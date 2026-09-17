@@ -1,0 +1,11 @@
+# Mantener los mismos saltos de línea en todos los equipos
+* text=auto eol=lf
+
+# Archivos de texto de Godot y C#
+*.tscn text
+*.tres text
+*.godot text
+*.gd text
+*.cs text
+*.csproj text
+*.uid text
