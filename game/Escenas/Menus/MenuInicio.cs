@@ -49,7 +49,7 @@ public partial class MenuInicio : Control
 			boton.FocusExited += () => Deslizar(fila, 0);
 		}
 
-		_botonNuevaPartida.Pressed += GestorPartida.Instancia.NuevaPartida;
+		_botonNuevaPartida.Pressed += AlPresionarNuevaPartida;
 		_botonContinuar.Pressed += GestorPartida.Instancia.ContinuarPartida;
 		_botonOpciones.Pressed += () => AbrirPanel(_menuOpciones, _botonOpciones);
 		_botonCreditos.Pressed += () => AbrirPanel(_pantallaCreditos, _botonCreditos);
@@ -122,6 +122,15 @@ public partial class MenuInicio : Control
 	{
 		_pantallaPrincipal.Show();
 		_focoAlVolver.GrabFocus();
+	}
+
+	// HU-04 CA-03: antes de empezar se pregunta si se quiere omitir el tutorial.
+	// El foco empieza en "Jugar tutorial", así que lo recomendado es lo fácil.
+	private async void AlPresionarNuevaPartida()
+	{
+		bool omitir = await _dialogoConfirmacion.Preguntar(
+			"¿Deseas omitir el tutorial?", "Omitir tutorial", "Jugar tutorial");
+		GestorPartida.Instancia.NuevaPartida(omitir);
 	}
 
 	private async void AlPresionarSalir()

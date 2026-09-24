@@ -1,0 +1,67 @@
+[gd_scene format=3]
+
+[sub_resource type="BoxShape3D" id="Forma_silla"]
+size = Vector3(0.45, 0.95, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="Material_asiento"]
+albedo_color = Color(0.22, 0.14, 0.08, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="Material_metal"]
+albedo_color = Color(0.12, 0.12, 0.12, 1)
+metallic = 0.7
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="Mesh_asiento"]
+material = SubResource("Material_asiento")
+size = Vector3(0.45, 0.04, 0.45)
+
+[sub_resource type="BoxMesh" id="Mesh_respaldo"]
+material = SubResource("Material_asiento")
+size = Vector3(0.45, 0.3, 0.03)
+
+[sub_resource type="BoxMesh" id="Mesh_pata"]
+material = SubResource("Material_metal")
+size = Vector3(0.03, 0.43, 0.03)
+
+[sub_resource type="BoxMesh" id="Mesh_poste"]
+material = SubResource("Material_metal")
+size = Vector3(0.03, 0.52, 0.03)
+
+[node name="Silla" type="StaticBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
+shape = SubResource("Forma_silla")
+
+[node name="Asiento" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("Mesh_asiento")
+
+[node name="PataFrenteIzq" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.215, -0.2)
+mesh = SubResource("Mesh_pata")
+
+[node name="PataFrenteDer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.215, -0.2)
+mesh = SubResource("Mesh_pata")
+
+[node name="PosteIzq" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.215, 0.2)
+mesh = SubResource("Mesh_pata")
+
+[node name="PosteDer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.215, 0.2)
+mesh = SubResource("Mesh_pata")
+
+[node name="RespaldoPosteIzq" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.73, 0.2)
+mesh = SubResource("Mesh_poste")
+
+[node name="RespaldoPosteDer" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.73, 0.2)
+mesh = SubResource("Mesh_poste")
+
+[node name="Respaldo" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0.2)
+mesh = SubResource("Mesh_respaldo")
