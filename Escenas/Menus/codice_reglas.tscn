@@ -1,0 +1,62 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Escenas/UI/PanelMenu.cs" id="1"]
+
+[node name="CodiceReglas" type="Control" node_paths=PackedStringArray("FocoInicial")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+FocoInicial = NodePath("Centro/Panel/Margen/VBox/BotonVolver")
+
+[node name="Centro" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Centro"]
+layout_mode = 2
+
+[node name="Margen" type="MarginContainer" parent="Centro/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="Centro/Panel/Margen"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Titulo" type="Label" parent="Centro/Panel/Margen/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Códice de reglas"
+horizontal_alignment = 1
+
+[node name="Contenido" type="RichTextLabel" parent="Centro/Panel/Margen/VBox"]
+custom_minimum_size = Vector2(560, 320)
+layout_mode = 2
+focus_mode = 2
+bbcode_enabled = true
+text = "[b]Regla 1[/b]
+Texto de ejemplo. Aquí irán las reglas del juego.
+
+[b]Regla 2[/b]
+Texto de ejemplo.
+
+[b]Regla 3[/b]
+Texto de ejemplo."
+
+[node name="BotonVolver" type="Button" parent="Centro/Panel/Margen/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Volver"

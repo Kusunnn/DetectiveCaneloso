@@ -1,0 +1,76 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Escenas/Menus/MenuOpciones.cs" id="1"]
+
+[node name="MenuOpciones" type="Control" node_paths=PackedStringArray("FocoInicial")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+FocoInicial = NodePath("Centro/Panel/Margen/VBox/Rejilla/DeslizadorVolumen")
+
+[node name="Centro" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Centro"]
+layout_mode = 2
+
+[node name="Margen" type="MarginContainer" parent="Centro/Panel"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 24
+
+[node name="VBox" type="VBoxContainer" parent="Centro/Panel/Margen"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Titulo" type="Label" parent="Centro/Panel/Margen/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Opciones"
+horizontal_alignment = 1
+
+[node name="Rejilla" type="GridContainer" parent="Centro/Panel/Margen/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 16
+columns = 2
+
+[node name="EtiquetaVolumen" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
+layout_mode = 2
+text = "Volumen general"
+
+[node name="DeslizadorVolumen" type="HSlider" parent="Centro/Panel/Margen/VBox/Rejilla"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="EtiquetaPantallaCompleta" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
+layout_mode = 2
+text = "Pantalla completa"
+
+[node name="InterruptorPantallaCompleta" type="CheckButton" parent="Centro/Panel/Margen/VBox/Rejilla"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="BotonVolver" type="Button" parent="Centro/Panel/Margen/VBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Volver"
