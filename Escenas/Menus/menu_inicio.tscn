@@ -1,0 +1,200 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://Escenas/Menus/MenuInicio.cs" id="1"]
+[ext_resource type="PackedScene" path="res://Escenas/Menus/menu_opciones.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://Escenas/Menus/pantalla_creditos.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://Escenas/UI/dialogo_confirmacion.tscn" id="4"]
+[ext_resource type="PackedScene" path="res://Escenas/Menus/Fondo/fondo_menu.tscn" id="5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_opcion"]
+content_margin_top = 8.0
+content_margin_bottom = 8.0
+
+[sub_resource type="Theme" id="Theme_opciones"]
+Button/colors/font_color = Color(0.910, 0.922, 0.937, 1)
+Button/colors/font_disabled_color = Color(0.910, 0.922, 0.937, 1)
+Button/colors/font_focus_color = Color(0.941, 0.392, 0.361, 1)
+Button/colors/font_hover_color = Color(0.941, 0.392, 0.361, 1)
+Button/colors/font_hover_pressed_color = Color(0.941, 0.392, 0.361, 1)
+Button/colors/font_pressed_color = Color(0.941, 0.392, 0.361, 1)
+Button/font_sizes/font_size = 36
+Button/styles/disabled = SubResource("StyleBoxEmpty_opcion")
+Button/styles/focus = SubResource("StyleBoxEmpty_opcion")
+Button/styles/hover = SubResource("StyleBoxEmpty_opcion")
+Button/styles/hover_pressed = SubResource("StyleBoxEmpty_opcion")
+Button/styles/normal = SubResource("StyleBoxEmpty_opcion")
+Button/styles/pressed = SubResource("StyleBoxEmpty_opcion")
+Label/colors/font_color = Color(0.373, 0.408, 0.451, 1)
+Label/font_sizes/font_size = 11
+
+[node name="MenuInicio" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+
+[node name="Fondo" parent="." instance=ExtResource("5")]
+layout_mode = 1
+
+[node name="PantallaPrincipal" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchor_left = 0.054
+anchor_right = 0.054
+anchor_bottom = 1.0
+offset_right = 800.0
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Antetitulo" type="Label" parent="PantallaPrincipal"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.682, 0.714, 0.749, 1)
+theme_override_font_sizes/font_size = 32
+text = "DETECTIVE"
+
+[node name="Titulo" type="Label" parent="PantallaPrincipal"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.937, 0.792, 0.031, 1)
+theme_override_font_sizes/font_size = 152
+text = "CANELOSO"
+
+[node name="Espacio" type="Control" parent="PantallaPrincipal"]
+custom_minimum_size = Vector2(0, 110)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ListaOpciones" type="VBoxContainer" parent="PantallaPrincipal"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme = SubResource("Theme_opciones")
+theme_override_constants/separation = 6
+
+[node name="FilaNuevaPartida" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+
+[node name="HBox" type="HBoxContainer" parent="PantallaPrincipal/ListaOpciones/FilaNuevaPartida"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaNuevaPartida/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "01"
+
+[node name="BotonNuevaPartida" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaNuevaPartida/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "NUEVA PARTIDA"
+alignment = 0
+
+[node name="FilaContinuar" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+
+[node name="HBox" type="HBoxContainer" parent="PantallaPrincipal/ListaOpciones/FilaContinuar"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaContinuar/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "02"
+
+[node name="BotonContinuar" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaContinuar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "CONTINUAR"
+alignment = 0
+
+[node name="FilaOpciones" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+
+[node name="HBox" type="HBoxContainer" parent="PantallaPrincipal/ListaOpciones/FilaOpciones"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaOpciones/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "03"
+
+[node name="BotonOpciones" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaOpciones/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "OPCIONES"
+alignment = 0
+
+[node name="FilaCreditos" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+
+[node name="HBox" type="HBoxContainer" parent="PantallaPrincipal/ListaOpciones/FilaCreditos"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaCreditos/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "04"
+
+[node name="BotonCreditos" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaCreditos/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "CRÉDITOS"
+alignment = 0
+
+[node name="FilaSalir" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+
+[node name="HBox" type="HBoxContainer" parent="PantallaPrincipal/ListaOpciones/FilaSalir"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaSalir/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "05"
+
+[node name="BotonSalir" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaSalir/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "SALIR"
+alignment = 0
+
+[node name="MenuOpciones" parent="." instance=ExtResource("2")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="PantallaCreditos" parent="." instance=ExtResource("3")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="DialogoConfirmacion" parent="." instance=ExtResource("4")]
+unique_name_in_owner = true
+layout_mode = 1
