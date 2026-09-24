@@ -12,6 +12,7 @@ public partial class Jugador : CharacterBody3D
 	private Camera3D _camara;
 	private Label _textoTutorial;
 	private Control _ventanaExpediente;
+	private Control _reticula;
 	private Label _textoPistasExpediente;
 
 	// Control de estados del tutorial y expediente
@@ -34,6 +35,7 @@ public partial class Jugador : CharacterBody3D
 		Node sala = GetParent();
 		_textoTutorial = sala.GetNodeOrNull<Label>("CanvasLayer/TextoTutorial");
 		_ventanaExpediente = sala.GetNodeOrNull<Control>("CanvasLayer/VentanaExpediente");
+		_reticula = sala.GetNodeOrNull<Control>("CanvasLayer/Reticula");
 		_textoPistasExpediente = sala.GetNodeOrNull<Label>("CanvasLayer/VentanaExpediente/TextoPistas");
 
 		if (_textoTutorial == null || _ventanaExpediente == null || _textoPistasExpediente == null)
@@ -114,6 +116,10 @@ public partial class Jugador : CharacterBody3D
 		if (_ventanaExpediente != null)
 		{
 			_ventanaExpediente.Visible = _expedienteAbierto;
+		}
+		if (_reticula != null)
+		{
+			_reticula.Visible = !_expedienteAbierto; // La retícula no se dibuja encima del expediente
 		}
 
 		if (_expedienteAbierto)
@@ -232,7 +238,7 @@ public partial class Jugador : CharacterBody3D
 		for (int i = 0; i < _pistasEncontradas.Count; i++)
 		{
 			ObjetoPista pista = _pistasEncontradas[i];
-			lineas.Add($"- [EVIDENCIA {i + 1:00}] {pista.Titulo}:\n  {pista.Descripcion}");
+			lineas.Add($"[EVIDENCIA {i + 1:00}] {pista.Titulo}\n{pista.Descripcion}");
 		}
 		_textoPistasExpediente.Text = string.Join("\n\n", lineas);
 	}

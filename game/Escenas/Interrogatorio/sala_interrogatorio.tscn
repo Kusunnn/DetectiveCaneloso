@@ -242,6 +242,18 @@ top_radius = 0.16
 bottom_radius = 0.13
 height = 0.35
 
+[sub_resource type="StyleBoxFlat" id="Estilo_expediente"]
+bg_color = Color(0.09, 0.08, 0.07, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.93, 0.76, 0.18, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=2045918174]
@@ -263,7 +275,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82961166, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -2)
 script = ExtResource("5_pista")
 Titulo = "Mesa de Interrogatorio"
-Descripcion = "Superficie de madera con marcas de tensiÃ³n. Hay un archivo confidencial sobre el sospechoso."
+Descripcion = "Superficie de madera con marcas de tensión. Hay un archivo confidencial sobre el sospechoso."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MesaPista" unique_id=184764123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39, 0)
@@ -333,41 +345,75 @@ text = "Usa [W, A, S, D] para moverte"
 horizontal_alignment = 1
 
 [node name="VentanaExpediente" type="Panel" parent="CanvasLayer" unique_id=1474104195]
-custom_minimum_size = Vector2(700, 500)
-anchors_preset = 4
+anchors_preset = 8
+anchor_left = 0.5
 anchor_top = 0.5
+anchor_right = 0.5
 anchor_bottom = 0.5
-offset_top = -250.0
-offset_right = 955.0
-offset_bottom = 250.0
+offset_left = -560.0
+offset_top = -340.0
+offset_right = 560.0
+offset_bottom = 340.0
+grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("Estilo_expediente")
 
 [node name="TituloCaso" type="Label" parent="CanvasLayer/VentanaExpediente" unique_id=1801427980]
-layout_mode = 0
-offset_left = 183.0
-offset_top = 42.0
-offset_right = 493.0
-offset_bottom = 91.0
-text = "EXPEDIENTE DEL CASO: El Interrogatorio
-"
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 36.0
+offset_bottom = 86.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.93, 0.76, 0.18, 1)
+theme_override_font_sizes/font_size = 36
+text = "EXPEDIENTE DEL CASO: El Interrogatorio"
+horizontal_alignment = 1
 
 [node name="SeccionNotas" type="Label" parent="CanvasLayer/VentanaExpediente" unique_id=137737522]
-layout_mode = 0
-offset_left = 55.0
-offset_top = 89.0
-offset_right = 211.0
-offset_bottom = 112.0
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 60.0
+offset_top = 110.0
+offset_right = -60.0
+offset_bottom = 150.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.7, 0.66, 0.58, 1)
+theme_override_font_sizes/font_size = 26
 text = "Notas del Detective:"
 
 [node name="TextoPistas" type="Label" parent="CanvasLayer/VentanaExpediente" unique_id=2145397164]
 layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.013
-anchor_bottom = 0.040000003
-offset_left = 56.0
-offset_top = 138.0
-offset_right = 644.9
-offset_bottom = 323.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 165.0
+offset_right = -60.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9, 0.88, 0.82, 1)
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 3
+
+[node name="AyudaCerrar" type="Label" parent="CanvasLayer/VentanaExpediente"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = -55.0
+offset_right = -60.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.55, 0.52, 0.46, 1)
+theme_override_font_sizes/font_size = 20
+text = "TAB para cerrar"
+horizontal_alignment = 2
 
 [node name="Reticula" type="ColorRect" parent="CanvasLayer" unique_id=174649373]
 anchors_preset = 8
@@ -390,7 +436,7 @@ environment = SubResource("Environment_je0k8")
 transform = Transform3D(0.9396926, 0, -0.34202015, 0, 1, 0, 0.34202015, 0, 0.9396926, 0.4, 1.28, -1.85)
 script = ExtResource("5_pista")
 Titulo = "Grabadora de Audio"
-Descripcion = "Una grabadora vieja con la cinta a medio rebobinar. Alguien la dejÃ³ encendida durante el Ãºltimo interrogatorio."
+Descripcion = "Una grabadora vieja con la cinta a medio rebobinar. Alguien la dejó encendida durante el último interrogatorio."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GrabadoraPista" unique_id=290225050]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
