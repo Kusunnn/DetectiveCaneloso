@@ -1,0 +1,650 @@
+[gd_scene format=3 uid="uid://da1lr16yek0bh"]
+
+[ext_resource type="Script" uid="uid://kuuyc8r7mpwl" path="res://Escenas/Interrogatorio/Jugador.cs" id="4_c73no"]
+[ext_resource type="Script" uid="uid://bcimcbvav5i6g" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="5_pista"]
+[ext_resource type="PackedScene" path="res://Escenas/Interrogatorio/silla.tscn" id="6_silla"]
+[ext_resource type="PackedScene" path="res://Escenas/Menus/menu_pausa.tscn" id="7_pausa"]
+
+[sub_resource type="StandardMaterial3D" id="Material_techo"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_je0k8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_htv4u"]
+size = Vector3(1.6, 0.78, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4kesh"]
+albedo_color = Color(0.32, 0.19, 0.09, 1)
+roughness = 0.65
+
+[sub_resource type="BoxMesh" id="Mesh_tablero"]
+material = SubResource("StandardMaterial3D_4kesh")
+size = Vector3(1.6, 0.05, 0.9)
+
+[sub_resource type="StandardMaterial3D" id="Material_patas"]
+albedo_color = Color(0.12, 0.12, 0.12, 1)
+metallic = 0.7
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="Mesh_pata"]
+material = SubResource("Material_patas")
+size = Vector3(0.05, 0.73, 0.05)
+
+[sub_resource type="BoxMesh" id="Mesh_travesano"]
+material = SubResource("Material_patas")
+size = Vector3(1.45, 0.06, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="Material_carpeta"]
+albedo_color = Color(0.55, 0.45, 0.28, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="Mesh_carpeta"]
+material = SubResource("Material_carpeta")
+size = Vector3(0.24, 0.015, 0.32)
+
+[sub_resource type="StandardMaterial3D" id="Material_vidrio"]
+transparency = 1
+albedo_color = Color(0.8, 0.9, 1, 0.25)
+metallic = 0.3
+roughness = 0.05
+
+[sub_resource type="CylinderMesh" id="Mesh_vaso"]
+material = SubResource("Material_vidrio")
+top_radius = 0.035
+bottom_radius = 0.03
+height = 0.1
+
+[sub_resource type="CylinderMesh" id="Mesh_cenicero"]
+material = SubResource("Material_patas")
+top_radius = 0.06
+bottom_radius = 0.05
+height = 0.025
+
+[sub_resource type="StandardMaterial3D" id="Material_cromo"]
+albedo_color = Color(0.75, 0.75, 0.72, 1)
+metallic = 1.0
+roughness = 0.25
+
+[sub_resource type="TorusMesh" id="Mesh_argolla"]
+material = SubResource("Material_cromo")
+inner_radius = 0.022
+outer_radius = 0.032
+
+[sub_resource type="Environment" id="Environment_je0k8"]
+background_mode = 1
+background_color = Color(0.018023593, 0.058232002, 0.1001626, 0.8509804)
+ssao_enabled = true
+glow_enabled = true
+adjustment_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_je0k8"]
+size = Vector3(0.32, 0.1, 0.22)
+
+[sub_resource type="StandardMaterial3D" id="Material_grabadora"]
+albedo_color = Color(0.15, 0.13, 0.11, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_htv4u"]
+material = SubResource("Material_grabadora")
+size = Vector3(0.3, 0.07, 0.2)
+
+[sub_resource type="CylinderMesh" id="Mesh_bobina"]
+material = SubResource("Material_cromo")
+top_radius = 0.045
+bottom_radius = 0.045
+height = 0.012
+
+[sub_resource type="BoxMesh" id="Mesh_rejilla"]
+material = SubResource("Material_cromo")
+size = Vector3(0.09, 0.004, 0.06)
+
+[sub_resource type="BoxMesh" id="Mesh_boton"]
+material = SubResource("Material_cromo")
+size = Vector3(0.028, 0.014, 0.022)
+
+[sub_resource type="StandardMaterial3D" id="Material_luz_roja"]
+albedo_color = Color(1, 0.1, 0.05, 1)
+emission_enabled = true
+emission = Color(1, 0.1, 0.05, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="Mesh_luz_roja"]
+material = SubResource("Material_luz_roja")
+radius = 0.007
+height = 0.014
+
+[sub_resource type="StandardMaterial3D" id="Material_pared"]
+albedo_color = Color(0.2, 0.21, 0.19, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Material_metal"]
+cull_mode = 2
+albedo_color = Color(0.08, 0.09, 0.08, 1)
+metallic = 0.8
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="Mesh_pantalla"]
+material = SubResource("Material_metal")
+top_radius = 0.03
+bottom_radius = 0.3
+height = 0.25
+cap_top = false
+cap_bottom = false
+
+[sub_resource type="StandardMaterial3D" id="Material_foco"]
+albedo_color = Color(1, 0.9, 0.7, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.6, 1)
+emission_energy_multiplier = 6.0
+
+[sub_resource type="SphereMesh" id="Mesh_foco"]
+material = SubResource("Material_foco")
+radius = 0.07
+height = 0.14
+
+[sub_resource type="StandardMaterial3D" id="Material_espejo"]
+albedo_color = Color(0.3, 0.32, 0.35, 1)
+metallic = 1.0
+roughness = 0.03
+
+[sub_resource type="BoxMesh" id="Mesh_espejo"]
+material = SubResource("Material_espejo")
+size = Vector3(0.02, 1.2, 3)
+
+[sub_resource type="BoxMesh" id="Mesh_marco_espejo_h"]
+material = SubResource("Material_patas")
+size = Vector3(0.05, 0.06, 3.12)
+
+[sub_resource type="BoxMesh" id="Mesh_marco_espejo_v"]
+material = SubResource("Material_patas")
+size = Vector3(0.05, 1.32, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Material_puerta"]
+albedo_color = Color(0.17, 0.2, 0.19, 1)
+metallic = 0.5
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="Mesh_puerta"]
+material = SubResource("Material_puerta")
+size = Vector3(1, 2.1, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Material_vidrio_oscuro"]
+albedo_color = Color(0.02, 0.03, 0.04, 1)
+metallic = 0.9
+roughness = 0.1
+
+[sub_resource type="BoxMesh" id="Mesh_ventanilla"]
+material = SubResource("Material_vidrio_oscuro")
+size = Vector3(0.3, 0.4, 0.012)
+
+[sub_resource type="BoxMesh" id="Mesh_manija"]
+material = SubResource("Material_cromo")
+size = Vector3(0.14, 0.03, 0.04)
+
+[sub_resource type="BoxMesh" id="Mesh_marco_puerta_v"]
+material = SubResource("Material_patas")
+size = Vector3(0.08, 2.2, 0.06)
+
+[sub_resource type="BoxMesh" id="Mesh_marco_puerta_h"]
+material = SubResource("Material_patas")
+size = Vector3(1.16, 0.08, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Material_plastico_claro"]
+albedo_color = Color(0.7, 0.68, 0.62, 1)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="Mesh_interruptor"]
+material = SubResource("Material_plastico_claro")
+size = Vector3(0.08, 0.12, 0.02)
+
+[sub_resource type="BoxMesh" id="Mesh_soporte"]
+material = SubResource("Material_patas")
+size = Vector3(0.03, 0.16, 0.03)
+
+[sub_resource type="BoxMesh" id="Mesh_camara_cuerpo"]
+material = SubResource("Material_plastico_claro")
+size = Vector3(0.12, 0.1, 0.26)
+
+[sub_resource type="BoxMesh" id="Mesh_camara_lente"]
+material = SubResource("Material_vidrio_oscuro")
+size = Vector3(0.09, 0.07, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="Material_reloj_cara"]
+albedo_color = Color(0.85, 0.83, 0.76, 1)
+roughness = 0.8
+
+[sub_resource type="CylinderMesh" id="Mesh_reloj_cara"]
+material = SubResource("Material_reloj_cara")
+top_radius = 0.18
+bottom_radius = 0.18
+height = 0.04
+
+[sub_resource type="TorusMesh" id="Mesh_reloj_aro"]
+material = SubResource("Material_patas")
+inner_radius = 0.17
+outer_radius = 0.2
+
+[sub_resource type="BoxMesh" id="Mesh_aguja_hora"]
+material = SubResource("Material_patas")
+size = Vector3(0.018, 0.09, 0.005)
+
+[sub_resource type="BoxMesh" id="Mesh_aguja_minuto"]
+material = SubResource("Material_patas")
+size = Vector3(0.13, 0.012, 0.005)
+
+[sub_resource type="BoxMesh" id="Mesh_rejilla_techo"]
+material = SubResource("Material_patas")
+size = Vector3(0.5, 0.02, 0.5)
+
+[sub_resource type="CylinderMesh" id="Mesh_papelera"]
+material = SubResource("Material_patas")
+top_radius = 0.16
+bottom_radius = 0.13
+height = 0.35
+
+[sub_resource type="StyleBoxFlat" id="Estilo_expediente"]
+bg_color = Color(0.09, 0.08, 0.07, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.93, 0.76, 0.18, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=2045918174]
+use_collision = true
+size = Vector3(15, 1, 15)
+material = SubResource("Material_techo")
+
+[node name="Jugador" type="CharacterBody3D" parent="." unique_id=3319378]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+script = ExtResource("4_c73no")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Jugador" unique_id=132017566]
+shape = SubResource("CapsuleShape3D_je0k8")
+
+[node name="CamaraInterrogatorio" type="Camera3D" parent="Jugador" unique_id=678562413]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82961166, 0)
+
+[node name="MesaPista" type="StaticBody3D" parent="." unique_id=64876306]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -2)
+script = ExtResource("5_pista")
+Titulo = "Mesa de Interrogatorio"
+Descripcion = "Superficie de madera con marcas de tensión. Hay un archivo confidencial sobre el sospechoso."
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MesaPista" unique_id=184764123]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39, 0)
+shape = SubResource("BoxShape3D_htv4u")
+
+[node name="Tablero" type="MeshInstance3D" parent="MesaPista" unique_id=243244598]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.755, 0)
+mesh = SubResource("Mesh_tablero")
+
+[node name="PataFrenteIzq" type="MeshInstance3D" parent="MesaPista" unique_id=331213394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.74, 0.365, 0.39)
+mesh = SubResource("Mesh_pata")
+
+[node name="PataFrenteDer" type="MeshInstance3D" parent="MesaPista" unique_id=444392536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74, 0.365, 0.39)
+mesh = SubResource("Mesh_pata")
+
+[node name="PataFondoIzq" type="MeshInstance3D" parent="MesaPista" unique_id=715338303]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.74, 0.365, -0.39)
+mesh = SubResource("Mesh_pata")
+
+[node name="PataFondoDer" type="MeshInstance3D" parent="MesaPista" unique_id=95804587]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.74, 0.365, -0.39)
+mesh = SubResource("Mesh_pata")
+
+[node name="TravesanoFrente" type="MeshInstance3D" parent="MesaPista" unique_id=1029075287]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0.39)
+mesh = SubResource("Mesh_travesano")
+
+[node name="TravesanoFondo" type="MeshInstance3D" parent="MesaPista" unique_id=1983121361]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -0.39)
+mesh = SubResource("Mesh_travesano")
+
+[node name="ArchivoConfidencial" type="MeshInstance3D" parent="MesaPista" unique_id=1493526210]
+transform = Transform3D(0.9848078, 0, 0.17364818, 0, 1, 0, -0.17364818, 0, 0.9848078, -0.35, 0.7875, 0.1)
+mesh = SubResource("Mesh_carpeta")
+
+[node name="VasoAgua" type="MeshInstance3D" parent="MesaPista" unique_id=261018111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.83, -0.25)
+mesh = SubResource("Mesh_vaso")
+
+[node name="Cenicero" type="MeshInstance3D" parent="MesaPista" unique_id=1514274302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.7925, -0.28)
+mesh = SubResource("Mesh_cenicero")
+
+[node name="ArgollaEsposas" type="MeshInstance3D" parent="MesaPista" unique_id=138234236]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.785, -0.38)
+mesh = SubResource("Mesh_argolla")
+
+[node name="EsposaIzq" type="MeshInstance3D" parent="MesaPista" unique_id=530097990]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.785, -0.34)
+mesh = SubResource("Mesh_argolla")
+
+[node name="EsposaDer" type="MeshInstance3D" parent="MesaPista" unique_id=1544489138]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17, 0.785, -0.31)
+mesh = SubResource("Mesh_argolla")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=252640307]
+
+[node name="TextoTutorial" type="Label" parent="CanvasLayer" unique_id=489829794]
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 60.0
+offset_bottom = 120.0
+grow_horizontal = 2
+text = "Usa [W, A, S, D] para moverte"
+horizontal_alignment = 1
+
+[node name="VentanaExpediente" type="Panel" parent="CanvasLayer" unique_id=1474104195]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -560.0
+offset_top = -340.0
+offset_right = 560.0
+offset_bottom = 340.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("Estilo_expediente")
+
+[node name="TituloCaso" type="Label" parent="CanvasLayer/VentanaExpediente" unique_id=1801427980]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 36.0
+offset_bottom = 86.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.93, 0.76, 0.18, 1)
+theme_override_font_sizes/font_size = 36
+text = "EXPEDIENTE DEL CASO: El Interrogatorio"
+horizontal_alignment = 1
+
+[node name="SeccionNotas" type="Label" parent="CanvasLayer/VentanaExpediente" unique_id=137737522]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 60.0
+offset_top = 110.0
+offset_right = -60.0
+offset_bottom = 150.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.7, 0.66, 0.58, 1)
+theme_override_font_sizes/font_size = 26
+text = "Notas del Detective:"
+
+[node name="TextoPistas" type="Label" parent="CanvasLayer/VentanaExpediente" unique_id=2145397164]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = 165.0
+offset_right = -60.0
+offset_bottom = -70.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.9, 0.88, 0.82, 1)
+theme_override_font_sizes/font_size = 24
+autowrap_mode = 3
+
+[node name="AyudaCerrar" type="Label" parent="CanvasLayer/VentanaExpediente"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 60.0
+offset_top = -55.0
+offset_right = -60.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.55, 0.52, 0.46, 1)
+theme_override_font_sizes/font_size = 20
+text = "TAB para cerrar"
+horizontal_alignment = 2
+
+[node name="Reticula" type="ColorRect" parent="CanvasLayer" unique_id=174649373]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.54731035, 0.75611496, 0.91367745, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=265072308]
+environment = SubResource("Environment_je0k8")
+
+[node name="GrabadoraPista" type="StaticBody3D" parent="." unique_id=409678302]
+transform = Transform3D(0.9396926, 0, -0.34202015, 0, 1, 0, 0.34202015, 0, 0.9396926, 0.4, 1.28, -1.85)
+script = ExtResource("5_pista")
+Titulo = "Grabadora de Audio"
+Descripcion = "Una grabadora vieja con la cinta a medio rebobinar. Alguien la dejó encendida durante el último interrogatorio."
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="GrabadoraPista" unique_id=290225050]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+shape = SubResource("BoxShape3D_je0k8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="GrabadoraPista" unique_id=162088288]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
+mesh = SubResource("BoxMesh_htv4u")
+
+[node name="BobinaIzq" type="MeshInstance3D" parent="GrabadoraPista" unique_id=2088295186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.076, -0.02)
+mesh = SubResource("Mesh_bobina")
+
+[node name="BobinaDer" type="MeshInstance3D" parent="GrabadoraPista" unique_id=2082207786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.076, -0.02)
+mesh = SubResource("Mesh_bobina")
+
+[node name="Altavoz" type="MeshInstance3D" parent="GrabadoraPista" unique_id=234051206]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.105, 0.072, -0.03)
+mesh = SubResource("Mesh_rejilla")
+
+[node name="BotonPlay" type="MeshInstance3D" parent="GrabadoraPista" unique_id=1533365684]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.077, 0.07)
+mesh = SubResource("Mesh_boton")
+
+[node name="BotonStop" type="MeshInstance3D" parent="GrabadoraPista" unique_id=1298333576]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.065, 0.077, 0.07)
+mesh = SubResource("Mesh_boton")
+
+[node name="BotonRebobinar" type="MeshInstance3D" parent="GrabadoraPista" unique_id=889543294]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.03, 0.077, 0.07)
+mesh = SubResource("Mesh_boton")
+
+[node name="BotonGrabar" type="MeshInstance3D" parent="GrabadoraPista" unique_id=557584800]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.005, 0.077, 0.07)
+mesh = SubResource("Mesh_boton")
+
+[node name="LuzGrabando" type="MeshInstance3D" parent="GrabadoraPista" unique_id=2013505264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.105, 0.073, 0.065)
+cast_shadow = 0
+mesh = SubResource("Mesh_luz_roja")
+
+[node name="Sala" type="Node3D" parent="." unique_id=1254170574]
+
+[node name="ParedFondo" type="CSGBox3D" parent="Sala" unique_id=801054415]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -5.1)
+use_collision = true
+size = Vector3(8.4, 3, 0.2)
+material = SubResource("Material_pared")
+
+[node name="ParedFrente" type="CSGBox3D" parent="Sala" unique_id=200418886]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3.1)
+use_collision = true
+size = Vector3(8.4, 3, 0.2)
+material = SubResource("Material_pared")
+
+[node name="ParedIzquierda" type="CSGBox3D" parent="Sala" unique_id=1944414335]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.1, 2, -1)
+use_collision = true
+size = Vector3(0.2, 3, 8)
+material = SubResource("Material_pared")
+
+[node name="ParedDerecha" type="CSGBox3D" parent="Sala" unique_id=524979639]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.1, 2, -1)
+use_collision = true
+size = Vector3(0.2, 3, 8)
+material = SubResource("Material_pared")
+
+[node name="Techo" type="CSGBox3D" parent="Sala" unique_id=2131093888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, -1)
+use_collision = true
+size = Vector3(8.4, 0.2, 8.4)
+material = SubResource("Material_techo")
+
+[node name="Lampara" type="Node3D" parent="." unique_id=794162896]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, -2)
+
+[node name="Cable" type="CSGCylinder3D" parent="Lampara" unique_id=655002491]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.34, 0)
+radius = 0.01
+height = 0.68
+material = SubResource("Material_metal")
+
+[node name="Pantalla" type="MeshInstance3D" parent="Lampara" unique_id=1540901539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8, 0)
+mesh = SubResource("Mesh_pantalla")
+
+[node name="Foco" type="MeshInstance3D" parent="Lampara" unique_id=1418261550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.86, 0)
+cast_shadow = 0
+mesh = SubResource("Mesh_foco")
+
+[node name="LuzInterrogatorio" type="SpotLight3D" parent="Lampara" unique_id=1607225069]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -0.95, 0)
+light_color = Color(1, 0.88, 0.7, 1)
+light_energy = 5.0
+shadow_enabled = true
+spot_range = 6.0
+spot_angle = 50.0
+
+[node name="LuzAmbiente" type="OmniLight3D" parent="Lampara" unique_id=775319913]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.75, 0)
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 0.4
+
+[node name="SillaDetective" parent="." unique_id=1824900028 instance=ExtResource("6_silla")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -1.2)
+
+[node name="SillaSospechoso" parent="." unique_id=406856655 instance=ExtResource("6_silla")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.5, -2.8)
+
+[node name="Detalles" type="Node3D" parent="." unique_id=1527284877]
+
+[node name="EspejoFalso" type="MeshInstance3D" parent="Detalles" unique_id=1868876511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.99, 2, -2)
+mesh = SubResource("Mesh_espejo")
+
+[node name="MarcoEspejoArriba" type="MeshInstance3D" parent="Detalles" unique_id=174770124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.975, 2.63, -2)
+mesh = SubResource("Mesh_marco_espejo_h")
+
+[node name="MarcoEspejoAbajo" type="MeshInstance3D" parent="Detalles" unique_id=474097071]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.975, 1.37, -2)
+mesh = SubResource("Mesh_marco_espejo_h")
+
+[node name="MarcoEspejoIzq" type="MeshInstance3D" parent="Detalles" unique_id=1860474517]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.975, 2, -0.47)
+mesh = SubResource("Mesh_marco_espejo_v")
+
+[node name="MarcoEspejoDer" type="MeshInstance3D" parent="Detalles" unique_id=1374268272]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.975, 2, -3.53)
+mesh = SubResource("Mesh_marco_espejo_v")
+
+[node name="ReflejoSala" type="ReflectionProbe" parent="Detalles" unique_id=446661273]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -1)
+size = Vector3(8, 3, 8)
+box_projection = true
+interior = true
+
+[node name="Puerta" type="MeshInstance3D" parent="Detalles" unique_id=602001027]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.55, 2.975)
+mesh = SubResource("Mesh_puerta")
+
+[node name="VentanillaPuerta" type="MeshInstance3D" parent="Detalles" unique_id=1116095045]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.15, 2.945)
+mesh = SubResource("Mesh_ventanilla")
+
+[node name="ManijaPuerta" type="MeshInstance3D" parent="Detalles" unique_id=448494075]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.12, 1.5, 2.93)
+mesh = SubResource("Mesh_manija")
+
+[node name="MarcoPuertaIzq" type="MeshInstance3D" parent="Detalles" unique_id=1776311544]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.96, 1.6, 2.97)
+mesh = SubResource("Mesh_marco_puerta_v")
+
+[node name="MarcoPuertaDer" type="MeshInstance3D" parent="Detalles" unique_id=1184563514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.04, 1.6, 2.97)
+mesh = SubResource("Mesh_marco_puerta_v")
+
+[node name="MarcoPuertaArriba" type="MeshInstance3D" parent="Detalles" unique_id=1867654602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.66, 2.97)
+mesh = SubResource("Mesh_marco_puerta_h")
+
+[node name="Interruptor" type="MeshInstance3D" parent="Detalles" unique_id=1538426664]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.72, 1.7, 2.99)
+mesh = SubResource("Mesh_interruptor")
+
+[node name="SoporteCamara" type="MeshInstance3D" parent="Detalles" unique_id=1562863346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.75, 3.42, -4.75)
+mesh = SubResource("Mesh_soporte")
+
+[node name="CamaraSeguridad" type="Node3D" parent="Detalles" unique_id=229149014]
+transform = Transform3D(-0.579, -0.321, 0.749, 0, 0.918, 0.394, -0.815, 0.228, -0.532, 3.75, 3.3, -4.75)
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Detalles/CamaraSeguridad" unique_id=1627474050]
+mesh = SubResource("Mesh_camara_cuerpo")
+
+[node name="Lente" type="MeshInstance3D" parent="Detalles/CamaraSeguridad" unique_id=2006529829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.14)
+mesh = SubResource("Mesh_camara_lente")
+
+[node name="LuzGrabando" type="MeshInstance3D" parent="Detalles/CamaraSeguridad" unique_id=121947625]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04, 0.035, -0.13)
+cast_shadow = 0
+mesh = SubResource("Mesh_luz_roja")
+
+[node name="Reloj" type="MeshInstance3D" parent="Detalles" unique_id=1858869959]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.9, -4.98)
+mesh = SubResource("Mesh_reloj_cara")
+
+[node name="RelojAro" type="MeshInstance3D" parent="Detalles" unique_id=2128148804]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.9, -4.975)
+mesh = SubResource("Mesh_reloj_aro")
+
+[node name="AgujaHora" type="MeshInstance3D" parent="Detalles" unique_id=185481194]
+transform = Transform3D(0.866, 0.5, 0, -0.5, 0.866, 0, 0, 0, 1, -0.0225, 2.939, -4.955)
+mesh = SubResource("Mesh_aguja_hora")
+
+[node name="AgujaMinuto" type="MeshInstance3D" parent="Detalles" unique_id=2058131831]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.065, 2.9, -4.953)
+mesh = SubResource("Mesh_aguja_minuto")
+
+[node name="RejillaVentilacion" type="MeshInstance3D" parent="Detalles" unique_id=1146853878]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 3.49, 1)
+mesh = SubResource("Mesh_rejilla_techo")
+
+[node name="Papelera" type="MeshInstance3D" parent="Detalles" unique_id=1405414172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 0.675, 2.5)
+mesh = SubResource("Mesh_papelera")
+
+[node name="MenuPausa" parent="." instance=ExtResource("7_pausa")]
