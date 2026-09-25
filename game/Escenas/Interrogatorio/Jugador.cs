@@ -11,9 +11,7 @@ public partial class Jugador : CharacterBody3D
 	private float _gravedad = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private Camera3D _camara;
 	private Label _textoTutorial;
-	private Control _ventanaExpediente;
-	private Control _reticula;
-	private Label _textoPistasExpediente;
+	private Node _hud;
 
 	// Control de estados del tutorial y expediente
 	private bool _movimientoRealizado = false;
@@ -34,24 +32,8 @@ public partial class Jugador : CharacterBody3D
 		// detective.tscn directamente como si está instanciada dentro de mundo.tscn
 		Node sala = GetParent();
 		_textoTutorial = sala.GetNodeOrNull<Label>("CanvasLayer/TextoTutorial");
-		_ventanaExpediente = sala.GetNodeOrNull<Control>("CanvasLayer/VentanaExpediente");
-		_reticula = sala.GetNodeOrNull<Control>("CanvasLayer/Reticula");
-		_textoPistasExpediente = sala.GetNodeOrNull<Label>("CanvasLayer/VentanaExpediente/TextoPistas");
-
-		if (_textoTutorial == null || _ventanaExpediente == null || _textoPistasExpediente == null)
-		{
-			GD.PushWarning("Jugador: no se encontró parte del HUD en CanvasLayer (TextoTutorial, VentanaExpediente o TextoPistas).");
-		}
-
-		if (_ventanaExpediente != null)
-		{
-			_ventanaExpediente.Visible = false; // Aseguramos que comience oculto
-		}
-
-		if (_textoPistasExpediente != null)
-		{
-			_textoPistasExpediente.Text = "- [Pendiente] Examinar los objetos de la sala de interrogatorio.";
-		}
+		_hud = sala.GetNode("HUD");
+		_hud.Connect("panel_cambiado", Callable.From<bool, bool>(AlCambiarPanel));
 
 		// Si al empezar la partida se eligió "Omitir tutorial" (o ya se completó), no mostramos indicaciones
 		_tutorialActivo = !(GestorPartida.Instancia?.SaltarTutorial ?? false);
@@ -70,15 +52,6 @@ public partial class Jugador : CharacterBody3D
 
 	public override void _Input(InputEvent @event)
 	{
-		// Detectar la tecla TAB para abrir o cerrar el expediente de forma inmediata
-		// Ignoramos las repeticiones (Echo) para que mantener TAB no haga parpadear la ventana
-		if (@event is InputEventKey teclaKey && teclaKey.Pressed && !teclaKey.Echo && teclaKey.Keycode == Key.Tab)
-		{
-			AlternarExpediente();
-			GetViewport().SetInputAsHandled();
-			return;
-		}
-
 		// Si el expediente está abierto, bloqueamos el resto de acciones del juego
 		if (_expedienteAbierto) return;
 
@@ -109,37 +82,17 @@ public partial class Jugador : CharacterBody3D
 		}
 	}
 
-	private void AlternarExpediente()
+	private void AlCambiarPanel(bool abierto, bool expediente)
 	{
-		_expedienteAbierto = !_expedienteAbierto;
-
-		if (_ventanaExpediente != null)
+		_expedienteAbierto = abierto;
+		Input.MouseMode = abierto ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Captured;
+		if (abierto)
 		{
-			_ventanaExpediente.Visible = _expedienteAbierto;
+			Velocity = Vector3.Zero;
+			_hud.Call("actualizar_movimiento", false);
 		}
-		if (_reticula != null)
-		{
-			_reticula.Visible = !_expedienteAbierto; // La retícula no se dibuja encima del expediente
-		}
-
-		if (_expedienteAbierto)
-		{
-			// Liberar el cursor para leer el expediente
-			Input.MouseMode = Input.MouseModeEnum.Visible;
-			GD.Print("Expediente abierto.");
-			
-			// Último paso del tutorial: abrir el expediente con al menos una pista
-			if (_tutorialActivo && _inspeccionRealizada)
-			{
-				FinalizarTutorial();
-			}
-		}
-		else
-		{
-			// Volver a capturar el cursor para jugar
-			Input.MouseMode = Input.MouseModeEnum.Captured;
-			GD.Print("Expediente cerrado.");
-		}
+		if (expediente && _tutorialActivo && _inspeccionRealizada)
+			FinalizarTutorial();
 	}
 
 	private void IntentarInspeccionarObjeto()
@@ -177,17 +130,17 @@ public partial class Jugador : CharacterBody3D
 		_pistasEncontradas.Add(pista);
 		_inspeccionRealizada = true;
 		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
-		ActualizarExpediente();
+		_hud.Call("registrar_pista", pista.GetPath().ToString(), pista.Titulo, pista.Descripcion);
 
 		if (_tutorialActivo)
 		{
 			MostrarTutorial(_pistasEncontradas.Count == 1
-				? "¡Pista encontrada! Presiona TAB para abrir el expediente."
-				: "Nueva pista: " + pista.Titulo + ". Presiona TAB para abrir el expediente.");
+				? "¡Pista encontrada! Presiona CTRL para abrir el expediente."
+				: "Nueva pista: " + pista.Titulo + ". Presiona CTRL para abrir el expediente.");
 		}
 		else
 		{
-			MostrarAviso("Nueva pista: " + pista.Titulo + ". Presiona TAB para revisarla.", 4.0);
+			MostrarAviso("Nueva pista: " + pista.Titulo + ". Presiona CTRL para revisarla.", 4.0);
 		}
 	}
 
@@ -230,19 +183,6 @@ public partial class Jugador : CharacterBody3D
 		}
 	}
 
-	private void ActualizarExpediente()
-	{
-		if (_textoPistasExpediente == null) return;
-
-		var lineas = new List<string>();
-		for (int i = 0; i < _pistasEncontradas.Count; i++)
-		{
-			ObjetoPista pista = _pistasEncontradas[i];
-			lineas.Add($"[EVIDENCIA {i + 1:00}] {pista.Titulo}\n{pista.Descripcion}");
-		}
-		_textoPistasExpediente.Text = string.Join("\n\n", lineas);
-	}
-
 	public override void _PhysicsProcess(double delta)
 	{
 		// Esc lo gestiona el menú de pausa (MenuPausa), que libera y restaura el cursor
@@ -281,5 +221,6 @@ public partial class Jugador : CharacterBody3D
 
 		Velocity = velocidadActual;
 		MoveAndSlide();
+		_hud.Call("actualizar_movimiento", new Vector2(Velocity.X, Velocity.Z).LengthSquared() > 0.001f);
 	}
 }

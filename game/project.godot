@@ -33,6 +33,10 @@ window/stretch/aspect="expand"
 
 project/assembly_name="Detective Caneloso"
 
+[filesystem]
+
+import/blender/enabled=false
+
 [gui]
 
 theme/default_theme_scale=1.5

@@ -1,6 +1,7 @@
 class_name DetectiveHUD
 extends CanvasLayer
 ## HUD transparente: no contiene escenario ni modifica al jugador.
+signal panel_cambiado(abierto: bool, expediente: bool)
 signal pista_seleccionada(pista: Pista)
 signal detalle_solicitado(pista: Pista)
 signal linterna_cambiada(encendida: bool)
@@ -66,6 +67,14 @@ func agregar_pista(pista: Pista) -> bool:
 		pista_seleccionada.emit(pista)
 	return true
 
+# Puente para los objetos de pista escritos en C#.
+func registrar_pista(id: String, titulo: String, descripcion: String) -> bool:
+	var pista := Pista.new()
+	pista.id = StringName(id)
+	pista.titulo = titulo
+	pista.descripcion = descripcion
+	return agregar_pista(pista)
+
 func cambiar_pista(paso: int) -> void:
 	if pistas.is_empty():
 		return
@@ -82,12 +91,17 @@ func _process(delta: float) -> void:
 	_aviso = maxf(0.0, _aviso - delta)
 	_lienzo.queue_redraw()
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and rueda_habilitada and not diario_abierto and pistas.size() > 1:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			cambiar_pista(-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1)
 			get_viewport().set_input_as_handled()
 	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode in [KEY_UP, KEY_LEFT, KEY_DOWN, KEY_RIGHT]:
+			if not diario_abierto and pistas.size() > 1:
+				cambiar_pista(-1 if event.keycode in [KEY_UP, KEY_LEFT] else 1)
+				get_viewport().set_input_as_handled()
+			return
 		match event.keycode:
 			KEY_CTRL:
 				_detalle = not _detalle
@@ -107,6 +121,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				diario_abierto = false
 			_:
 				return
+		if event.keycode != KEY_F:
+			panel_cambiado.emit(_detalle or diario_abierto, _detalle)
 		get_viewport().set_input_as_handled()
 
 func _texto(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float = -1) -> void:
@@ -182,15 +198,12 @@ func _dibujar() -> void:
 	var w := size.x / escala
 	var h := size.y / escala
 	# Expediente compacto inspirado en la referencia, sin logotipo.
-	_linea(Vector2(30, 38), Vector2(30, 187), Color(AMBAR, 0.55))
 	var carpeta := Color("c1a259")
 	_lienzo.draw_colored_polygon(PackedVector2Array([Vector2(57, 53), Vector2(62, 43), Vector2(79, 43), Vector2(85, 49), Vector2(106, 49), Vector2(106, 83), Vector2(57, 83)]), carpeta.darkened(0.22))
 	_lienzo.draw_colored_polygon(PackedVector2Array([Vector2(53, 57), Vector2(112, 57), Vector2(106, 91), Vector2(58, 91)]), carpeta)
 	_texto("CASO " + caso, Vector2(133, 59), _bold, 26, BLANCO)
 	_linea(Vector2(133, 70), Vector2(335, 70), Color(BLANCO, 0.65))
 	_texto("Archivo: " + archivo, Vector2(133, 98), MONO, 16, GRIS)
-	_texto("La verdad", Vector2(56, 145), MONO, 16, Color(GRIS, 0.6))
-	_texto("siempre deja rastro.", Vector2(56, 171), MONO, 16, Color(GRIS, 0.6))
 	# Objetivo en nota independiente.
 	_nota(Rect2(w - 420, 42, 378, 137))
 	_texto("OBJETIVO ACTUAL", Vector2(w - 398, 78), _bold, 26, TINTA)
@@ -206,18 +219,6 @@ func _dibujar() -> void:
 	_lienzo.draw_circle(Vector2(w / 2, h / 2), 2, Color(BLANCO, 0.65))
 	if not interaccion.is_empty():
 		_texto("[ E ]  " + interaccion, Vector2(w / 2 - 75, h / 2 + 42), _bold, 26, BLANCO)
-	# Ayuda: solamente este grupo desaparece al caminar.
-	var teclas := ["CTRL", "Q", "F"]
-	var acciones := ["PISTAS", "DIARIO", "LINTERNA"]
-	for i in range(3):
-		var y := h - 157 + i * 45
-		_lienzo.draw_rect(Rect2(46, y, 58, 32), Color(GRIS, _ayuda_alpha * 0.7), false)
-		_texto(teclas[i], Vector2(53, y + 22), MONO, 13, Color(BLANCO, _ayuda_alpha))
-		_texto(acciones[i], Vector2(122, y + 25), _bold, 26, Color(BLANCO, _ayuda_alpha))
-	_linea(Vector2(295, h - 157), Vector2(295, h - 34), Color(GRIS, _ayuda_alpha * 0.3))
-	_texto("Observa.", Vector2(318, h - 126), MONO, 14, Color(GRIS, _ayuda_alpha))
-	_texto("Analiza.", Vector2(318, h - 101), MONO, 14, Color(GRIS, _ayuda_alpha))
-	_texto("Conecta.", Vector2(318, h - 76), MONO, 14, Color(GRIS, _ayuda_alpha))
 	_dibujar_pistas(w, h)
 	if _detalle:
 		_dibujar_expediente(w, h)
@@ -227,7 +228,6 @@ func _dibujar() -> void:
 		_nota(Rect2(origen, Vector2(840, 540)))
 		_texto("DIARIO", origen + Vector2(35, 55), _bold, 34, TINTA)
 		_linea(origen + Vector2(420, 30), origen + Vector2(420, 490), Color(TINTA, 0.22))
-		_texto("Q / ESC  CERRAR", origen + Vector2(35, 511), MONO, 12, TINTA)
 
 func _dibujar_expediente(w: float, h: float) -> void:
 	_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.04, 0.06, 0.85))
@@ -257,7 +257,6 @@ func _dibujar_expediente(w: float, h: float) -> void:
 			medida *= minf(220.0 / medida.x, 130.0 / medida.y)
 			_lienzo.draw_texture_rect(pista.imagen, Rect2(origen + Vector2(425, 345), medida), false)
 		_texto("%02d / %02d" % [indice_pista + 1, pistas.size()], origen + Vector2(32, 479), MONO, 12, TINTA)
-	_texto("CTRL / ESC  CERRAR     RUEDA  SELECCIONAR PISTA", origen + Vector2(32, 519), MONO, 12, TINTA)
 
 func _dibujar_pistas(w: float, h: float) -> void:
 	var p := Vector2(w - 405, h - 220)
@@ -275,7 +274,6 @@ func _dibujar_pistas(w: float, h: float) -> void:
 		var pista := pistas[indice_pista]
 		var ancho := 210.0 if pista.imagen else 311.0
 		_texto(pista.titulo, p + Vector2(22, 93), _bold, 30, TINTA, ancho)
-		_texto("[ CTRL ] VER TODAS", p + Vector2(22, 125), MONO, 12, TINTA)
 		if pista.imagen:
 			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), BLANCO)
 			var zona := Rect2(p + Vector2(254, 63), Vector2(76, 64))
@@ -283,4 +281,3 @@ func _dibujar_pistas(w: float, h: float) -> void:
 			var medida := pista.imagen.get_size() * factor
 			_lienzo.draw_texture_rect(pista.imagen, Rect2(zona.position + (zona.size - medida) / 2, medida), false)
 	_linea(p + Vector2(22, 141), p + Vector2(333, 141), Color(TINTA, 0.2))
-	_texto("↑↓  RUEDA PARA CAMBIAR" if pistas.size() > 1 else "ARCHIVO DE EVIDENCIAS", p + Vector2(22, 164), MONO, 11, TINTA)
