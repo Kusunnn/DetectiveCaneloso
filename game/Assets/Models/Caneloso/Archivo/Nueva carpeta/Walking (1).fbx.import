@@ -8,7 +8,7 @@ path="res://.godot/imported/Walking (1).fbx-60afb9b5fac1351d9ac9e3419755da13.scn
 
 [deps]
 
-source_file="res://Nueva carpeta/Walking (1).fbx"
+source_file="res://Assets/Models/Caneloso/Archivo/Nueva carpeta/Walking (1).fbx"
 dest_files=["res://.godot/imported/Walking (1).fbx-60afb9b5fac1351d9ac9e3419755da13.scn"]
 
 [params]
@@ -43,7 +43,7 @@ _subresources={
 "animations": {
 "mixamo_com": {
 "save_to_file/enabled": true,
-"save_to_file/fallback_path": "res://anim_caminar.res",
+"save_to_file/fallback_path": "res://Assets/Models/Caneloso/Archivo/anim_caminar.res",
 "save_to_file/keep_custom_tracks": "",
 "save_to_file/path": "uid://8my1tmhwyv6w",
 "settings/loop_mode": 0,

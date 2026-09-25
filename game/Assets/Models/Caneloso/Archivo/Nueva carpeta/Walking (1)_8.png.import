@@ -14,7 +14,7 @@ generator_parameters={
 
 [deps]
 
-source_file="res://Nueva carpeta/Walking (1)_8.png"
+source_file="res://Assets/Models/Caneloso/Archivo/Nueva carpeta/Walking (1)_8.png"
 dest_files=["res://.godot/imported/Walking (1)_8.png-96daf167790c66d7b00327be957eac0d.s3tc.ctex"]
 
 [params]

@@ -23,4 +23,6 @@ _data = {
 transform = Transform3D(22222, 0, 0, 0, 22222, 0, 0, 0, 22222, 0, 0, 0)
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Walking (1)" unique_id=112135585]
-libraries/ = SubResource("AnimationLibrary_i3pqv")
+libraries = {
+&"": SubResource("AnimationLibrary_i3pqv")
+}
