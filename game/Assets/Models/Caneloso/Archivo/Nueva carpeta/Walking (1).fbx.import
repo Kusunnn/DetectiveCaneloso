@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://bn408engultuc"
-path="res://.godot/imported/Walking (1).fbx-60afb9b5fac1351d9ac9e3419755da13.scn"
+path="res://.godot/imported/Walking (1).fbx-228f0519381bfaf1a5b279f2905844d7.scn"
 
 [deps]
 
 source_file="res://Assets/Models/Caneloso/Archivo/Nueva carpeta/Walking (1).fbx"
-dest_files=["res://.godot/imported/Walking (1).fbx-60afb9b5fac1351d9ac9e3419755da13.scn"]
+dest_files=["res://.godot/imported/Walking (1).fbx-228f0519381bfaf1a5b279f2905844d7.scn"]
 
 [params]
 

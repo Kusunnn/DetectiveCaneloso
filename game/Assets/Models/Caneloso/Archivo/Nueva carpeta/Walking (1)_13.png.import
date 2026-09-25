@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bnltvhnwbvud2"
-path="res://.godot/imported/Walking (1)_13.png-b5c319927390d8e29f4e47dc291f1a54.ctex"
+path="res://.godot/imported/Walking (1)_13.png-248603f1a7dfc989e7a7638d273c0267.ctex"
 metadata={
 "vram_texture": false
 }
@@ -14,7 +14,7 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Models/Caneloso/Archivo/Nueva carpeta/Walking (1)_13.png"
-dest_files=["res://.godot/imported/Walking (1)_13.png-b5c319927390d8e29f4e47dc291f1a54.ctex"]
+dest_files=["res://.godot/imported/Walking (1)_13.png-248603f1a7dfc989e7a7638d273c0267.ctex"]
 
 [params]
 
