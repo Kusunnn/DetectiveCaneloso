@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://dd4o430kgktjx"]
+
+[ext_resource type="PackedScene" uid="uid://bn408engultuc" path="res://Nueva carpeta/Walking (1).fbx" id="1_2hs0m"]
+[ext_resource type="Animation" uid="uid://pmdsvabjcqe5" path="res://anim_agacharse.res" id="2_1jxqw"]
+[ext_resource type="Animation" uid="uid://dd57a1xdeyc5a" path="res://anim_caminar.res" id="2_onrkg"]
+[ext_resource type="Animation" uid="uid://cxh8p3f6ijnb7" path="res://anim_agarrar.res" id="3_dw050"]
+[ext_resource type="Animation" uid="uid://cg5mukctmut4v" path="res://anim_macarena.res" id="4_b26j0"]
+[ext_resource type="Animation" uid="uid://bff43vqokagb0" path="res://anim_muerte.res" id="5_n7ghd"]
+[ext_resource type="Animation" uid="uid://c4y4mhw8vsngj" path="res://anim_reposo.res" id="6_nvl01"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_i3pqv"]
+_data = {
+&"anim_agacharse": ExtResource("2_1jxqw"),
+&"anim_agarrar": ExtResource("3_dw050"),
+&"anim_caminar": ExtResource("2_onrkg"),
+&"anim_macarena": ExtResource("4_b26j0"),
+&"anim_muerte": ExtResource("5_n7ghd"),
+&"anim_reposo": ExtResource("6_nvl01")
+}
+
+[node name="Player" type="Node3D" unique_id=171374625]
+
+[node name="Walking (1)" parent="." unique_id=1528193495 instance=ExtResource("1_2hs0m")]
+transform = Transform3D(22222, 0, 0, 0, 22222, 0, 0, 0, 22222, 0, 0, 0)
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Walking (1)" unique_id=112135585]
+libraries/ = SubResource("AnimationLibrary_i3pqv")
