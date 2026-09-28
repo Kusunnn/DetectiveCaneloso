@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://da1lr16yek0bh"]
 
+[ext_resource type="PackedScene" uid="uid://dd4o430kgktjx" path="res://Assets/Models/Caneloso/Archivo/player.tscn" id="1_7qr73"]
 [ext_resource type="PackedScene" path="res://hud/hud.tscn" id="1_ar7rw"]
 [ext_resource type="Script" uid="uid://kuuyc8r7mpwl" path="res://Escenas/Interrogatorio/Jugador.cs" id="4_c73no"]
 [ext_resource type="Script" uid="uid://bcimcbvav5i6g" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="5_pista"]
@@ -244,6 +245,9 @@ bottom_radius = 0.13
 height = 0.35
 
 [node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
+
+[node name="Player" parent="." unique_id=171374625 instance=ExtResource("1_7qr73")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 0.5, -3)
 
 [node name="HUD" parent="." unique_id=993473331 instance=ExtResource("1_ar7rw")]
 
