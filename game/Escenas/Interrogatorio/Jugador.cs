@@ -10,6 +10,10 @@ public partial class Jugador : CharacterBody3D
 
 	private float _gravedad = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private Camera3D _camara;
+	private Camera3D _camaraTercera;
+	private SpringArm3D _brazoCamara;
+	private CuerpoDetective _cuerpo;
+	private bool _terceraPersona = false;
 	private Label _textoTutorial;
 	private Node _hud;
 
@@ -27,6 +31,11 @@ public partial class Jugador : CharacterBody3D
 	{
 		// Vinculamos la cámara de la escena
 		_camara = GetNode<Camera3D>("CamaraInterrogatorio");
+		_brazoCamara = GetNode<SpringArm3D>("BrazoCamara");
+		_camaraTercera = GetNode<Camera3D>("BrazoCamara/CamaraTerceraPersona");
+		_cuerpo = GetNodeOrNull<CuerpoDetective>("Modelo");
+		_brazoCamara.AddExcludedObject(GetRid()); // Que la cámara no choque con el propio jugador
+		AplicarPerspectiva();
 
 		// Rutas relativas al padre del Jugador, así funciona tanto si se ejecuta
 		// detective.tscn directamente como si está instanciada dentro de mundo.tscn
@@ -39,7 +48,7 @@ public partial class Jugador : CharacterBody3D
 		_tutorialActivo = !(GestorPartida.Instancia?.SaltarTutorial ?? false);
 		if (_tutorialActivo)
 		{
-			MostrarTutorial("Usa [W, A, S, D] para moverte y el ratón para mirar alrededor.");
+			MostrarTutorial("Usa [W, A, S, D] para moverte y el ratón para mirar alrededor. [V] cambia la cámara.");
 		}
 		else if (_textoTutorial != null)
 		{
@@ -68,11 +77,27 @@ public partial class Jugador : CharacterBody3D
 		{
 			RotateY(-eventoRaton.Relative.X * SensibilidadRaton);
 
+			float giroVertical = -eventoRaton.Relative.Y * SensibilidadRaton;
 			Vector3 rotacionCamara = _camara.Rotation;
-			rotacionCamara.X -= eventoRaton.Relative.Y * SensibilidadRaton;
-			rotacionCamara.X = Mathf.Clamp(rotacionCamara.X, -Mathf.Pi / 2.5f, Mathf.Pi / 2.5f);
+			rotacionCamara.X = Mathf.Clamp(rotacionCamara.X + giroVertical, -Mathf.Pi / 2.5f, Mathf.Pi / 2.5f);
 			_camara.Rotation = rotacionCamara;
+
+			// En tercera persona se inclina el brazo de la cámara, con un rango más corto para no atravesar el suelo
+			Vector3 rotacionBrazo = _brazoCamara.Rotation;
+			rotacionBrazo.X = Mathf.Clamp(rotacionBrazo.X + giroVertical, -1.1f, 0.5f);
+			_brazoCamara.Rotation = rotacionBrazo;
 		}
+
+		// Teclas del protagonista: V cambia de cámara; C, G, B y K reproducen sus animaciones
+		if (@event.IsActionPressed("cambiar_camara"))
+		{
+			_terceraPersona = !_terceraPersona;
+			AplicarPerspectiva();
+		}
+		else if (@event.IsActionPressed("agacharse")) _cuerpo?.HacerAccion(CuerpoDetective.Agacharse);
+		else if (@event.IsActionPressed("agarrar")) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
+		else if (@event.IsActionPressed("bailar")) _cuerpo?.HacerAccion(CuerpoDetective.Bailar);
+		else if (@event.IsActionPressed("morir")) _cuerpo?.HacerAccion(CuerpoDetective.Morir);
 
 		// Clic izquierdo para inspeccionar (solo con el cursor capturado, apuntando con la retícula)
 		if (@event is InputEventMouseButton clicIzq && clicIzq.ButtonIndex == MouseButton.Left && clicIzq.Pressed
@@ -81,6 +106,16 @@ public partial class Jugador : CharacterBody3D
 			IntentarInspeccionarObjeto();
 		}
 	}
+
+	// Activa la cámara de primera o tercera persona y muestra u oculta el cuerpo de Caneloso
+	private void AplicarPerspectiva()
+	{
+		_camara.Current = !_terceraPersona;
+		_camaraTercera.Current = _terceraPersona;
+		_cuerpo?.MostrarEnPrimeraPersona(!_terceraPersona);
+	}
+
+	private Camera3D CamaraActiva => _terceraPersona ? _camaraTercera : _camara;
 
 	private void AlCambiarPanel(bool abierto, bool expediente)
 	{
@@ -100,8 +135,11 @@ public partial class Jugador : CharacterBody3D
 		var espacioFisico = GetWorld3D().DirectSpaceState;
 		// Centro del viewport (no de la ventana), que es lo que esperan los métodos Project* de la cámara
 		Vector2 centroPantalla = GetViewport().GetVisibleRect().Size / 2;
-		Vector3 origen = _camara.ProjectRayOrigin(centroPantalla);
-		Vector3 destino = origen + _camara.ProjectRayNormal(centroPantalla) * DistanciaInteraccion;
+		// En tercera persona la cámara está detrás del detective, así que el rayo se alarga esa distancia
+		Camera3D camara = CamaraActiva;
+		float alcance = DistanciaInteraccion + (_terceraPersona ? camara.GlobalPosition.DistanceTo(_camara.GlobalPosition) : 0f);
+		Vector3 origen = camara.ProjectRayOrigin(centroPantalla);
+		Vector3 destino = origen + camara.ProjectRayNormal(centroPantalla) * alcance;
 
 		var query = PhysicsRayQueryParameters3D.Create(origen, destino);
 		query.Exclude = new Godot.Collections.Array<Rid> { GetRid() };
@@ -127,6 +165,7 @@ public partial class Jugador : CharacterBody3D
 		}
 
 		GD.Print("¡Pista encontrada: " + pista.Titulo + "!");
+		_cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
 		_pistasEncontradas.Add(pista);
 		_inspeccionRealizada = true;
 		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
@@ -188,7 +227,11 @@ public partial class Jugador : CharacterBody3D
 		// Esc lo gestiona el menú de pausa (MenuPausa), que libera y restaura el cursor
 
 		// Si el expediente está abierto, congelamos el movimiento del jugador
-		if (_expedienteAbierto) return;
+		if (_expedienteAbierto)
+		{
+			_cuerpo?.ActualizarMovimiento(false);
+			return;
+		}
 
 		Vector3 velocidadActual = Velocity;
 
@@ -221,6 +264,8 @@ public partial class Jugador : CharacterBody3D
 
 		Velocity = velocidadActual;
 		MoveAndSlide();
-		_hud.Call("actualizar_movimiento", new Vector2(Velocity.X, Velocity.Z).LengthSquared() > 0.001f);
+		bool moviendose = new Vector2(Velocity.X, Velocity.Z).LengthSquared() > 0.001f;
+		_hud.Call("actualizar_movimiento", moviendose);
+		_cuerpo?.ActualizarMovimiento(moviendose);
 	}
 }

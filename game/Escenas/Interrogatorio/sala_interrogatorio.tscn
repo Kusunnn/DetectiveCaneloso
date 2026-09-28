@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dd4o430kgktjx" path="res://Assets/Models/Caneloso/Archivo/player.tscn" id="1_7qr73"]
 [ext_resource type="PackedScene" path="res://hud/hud.tscn" id="1_ar7rw"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/CuerpoDetective.cs" id="10_cuerpo"]
 [ext_resource type="Script" uid="uid://kuuyc8r7mpwl" path="res://Escenas/Interrogatorio/Jugador.cs" id="4_c73no"]
 [ext_resource type="Script" uid="uid://bcimcbvav5i6g" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="5_pista"]
 [ext_resource type="PackedScene" path="res://Escenas/Interrogatorio/silla.tscn" id="6_silla"]
@@ -246,9 +247,6 @@ height = 0.35
 
 [node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
 
-[node name="Player" parent="." unique_id=171374625 instance=ExtResource("1_7qr73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 0.5, -3)
-
 [node name="HUD" parent="." unique_id=993473331 instance=ExtResource("1_ar7rw")]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=2045918174]
@@ -264,7 +262,18 @@ script = ExtResource("4_c73no")
 shape = SubResource("CapsuleShape3D_je0k8")
 
 [node name="CamaraInterrogatorio" type="Camera3D" parent="Jugador" unique_id=678562413]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82961166, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.15)
+
+[node name="BrazoCamara" type="SpringArm3D" parent="Jugador"]
+transform = Transform3D(1, 0, 0, 0, 0.9800666, 0.19866933, 0, -0.19866933, 0.9800666, 0.35, 0.8, 0)
+spring_length = 3.0
+margin = 0.1
+
+[node name="CamaraTerceraPersona" type="Camera3D" parent="Jugador/BrazoCamara"]
+
+[node name="Modelo" parent="Jugador" instance=ExtResource("1_7qr73")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -2, 0)
+script = ExtResource("10_cuerpo")
 
 [node name="MesaPista" type="StaticBody3D" parent="." unique_id=64876306]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -2)
