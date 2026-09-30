@@ -18,6 +18,7 @@
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_je0k8"]
+radius = 0.3
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_htv4u"]
 size = Vector3(1.6, 0.78, 0.9)
