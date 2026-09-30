@@ -1,0 +1,334 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="1_pista"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Puerta.cs" id="2_puerta"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_azulejo"]
+albedo_color = Color(0.72, 0.78, 0.72, 1)
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Mat_pared"]
+albedo_color = Color(0.62, 0.7, 0.62, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_techo"]
+albedo_color = Color(0.5, 0.55, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_casillero"]
+albedo_color = Color(0.32, 0.45, 0.38, 1)
+metallic = 0.6
+roughness = 0.45
+
+[sub_resource type="StandardMaterial3D" id="Mat_ranura"]
+albedo_color = Color(0.05, 0.06, 0.05, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_puerta"]
+albedo_color = Color(0.2, 0.26, 0.24, 1)
+metallic = 0.5
+roughness = 0.55
+
+[sub_resource type="StandardMaterial3D" id="Mat_banco"]
+albedo_color = Color(0.4, 0.28, 0.16, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_cinta"]
+albedo_color = Color(0.1, 0.08, 0.06, 1)
+metallic = 0.3
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_donas"]
+albedo_color = Color(0.95, 0.6, 0.72, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_tubo"]
+albedo_color = Color(0.9, 1, 0.9, 1)
+emission_enabled = true
+emission = Color(0.85, 1, 0.88, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="BoxMesh" id="Mesh_casilleros_a"]
+material = SubResource("Mat_casillero")
+size = Vector3(0.5, 1.9, 2.5)
+
+[sub_resource type="BoxMesh" id="Mesh_casilleros_b"]
+material = SubResource("Mat_casillero")
+size = Vector3(0.5, 1.9, 2.0)
+
+[sub_resource type="BoxMesh" id="Mesh_separador"]
+material = SubResource("Mat_ranura")
+size = Vector3(0.01, 1.9, 0.015)
+
+[sub_resource type="BoxMesh" id="Mesh_hueco_fondo"]
+material = SubResource("Mat_ranura")
+size = Vector3(0.02, 1.9, 0.5)
+
+[sub_resource type="BoxMesh" id="Mesh_hueco_lado"]
+material = SubResource("Mat_casillero")
+size = Vector3(0.5, 1.9, 0.02)
+
+[sub_resource type="BoxMesh" id="Mesh_repisa"]
+material = SubResource("Mat_casillero")
+size = Vector3(0.48, 0.02, 0.48)
+
+[sub_resource type="BoxMesh" id="Mesh_hoja_casillero"]
+material = SubResource("Mat_casillero")
+size = Vector3(0.03, 1.86, 0.48)
+
+[sub_resource type="BoxMesh" id="Mesh_hoja_puerta"]
+material = SubResource("Mat_puerta")
+size = Vector3(1, 2.1, 0.05)
+
+[sub_resource type="BoxMesh" id="Mesh_banco"]
+material = SubResource("Mat_banco")
+size = Vector3(0.4, 0.06, 2.4)
+
+[sub_resource type="BoxMesh" id="Mesh_pata_banco"]
+material = SubResource("Mat_ranura")
+size = Vector3(0.35, 0.42, 0.05)
+
+[sub_resource type="CylinderMesh" id="Mesh_cinta"]
+material = SubResource("Mat_cinta")
+top_radius = 0.06
+bottom_radius = 0.06
+height = 0.02
+
+[sub_resource type="BoxMesh" id="Mesh_donas"]
+material = SubResource("Mat_donas")
+size = Vector3(0.18, 0.12, 0.14)
+
+[sub_resource type="BoxMesh" id="Mesh_tubo"]
+material = SubResource("Mat_tubo")
+size = Vector3(0.1, 0.05, 1.4)
+
+[sub_resource type="BoxShape3D" id="Forma_casilleros_a"]
+size = Vector3(0.5, 1.9, 2.5)
+
+[sub_resource type="BoxShape3D" id="Forma_casilleros_b"]
+size = Vector3(0.5, 1.9, 2.0)
+
+[sub_resource type="BoxShape3D" id="Forma_hoja_casillero"]
+size = Vector3(0.06, 1.86, 0.48)
+
+[sub_resource type="BoxShape3D" id="Forma_cinta"]
+size = Vector3(0.2, 0.08, 0.2)
+
+[sub_resource type="BoxShape3D" id="Forma_puerta"]
+size = Vector3(1, 2.1, 0.14)
+
+[sub_resource type="BoxShape3D" id="Forma_banco"]
+size = Vector3(0.4, 0.45, 2.4)
+
+[sub_resource type="BoxShape3D" id="Forma_area"]
+size = Vector3(4.8, 3, 6)
+
+[node name="ZonaVestuario" type="Node3D"]
+
+[node name="Suelo" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 0, -0.1)
+use_collision = true
+size = Vector3(5, 1, 6.2)
+material = SubResource("Mat_azulejo")
+
+[node name="Techo" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 3.6, -0.1)
+use_collision = true
+size = Vector3(5, 0.2, 6.2)
+material = SubResource("Mat_techo")
+
+[node name="ParedOeste" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.2, 2, -0.1)
+use_collision = true
+size = Vector3(0.2, 3, 6.4)
+material = SubResource("Mat_pared")
+
+[node name="ParedSur" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 2, -3.1)
+use_collision = true
+size = Vector3(5.2, 3, 0.2)
+material = SubResource("Mat_pared")
+
+[node name="PuertaVestuario" type="StaticBody3D" parent="." node_paths=PackedStringArray("Bisagra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 0.5, 3.1)
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("2_puerta")
+Bloqueada = true
+MensajeBloqueada = "Vestuario: solo personal autorizado."
+Bisagra = NodePath("Bisagra")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PuertaVestuario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+shape = SubResource("Forma_puerta")
+
+[node name="Bisagra" type="Node3D" parent="PuertaVestuario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
+
+[node name="Hoja" type="MeshInstance3D" parent="PuertaVestuario/Bisagra"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.05, 0)
+mesh = SubResource("Mesh_hoja_puerta")
+
+[node name="Letrero" type="Label3D" parent="PuertaVestuario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 0.12)
+pixel_size = 0.004
+modulate = Color(0.9, 0.85, 0.7, 1)
+text = "VESTUARIO · SOLO PERSONAL"
+font_size = 40
+
+[node name="Casilleros" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.85, 0.5, 0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="ColisionA" type="CollisionShape3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -1.25)
+shape = SubResource("Forma_casilleros_a")
+
+[node name="ColisionB" type="CollisionShape3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 1.5)
+shape = SubResource("Forma_casilleros_b")
+
+[node name="BloqueA" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -1.25)
+mesh = SubResource("Mesh_casilleros_a")
+
+[node name="BloqueB" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 1.5)
+mesh = SubResource("Mesh_casilleros_b")
+
+[node name="Separadorm2" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, -2)
+mesh = SubResource("Mesh_separador")
+
+[node name="Separadorm1_5" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, -1.5)
+mesh = SubResource("Mesh_separador")
+
+[node name="Separadorm1" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, -1)
+mesh = SubResource("Mesh_separador")
+
+[node name="Separadorm0_5" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, -0.5)
+mesh = SubResource("Mesh_separador")
+
+[node name="Separador1" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, 1)
+mesh = SubResource("Mesh_separador")
+
+[node name="Separador1_5" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, 1.5)
+mesh = SubResource("Mesh_separador")
+
+[node name="Separador2" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, 2)
+mesh = SubResource("Mesh_separador")
+
+[node name="HuecoFondo" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.24, 0.95, 0.25)
+mesh = SubResource("Mesh_hueco_fondo")
+
+[node name="HuecoLado1" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.01)
+mesh = SubResource("Mesh_hueco_lado")
+
+[node name="HuecoLado2" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.49)
+mesh = SubResource("Mesh_hueco_lado")
+
+[node name="Repisa" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.25)
+mesh = SubResource("Mesh_repisa")
+
+[node name="BolsaDonas" type="MeshInstance3D" parent="Casilleros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1.17, 0.35)
+mesh = SubResource("Mesh_donas")
+
+[node name="Cinta" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 1.62, 0.18)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_pista")
+Id = "cinta"
+Titulo = "La cinta desaparecida"
+Descripcion = "La cinta de la grabadora, escondida en el casillero de Porky bajo una bolsa de donas."
+SeRecoge = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cinta"]
+shape = SubResource("Forma_cinta")
+
+[node name="Malla" type="MeshInstance3D" parent="Cinta"]
+mesh = SubResource("Mesh_cinta")
+
+[node name="CasilleroPorky" type="StaticBody3D" parent="." node_paths=PackedStringArray("Bisagra")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.58, 0.5, 0)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("2_puerta")
+Bisagra = NodePath("Bisagra")
+AnguloApertura = 100.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CasilleroPorky"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.25)
+shape = SubResource("Forma_hoja_casillero")
+
+[node name="Bisagra" type="Node3D" parent="CasilleroPorky"]
+
+[node name="Hoja" type="MeshInstance3D" parent="CasilleroPorky/Bisagra"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.25)
+mesh = SubResource("Mesh_hoja_casillero")
+
+[node name="Nombre" type="Label3D" parent="CasilleroPorky/Bisagra/Hoja"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.02, 0.55, 0)
+pixel_size = 0.003
+modulate = Color(0.95, 0.95, 0.9, 1)
+text = "PORKY"
+font_size = 40
+
+[node name="Banco" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2, 0.5, -0.4)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Banco"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.225, 0)
+shape = SubResource("Forma_banco")
+
+[node name="Asiento" type="MeshInstance3D" parent="Banco"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+mesh = SubResource("Mesh_banco")
+
+[node name="Pata1" type="MeshInstance3D" parent="Banco"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -1)
+mesh = SubResource("Mesh_pata_banco")
+
+[node name="Pata2" type="MeshInstance3D" parent="Banco"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 1)
+mesh = SubResource("Mesh_pata_banco")
+
+[node name="LuzSur" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 3.25, -1.5)
+light_color = Color(0.85, 1, 0.88, 1)
+light_energy = 1.2
+shadow_enabled = true
+omni_range = 6.0
+
+[node name="Tubo" type="MeshInstance3D" parent="LuzSur"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+mesh = SubResource("Mesh_tubo")
+
+[node name="LuzNorte" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 3.25, 1.5)
+light_color = Color(0.85, 1, 0.88, 1)
+light_energy = 1.2
+shadow_enabled = true
+omni_range = 6.0
+
+[node name="Tubo" type="MeshInstance3D" parent="LuzNorte"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+mesh = SubResource("Mesh_tubo")
+
+[node name="AreaVestuario" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaVestuario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 2, -0.1)
+shape = SubResource("Forma_area")

@@ -1,9 +1,12 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 
+// Detective Caneloso: movimiento, cámaras, linterna e interacción con lo que apunta la retícula.
+// No conoce el guion del caso: avisa con EvidenciaRegistrada y el caso decide qué pasa.
 public partial class Jugador : CharacterBody3D
 {
+	[Signal] public delegate void EvidenciaRegistradaEventHandler(string id);
+
 	[Export] public float Velocidad = 3.0f;
 	[Export] public float SensibilidadRaton = 0.003f;
 	[Export] public float DistanciaInteraccion = 3.0f;
@@ -13,62 +16,53 @@ public partial class Jugador : CharacterBody3D
 	private Camera3D _camaraTercera;
 	private SpringArm3D _brazoCamara;
 	private CuerpoDetective _cuerpo;
+	private SpotLight3D _linterna;
 	private bool _terceraPersona = false;
 	private Label _textoTutorial;
 	private Node _hud;
 
-	// Control de estados del tutorial y expediente
-	private bool _movimientoRealizado = false;
-	private bool _inspeccionRealizada = false;
-	private bool _expedienteAbierto = false;
-	private bool _tutorialActivo = true;
-	private int _idAviso = 0; // Evita que un temporizador viejo oculte un texto nuevo
+	private bool _panelAbierto = false;   // Diario o expediente del HUD
+	private bool _bloqueado = false;      // Diálogo en curso
+	private int _idAviso = 0;             // Evita que un temporizador viejo oculte un texto nuevo
+	private IInteractuable _apuntado;
 
-	// Pistas encontradas, en el orden en que se inspeccionaron
-	private readonly List<ObjetoPista> _pistasEncontradas = new List<ObjetoPista>();
+	public bool SeHaMovido { get; private set; } = false;
+	public bool LinternaEncendida { get; private set; } = false;
 
 	public override void _Ready()
 	{
-		// Vinculamos la cámara de la escena
+		AddToGroup("jugador");
+
 		_camara = GetNode<Camera3D>("CamaraInterrogatorio");
 		_brazoCamara = GetNode<SpringArm3D>("BrazoCamara");
 		_camaraTercera = GetNode<Camera3D>("BrazoCamara/CamaraTerceraPersona");
 		_cuerpo = GetNodeOrNull<CuerpoDetective>("Modelo");
+		_linterna = GetNodeOrNull<SpotLight3D>("CamaraInterrogatorio/Linterna");
 		_brazoCamara.AddExcludedObject(GetRid()); // Que la cámara no choque con el propio jugador
 		AplicarPerspectiva();
 
-		// Rutas relativas al padre del Jugador, así funciona tanto si se ejecuta
-		// detective.tscn directamente como si está instanciada dentro de mundo.tscn
+		// Rutas relativas al padre del Jugador (la escena del caso)
 		Node sala = GetParent();
 		_textoTutorial = sala.GetNodeOrNull<Label>("CanvasLayer/TextoTutorial");
+		if (_textoTutorial != null) _textoTutorial.Visible = false;
 		_hud = sala.GetNode("HUD");
 		_hud.Connect("panel_cambiado", Callable.From<bool, bool>(AlCambiarPanel));
+		_hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
+		AlCambiarLinterna(false);
 
-		// Si al empezar la partida se eligió "Omitir tutorial" (o ya se completó), no mostramos indicaciones
-		_tutorialActivo = !(GestorPartida.Instancia?.SaltarTutorial ?? false);
-		if (_tutorialActivo)
-		{
-			MostrarTutorial("Usa [W, A, S, D] para moverte y el ratón para mirar alrededor. [V] cambia la cámara.");
-		}
-		else if (_textoTutorial != null)
-		{
-			_textoTutorial.Visible = false;
-		}
-
-		// Capturar el ratón al iniciar el juego
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
 
 	public override void _Input(InputEvent @event)
 	{
-		// Si el expediente está abierto, bloqueamos el resto de acciones del juego
-		if (_expedienteAbierto) return;
+		// Con el diario abierto o en un diálogo, el detective no hace nada más
+		if (_panelAbierto || _bloqueado) return;
 
 		// Alternar el cursor con Clic Derecho
 		if (@event is InputEventMouseButton boton && boton.ButtonIndex == MouseButton.Right && boton.Pressed)
 		{
-			Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured 
-				? Input.MouseModeEnum.Visible 
+			Input.MouseMode = Input.MouseMode == Input.MouseModeEnum.Captured
+				? Input.MouseModeEnum.Visible
 				: Input.MouseModeEnum.Captured;
 		}
 
@@ -99,11 +93,16 @@ public partial class Jugador : CharacterBody3D
 		else if (@event.IsActionPressed("bailar")) _cuerpo?.HacerAccion(CuerpoDetective.Bailar);
 		else if (@event.IsActionPressed("morir")) _cuerpo?.HacerAccion(CuerpoDetective.Morir);
 
-		// Clic izquierdo para inspeccionar (solo con el cursor capturado, apuntando con la retícula)
-		if (@event is InputEventMouseButton clicIzq && clicIzq.ButtonIndex == MouseButton.Left && clicIzq.Pressed
-			&& Input.MouseMode == Input.MouseModeEnum.Captured)
+		// [E] o clic izquierdo: usar lo que apunta la retícula
+		bool clic = @event is InputEventMouseButton clicIzq && clicIzq.ButtonIndex == MouseButton.Left && clicIzq.Pressed;
+		if ((clic || @event.IsActionPressed("interactuar")) && Input.MouseMode == Input.MouseModeEnum.Captured)
 		{
-			IntentarInspeccionarObjeto();
+			IInteractuable objetivo = BuscarInteractuable();
+			if (objetivo != null)
+			{
+				GetViewport().SetInputAsHandled();
+				objetivo.Interactuar(this);
+			}
 		}
 	}
 
@@ -119,21 +118,40 @@ public partial class Jugador : CharacterBody3D
 
 	private void AlCambiarPanel(bool abierto, bool expediente)
 	{
-		_expedienteAbierto = abierto;
+		_panelAbierto = abierto;
 		Input.MouseMode = abierto ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Captured;
-		if (abierto)
-		{
-			Velocity = Vector3.Zero;
-			_hud.Call("actualizar_movimiento", false);
-		}
-		if (expediente && _tutorialActivo && _inspeccionRealizada)
-			FinalizarTutorial();
+		if (abierto) Detenerse();
 	}
 
-	private void IntentarInspeccionarObjeto()
+	private void AlCambiarLinterna(bool encendida)
+	{
+		LinternaEncendida = encendida;
+		if (_linterna != null) _linterna.Visible = encendida;
+		// Lo que solo se ve con luz directa (huellas...) aparece con la linterna
+		foreach (Node nodo in GetTree().GetNodesInGroup("solo_con_linterna"))
+		{
+			if (nodo is Node3D objeto) objeto.Visible = encendida;
+		}
+	}
+
+	// Lo usa la ventana de diálogo: congela al detective mientras se habla
+	public void Bloquear(bool bloqueado)
+	{
+		_bloqueado = bloqueado;
+		if (bloqueado) Detenerse();
+	}
+
+	private void Detenerse()
+	{
+		Velocity = Vector3.Zero;
+		_hud.Call("actualizar_movimiento", false);
+		_cuerpo?.ActualizarMovimiento(false);
+	}
+
+	// Rayo desde el centro de la cámara activa; devuelve lo que se puede usar, o null
+	private IInteractuable BuscarInteractuable()
 	{
 		var espacioFisico = GetWorld3D().DirectSpaceState;
-		// Centro del viewport (no de la ventana), que es lo que esperan los métodos Project* de la cámara
 		Vector2 centroPantalla = GetViewport().GetVisibleRect().Size / 2;
 		// En tercera persona la cámara está detrás del detective, así que el rayo se alarga esa distancia
 		Camera3D camara = CamaraActiva;
@@ -144,56 +162,31 @@ public partial class Jugador : CharacterBody3D
 		var query = PhysicsRayQueryParameters3D.Create(origen, destino);
 		query.Exclude = new Godot.Collections.Array<Rid> { GetRid() };
 		var resultado = espacioFisico.IntersectRay(query);
-
-		if (resultado.Count == 0)
-		{
-			GD.Print("Clic al aire...");
-			return;
-		}
-
-		// Solo cuentan los objetos que tienen el script ObjetoPista (mesa, grabadora...)
-		if (resultado["collider"].As<Node>() is not ObjetoPista pista)
-		{
-			GD.Print("Aquí no hay nada relevante.");
-			return;
-		}
-
-		if (!pista.Inspeccionar())
-		{
-			GD.Print("Ya examinaste: " + pista.Titulo);
-			return;
-		}
-
-		GD.Print("¡Pista encontrada: " + pista.Titulo + "!");
-		_cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
-		_pistasEncontradas.Add(pista);
-		_inspeccionRealizada = true;
-		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
-		_hud.Call("registrar_pista", pista.GetPath().ToString(), pista.Titulo, pista.Descripcion);
-
-		if (_tutorialActivo)
-		{
-			MostrarTutorial(_pistasEncontradas.Count == 1
-				? "¡Pista encontrada! Presiona CTRL para abrir el expediente."
-				: "Nueva pista: " + pista.Titulo + ". Presiona CTRL para abrir el expediente.");
-		}
-		else
-		{
-			MostrarAviso("Nueva pista: " + pista.Titulo + ". Presiona CTRL para revisarla.", 4.0);
-		}
+		if (resultado.Count == 0) return null;
+		return resultado["collider"].As<Node>() as IInteractuable;
 	}
 
-	// Indicación fija del tutorial (solo si el tutorial está activo)
-	private void MostrarTutorial(string texto)
+	// Añade una evidencia al panel de pistas y avisa al caso
+	public void RegistrarEvidencia(string id, string titulo, string descripcion, bool animar = true)
 	{
-		if (!_tutorialActivo || _textoTutorial == null) return;
+		bool nueva = _hud.Call("registrar_pista", id, titulo, descripcion).AsBool();
+		if (!nueva) return;
+		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
+		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
+		EmitSignal(SignalName.EvidenciaRegistrada, id);
+	}
+
+	// Indicación del tutorial: se queda en pantalla hasta la siguiente
+	public void MostrarIndicacion(string texto)
+	{
+		if (_textoTutorial == null) return;
 		_idAviso++;
 		_textoTutorial.Text = texto;
 		_textoTutorial.Visible = true;
 	}
 
 	// Mensaje temporal que se oculta solo después de unos segundos
-	private void MostrarAviso(string texto, double segundos)
+	public void MostrarAviso(string texto, double segundos)
 	{
 		if (_textoTutorial == null) return;
 		int id = ++_idAviso;
@@ -209,25 +202,21 @@ public partial class Jugador : CharacterBody3D
 		};
 	}
 
-	private void FinalizarTutorial()
+	public override void _Process(double delta)
 	{
-		_tutorialActivo = false;
-		MostrarAviso("Tutorial completado. Sigue investigando la sala.", 4.0);
-
-		// Guardamos en la partida que el tutorial ya no hace falta
-		if (GestorPartida.Instancia != null)
+		// El HUD muestra "[ E ] acción" cuando la retícula apunta a algo usable
+		IInteractuable apuntado = (_panelAbierto || _bloqueado) ? null : BuscarInteractuable();
+		if (apuntado != _apuntado)
 		{
-			GestorPartida.Instancia.SaltarTutorial = true;
-			GestorPartida.Instancia.GuardarPartida();
+			_apuntado = apuntado;
+			_hud.Set("interaccion", apuntado?.TextoAccion ?? "");
 		}
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
 		// Esc lo gestiona el menú de pausa (MenuPausa), que libera y restaura el cursor
-
-		// Si el expediente está abierto, congelamos el movimiento del jugador
-		if (_expedienteAbierto)
+		if (_panelAbierto || _bloqueado)
 		{
 			_cuerpo?.ActualizarMovimiento(false);
 			return;
@@ -245,16 +234,7 @@ public partial class Jugador : CharacterBody3D
 		{
 			velocidadActual.X = direccion.X * Velocidad;
 			velocidadActual.Z = direccion.Z * Velocidad;
-
-			// Actualizar el tutorial al dar el primer paso
-			if (!_movimientoRealizado && (Mathf.Abs(entrada.X) > 0 || Mathf.Abs(entrada.Y) > 0))
-			{
-				_movimientoRealizado = true;
-				if (!_inspeccionRealizada)
-				{
-					MostrarTutorial("Acércate a la mesa, apunta con el punto central y haz Clic Izquierdo para examinarla.");
-				}
-			}
+			SeHaMovido = true;
 		}
 		else
 		{

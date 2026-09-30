@@ -1,0 +1,372 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="1_pista"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/PuntoInteraccion.cs" id="2_punto"]
+[ext_resource type="PackedScene" path="res://Assets/Models/porky.fbx" id="3_porky"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_suelo"]
+albedo_color = Color(0.3, 0.19, 0.1, 1)
+roughness = 0.75
+
+[sub_resource type="StandardMaterial3D" id="Mat_pared"]
+albedo_color = Color(0.42, 0.33, 0.22, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_techo"]
+albedo_color = Color(0.15, 0.12, 0.09, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_mostrador"]
+albedo_color = Color(0.24, 0.14, 0.07, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_libro"]
+albedo_color = Color(0.45, 0.08, 0.07, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_corcho"]
+albedo_color = Color(0.58, 0.42, 0.25, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_papel"]
+albedo_color = Color(0.9, 0.88, 0.78, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_archivador"]
+albedo_color = Color(0.35, 0.37, 0.36, 1)
+metallic = 0.6
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_verde"]
+albedo_color = Color(0.1, 0.35, 0.18, 1)
+metallic = 0.4
+roughness = 0.4
+cull_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="Mat_uniforme"]
+albedo_color = Color(0.1, 0.12, 0.25, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_piel"]
+albedo_color = Color(0.72, 0.56, 0.42, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_lamina"]
+albedo_color = Color(0.15, 0.13, 0.1, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_mostrador"]
+material = SubResource("Mat_mostrador")
+size = Vector3(3.2, 1.1, 0.6)
+
+[sub_resource type="BoxMesh" id="Mesh_libro"]
+material = SubResource("Mat_libro")
+size = Vector3(0.32, 0.05, 0.24)
+
+[sub_resource type="BoxMesh" id="Mesh_corcho"]
+material = SubResource("Mat_corcho")
+size = Vector3(1.6, 1.0, 0.05)
+
+[sub_resource type="BoxMesh" id="Mesh_nota"]
+material = SubResource("Mat_papel")
+size = Vector3(0.22, 0.28, 0.01)
+
+[sub_resource type="BoxMesh" id="Mesh_archivador"]
+material = SubResource("Mat_archivador")
+size = Vector3(0.55, 1.3, 0.6)
+
+[sub_resource type="BoxMesh" id="Mesh_escritorio"]
+material = SubResource("Mat_mostrador")
+size = Vector3(1.6, 0.78, 0.8)
+
+[sub_resource type="CylinderMesh" id="Mesh_pantalla_verde"]
+material = SubResource("Mat_verde")
+top_radius = 0.05
+bottom_radius = 0.16
+height = 0.14
+cap_bottom = false
+
+[sub_resource type="CapsuleMesh" id="Mesh_cuerpo_comisario"]
+material = SubResource("Mat_uniforme")
+radius = 0.28
+height = 1.25
+
+[sub_resource type="SphereMesh" id="Mesh_cabeza_comisario"]
+material = SubResource("Mat_piel")
+radius = 0.2
+height = 0.38
+
+[sub_resource type="CylinderMesh" id="Mesh_gorra"]
+material = SubResource("Mat_uniforme")
+top_radius = 0.2
+bottom_radius = 0.21
+height = 0.12
+
+[sub_resource type="BoxMesh" id="Mesh_lamina"]
+material = SubResource("Mat_lamina")
+size = Vector3(0.05, 0.03, 1.7)
+
+[sub_resource type="BoxShape3D" id="Forma_mostrador"]
+size = Vector3(3.2, 1.1, 0.6)
+
+[sub_resource type="BoxShape3D" id="Forma_libro"]
+size = Vector3(0.42, 0.14, 0.34)
+
+[sub_resource type="BoxShape3D" id="Forma_corcho"]
+size = Vector3(1.6, 1.0, 0.1)
+
+[sub_resource type="BoxShape3D" id="Forma_archivadores"]
+size = Vector3(1.8, 1.3, 0.6)
+
+[sub_resource type="BoxShape3D" id="Forma_escritorio"]
+size = Vector3(1.6, 0.78, 0.8)
+
+[sub_resource type="CapsuleShape3D" id="Forma_npc"]
+radius = 0.35
+height = 1.4
+
+[sub_resource type="BoxShape3D" id="Forma_area"]
+size = Vector3(7, 3, 9)
+
+[node name="ZonaRecepcion" type="Node3D"]
+
+[node name="Suelo" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 0, 2.5)
+use_collision = true
+size = Vector3(7.4, 1, 9.4)
+material = SubResource("Mat_suelo")
+
+[node name="Techo" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 3.6, 2.5)
+use_collision = true
+size = Vector3(7.4, 0.2, 9.4)
+material = SubResource("Mat_techo")
+
+[node name="ParedNorte" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2, 7.1)
+use_collision = true
+size = Vector3(7.4, 3, 0.2)
+material = SubResource("Mat_pared")
+
+[node name="ParedSur" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2, -2.1)
+use_collision = true
+size = Vector3(7.4, 3, 0.2)
+material = SubResource("Mat_pared")
+
+[node name="ParedOesteSur" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.9, 2, 0.5)
+use_collision = true
+size = Vector3(0.2, 3, 5.4)
+material = SubResource("Mat_pared")
+
+[node name="ParedOesteNorte" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.9, 2, 6.3)
+use_collision = true
+size = Vector3(0.2, 3, 1.8)
+material = SubResource("Mat_pared")
+
+[node name="ParedEste" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.1, 2, 2.5)
+use_collision = true
+size = Vector3(0.2, 3, 9.4)
+material = SubResource("Mat_pared")
+
+[node name="Ventana" type="CSGBox3D" parent="ParedEste"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 1)
+operation = 2
+size = Vector3(0.4, 1.2, 1.8)
+
+[node name="Lamina0" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 1.75, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="Lamina1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 1.89, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="Lamina2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.03, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="Lamina3" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.17, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="Lamina4" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.31, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="Lamina5" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.45, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="Lamina6" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.59, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="Lamina7" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.73, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="Lamina8" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.87, 3.5)
+mesh = SubResource("Mesh_lamina")
+
+[node name="LuzFarola" type="SpotLight3D" parent="."]
+transform = Transform3D(0, -0.2588, 0.9659, 0, 0.9659, 0.2588, -1, 0, 0, 23.5, 3.2, 3.5)
+light_color = Color(1, 0.55, 0.2, 1)
+light_energy = 6.0
+shadow_enabled = true
+spot_range = 12.0
+spot_angle = 30.0
+
+[node name="Mostrador" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.2, 0.5, 0.8)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mostrador"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("Forma_mostrador")
+
+[node name="Malla" type="MeshInstance3D" parent="Mostrador"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+mesh = SubResource("Mesh_mostrador")
+
+[node name="LibroTurnos" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.4, 1.625, 0.8)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_pista")
+Id = "libro_turnos"
+Titulo = "Libro de turnos"
+Descripcion = "Eriz (conserje): salida a la 1:00, firmado. Guardia de 2:00 a 4:00: agente Porky, puesto en recepción. Nadie más firmó esa noche."
+SeRecoge = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LibroTurnos"]
+shape = SubResource("Forma_libro")
+
+[node name="Malla" type="MeshInstance3D" parent="LibroTurnos"]
+mesh = SubResource("Mesh_libro")
+
+[node name="Tablon" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2, -1.95)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_pista")
+Titulo = "Tablón de avisos"
+Descripcion = "Tablón de avisos: el torneo de bolos de la comisaría, un gato perdido y el turno de limpieza. Nada que ver con la cinta."
+EsEvidencia = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tablon"]
+shape = SubResource("Forma_corcho")
+
+[node name="Malla" type="MeshInstance3D" parent="Tablon"]
+mesh = SubResource("Mesh_corcho")
+
+[node name="Nota1" type="MeshInstance3D" parent="Tablon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.2, 0.035)
+mesh = SubResource("Mesh_nota")
+
+[node name="Nota2" type="MeshInstance3D" parent="Tablon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, -0.15, 0.035)
+mesh = SubResource("Mesh_nota")
+
+[node name="Nota3" type="MeshInstance3D" parent="Tablon"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.18, 0.035)
+mesh = SubResource("Mesh_nota")
+
+[node name="Archivadores" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.5, 6.6)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Archivadores"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("Forma_archivadores")
+
+[node name="Archivador1" type="MeshInstance3D" parent="Archivadores"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.65, 0)
+mesh = SubResource("Mesh_archivador")
+
+[node name="Archivador2" type="MeshInstance3D" parent="Archivadores"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+mesh = SubResource("Mesh_archivador")
+
+[node name="Archivador3" type="MeshInstance3D" parent="Archivadores"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.65, 0)
+mesh = SubResource("Mesh_archivador")
+
+[node name="Escritorio" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3, 0.5, 5.4)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Escritorio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39, 0)
+shape = SubResource("Forma_escritorio")
+
+[node name="Malla" type="MeshInstance3D" parent="Escritorio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39, 0)
+mesh = SubResource("Mesh_escritorio")
+
+[node name="PantallaLampara" type="MeshInstance3D" parent="Escritorio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.05, 0)
+mesh = SubResource("Mesh_pantalla_verde")
+
+[node name="LuzLampara" type="OmniLight3D" parent="Escritorio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.95, 0)
+light_color = Color(1, 0.85, 0.55, 1)
+light_energy = 1.2
+omni_range = 3.0
+
+[node name="Porky" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.2, 0.5, -0.3)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("2_punto")
+Accion = "Hablar con Porky"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Porky"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("Forma_npc")
+
+[node name="Modelo" parent="Porky" instance=ExtResource("3_porky")]
+transform = Transform3D(3.5, 0, 0, 0, 3.5, 0, 0, 0, 3.5, 0, 0, 0)
+
+[node name="Light" parent="Porky/Modelo"]
+visible = false
+
+[node name="Comisario" type="StaticBody3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 19.3, 0.5, 6.3)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("2_punto")
+Accion = "Hablar con el comisario"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Comisario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("Forma_npc")
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Comisario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.63, 0)
+mesh = SubResource("Mesh_cuerpo_comisario")
+
+[node name="Cabeza" type="MeshInstance3D" parent="Comisario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+mesh = SubResource("Mesh_cabeza_comisario")
+
+[node name="Gorra" type="MeshInstance3D" parent="Comisario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.63, 0)
+mesh = SubResource("Mesh_gorra")
+
+[node name="LuzTecho" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.2, 2.5)
+light_color = Color(1, 0.72, 0.45, 1)
+light_energy = 1.3
+shadow_enabled = true
+omni_range = 9.0
+
+[node name="AreaRecepcion" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaRecepcion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2, 2.5)
+shape = SubResource("Forma_area")
