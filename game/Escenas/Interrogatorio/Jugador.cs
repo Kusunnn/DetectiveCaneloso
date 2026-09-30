@@ -88,14 +88,14 @@ public partial class Jugador : CharacterBody3D
 			_brazoCamara.Rotation = rotacionBrazo;
 		}
 
-		// Teclas del protagonista: V cambia de cámara; C, G, B y K reproducen sus animaciones
+		// Teclas del protagonista: V cambia de cámara; C agacharse, B bailar y K caerse.
+		// La animación de agarrar no tiene tecla: se reproduce al tomar una pista.
 		if (@event.IsActionPressed("cambiar_camara"))
 		{
 			_terceraPersona = !_terceraPersona;
 			AplicarPerspectiva();
 		}
 		else if (@event.IsActionPressed("agacharse")) _cuerpo?.HacerAccion(CuerpoDetective.Agacharse);
-		else if (@event.IsActionPressed("agarrar")) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
 		else if (@event.IsActionPressed("bailar")) _cuerpo?.HacerAccion(CuerpoDetective.Bailar);
 		else if (@event.IsActionPressed("morir")) _cuerpo?.HacerAccion(CuerpoDetective.Morir);
 
