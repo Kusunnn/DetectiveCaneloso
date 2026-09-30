@@ -24,7 +24,7 @@ public partial class VentanaDialogo : CanvasLayer
 
 	public override void _Ready()
 	{
-		Layer = 5;
+		Layer = 10; // Por encima del HUD
 		ConstruirInterfaz();
 		_caja.Hide();
 	}

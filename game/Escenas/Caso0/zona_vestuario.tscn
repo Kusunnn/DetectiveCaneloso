@@ -1,7 +1,9 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="1_pista"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/Puerta.cs" id="2_puerta"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e1"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Puerta.cs" id="e2"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e3"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso0/casillero.tscn" id="e4"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_azulejo"]
 albedo_color = Color(0.72, 0.78, 0.72, 1)
@@ -11,16 +13,11 @@ roughness = 0.35
 albedo_color = Color(0.62, 0.7, 0.62, 1)
 roughness = 0.8
 
+[sub_resource type="StandardMaterial3D" id="Mat_franja"]
+albedo_color = Color(0.3, 0.45, 0.38, 1)
+
 [sub_resource type="StandardMaterial3D" id="Mat_techo"]
 albedo_color = Color(0.5, 0.55, 0.5, 1)
-
-[sub_resource type="StandardMaterial3D" id="Mat_casillero"]
-albedo_color = Color(0.32, 0.45, 0.38, 1)
-metallic = 0.6
-roughness = 0.45
-
-[sub_resource type="StandardMaterial3D" id="Mat_ranura"]
-albedo_color = Color(0.05, 0.06, 0.05, 1)
 
 [sub_resource type="StandardMaterial3D" id="Mat_puerta"]
 albedo_color = Color(0.2, 0.26, 0.24, 1)
@@ -29,6 +26,9 @@ roughness = 0.55
 
 [sub_resource type="StandardMaterial3D" id="Mat_banco"]
 albedo_color = Color(0.4, 0.28, 0.16, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_negro"]
+albedo_color = Color(0.05, 0.06, 0.05, 1)
 
 [sub_resource type="StandardMaterial3D" id="Mat_cinta"]
 albedo_color = Color(0.1, 0.08, 0.06, 1)
@@ -44,79 +44,265 @@ emission_enabled = true
 emission = Color(0.85, 1, 0.88, 1)
 emission_energy_multiplier = 3.0
 
-[sub_resource type="BoxMesh" id="Mesh_casilleros_a"]
-material = SubResource("Mat_casillero")
-size = Vector3(0.5, 1.9, 2.5)
+[sub_resource type="StandardMaterial3D" id="Mat_toalla"]
+albedo_color = Color(0.85, 0.85, 0.95, 1)
 
-[sub_resource type="BoxMesh" id="Mesh_casilleros_b"]
-material = SubResource("Mat_casillero")
-size = Vector3(0.5, 1.9, 2.0)
+[sub_resource type="StandardMaterial3D" id="Mat_toalla2"]
+albedo_color = Color(0.9, 0.55, 0.3, 1)
 
-[sub_resource type="BoxMesh" id="Mesh_separador"]
-material = SubResource("Mat_ranura")
-size = Vector3(0.01, 1.9, 0.015)
+[sub_resource type="StandardMaterial3D" id="Mat_bota"]
+albedo_color = Color(0.08, 0.07, 0.06, 1)
+roughness = 0.4
 
-[sub_resource type="BoxMesh" id="Mesh_hueco_fondo"]
-material = SubResource("Mat_ranura")
-size = Vector3(0.02, 1.9, 0.5)
+[sub_resource type="StandardMaterial3D" id="Mat_barro"]
+albedo_color = Color(0.25, 0.16, 0.08, 1)
+roughness = 1.0
 
-[sub_resource type="BoxMesh" id="Mesh_hueco_lado"]
-material = SubResource("Mat_casillero")
-size = Vector3(0.5, 1.9, 0.02)
+[sub_resource type="StandardMaterial3D" id="Mat_espejo"]
+albedo_color = Color(0.6, 0.65, 0.65, 1)
+metallic = 1.0
+roughness = 0.05
 
-[sub_resource type="BoxMesh" id="Mesh_repisa"]
-material = SubResource("Mat_casillero")
-size = Vector3(0.48, 0.02, 0.48)
+[sub_resource type="StandardMaterial3D" id="Mat_loza"]
+albedo_color = Color(0.92, 0.93, 0.94, 1)
+roughness = 0.2
 
-[sub_resource type="BoxMesh" id="Mesh_hoja_casillero"]
-material = SubResource("Mat_casillero")
-size = Vector3(0.03, 1.86, 0.48)
+[sub_resource type="StandardMaterial3D" id="Mat_agua"]
+albedo_color = Color(0.4, 0.5, 0.55, 0.5)
+transparency = 1
+metallic = 0.6
+roughness = 0.05
 
-[sub_resource type="BoxMesh" id="Mesh_hoja_puerta"]
+[sub_resource type="StandardMaterial3D" id="Mat_papel"]
+albedo_color = Color(0.9, 0.9, 0.82, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_uniforme"]
+albedo_color = Color(0.12, 0.14, 0.28, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_casco"]
+albedo_color = Color(0.7, 0.1, 0.1, 1)
+metallic = 0.3
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="Mat_madera"]
+albedo_color = Color(0.5, 0.35, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_caramelo"]
+albedo_color = Color(0.9, 0.3, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_radio"]
+albedo_color = Color(0.3, 0.25, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_candado"]
+albedo_color = Color(0.8, 0.7, 0.3, 1)
+metallic = 1.0
+roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="Mat_cesto"]
+albedo_color = Color(0.6, 0.55, 0.4, 1)
+
+[sub_resource type="BoxMesh" id="Box_4p8_0p12_0p02_Mat_franja"]
+material = SubResource("Mat_franja")
+size = Vector3(4.8, 0.12, 0.02)
+
+[sub_resource type="BoxMesh" id="Box_0p02_0p12_6_Mat_franja"]
+material = SubResource("Mat_franja")
+size = Vector3(0.02, 0.12, 6)
+
+[sub_resource type="BoxMesh" id="Box_1p9_0p12_0p02_Mat_franja"]
+material = SubResource("Mat_franja")
+size = Vector3(1.9, 0.12, 0.02)
+
+[sub_resource type="BoxShape3D" id="Shape_1_2p1_0p14"]
+size = Vector3(1, 2.1, 0.14)
+
+[sub_resource type="BoxMesh" id="Box_1_2p1_0p05_Mat_puerta"]
 material = SubResource("Mat_puerta")
 size = Vector3(1, 2.1, 0.05)
 
-[sub_resource type="BoxMesh" id="Mesh_banco"]
-material = SubResource("Mat_banco")
-size = Vector3(0.4, 0.06, 2.4)
+[sub_resource type="BoxMesh" id="Box_0p12_0p03_0p04_Mat_candado"]
+material = SubResource("Mat_candado")
+size = Vector3(0.12, 0.03, 0.04)
 
-[sub_resource type="BoxMesh" id="Mesh_pata_banco"]
-material = SubResource("Mat_ranura")
-size = Vector3(0.35, 0.42, 0.05)
+[sub_resource type="BoxMesh" id="Box_0p18_0p04_0p07_Mat_toalla2"]
+material = SubResource("Mat_toalla2")
+size = Vector3(0.18, 0.04, 0.07)
 
-[sub_resource type="CylinderMesh" id="Mesh_cinta"]
+[sub_resource type="CylinderMesh" id="Cyl_0p04_0p05_0p2_Mat_agua"]
+material = SubResource("Mat_agua")
+top_radius = 0.04
+bottom_radius = 0.05
+height = 0.2
+
+[sub_resource type="BoxMesh" id="Box_0p01_0p15_0p2_Mat_papel"]
+material = SubResource("Mat_papel")
+size = Vector3(0.01, 0.15, 0.2)
+
+[sub_resource type="CylinderMesh" id="Cyl_0p02_0p02_0p8_Mat_negro"]
+material = SubResource("Mat_negro")
+top_radius = 0.02
+bottom_radius = 0.02
+height = 0.8
+
+[sub_resource type="BoxMesh" id="Box_0p18_0p12_0p14_Mat_donas"]
+material = SubResource("Mat_donas")
+size = Vector3(0.18, 0.12, 0.14)
+
+[sub_resource type="BoxMesh" id="Box_0p03_0p08_0p06_Mat_candado"]
+material = SubResource("Mat_candado")
+size = Vector3(0.03, 0.08, 0.06)
+
+[sub_resource type="CapsuleMesh" id="Mesh_uniforme"]
+material = SubResource("Mat_uniforme")
+radius = 0.15
+height = 0.9
+
+[sub_resource type="SphereMesh" id="Sph_0p13_Mat_casco"]
+material = SubResource("Mat_casco")
+radius = 0.13
+height = 0.26
+
+[sub_resource type="BoxMesh" id="Box_0p25_0p02_0p2_Mat_papel"]
+material = SubResource("Mat_papel")
+size = Vector3(0.25, 0.02, 0.2)
+
+[sub_resource type="BoxMesh" id="Box_0p06_0p01_0p03_Mat_caramelo"]
+material = SubResource("Mat_caramelo")
+size = Vector3(0.06, 0.01, 0.03)
+
+[sub_resource type="BoxMesh" id="Box_0p25_0p2_0p09_Mat_bota"]
+material = SubResource("Mat_bota")
+size = Vector3(0.25, 0.2, 0.09)
+
+[sub_resource type="BoxMesh" id="Box_0p22_0p06_0p17_Mat_casco"]
+material = SubResource("Mat_casco")
+size = Vector3(0.22, 0.06, 0.17)
+
+[sub_resource type="BoxMesh" id="Box_0p04_0p4_0p3_Mat_toalla"]
+material = SubResource("Mat_toalla")
+size = Vector3(0.04, 0.4, 0.3)
+
+[sub_resource type="BoxMesh" id="Box_0p28_0p14_0p12_Mat_radio"]
+material = SubResource("Mat_radio")
+size = Vector3(0.28, 0.14, 0.12)
+
+[sub_resource type="BoxShape3D" id="Shape_0p18_0p08_0p18"]
+size = Vector3(0.18, 0.08, 0.18)
+
+[sub_resource type="CylinderMesh" id="Cyl_0p06_0p06_0p02_Mat_cinta"]
 material = SubResource("Mat_cinta")
 top_radius = 0.06
 bottom_radius = 0.06
 height = 0.02
 
-[sub_resource type="BoxMesh" id="Mesh_donas"]
-material = SubResource("Mat_donas")
-size = Vector3(0.18, 0.12, 0.14)
+[sub_resource type="BoxMesh" id="Box_0p28_0p2_0p1_Mat_bota"]
+material = SubResource("Mat_bota")
+size = Vector3(0.28, 0.2, 0.1)
 
-[sub_resource type="BoxMesh" id="Mesh_tubo"]
+[sub_resource type="BoxMesh" id="Box_0p32_0p004_0p14_Mat_barro"]
+material = SubResource("Mat_barro")
+size = Vector3(0.32, 0.004, 0.14)
+
+[sub_resource type="BoxMesh" id="Box_0p28_0p004_0p11_Mat_barro"]
+material = SubResource("Mat_barro")
+size = Vector3(0.28, 0.004, 0.11)
+
+[sub_resource type="BoxShape3D" id="Shape_0p4_0p45_2p4"]
+size = Vector3(0.4, 0.45, 2.4)
+
+[sub_resource type="BoxMesh" id="Box_0p4_0p06_2p4_Mat_banco"]
+material = SubResource("Mat_banco")
+size = Vector3(0.4, 0.06, 2.4)
+
+[sub_resource type="BoxMesh" id="Box_0p35_0p42_0p05_Mat_negro"]
+material = SubResource("Mat_negro")
+size = Vector3(0.35, 0.42, 0.05)
+
+[sub_resource type="BoxMesh" id="Box_0p3_0p06_0p4_Mat_toalla"]
+material = SubResource("Mat_toalla")
+size = Vector3(0.3, 0.06, 0.4)
+
+[sub_resource type="BoxMesh" id="Box_0p32_0p04_0p45_Mat_toalla2"]
+material = SubResource("Mat_toalla2")
+size = Vector3(0.32, 0.04, 0.45)
+
+[sub_resource type="BoxShape3D" id="Shape_0p5_0p6_0p5"]
+size = Vector3(0.5, 0.6, 0.5)
+
+[sub_resource type="CylinderMesh" id="Cyl_0p27_0p22_0p6_Mat_cesto"]
+material = SubResource("Mat_cesto")
+top_radius = 0.27
+bottom_radius = 0.22
+height = 0.6
+
+[sub_resource type="BoxMesh" id="Box_0p35_0p1_0p3_Mat_uniforme"]
+material = SubResource("Mat_uniforme")
+size = Vector3(0.35, 0.1, 0.3)
+
+[sub_resource type="BoxShape3D" id="Shape_0p45_0p2_0p6"]
+size = Vector3(0.45, 0.2, 0.6)
+
+[sub_resource type="BoxMesh" id="Box_0p45_0p15_0p6_Mat_loza"]
+material = SubResource("Mat_loza")
+size = Vector3(0.45, 0.15, 0.6)
+
+[sub_resource type="CylinderMesh" id="Cyl_0p08_0p1_0p8_Mat_loza"]
+material = SubResource("Mat_loza")
+top_radius = 0.08
+bottom_radius = 0.1
+height = 0.8
+
+[sub_resource type="CylinderMesh" id="Cyl_0p015_0p015_0p15_Mat_candado"]
+material = SubResource("Mat_candado")
+top_radius = 0.015
+bottom_radius = 0.015
+height = 0.15
+
+[sub_resource type="BoxMesh" id="Box_0p02_0p7_0p55_Mat_espejo"]
+material = SubResource("Mat_espejo")
+size = Vector3(0.02, 0.7, 0.55)
+
+[sub_resource type="BoxMesh" id="Box_0p6_0p004_0p5_Mat_agua"]
+material = SubResource("Mat_agua")
+size = Vector3(0.6, 0.004, 0.5)
+
+[sub_resource type="BoxMesh" id="Box_0p7_0p4_0p01_Mat_papel"]
+material = SubResource("Mat_papel")
+size = Vector3(0.7, 0.4, 0.01)
+
+[sub_resource type="BoxMesh" id="Box_0p5_0p4_0p01_Mat_papel"]
+material = SubResource("Mat_papel")
+size = Vector3(0.5, 0.4, 0.01)
+
+[sub_resource type="BoxMesh" id="Box_0p1_0p05_1p4_Mat_tubo"]
 material = SubResource("Mat_tubo")
 size = Vector3(0.1, 0.05, 1.4)
 
-[sub_resource type="BoxShape3D" id="Forma_casilleros_a"]
-size = Vector3(0.5, 1.9, 2.5)
+[sub_resource type="StandardMaterial3D" id="Mat_polvo"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.95, 0.85, 0.18)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
 
-[sub_resource type="BoxShape3D" id="Forma_casilleros_b"]
-size = Vector3(0.5, 1.9, 2.0)
+[sub_resource type="QuadMesh" id="Quad_polvo"]
+material = SubResource("Mat_polvo")
+size = Vector2(0.005, 0.005)
 
-[sub_resource type="BoxShape3D" id="Forma_hoja_casillero"]
-size = Vector3(0.06, 1.86, 0.48)
+[sub_resource type="ParticleProcessMaterial" id="Proc_polvo_Polvo"]
+emission_shape = 3
+emission_box_extents = Vector3(2, 0.8, 2.5)
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 0.01
+initial_velocity_max = 0.04
+gravity = Vector3(0, -0.005, 0)
+turbulence_enabled = true
+turbulence_noise_strength = 0.3
 
-[sub_resource type="BoxShape3D" id="Forma_cinta"]
-size = Vector3(0.2, 0.08, 0.2)
-
-[sub_resource type="BoxShape3D" id="Forma_puerta"]
-size = Vector3(1, 2.1, 0.14)
-
-[sub_resource type="BoxShape3D" id="Forma_banco"]
-size = Vector3(0.4, 0.45, 2.4)
-
-[sub_resource type="BoxShape3D" id="Forma_area"]
+[sub_resource type="BoxShape3D" id="Shape_4p8_3_6"]
 size = Vector3(4.8, 3, 6)
 
 [node name="ZonaVestuario" type="Node3D"]
@@ -124,211 +310,500 @@ size = Vector3(4.8, 3, 6)
 [node name="Suelo" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 0, -0.1)
 use_collision = true
+collision_layer = 1
+collision_mask = 0
 size = Vector3(5, 1, 6.2)
 material = SubResource("Mat_azulejo")
 
 [node name="Techo" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 3.6, -0.1)
 use_collision = true
+collision_layer = 1
+collision_mask = 0
 size = Vector3(5, 0.2, 6.2)
 material = SubResource("Mat_techo")
 
 [node name="ParedOeste" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.2, 2, -0.1)
 use_collision = true
+collision_layer = 1
+collision_mask = 0
 size = Vector3(0.2, 3, 6.4)
 material = SubResource("Mat_pared")
 
 [node name="ParedSur" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 2, -3.1)
 use_collision = true
+collision_layer = 1
+collision_mask = 0
 size = Vector3(5.2, 3, 0.2)
 material = SubResource("Mat_pared")
+
+[node name="FranjaSur" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 1.7, -2.99)
+mesh = SubResource("Box_4p8_0p12_0p02_Mat_franja")
+
+
+[node name="FranjaEste" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.21, 1.7, 0)
+mesh = SubResource("Box_0p02_0p12_6_Mat_franja")
+
+
+[node name="FranjaNorte" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -8.15, 1.7, 2.99)
+mesh = SubResource("Box_1p9_0p12_0p02_Mat_franja")
+
 
 [node name="PuertaVestuario" type="StaticBody3D" parent="." node_paths=PackedStringArray("Bisagra")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.6, 0.5, 3.1)
 collision_layer = 32
 collision_mask = 0
-script = ExtResource("2_puerta")
+script = ExtResource("e2")
 Bloqueada = true
 MensajeBloqueada = "Vestuario: solo personal autorizado."
 Bisagra = NodePath("Bisagra")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="PuertaVestuario"]
+[node name="Colision" type="CollisionShape3D" parent="PuertaVestuario"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
-shape = SubResource("Forma_puerta")
+shape = SubResource("Shape_1_2p1_0p14")
 
 [node name="Bisagra" type="Node3D" parent="PuertaVestuario"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0, 0)
 
 [node name="Hoja" type="MeshInstance3D" parent="PuertaVestuario/Bisagra"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.05, 0)
-mesh = SubResource("Mesh_hoja_puerta")
+mesh = SubResource("Box_1_2p1_0p05_Mat_puerta")
+
+
+[node name="Manija" type="MeshInstance3D" parent="PuertaVestuario/Bisagra"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.88, 1, 0.05)
+mesh = SubResource("Box_0p12_0p03_0p04_Mat_candado")
+
 
 [node name="Letrero" type="Label3D" parent="PuertaVestuario"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 0.12)
 pixel_size = 0.004
 modulate = Color(0.9, 0.85, 0.7, 1)
+outline_size = 0
 text = "VESTUARIO · SOLO PERSONAL"
 font_size = 40
+autowrap_mode = 3
+width = 400.0
 
-[node name="Casilleros" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.85, 0.5, 0)
-collision_layer = 2
-collision_mask = 0
+[node name="Casillero01" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, -1.75)
+Nombre = "Casillero"
+MensajeAlAbrir = "Solo hay un calcetín perdido. Espero que no sea de nadie que conozca."
 
-[node name="ColisionA" type="CollisionShape3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -1.25)
-shape = SubResource("Forma_casilleros_a")
+[node name="Nombre" parent="Casillero01/Bisagra/Hoja"]
+text = "R. PÉREZ"
 
-[node name="ColisionB" type="CollisionShape3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 1.5)
-shape = SubResource("Forma_casilleros_b")
+[node name="Calcetin" type="MeshInstance3D" parent="Casillero01"]
+transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, -0.25, 0.13, 0.05)
+mesh = SubResource("Box_0p18_0p04_0p07_Mat_toalla2")
 
-[node name="BloqueA" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -1.25)
-mesh = SubResource("Mesh_casilleros_a")
 
-[node name="BloqueB" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 1.5)
-mesh = SubResource("Mesh_casilleros_b")
+[node name="Casillero02" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, -1.25)
+Nombre = "Casillero"
+MensajeAlAbrir = "Huele a desinfectante. Nada útil."
 
-[node name="Separadorm2" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, -2)
-mesh = SubResource("Mesh_separador")
+[node name="Nombre" parent="Casillero02/Bisagra/Hoja"]
+text = "M. RUIZ"
 
-[node name="Separadorm1_5" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, -1.5)
-mesh = SubResource("Mesh_separador")
+[node name="Botella" type="MeshInstance3D" parent="Casillero02"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.6, 0.1)
+mesh = SubResource("Cyl_0p04_0p05_0p2_Mat_agua")
 
-[node name="Separadorm1" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, -1)
-mesh = SubResource("Mesh_separador")
 
-[node name="Separadorm0_5" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, -0.5)
-mesh = SubResource("Mesh_separador")
+[node name="Casillero03" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, -0.75)
+Nombre = "Casillero"
+MensajeAlAbrir = "Vacío. Solo polvo y una etiqueta despegada."
 
-[node name="Separador1" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, 1)
-mesh = SubResource("Mesh_separador")
+[node name="Nombre" parent="Casillero03/Bisagra/Hoja"]
+text = "—"
 
-[node name="Separador1_5" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, 1.5)
-mesh = SubResource("Mesh_separador")
+[node name="Casillero04" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, -0.25)
+Nombre = "Casillero"
+MensajeAlAbrir = "Una foto de familia y un paraguas roto. Nada que ver con la cinta."
 
-[node name="Separador2" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.95, 2)
-mesh = SubResource("Mesh_separador")
+[node name="Nombre" parent="Casillero04/Bisagra/Hoja"]
+text = "L. VEGA"
 
-[node name="HuecoFondo" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.24, 0.95, 0.25)
-mesh = SubResource("Mesh_hueco_fondo")
+[node name="Foto" type="MeshInstance3D" parent="Casillero04"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47, 1.3, 0)
+mesh = SubResource("Box_0p01_0p15_0p2_Mat_papel")
 
-[node name="HuecoLado1" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.01)
-mesh = SubResource("Mesh_hueco_lado")
 
-[node name="HuecoLado2" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.49)
-mesh = SubResource("Mesh_hueco_lado")
+[node name="Paraguas" type="MeshInstance3D" parent="Casillero04"]
+transform = Transform3D(0.9848, -0.1736, 0, 0.1736, 0.9848, 0, 0, 0, 1, -0.3, 0.5, 0.12)
+mesh = SubResource("Cyl_0p02_0p02_0p8_Mat_negro")
 
-[node name="Repisa" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.25)
-mesh = SubResource("Mesh_repisa")
 
-[node name="BolsaDonas" type="MeshInstance3D" parent="Casilleros"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1.17, 0.35)
-mesh = SubResource("Mesh_donas")
+[node name="CasilleroPorky" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 0.25)
+Nombre = "Casillero"
+MensajeAlAbrir = "3-1-2... ¡clic! Debajo de una bolsa de donas... ¡ahí está la cinta!"
+RequiereObjeto = "combinacion_porky"
+MensajeBloqueado = "Candado de combinación. Porky tendrá los números apuntados en algún sitio... quizá entre sus cosas, en la recepción."
+LiberarAlAbrir = true
+Nombre = "Casillero de Porky"
+
+[node name="Nombre" parent="CasilleroPorky/Bisagra/Hoja"]
+text = "PORKY"
+
+[node name="BolsaDonas" type="MeshInstance3D" parent="CasilleroPorky"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.57, -0.08)
+mesh = SubResource("Box_0p18_0p12_0p14_Mat_donas")
+
+
+[node name="Candado" type="MeshInstance3D" parent="CasilleroPorky"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.035, 1, 0.2)
+mesh = SubResource("Box_0p03_0p08_0p06_Mat_candado")
+
+
+[node name="Casillero06" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 0.75)
+Nombre = "Casillero"
+MensajeAlAbrir = "Un uniforme recién planchado. Este agente sí cuida los detalles."
+
+[node name="Nombre" parent="Casillero06/Bisagra/Hoja"]
+text = "T. SOTO"
+
+[node name="Uniforme" type="MeshInstance3D" parent="Casillero06"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.95, 0)
+mesh = SubResource("Mesh_uniforme")
+
+[node name="Casillero07" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 1.25)
+Nombre = "Casillero"
+MensajeAlAbrir = "Un casco de moto y una revista de crucigramas a medias."
+
+[node name="Nombre" parent="Casillero07/Bisagra/Hoja"]
+text = "A. DÍAZ"
+
+[node name="Casco" type="MeshInstance3D" parent="Casillero07"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.63, 0)
+mesh = SubResource("Sph_0p13_Mat_casco")
+
+
+[node name="Revista" type="MeshInstance3D" parent="Casillero07"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.13, 0)
+mesh = SubResource("Box_0p25_0p02_0p2_Mat_papel")
+
+
+[node name="Casillero08" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 1.75)
+Nombre = "Casillero"
+MensajeAlAbrir = "Envoltorios de caramelos. Muchos. Demasiados."
+
+[node name="Nombre" parent="Casillero08/Bisagra/Hoja"]
+text = "J. CAMPOS"
+
+[node name="Envoltorio0" type="MeshInstance3D" parent="Casillero08"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.12, -0.12)
+mesh = SubResource("Box_0p06_0p01_0p03_Mat_caramelo")
+
+
+[node name="Envoltorio1" type="MeshInstance3D" parent="Casillero08"]
+transform = Transform3D(0.766, 0, 0.6428, 0, 1, 0, -0.6428, 0, 0.766, -0.24, 0.13, -0.07)
+mesh = SubResource("Box_0p06_0p01_0p03_Mat_caramelo")
+
+
+[node name="Envoltorio2" type="MeshInstance3D" parent="Casillero08"]
+transform = Transform3D(0.1736, 0, 0.9848, 0, 1, 0, -0.9848, 0, 0.1736, -0.28, 0.14, -0.02)
+mesh = SubResource("Box_0p06_0p01_0p03_Mat_caramelo")
+
+
+[node name="Envoltorio3" type="MeshInstance3D" parent="Casillero08"]
+transform = Transform3D(-0.5, 0, 0.866, 0, 1, 0, -0.866, 0, -0.5, -0.2, 0.15, 0.03)
+mesh = SubResource("Box_0p06_0p01_0p03_Mat_caramelo")
+
+
+[node name="Envoltorio4" type="MeshInstance3D" parent="Casillero08"]
+transform = Transform3D(-0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, -0.9397, -0.24, 0.16, 0.08)
+mesh = SubResource("Box_0p06_0p01_0p03_Mat_caramelo")
+
+
+[node name="Envoltorio5" type="MeshInstance3D" parent="Casillero08"]
+transform = Transform3D(-0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, -0.9397, -0.28, 0.17, 0.13)
+mesh = SubResource("Box_0p06_0p01_0p03_Mat_caramelo")
+
+
+[node name="Casillero09" parent="." instance=ExtResource("e4")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -7.75, 0.5, -2.5)
+Nombre = "Casillero"
+MensajeAlAbrir = "Unas botas reglamentarias... limpias. Las del pasillo tenían barro, no son estas."
+
+[node name="Nombre" parent="Casillero09/Bisagra/Hoja"]
+text = "E. MORA"
+
+[node name="BotaIzq" type="MeshInstance3D" parent="Casillero09"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.2, -0.08)
+mesh = SubResource("Box_0p25_0p2_0p09_Mat_bota")
+
+
+[node name="BotaDer" type="MeshInstance3D" parent="Casillero09"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.2, 0.08)
+mesh = SubResource("Box_0p25_0p2_0p09_Mat_bota")
+
+
+[node name="Casillero10" parent="." instance=ExtResource("e4")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -7.25, 0.5, -2.5)
+Nombre = "Casillero"
+MensajeAlAbrir = "Un libro de recetas de tamales con la esquina doblada."
+
+[node name="Nombre" parent="Casillero10/Bisagra/Hoja"]
+text = "C. LEÓN"
+
+[node name="Recetas" type="MeshInstance3D" parent="Casillero10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.54, 0)
+mesh = SubResource("Box_0p22_0p06_0p17_Mat_casco")
+
+
+[node name="Casillero11" parent="." instance=ExtResource("e4")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.75, 0.5, -2.5)
+Nombre = "Casillero"
+MensajeAlAbrir = "Una toalla húmeda y un peine. Nada más."
+
+[node name="Nombre" parent="Casillero11/Bisagra/Hoja"]
+text = "S. REYES"
+
+[node name="Toalla" type="MeshInstance3D" parent="Casillero11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.36, 1.2, 0)
+mesh = SubResource("Box_0p04_0p4_0p3_Mat_toalla")
+
+
+[node name="Casillero12" parent="." instance=ExtResource("e4")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.25, 0.5, -2.5)
+Nombre = "Casillero"
+MensajeAlAbrir = "Una radio vieja sin pilas. Silencio total."
+
+[node name="Nombre" parent="Casillero12/Bisagra/Hoja"]
+text = "N. GIL"
+
+[node name="Radio" type="MeshInstance3D" parent="Casillero12"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.58, 0)
+mesh = SubResource("Box_0p28_0p14_0p12_Mat_radio")
+
 
 [node name="Cinta" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.8, 1.62, 0.18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.82, 2.035, 0.3)
 collision_layer = 8
 collision_mask = 0
-script = ExtResource("1_pista")
+script = ExtResource("e1")
 Id = "cinta"
 Titulo = "La cinta desaparecida"
 Descripcion = "La cinta de la grabadora, escondida en el casillero de Porky bajo una bolsa de donas."
 SeRecoge = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cinta"]
-shape = SubResource("Forma_cinta")
+[node name="Colision" type="CollisionShape3D" parent="Cinta"]
+shape = SubResource("Shape_0p18_0p08_0p18")
 
 [node name="Malla" type="MeshInstance3D" parent="Cinta"]
-mesh = SubResource("Mesh_cinta")
+mesh = SubResource("Cyl_0p06_0p06_0p02_Mat_cinta")
 
-[node name="CasilleroPorky" type="StaticBody3D" parent="." node_paths=PackedStringArray("Bisagra")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.58, 0.5, 0)
-collision_layer = 8
-collision_mask = 0
-script = ExtResource("2_puerta")
-Bisagra = NodePath("Bisagra")
-AnguloApertura = 100.0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CasilleroPorky"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.25)
-shape = SubResource("Forma_hoja_casillero")
+[node name="BotaBarro1" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.9659, 0, 0.2588, 0, 1, 0, -0.2588, 0, 0.9659, -8.2, 0.6, 0.1)
+mesh = SubResource("Box_0p28_0p2_0p1_Mat_bota")
 
-[node name="Bisagra" type="Node3D" parent="CasilleroPorky"]
 
-[node name="Hoja" type="MeshInstance3D" parent="CasilleroPorky/Bisagra"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.25)
-mesh = SubResource("Mesh_hoja_casillero")
+[node name="BotaBarro2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.9848, 0, -0.1736, 0, 1, 0, 0.1736, 0, 0.9848, -8.15, 0.6, 0.35)
+mesh = SubResource("Box_0p28_0p2_0p1_Mat_bota")
 
-[node name="Nombre" type="Label3D" parent="CasilleroPorky/Bisagra/Hoja"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.02, 0.55, 0)
-pixel_size = 0.003
-modulate = Color(0.95, 0.95, 0.9, 1)
-text = "PORKY"
-font_size = 40
+
+[node name="Barro1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.2, 0.505, 0.1)
+mesh = SubResource("Box_0p32_0p004_0p14_Mat_barro")
+
+
+[node name="Barro2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.9, 0.505, 0.5)
+mesh = SubResource("Box_0p28_0p004_0p11_Mat_barro")
+
 
 [node name="Banco" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2, 0.5, -0.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2, 0.5, -0.2)
 collision_layer = 2
 collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Banco"]
+[node name="Colision" type="CollisionShape3D" parent="Banco"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.225, 0)
-shape = SubResource("Forma_banco")
+shape = SubResource("Shape_0p4_0p45_2p4")
 
 [node name="Asiento" type="MeshInstance3D" parent="Banco"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
-mesh = SubResource("Mesh_banco")
+mesh = SubResource("Box_0p4_0p06_2p4_Mat_banco")
+
 
 [node name="Pata1" type="MeshInstance3D" parent="Banco"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -1)
-mesh = SubResource("Mesh_pata_banco")
+mesh = SubResource("Box_0p35_0p42_0p05_Mat_negro")
+
 
 [node name="Pata2" type="MeshInstance3D" parent="Banco"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 1)
-mesh = SubResource("Mesh_pata_banco")
+mesh = SubResource("Box_0p35_0p42_0p05_Mat_negro")
+
+
+[node name="ToallaDoblada" type="MeshInstance3D" parent="Banco"]
+transform = Transform3D(0.9962, 0, 0.0872, 0, 1, 0, -0.0872, 0, 0.9962, 0, 0.48, 0.6)
+mesh = SubResource("Box_0p3_0p06_0p4_Mat_toalla")
+
+
+[node name="ToallaNaranja" type="MeshInstance3D" parent="Banco"]
+transform = Transform3D(0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, 0.9397, 0.05, 0.47, -0.7)
+mesh = SubResource("Box_0p32_0p04_0p45_Mat_toalla2")
+
+
+[node name="Cesto" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -2.5)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Colision" type="CollisionShape3D" parent="Cesto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("Shape_0p5_0p6_0p5")
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Cesto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("Cyl_0p27_0p22_0p6_Mat_cesto")
+
+
+[node name="Ropa" type="MeshInstance3D" parent="Cesto"]
+transform = Transform3D(0.9063, 0, 0.4226, 0, 1, 0, -0.4226, 0, 0.9063, 0, 0.6, 0)
+mesh = SubResource("Box_0p35_0p1_0p3_Mat_uniforme")
+
+
+[node name="Lavabo" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.45, 0.5, 1.6)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Colision" type="CollisionShape3D" parent="Lavabo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+shape = SubResource("Shape_0p45_0p2_0p6")
+
+[node name="Pila" type="MeshInstance3D" parent="Lavabo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("Box_0p45_0p15_0p6_Mat_loza")
+
+
+[node name="Pie" type="MeshInstance3D" parent="Lavabo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+mesh = SubResource("Cyl_0p08_0p1_0p8_Mat_loza")
+
+
+[node name="Grifo" type="MeshInstance3D" parent="Lavabo"]
+transform = Transform3D(0.5, -0.866, 0, 0.866, 0.5, 0, 0, 0, 1, 0.12, 1.02, 0)
+mesh = SubResource("Cyl_0p015_0p015_0p15_Mat_candado")
+
+
+[node name="Espejo" type="MeshInstance3D" parent="Lavabo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 1.6, 0)
+mesh = SubResource("Box_0p02_0p7_0p55_Mat_espejo")
+
+
+[node name="Charco" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9, 0.505, 1.4)
+mesh = SubResource("Box_0p6_0p004_0p5_Mat_agua")
+
+
+[node name="CartelUniforme" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -8.2, 2.3, 2.99)
+
+[node name="Papel" type="MeshInstance3D" parent="CartelUniforme"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("Box_0p7_0p4_0p01_Mat_papel")
+
+
+[node name="Texto" type="Label3D" parent="CartelUniforme"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
+pixel_size = 0.0025
+modulate = Color(0.12, 0.1, 0.08, 1)
+outline_size = 0
+text = "¡UNIFORME IMPECABLE!
+Y las botas, sin barro."
+font_size = 34
+autowrap_mode = 3
+width = 252
+
+[node name="CartelTurnos" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 2.1, -2.99)
+
+[node name="Papel" type="MeshInstance3D" parent="CartelTurnos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("Box_0p5_0p4_0p01_Mat_papel")
+
+
+[node name="Texto" type="Label3D" parent="CartelTurnos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
+pixel_size = 0.0025
+modulate = Color(0.12, 0.1, 0.08, 1)
+outline_size = 0
+text = "Duchas: 5 minutos máximo.
+— La dirección"
+font_size = 30
+autowrap_mode = 3
+width = 180
 
 [node name="LuzSur" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 3.25, -1.5)
 light_color = Color(0.85, 1, 0.88, 1)
-light_energy = 1.2
+light_energy = 1.1
 shadow_enabled = true
 omni_range = 6.0
 
 [node name="Tubo" type="MeshInstance3D" parent="LuzSur"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
-mesh = SubResource("Mesh_tubo")
+mesh = SubResource("Box_0p1_0p05_1p4_Mat_tubo")
+
 
 [node name="LuzNorte" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 3.25, 1.5)
 light_color = Color(0.85, 1, 0.88, 1)
-light_energy = 1.2
+light_energy = 1.1
 shadow_enabled = true
 omni_range = 6.0
 
 [node name="Tubo" type="MeshInstance3D" parent="LuzNorte"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
-mesh = SubResource("Mesh_tubo")
+mesh = SubResource("Box_0p1_0p05_1p4_Mat_tubo")
+
+
+[node name="FocoCasillero" type="SpotLight3D" parent="."]
+transform = Transform3D(0, -0.7071, 0.7071, 0, 0.7071, 0.7071, -1, 0, 0, -7.4, 3.2, 0.25)
+light_color = Color(0.9, 1, 0.95, 1)
+light_energy = 2.0
+shadow_enabled = true
+spot_range = 4.0
+spot_angle = 18.0
+
+[node name="Polvo" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 2.2, 0)
+amount = 50
+lifetime = 12.0
+preprocess = 12.0
+visibility_aabb = AABB(-4, -1.6, -5, 8, 3.2, 10)
+process_material = SubResource("Proc_polvo_Polvo")
+draw_pass_1 = SubResource("Quad_polvo")
+
+[node name="Ambiente" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 1.2, 1.6)
+script = ExtResource("e3")
+Tipo = 8
+volume_db = -8.0
+unit_size = 2.5
+max_distance = 9.0
 
 [node name="AreaVestuario" type="Area3D" parent="."]
 collision_layer = 0
 collision_mask = 4
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AreaVestuario"]
+[node name="Colision" type="CollisionShape3D" parent="AreaVestuario"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 2, -0.1)
-shape = SubResource("Forma_area")
+shape = SubResource("Shape_4p8_3_6")

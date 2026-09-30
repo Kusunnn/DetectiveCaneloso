@@ -13,6 +13,7 @@
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_pasillo.tscn" id="14_pasillo"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_recepcion.tscn" id="15_recepcion"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_vestuario.tscn" id="16_vestuario"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso0/ambiente_sala.tscn" id="17_ambiente"]
 
 [sub_resource type="StandardMaterial3D" id="Material_techo"]
 albedo_color = Color(0.1, 0.1, 0.1, 1)
@@ -83,6 +84,9 @@ outer_radius = 0.032
 [sub_resource type="Environment" id="Environment_je0k8"]
 background_mode = 1
 background_color = Color(0.018023593, 0.058232002, 0.1001626, 0.8509804)
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.4, 0.5, 1)
+ambient_light_energy = 0.25
 ssao_enabled = true
 glow_enabled = true
 adjustment_enabled = true
@@ -620,10 +624,12 @@ transform = Transform3D(0.939, 0, -0.343, 0, 1, 0, 0.343, 0, 0.939, 1.1, 0.5, -3
 
 [node name="ZonaVestuario" parent="." instance=ExtResource("16_vestuario")]
 
+[node name="AmbienteSala" parent="." instance=ExtResource("17_ambiente")]
+
 [node name="VentanaDialogo" type="CanvasLayer" parent="."]
 script = ExtResource("12_dialogo")
 
-[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal")]
+[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky")]
 script = ExtResource("13_caso")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
@@ -638,3 +644,4 @@ ZonaRecepcion = NodePath("../ZonaRecepcion/AreaRecepcion")
 ZonaVestuario = NodePath("../ZonaVestuario/AreaVestuario")
 PuntoErizFinal = NodePath("../PuntoErizFinal")
 PuntoPorkyFinal = NodePath("../PuntoPorkyFinal")
+CasilleroPorky = NodePath("../ZonaVestuario/CasilleroPorky")

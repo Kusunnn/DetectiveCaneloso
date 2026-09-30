@@ -17,6 +17,8 @@ public partial class Caso0 : Node
 	private const string Testimonio = "testimonio_eriz";
 	private const string Cinta = "cinta";
 
+	private const string Combinacion = "combinacion_porky";
+
 	private const uint CapaInteractuable = 1u << 3; // Capa 4
 	private const uint CapaNpc = 1u << 4;           // Capa 5
 
@@ -34,6 +36,8 @@ public partial class Caso0 : Node
 	// Dónde esperan Eriz y Porky durante la acusación
 	[Export] public Node3D PuntoErizFinal;
 	[Export] public Node3D PuntoPorkyFinal;
+	// Casillero con candado: se abre con la combinación de la mochila de Porky (recepción)
+	[Export] public Contenedor CasilleroPorky;
 
 	private readonly HashSet<string> _pistas = new HashSet<string>();
 	private readonly HashSet<string> _indicacionesDadas = new HashSet<string>();
@@ -51,6 +55,7 @@ public partial class Caso0 : Node
 		Hud.Set("caso", "00");
 		Hud.Set("archivo", "Tutorial");
 		Jugador.EvidenciaRegistrada += AlRegistrarEvidencia;
+		Jugador.ObjetoObtenido += _ => ActualizarObjetivo();
 		Hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
 		Hud.Connect("panel_cambiado", Callable.From<bool, bool>(AlCambiarPanel));
 
@@ -65,17 +70,18 @@ public partial class Caso0 : Node
 
 		ZonaPasillo.BodyEntered += cuerpo => { if (cuerpo == Jugador) AlEntrarPasillo(); };
 		ZonaRecepcion.BodyEntered += cuerpo => { if (cuerpo == Jugador) AlEntrarRecepcion(); };
-		ZonaVestuario.BodyEntered += cuerpo => { if (cuerpo == Jugador) Indicar("vestuario", "Busca el casillero de Porky y ábrelo."); };
+		ZonaVestuario.BodyEntered += cuerpo => { if (cuerpo == Jugador) Indicar("vestuario", "Cuántos casilleros... Puedo abrirlos todos, pero el que me interesa es el de Porky."); };
+		CasilleroPorky.IntentoBloqueado += AlEncontrarCandado;
 
 		Objetivo("Examina la grabadora de la sala.");
-		Indicar("inicio", "Usa [W, A, S, D] para moverte y el ratón para mirar. [V] cambia la cámara.");
+		CallDeferred(MethodName.Presentacion);
 	}
 
 	public override void _Process(double delta)
 	{
 		if (Jugador.SeHaMovido && !_pistas.Contains(Grabadora))
 		{
-			Indicar("apuntar", "Apunta a la grabadora con el punto central y pulsa [E] (o clic) para examinarla.");
+			Indicar("apuntar", "Esa grabadora de la mesa... Si la miro de cerca y pulso [E], sabré qué pasó.");
 		}
 	}
 
@@ -87,13 +93,13 @@ public partial class Caso0 : Node
 		switch (id)
 		{
 			case Grabadora:
-				Indicar("salir", "¡Primera pista! Date la vuelta y sal por la puerta al pasillo.");
+				Indicar("salir", "Alguien sacó la cinta a mano. El rastro sigue por la puerta de atrás, hacia el pasillo.");
 				break;
 			case Huellas:
-				Indicar("hablar", "Al otro lado del pasillo alguien está limpiando. Apúntale y pulsa [E] para hablar.");
+				Indicar("hablar", "Botas reglamentarias... Al fondo del pasillo alguien friega. Hablaré con él [E].");
 				break;
 			case Turnos:
-				Indicar("diario", "Pulsa [Q] para abrir tu diario. Con la rueda del ratón repasas las pistas del panel.");
+				Indicar("diario", "Repasemos lo que sé: [Q] abre mi diario, y con la rueda del ratón paso las pistas.");
 				break;
 			case Cinta:
 				EmpezarAcusacion();
@@ -120,23 +126,46 @@ public partial class Caso0 : Node
 		else if (!_autorizado)
 		{
 			Objetivo("Pide al comisario (recepción) permiso para entrar al vestuario.");
-			Indicar("autorizacion", "Ya tienes lo necesario. Habla con el comisario en la recepción.");
+			Indicar("autorizacion", "Todo apunta al vestuario. Necesito el permiso del comisario, en recepción.");
 		}
 		else if (!_pistas.Contains(Cinta))
 		{
-			Objetivo("Abre el casillero de Porky en el vestuario, al oeste del pasillo.");
+			Objetivo(Jugador.TieneObjeto(Combinacion)
+				? "Abre el casillero de Porky con la combinación 3-1-2."
+				: "Revisa los casilleros del vestuario, al oeste del pasillo.");
 		}
 	}
 
 	private void EmpezarAcusacion()
 	{
 		Objetivo("Vuelve a la sala de interrogatorio y señala al culpable.");
-		Indicar("acusar", "Tienes todas las pistas. Vuelve a la sala y usa la silla del sospechoso para acusar.");
+		Indicar("acusar", "Todo encaja. De vuelta a la sala: desde la silla del sospechoso señalaré al culpable.");
 
 		// Los dos sospechosos esperan en la sala
 		Eriz.GlobalTransform = PuntoErizFinal.GlobalTransform;
 		Porky.GlobalTransform = PuntoPorkyFinal.GlobalTransform;
 		SillaAcusacion.Habilitar(true, CapaInteractuable);
+	}
+
+	// Arranque: Caneloso piensa en voz alta, en vez de un cartel de instrucciones
+	private async void Presentacion()
+	{
+		await ToSignal(GetTree().CreateTimer(0.6), SceneTreeTimer.SignalName.Timeout);
+		if (_tutorial)
+		{
+			_enDialogo = true;
+			await Dialogo.Decir("Caneloso",
+				"La cinta de la grabadora ha desaparecido de esta sala... y el juicio es mañana.",
+				"Bien. Muevo las patas con [W, A, S, D], miro con el ratón y, si quiero verme desde fuera, [V].");
+			_enDialogo = false;
+		}
+		Indicar("inicio", "Primero, la grabadora de la mesa.");
+	}
+
+	private void AlEncontrarCandado()
+	{
+		if (Jugador.TieneObjeto(Combinacion)) return;
+		Objetivo("Encuentra la combinación del candado de Porky (¿sus cosas en recepción?).");
 	}
 
 	// ---------- Zonas ----------
@@ -145,7 +174,7 @@ public partial class Caso0 : Node
 	{
 		if (!Jugador.LinternaEncendida && !_pistas.Contains(Huellas))
 		{
-			Indicar("linterna", "Está muy oscuro. Pulsa [F] para encender la linterna.");
+			Indicar("linterna", "No veo ni mis propias patas. Mi linterna [F]...");
 		}
 	}
 
@@ -153,7 +182,7 @@ public partial class Caso0 : Node
 	{
 		if (!_pistas.Contains(Turnos))
 		{
-			Indicar("recoger", "Recoge el libro de turnos del mostrador: apúntalo y pulsa [E].");
+			Indicar("recoger", "El libro de turnos, en el mostrador. Me lo llevo [E].");
 		}
 	}
 
@@ -161,7 +190,7 @@ public partial class Caso0 : Node
 	{
 		if (encendida && _pistas.Contains(Grabadora) && !_pistas.Contains(Huellas))
 		{
-			Indicar("buscar_huellas", "Con luz directa se ven cosas nuevas. Revisa el suelo del pasillo.");
+			Indicar("buscar_huellas", "Con luz directa se ven cosas que antes no... ¿Qué hay en el suelo?");
 		}
 	}
 
@@ -170,8 +199,8 @@ public partial class Caso0 : Node
 		if (!abierto && _indicacionesDadas.Contains("diario") && !_autorizado)
 		{
 			Indicar("tras_diario", FaseDosCompleta
-				? "Ya tienes lo necesario. Habla con el comisario en la recepción."
-				: "Sigue el objetivo de la nota de arriba a la derecha.");
+				? "Todo apunta al vestuario. Necesito el permiso del comisario, en recepción."
+				: "Aún me faltan piezas. La nota de objetivos me dirá qué sigue.");
 		}
 	}
 
@@ -196,7 +225,8 @@ public partial class Caso0 : Node
 		await Dialogo.Decir("Eriz",
 			"¿Detective? Yo solo limpio, ¿eh? Anoche fregué la sala de interrogatorio y me fui a la una en punto. Lo firmé en el libro de turnos.",
 			"Pero olvidé mi termo y volví sobre las tres. La recepción estaba vacía... y se oía la puerta del vestuario.",
-			"Solo los agentes tienen llave del vestuario. Y yo, con estas zapatillas de goma, no hago ni ruido.");
+			"Solo los agentes tienen llave del vestuario. Y yo, con estas zapatillas de goma, no hago ni ruido.",
+			"Si busca horarios, el libro de turnos está en el mostrador de recepción, al final del pasillo.");
 		Jugador.RegistrarEvidencia(Testimonio, "Testimonio de Eriz",
 			"Eriz se fue a la 1:00 y usa zapatillas de goma. Volvió a las 3:00 por su termo: la recepción estaba vacía y se oía la puerta del vestuario.",
 			animar: false);
@@ -232,7 +262,7 @@ public partial class Caso0 : Node
 		{
 			await Dialogo.Decir("Comisario",
 				"Botas de agente, un solo agente de guardia... y alguien en el vestuario a las tres. Bien visto.",
-				"Toma, la llave del vestuario. Revisa los casilleros.");
+				"Toma, la llave del vestuario. Revisa los casilleros... y ojo: Porky le pone candado de combinación a todo.");
 			_autorizado = true;
 			PuertaVestuario.Desbloquear();
 			Jugador.MostrarAviso("Nueva zona disponible: Vestuario", 4.0);

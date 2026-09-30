@@ -218,6 +218,8 @@ func _dibujar() -> void:
 	# Retícula e interacción opcional.
 	_lienzo.draw_circle(Vector2(w / 2, h / 2), 2, Color(BLANCO, 0.65))
 	if not interaccion.is_empty():
+		# Anillo ámbar: la retícula está sobre algo que se puede usar
+		_lienzo.draw_arc(Vector2(w / 2, h / 2), 13, 0, TAU, 32, Color(AMBAR, 0.9), 2.0, true)
 		_texto("[ E ]  " + interaccion, Vector2(w / 2 - 75, h / 2 + 42), _bold, 26, BLANCO)
 	_dibujar_pistas(w, h)
 	if _detalle:

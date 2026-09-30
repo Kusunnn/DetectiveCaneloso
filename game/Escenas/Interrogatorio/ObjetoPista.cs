@@ -25,17 +25,17 @@ public partial class ObjetoPista : StaticBody3D, IInteractuable
 	{
 		if (RequiereLinterna && !jugador.LinternaEncendida)
 		{
-			jugador.MostrarAviso("Está demasiado oscuro para distinguir nada. Prueba con la linterna [F].", 3.0);
+			jugador.MostrarPensamiento("Está demasiado oscuro para distinguir nada... Si encendiera la linterna [F]...", 3.0);
 			return;
 		}
 		if (!EsEvidencia)
 		{
-			jugador.MostrarAviso(Descripcion, 4.0);
+			jugador.MostrarPensamiento(Descripcion, 4.0);
 			return;
 		}
 		if (Encontrada)
 		{
-			jugador.MostrarAviso("Ya examinaste: " + Titulo, 2.0);
+			jugador.MostrarPensamiento("Ya lo examiné: " + Titulo + ".", 2.0);
 			return;
 		}
 

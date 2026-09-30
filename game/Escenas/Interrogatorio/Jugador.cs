@@ -6,6 +6,7 @@ using System;
 public partial class Jugador : CharacterBody3D
 {
 	[Signal] public delegate void EvidenciaRegistradaEventHandler(string id);
+	[Signal] public delegate void ObjetoObtenidoEventHandler(string id);
 
 	[Export] public float Velocidad = 3.0f;
 	[Export] public float SensibilidadRaton = 0.003f;
@@ -25,6 +26,12 @@ public partial class Jugador : CharacterBody3D
 	private bool _bloqueado = false;      // Diálogo en curso
 	private int _idAviso = 0;             // Evita que un temporizador viejo oculte un texto nuevo
 	private IInteractuable _apuntado;
+	private Material _materialResaltado;
+	// Llaves, combinaciones... que abren contenedores en otras zonas
+	private readonly System.Collections.Generic.HashSet<string> _objetos = new System.Collections.Generic.HashSet<string>();
+
+	private static readonly Color ColorPensamiento = new Color(0.96f, 0.9f, 0.72f);
+	private static readonly Color ColorAviso = new Color(1f, 1f, 1f);
 
 	public bool SeHaMovido { get; private set; } = false;
 	public bool LinternaEncendida { get; private set; } = false;
@@ -40,6 +47,7 @@ public partial class Jugador : CharacterBody3D
 		_linterna = GetNodeOrNull<SpotLight3D>("CamaraInterrogatorio/Linterna");
 		_brazoCamara.AddExcludedObject(GetRid()); // Que la cámara no choque con el propio jugador
 		AplicarPerspectiva();
+		_materialResaltado = new ShaderMaterial { Shader = GD.Load<Shader>("res://Escenas/Investigacion/resaltado.gdshader") };
 
 		// Rutas relativas al padre del Jugador (la escena del caso)
 		Node sala = GetParent();
@@ -139,6 +147,19 @@ public partial class Jugador : CharacterBody3D
 	{
 		_bloqueado = bloqueado;
 		if (bloqueado) Detenerse();
+		// Durante el diálogo se oculta el HUD para que no tape el texto
+		if (_hud is CanvasLayer capa) capa.Visible = !bloqueado;
+		if (bloqueado && _textoTutorial != null) _textoTutorial.Visible = false;
+	}
+
+	public bool TieneObjeto(string id) => _objetos.Contains(id);
+
+	public void DarObjeto(string id, string pensamiento)
+	{
+		if (!_objetos.Add(id)) return;
+		Sonidos.Reproducir(this, Sonidos.Tipo.Pista, GlobalPosition, -6f);
+		MostrarPensamiento(pensamiento, 5.0);
+		EmitSignal(SignalName.ObjetoObtenido, id);
 	}
 
 	private void Detenerse()
@@ -172,25 +193,39 @@ public partial class Jugador : CharacterBody3D
 		bool nueva = _hud.Call("registrar_pista", id, titulo, descripcion).AsBool();
 		if (!nueva) return;
 		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
+		Sonidos.Reproducir(this, Sonidos.Tipo.Pista, GlobalPosition);
 		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
 		EmitSignal(SignalName.EvidenciaRegistrada, id);
 	}
 
-	// Indicación del tutorial: se queda en pantalla hasta la siguiente
+	// Pensamiento del detective que guía el tutorial: se queda hasta el siguiente
 	public void MostrarIndicacion(string texto)
 	{
 		if (_textoTutorial == null) return;
 		_idAviso++;
-		_textoTutorial.Text = texto;
-		_textoTutorial.Visible = true;
+		_textoTutorial.Text = "“" + texto + "”";
+		_textoTutorial.Modulate = ColorPensamiento;
+		_textoTutorial.Visible = !_bloqueado;
 	}
 
-	// Mensaje temporal que se oculta solo después de unos segundos
+	// Pensamiento corto que se oculta solo (al abrir un casillero, al examinar algo...)
+	public void MostrarPensamiento(string texto, double segundos)
+	{
+		MostrarTemporal("“" + texto + "”", ColorPensamiento, segundos);
+	}
+
+	// Aviso del juego (no es el detective quien habla): "Nueva zona disponible", "Caso resuelto"...
 	public void MostrarAviso(string texto, double segundos)
+	{
+		MostrarTemporal(texto, ColorAviso, segundos);
+	}
+
+	private void MostrarTemporal(string texto, Color color, double segundos)
 	{
 		if (_textoTutorial == null) return;
 		int id = ++_idAviso;
 		_textoTutorial.Text = texto;
+		_textoTutorial.Modulate = color;
 		_textoTutorial.Visible = true;
 
 		GetTree().CreateTimer(segundos).Timeout += () =>
@@ -208,8 +243,23 @@ public partial class Jugador : CharacterBody3D
 		IInteractuable apuntado = (_panelAbierto || _bloqueado) ? null : BuscarInteractuable();
 		if (apuntado != _apuntado)
 		{
+			Resaltar(_apuntado, false);
 			_apuntado = apuntado;
-			_hud.Set("interaccion", apuntado?.TextoAccion ?? "");
+			Resaltar(_apuntado, true);
+			if (apuntado != null) Sonidos.Reproducir(this, Sonidos.Tipo.Paso, GlobalPosition, -14f);
+		}
+		// Se actualiza siempre: el texto cambia al abrir un contenedor ("Abrir" → "Revisado")
+		_hud.Set("interaccion", _apuntado?.TextoAccion ?? "");
+	}
+
+	// Borde brillante en el objeto que apunta la retícula
+	private void Resaltar(IInteractuable objetivo, bool activo)
+	{
+		if (objetivo is not Node nodo || !IsInstanceValid(nodo)) return;
+		foreach (Node hijo in nodo.FindChildren("*", "GeometryInstance3D", true, false))
+		{
+			if (hijo is GeometryInstance3D geometria && hijo is not Label3D)
+				geometria.MaterialOverlay = activo ? _materialResaltado : null;
 		}
 	}
 

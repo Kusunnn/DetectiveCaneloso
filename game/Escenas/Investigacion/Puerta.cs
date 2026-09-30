@@ -21,7 +21,8 @@ public partial class Puerta : StaticBody3D, IInteractuable
 		if (EstaAbierta) return;
 		if (Bloqueada)
 		{
-			jugador.MostrarAviso(MensajeBloqueada, 3.0);
+			Sonidos.Reproducir(this, Sonidos.Tipo.Bloqueado, GlobalPosition);
+			jugador.MostrarPensamiento(MensajeBloqueada, 4.0);
 			return;
 		}
 		Abrir();
@@ -36,6 +37,7 @@ public partial class Puerta : StaticBody3D, IInteractuable
 	{
 		EstaAbierta = true;
 		CollisionLayer = 0; // Deja pasar al jugador y al rayo de interacción
+		Sonidos.Reproducir(this, Sonidos.Tipo.AbrirMetal, GlobalPosition);
 		if (Bisagra != null)
 		{
 			float destino = Bisagra.Rotation.Y + Mathf.DegToRad(AnguloApertura);

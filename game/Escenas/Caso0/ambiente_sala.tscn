@@ -1,0 +1,164 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e1"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_papel"]
+albedo_color = Color(0.86, 0.83, 0.72, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_cafe"]
+albedo_color = Color(0.2, 0.12, 0.06, 0.6)
+transparency = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_colilla"]
+albedo_color = Color(0.9, 0.85, 0.75, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_carpeta"]
+albedo_color = Color(0.55, 0.45, 0.28, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_polvo"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.95, 0.85, 0.18)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="Quad_polvo"]
+material = SubResource("Mat_polvo")
+size = Vector2(0.005, 0.005)
+
+[sub_resource type="ParticleProcessMaterial" id="Proc_polvo_PolvoLampara"]
+emission_shape = 3
+emission_box_extents = Vector3(0.7, 0.7, 0.7)
+direction = Vector3(0, 1, 0)
+spread = 180.0
+initial_velocity_min = 0.01
+initial_velocity_max = 0.04
+gravity = Vector3(0, -0.005, 0)
+turbulence_enabled = true
+turbulence_noise_strength = 0.3
+
+[sub_resource type="BoxMesh" id="Box_0p12_0p002_0p12_Mat_cafe"]
+material = SubResource("Mat_cafe")
+size = Vector3(0.12, 0.002, 0.12)
+
+[sub_resource type="CylinderMesh" id="Cyl_0p006_0p006_0p04_Mat_colilla"]
+material = SubResource("Mat_colilla")
+top_radius = 0.006
+bottom_radius = 0.006
+height = 0.04
+
+[sub_resource type="BoxMesh" id="Box_0p32_0p035_0p24_Mat_carpeta"]
+material = SubResource("Mat_carpeta")
+size = Vector3(0.32, 0.035, 0.24)
+
+[sub_resource type="BoxMesh" id="Box_0p35_0p2_0p01_Mat_papel"]
+material = SubResource("Mat_papel")
+size = Vector3(0.35, 0.2, 0.01)
+
+[sub_resource type="BoxMesh" id="Box_0p55_0p4_0p01_Mat_papel"]
+material = SubResource("Mat_papel")
+size = Vector3(0.55, 0.4, 0.01)
+
+[node name="AmbienteSala" type="Node3D"]
+
+[node name="PolvoLampara" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, -2)
+amount = 90
+lifetime = 12.0
+preprocess = 12.0
+visibility_aabb = AABB(-1.4, -1.4, -1.4, 2.8, 2.8, 2.8)
+process_material = SubResource("Proc_polvo_PolvoLampara")
+draw_pass_1 = SubResource("Quad_polvo")
+
+[node name="Ambiente" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -4.9)
+script = ExtResource("e1")
+Tipo = 9
+volume_db = -10.0
+unit_size = 3.0
+max_distance = 9.0
+
+[node name="ManchaCafe" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 1.282, -2.3)
+mesh = SubResource("Box_0p12_0p002_0p12_Mat_cafe")
+
+
+[node name="Colilla0" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -0.08, 1.295, -2.28)
+mesh = SubResource("Cyl_0p006_0p006_0p04_Mat_colilla")
+
+
+[node name="Colilla1" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, -0.03, 1.295, -2.28)
+mesh = SubResource("Cyl_0p006_0p006_0p04_Mat_colilla")
+
+
+[node name="Colilla2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0, -1, 0, 1, 0, 0, 0, 0, 1, 0.02, 1.295, -2.28)
+mesh = SubResource("Cyl_0p006_0p006_0p04_Mat_colilla")
+
+
+[node name="Carpeta0" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.52, -4.5)
+mesh = SubResource("Box_0p32_0p035_0p24_Mat_carpeta")
+
+
+[node name="Carpeta1" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.9925, 0, 0.1219, 0, 1, 0, -0.1219, 0, 0.9925, 3.5, 0.56, -4.5)
+mesh = SubResource("Box_0p32_0p035_0p24_Mat_carpeta")
+
+
+[node name="Carpeta2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.9703, 0, 0.2419, 0, 1, 0, -0.2419, 0, 0.9703, 3.5, 0.6, -4.5)
+mesh = SubResource("Box_0p32_0p035_0p24_Mat_carpeta")
+
+
+[node name="Carpeta3" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.9336, 0, 0.3584, 0, 1, 0, -0.3584, 0, 0.9336, 3.5, 0.64, -4.5)
+mesh = SubResource("Box_0p32_0p035_0p24_Mat_carpeta")
+
+
+[node name="Carpeta4" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.8829, 0, 0.4695, 0, 1, 0, -0.4695, 0, 0.8829, 3.5, 0.68, -4.5)
+mesh = SubResource("Box_0p32_0p035_0p24_Mat_carpeta")
+
+
+[node name="CartelSala" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.2, 2.4, 2.99)
+
+[node name="Papel" type="MeshInstance3D" parent="CartelSala"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("Box_0p35_0p2_0p01_Mat_papel")
+
+
+[node name="Texto" type="Label3D" parent="CartelSala"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
+pixel_size = 0.0025
+modulate = Color(0.12, 0.1, 0.08, 1)
+outline_size = 0
+text = "SALA 1"
+font_size = 70
+autowrap_mode = 3
+width = 126
+
+[node name="CartelNormas" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 2.1, -4.99)
+
+[node name="Papel" type="MeshInstance3D" parent="CartelNormas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("Box_0p55_0p4_0p01_Mat_papel")
+
+
+[node name="Texto" type="Label3D" parent="CartelNormas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
+pixel_size = 0.0025
+modulate = Color(0.12, 0.1, 0.08, 1)
+outline_size = 0
+text = "NORMAS
+Nada de gritos. Nada de trucos.
+Solo la verdad."
+font_size = 30
+autowrap_mode = 3
+width = 198

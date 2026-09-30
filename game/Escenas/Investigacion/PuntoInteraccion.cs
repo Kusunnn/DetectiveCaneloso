@@ -11,7 +11,7 @@ public partial class PuntoInteraccion : StaticBody3D, IInteractuable
 
 	public string TextoAccion => Accion;
 
-	public void Interactuar(Jugador jugador)
+	public virtual void Interactuar(Jugador jugador)
 	{
 		EmitSignal(SignalName.Usado);
 	}

@@ -1,0 +1,94 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e1"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_frente"]
+albedo_color = Color(0.36, 0.38, 0.37, 1)
+metallic = 0.5
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_bandeja"]
+albedo_color = Color(0.2, 0.21, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_tirador"]
+albedo_color = Color(0.75, 0.72, 0.6, 1)
+metallic = 1.0
+roughness = 0.3
+
+[sub_resource type="BoxShape3D" id="Shape_0p04_0p28_0p5"]
+size = Vector3(0.04, 0.28, 0.5)
+
+[sub_resource type="BoxMesh" id="Box_0p03_0p26_0p48_Mat_frente"]
+material = SubResource("Mat_frente")
+size = Vector3(0.03, 0.26, 0.48)
+
+[sub_resource type="BoxMesh" id="Box_0p02_0p03_0p16_Mat_tirador"]
+material = SubResource("Mat_tirador")
+size = Vector3(0.02, 0.03, 0.16)
+
+[sub_resource type="BoxMesh" id="Box_0p42_0p02_0p44_Mat_bandeja"]
+material = SubResource("Mat_bandeja")
+size = Vector3(0.42, 0.02, 0.44)
+
+[sub_resource type="BoxMesh" id="Box_0p42_0p14_0p01_Mat_bandeja"]
+material = SubResource("Mat_bandeja")
+size = Vector3(0.42, 0.14, 0.01)
+
+[sub_resource type="BoxMesh" id="Box_0p01_0p14_0p44_Mat_bandeja"]
+material = SubResource("Mat_bandeja")
+size = Vector3(0.01, 0.14, 0.44)
+
+[node name="Cajon" type="StaticBody3D" node_paths=PackedStringArray("Parte", "MarcaRevisado")]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e1")
+Nombre = "Cajón"
+Parte = NodePath("Movil")
+TipoMovimiento = 1
+Desplazamiento = Vector3(0.35, 0, 0)
+SonidoAbrir = 1
+MarcaRevisado = NodePath("Movil/Marca")
+
+[node name="Colision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, 0.14, 0)
+shape = SubResource("Shape_0p04_0p28_0p5")
+
+[node name="Movil" type="Node3D" parent="."]
+
+[node name="Frente" type="MeshInstance3D" parent="Movil"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14, 0)
+mesh = SubResource("Box_0p03_0p26_0p48_Mat_frente")
+
+
+[node name="Tirador" type="MeshInstance3D" parent="Movil"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.025, 0.17, 0)
+mesh = SubResource("Box_0p02_0p03_0p16_Mat_tirador")
+
+
+[node name="Suelo" type="MeshInstance3D" parent="Movil"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.03, 0)
+mesh = SubResource("Box_0p42_0p02_0p44_Mat_bandeja")
+
+
+[node name="LadoIzq" type="MeshInstance3D" parent="Movil"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.1, -0.22)
+mesh = SubResource("Box_0p42_0p14_0p01_Mat_bandeja")
+
+
+[node name="LadoDer" type="MeshInstance3D" parent="Movil"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22, 0.1, 0.22)
+mesh = SubResource("Box_0p42_0p14_0p01_Mat_bandeja")
+
+
+[node name="Trasera" type="MeshInstance3D" parent="Movil"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.1, 0)
+mesh = SubResource("Box_0p01_0p14_0p44_Mat_bandeja")
+
+
+[node name="Marca" type="Label3D" parent="Movil"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.017, 0.08, -0.15)
+pixel_size = 0.003
+modulate = Color(0.95, 0.95, 0.9, 0.7)
+outline_size = 0
+text = "✓"
+font_size = 40
