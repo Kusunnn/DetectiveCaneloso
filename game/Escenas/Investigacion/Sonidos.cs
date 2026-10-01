@@ -35,9 +35,9 @@ public static class Sonidos
 	}
 
 	// Reproduce un efecto corto en una posición del mundo y se borra solo.
-	public static void Reproducir(Node padre, Tipo tipo, Vector3 posicion, float volumenDb = 0f)
+	public static void Reproducir(Node padre, Tipo tipo, Vector3 posicion, float volumenDb = 0f, float tono = 1f)
 	{
-		var reproductor = new AudioStreamPlayer3D { Stream = Obtener(tipo), VolumeDb = volumenDb, UnitSize = 4f };
+		var reproductor = new AudioStreamPlayer3D { Stream = Obtener(tipo), VolumeDb = volumenDb, UnitSize = 4f, PitchScale = tono };
 		padre.GetTree().CurrentScene.AddChild(reproductor);
 		reproductor.GlobalPosition = posicion;
 		reproductor.Finished += reproductor.QueueFree;

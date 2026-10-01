@@ -259,6 +259,9 @@ height = 0.35
 [sub_resource type="BoxShape3D" id="Forma_acusacion"]
 size = Vector3(0.7, 1.6, 0.7)
 
+[sub_resource type="BoxShape3D" id="Forma_puerta_sala"]
+size = Vector3(0.06, 2.1, 1.0)
+
 [node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
 
 [node name="HUD" parent="." unique_id=993473331 instance=ExtResource("1_ar7rw")]
@@ -629,7 +632,7 @@ transform = Transform3D(0.939, 0, -0.343, 0, 1, 0, 0.343, 0, 0.939, 1.1, 0.5, -3
 [node name="VentanaDialogo" type="CanvasLayer" parent="."]
 script = ExtResource("12_dialogo")
 
-[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky")]
+[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio")]
 script = ExtResource("13_caso")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
@@ -645,3 +648,12 @@ ZonaVestuario = NodePath("../ZonaVestuario/AreaVestuario")
 PuntoErizFinal = NodePath("../PuntoErizFinal")
 PuntoPorkyFinal = NodePath("../PuntoPorkyFinal")
 CasilleroPorky = NodePath("../ZonaVestuario/CasilleroPorky")
+ZonaAndamio = NodePath("../ZonaPasillo/AreaAndamio")
+
+[node name="PuertaSalaColision" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.03, 1.55, 3.7)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PuertaSalaColision"]
+shape = SubResource("Forma_puerta_sala")

@@ -11,6 +11,14 @@ public partial class Jugador : CharacterBody3D
 	[Export] public float Velocidad = 3.0f;
 	[Export] public float SensibilidadRaton = 0.003f;
 	[Export] public float DistanciaInteraccion = 3.0f;
+	// Agacharse: velocidad relativa y alturas de la cápsula (de pie / agachado)
+	[Export] public float FactorVelocidadAgachado = 0.45f;
+	private const float AlturaDePie = 2.0f;
+	private const float AlturaAgachado = 0.9f;
+	private const float OjosDePie = 0.6f;
+	private const float OjosAgachado = -0.25f;
+	private const float BrazoDePie = 0.8f;
+	private const float BrazoAgachado = 0.1f;
 
 	private float _gravedad = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 	private Camera3D _camara;
@@ -26,6 +34,10 @@ public partial class Jugador : CharacterBody3D
 	private bool _bloqueado = false;      // Diálogo en curso
 	private int _idAviso = 0;             // Evita que un temporizador viejo oculte un texto nuevo
 	private IInteractuable _apuntado;
+	private CollisionShape3D _colision;
+	private CapsuleShape3D _capsula;
+	private bool _quiereAgacharse = false;   // Solo se usa en modo alternar
+	private float _mezclaAgachado = 0f;      // 0 = de pie, 1 = agachado (transición suave)
 	private Material _materialResaltado;
 	// Llaves, combinaciones... que abren contenedores en otras zonas
 	private readonly System.Collections.Generic.HashSet<string> _objetos = new System.Collections.Generic.HashSet<string>();
@@ -35,6 +47,7 @@ public partial class Jugador : CharacterBody3D
 
 	public bool SeHaMovido { get; private set; } = false;
 	public bool LinternaEncendida { get; private set; } = false;
+	public bool Agachado { get; private set; } = false;
 
 	public override void _Ready()
 	{
@@ -46,6 +59,9 @@ public partial class Jugador : CharacterBody3D
 		_cuerpo = GetNodeOrNull<CuerpoDetective>("Modelo");
 		_linterna = GetNodeOrNull<SpotLight3D>("CamaraInterrogatorio/Linterna");
 		_brazoCamara.AddExcludedObject(GetRid()); // Que la cámara no choque con el propio jugador
+		_colision = GetNode<CollisionShape3D>("CollisionShape3D");
+		_capsula = (CapsuleShape3D)_colision.Shape.Duplicate(); // Propia, porque su altura cambia al agacharse
+		_colision.Shape = _capsula;
 		AplicarPerspectiva();
 		_materialResaltado = new ShaderMaterial { Shader = GD.Load<Shader>("res://Escenas/Investigacion/resaltado.gdshader") };
 
@@ -90,14 +106,14 @@ public partial class Jugador : CharacterBody3D
 			_brazoCamara.Rotation = rotacionBrazo;
 		}
 
-		// Teclas del protagonista: V cambia de cámara; C agacharse, B bailar y K caerse.
+		// Teclas del protagonista: V cambia de cámara; C o Ctrl agacharse; B bailar y K caerse.
 		// La animación de agarrar no tiene tecla: se reproduce al tomar una pista.
 		if (@event.IsActionPressed("cambiar_camara"))
 		{
 			_terceraPersona = !_terceraPersona;
 			AplicarPerspectiva();
 		}
-		else if (@event.IsActionPressed("agacharse")) _cuerpo?.HacerAccion(CuerpoDetective.Agacharse);
+		else if (@event.IsActionPressed("agacharse") && ModoAlternar) _quiereAgacharse = !_quiereAgacharse;
 		else if (@event.IsActionPressed("bailar")) _cuerpo?.HacerAccion(CuerpoDetective.Bailar);
 		else if (@event.IsActionPressed("morir")) _cuerpo?.HacerAccion(CuerpoDetective.Morir);
 
@@ -184,13 +200,29 @@ public partial class Jugador : CharacterBody3D
 		query.Exclude = new Godot.Collections.Array<Rid> { GetRid() };
 		var resultado = espacioFisico.IntersectRay(query);
 		if (resultado.Count == 0) return null;
-		return resultado["collider"].As<Node>() as IInteractuable;
+		// La pieza golpeada puede ser parte de algo mayor (la puerta de un casillero): se sube hasta encontrarlo
+		Node nodo = resultado["collider"].As<Node>();
+		for (int nivel = 0; nivel < 4 && nodo != null; nivel++, nodo = nodo.GetParent())
+		{
+			if (nodo is Contenedor { SoloAgachado: true } && !Agachado) return null; // Hay que agacharse para alcanzarlo
+			if (nodo is IInteractuable interactuable) return interactuable;
+		}
+		return null;
 	}
 
 	// Añade una evidencia al panel de pistas y avisa al caso
-	public void RegistrarEvidencia(string id, string titulo, string descripcion, bool animar = true)
+	// Usa el sistema de pistas del HUD del equipo (aviso "Expediente actualizado", tarjeta y expediente)
+	public void RegistrarEvidencia(string id, string titulo, string descripcion, Texture2D imagen = null, bool animar = true)
 	{
-		bool nueva = _hud.Call("registrar_pista", id, titulo, descripcion).AsBool();
+		// Si el objeto no trae foto, se usa la de Assets/Pistas/<id>.png
+		string rutaFoto = "res://Assets/Pistas/" + id + ".png";
+		if (imagen == null && ResourceLoader.Exists(rutaFoto)) imagen = GD.Load<Texture2D>(rutaFoto);
+		var pista = (Resource)GD.Load<GDScript>("res://hud/pista.gd").New();
+		pista.Set("id", new StringName(id));
+		pista.Set("titulo", titulo);
+		pista.Set("descripcion", descripcion);
+		pista.Set("imagen", imagen);
+		bool nueva = _hud.Call("agregar_pista", pista).AsBool();
 		if (!nueva) return;
 		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
 		Sonidos.Reproducir(this, Sonidos.Tipo.Pista, GlobalPosition);
@@ -263,6 +295,40 @@ public partial class Jugador : CharacterBody3D
 		}
 	}
 
+	private bool ModoAlternar => Configuracion.Instancia?.AgacharseAlternar ?? false;
+
+	// Agacharse: la cápsula, la cámara y el cuerpo pasan de una altura a otra de forma gradual.
+	// No se puede levantar si hay algo encima (una mesa, el andamio del pasillo...).
+	private void ActualizarAgachado(float delta)
+	{
+		bool quiere = ModoAlternar ? _quiereAgacharse : Input.IsActionPressed("agacharse");
+		if (quiere) Agachado = true;
+		else if (Agachado && HayEspacioParaLevantarse()) Agachado = false;
+		if (!ModoAlternar) _quiereAgacharse = Agachado;
+
+		_mezclaAgachado = Mathf.MoveToward(_mezclaAgachado, Agachado ? 1f : 0f, delta * 4f);
+		float t = Mathf.SmoothStep(0f, 1f, _mezclaAgachado);
+		_capsula.Height = Mathf.Lerp(AlturaDePie, AlturaAgachado, t);
+		// Los pies quedan siempre en el mismo sitio (1 m por debajo del centro del jugador)
+		_colision.Position = new Vector3(0, -1f + _capsula.Height / 2f, 0);
+		_camara.Position = new Vector3(_camara.Position.X, Mathf.Lerp(OjosDePie, OjosAgachado, t), _camara.Position.Z);
+		_brazoCamara.Position = new Vector3(_brazoCamara.Position.X, Mathf.Lerp(BrazoDePie, BrazoAgachado, t), _brazoCamara.Position.Z);
+		_cuerpo?.FijarAgachado(Agachado);
+	}
+
+	private bool HayEspacioParaLevantarse()
+	{
+		var forma = new CapsuleShape3D { Radius = _capsula.Radius - 0.02f, Height = AlturaDePie - 0.05f };
+		var consulta = new PhysicsShapeQueryParameters3D
+		{
+			Shape = forma,
+			Transform = new Transform3D(Basis.Identity, GlobalPosition + new Vector3(0, 0.03f, 0)),
+			CollisionMask = CollisionMask,
+			Exclude = new Godot.Collections.Array<Rid> { GetRid() },
+		};
+		return GetWorld3D().DirectSpaceState.IntersectShape(consulta, 1).Count == 0;
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
 		// Esc lo gestiona el menú de pausa (MenuPausa), que libera y restaura el cursor
@@ -272,8 +338,9 @@ public partial class Jugador : CharacterBody3D
 			return;
 		}
 
+		ActualizarAgachado((float)delta);
 		Vector3 velocidadActual = Velocity;
-
+		float velocidad = Velocidad * Mathf.Lerp(1f, FactorVelocidadAgachado, _mezclaAgachado);
 		if (!IsOnFloor())
 			velocidadActual.Y -= _gravedad * (float)delta;
 
@@ -282,8 +349,8 @@ public partial class Jugador : CharacterBody3D
 
 		if (direccion != Vector3.Zero)
 		{
-			velocidadActual.X = direccion.X * Velocidad;
-			velocidadActual.Z = direccion.Z * Velocidad;
+			velocidadActual.X = direccion.X * velocidad;
+			velocidadActual.Z = direccion.Z * velocidad;
 			SeHaMovido = true;
 		}
 		else

@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e1"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e2"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_papel"]
 albedo_color = Color(0.86, 0.83, 0.72, 1)
@@ -52,14 +53,6 @@ height = 0.04
 [sub_resource type="BoxMesh" id="Box_0p32_0p035_0p24_Mat_carpeta"]
 material = SubResource("Mat_carpeta")
 size = Vector3(0.32, 0.035, 0.24)
-
-[sub_resource type="BoxMesh" id="Box_0p35_0p2_0p01_Mat_papel"]
-material = SubResource("Mat_papel")
-size = Vector3(0.35, 0.2, 0.01)
-
-[sub_resource type="BoxMesh" id="Box_0p55_0p4_0p01_Mat_papel"]
-material = SubResource("Mat_papel")
-size = Vector3(0.55, 0.4, 0.01)
 
 [node name="AmbienteSala" type="Node3D"]
 
@@ -127,38 +120,28 @@ mesh = SubResource("Box_0p32_0p035_0p24_Mat_carpeta")
 
 [node name="CartelSala" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.2, 2.4, 2.99)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelSala"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p35_0p2_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="CartelSala"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "SALA 1"
-font_size = 70
-autowrap_mode = 3
-width = 126
+script = ExtResource("e2")
+Texto = "SALA 1"
+Ancho = 0.35
+Margen = 0.024
+TamFuente = 70
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.2
 
 [node name="CartelNormas" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 2.1, -4.99)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelNormas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p55_0p4_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="CartelNormas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "NORMAS
+script = ExtResource("e2")
+Texto = "NORMAS
 Nada de gritos. Nada de trucos.
 Solo la verdad."
-font_size = 30
-autowrap_mode = 3
-width = 198
+Ancho = 0.55
+Margen = 0.03
+TamFuente = 30
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.4

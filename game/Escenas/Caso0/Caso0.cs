@@ -38,6 +38,8 @@ public partial class Caso0 : Node
 	[Export] public Node3D PuntoPorkyFinal;
 	// Casillero con candado: se abre con la combinación de la mochila de Porky (recepción)
 	[Export] public Contenedor CasilleroPorky;
+	// Andamio del pasillo (se pasa agachado) y zona para enseñar la mecánica
+	[Export] public Area3D ZonaAndamio;
 
 	private readonly HashSet<string> _pistas = new HashSet<string>();
 	private readonly HashSet<string> _indicacionesDadas = new HashSet<string>();
@@ -72,6 +74,7 @@ public partial class Caso0 : Node
 		ZonaRecepcion.BodyEntered += cuerpo => { if (cuerpo == Jugador) AlEntrarRecepcion(); };
 		ZonaVestuario.BodyEntered += cuerpo => { if (cuerpo == Jugador) Indicar("vestuario", "Cuántos casilleros... Puedo abrirlos todos, pero el que me interesa es el de Porky."); };
 		CasilleroPorky.IntentoBloqueado += AlEncontrarCandado;
+		ZonaAndamio.BodyEntered += cuerpo => { if (cuerpo == Jugador) Indicar("andamio", "Un andamio cruzado en mitad del pasillo... Tendré que pasar agachado [C]."); };
 
 		Objetivo("Examina la grabadora de la sala.");
 		CallDeferred(MethodName.Presentacion);
@@ -99,7 +102,7 @@ public partial class Caso0 : Node
 				Indicar("hablar", "Botas reglamentarias... Al fondo del pasillo alguien friega. Hablaré con él [E].");
 				break;
 			case Turnos:
-				Indicar("diario", "Repasemos lo que sé: [Q] abre mi diario, y con la rueda del ratón paso las pistas.");
+				Indicar("diario", "Repasemos lo que sé: [Q] abre mi libreta, [TAB] el expediente, y con la rueda del ratón paso las pistas.");
 				break;
 			case Cinta:
 				EmpezarAcusacion();
@@ -166,6 +169,7 @@ public partial class Caso0 : Node
 	{
 		if (Jugador.TieneObjeto(Combinacion)) return;
 		Objetivo("Encuentra la combinación del candado de Porky (¿sus cosas en recepción?).");
+		Indicar("mochila", "Porky dice que no se movió de la recepción. Allí habrá dejado sus cosas...");
 	}
 
 	// ---------- Zonas ----------
@@ -180,6 +184,10 @@ public partial class Caso0 : Node
 
 	private void AlEntrarRecepcion()
 	{
+		if (_indicacionesDadas.Contains("mochila") && !Jugador.TieneObjeto(Combinacion))
+		{
+			Indicar("agacharse_banco", "Ese bulto bajo el banco de espera... Si me agacho [C], podré verlo.");
+		}
 		if (!_pistas.Contains(Turnos))
 		{
 			Indicar("recoger", "El libro de turnos, en el mostrador. Me lo llevo [E].");
@@ -286,7 +294,7 @@ public partial class Caso0 : Node
 		{
 			await Dialogo.Decir("Comisario",
 				"¿Eriz? Usa zapatillas de goma, y las huellas del pasillo son de bota reglamentaria.",
-				"Repasa tus pistas con la rueda del ratón o en el diario [Q] y vuelve a intentarlo.");
+				"Repasa tus pistas en el expediente [TAB] o en la libreta [Q] y vuelve a intentarlo.");
 			return;
 		}
 

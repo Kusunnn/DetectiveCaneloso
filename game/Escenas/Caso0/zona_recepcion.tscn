@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e4"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/cajon.tscn" id="e5"]
 [ext_resource type="PackedScene" path="res://Assets/Models/porky.fbx" id="e6"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e7"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_suelo"]
 albedo_color = Color(0.3, 0.19, 0.1, 1)
@@ -203,6 +204,32 @@ size = Vector3(0.35, 0.03, 0.22)
 material = SubResource("Mat_papel")
 size = Vector3(0.12, 0.005, 0.09)
 
+[sub_resource type="BoxShape3D" id="Shape_0p5_0p05_1p5"]
+size = Vector3(0.5, 0.05, 1.5)
+
+[sub_resource type="BoxShape3D" id="Shape_0p04_0p5_1p5"]
+size = Vector3(0.04, 0.5, 1.5)
+
+[sub_resource type="BoxMesh" id="Box_0p5_0p05_1p5_Mat_mostrador"]
+material = SubResource("Mat_mostrador")
+size = Vector3(0.5, 0.05, 1.5)
+
+[sub_resource type="BoxMesh" id="Box_0p02_0p1_1p5_Mat_mostrador"]
+material = SubResource("Mat_mostrador")
+size = Vector3(0.02, 0.1, 1.5)
+
+[sub_resource type="BoxMesh" id="Box_0p04_0p5_1p5_Mat_mostrador"]
+material = SubResource("Mat_mostrador")
+size = Vector3(0.04, 0.5, 1.5)
+
+[sub_resource type="BoxMesh" id="Box_0p45_0p4_0p04_Mat_negro"]
+material = SubResource("Mat_negro")
+size = Vector3(0.45, 0.4, 0.04)
+
+[sub_resource type="BoxMesh" id="Box_0p2_0p01_0p27_Mat_papel"]
+material = SubResource("Mat_papel")
+size = Vector3(0.2, 0.01, 0.27)
+
 [sub_resource type="BoxShape3D" id="Shape_0p55_1p1_0p52"]
 size = Vector3(0.55, 1.1, 0.52)
 
@@ -253,10 +280,6 @@ material = SubResource("Mat_blanco")
 top_radius = 0.045
 bottom_radius = 0.04
 height = 0.1
-
-[sub_resource type="BoxMesh" id="Box_0p4_0p08_0p03_Mat_oro"]
-material = SubResource("Mat_oro")
-size = Vector3(0.4, 0.08, 0.03)
 
 [sub_resource type="CapsuleShape3D" id="Cap_0p45_1p9"]
 radius = 0.45
@@ -354,14 +377,6 @@ material = SubResource("Mat_blanco")
 top_radius = 0.2
 bottom_radius = 0.2
 height = 0.04
-
-[sub_resource type="BoxMesh" id="Box_0p5_0p65_0p01_Mat_papel_rojo"]
-material = SubResource("Mat_papel_rojo")
-size = Vector3(0.5, 0.65, 0.01)
-
-[sub_resource type="BoxMesh" id="Box_0p55_0p5_0p01_Mat_papel"]
-material = SubResource("Mat_papel")
-size = Vector3(0.55, 0.5, 0.01)
 
 [sub_resource type="BoxShape3D" id="Shape_1p6_1_0p1"]
 size = Vector3(1.6, 1, 0.1)
@@ -680,13 +695,14 @@ upper_fade = 0.5
 lower_fade = 0.5
 
 [node name="MochilaPorky" type="StaticBody3D" parent="." node_paths=PackedStringArray("Parte", "MarcaRevisado")]
-transform = Transform3D(0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, 0.9397, 16.3, 0.5, -0.9)
+transform = Transform3D(0.1216, 0, 0.6894, 0, 0.7, 0, -0.6894, 0, 0.1216, 14.24, 0.5, 0.9)
 collision_layer = 10
 collision_mask = 0
 script = ExtResource("e4")
 Nombre = "Mochila de Porky"
 MensajeAlAbrir = "En la mochila de Porky hay una nota arrugada: «Casillero: 3-1-2». Eso parece una combinación..."
 ObjetoQueDa = "combinacion_porky"
+SoloAgachado = true
 Parte = NodePath("Solapa")
 EjeGiro = Vector3(1, 0, 0)
 AnguloApertura = -110.0
@@ -720,15 +736,18 @@ transform = Transform3D(0.9063, 0, 0.4226, 0, 1, 0, -0.4226, 0, 0.9063, 0, 0.41,
 mesh = SubResource("Box_0p12_0p005_0p09_Mat_papel")
 
 
-[node name="Llavero" type="Label3D" parent="MochilaPorky"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.135)
-pixel_size = 0.0025
-modulate = Color(0.95, 0.9, 0.6, 1)
-outline_size = 0
-text = "PORKY"
-font_size = 40
-autowrap_mode = 3
-width = 400.0
+[node name="Llavero" type="Node3D" parent="MochilaPorky"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.125)
+script = ExtResource("e7")
+Texto = "PORKY"
+Ancho = 0.14
+Margen = 0.006
+TamFuente = 40
+TamMinimo = 12
+TamPixel = 0.001
+ColorPapel = Color(0.85, 0.82, 0.7, 1)
+ColorTexto = Color(0.1, 0.1, 0.1, 1)
+AltoFijo = 0.05
 
 [node name="Marca" type="Label3D" parent="MochilaPorky"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.05, 0.135)
@@ -739,6 +758,53 @@ text = "✓"
 font_size = 48
 autowrap_mode = 3
 width = 400.0
+
+[node name="BancoEspera" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.28, 0.5, 0.9)
+collision_layer = 10
+collision_mask = 0
+script = ExtResource("e1")
+Titulo = "Banco de espera"
+Descripcion = "Algo asoma por debajo del banco, pero desde aquí no lo alcanzo. Tendré que agacharme [C]."
+EsEvidencia = false
+
+[node name="ColisionAsiento" type="CollisionShape3D" parent="BancoEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.425, 0)
+shape = SubResource("Shape_0p5_0p05_1p5")
+
+[node name="ColisionRespaldo" type="CollisionShape3D" parent="BancoEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, 0.7, 0)
+shape = SubResource("Shape_0p04_0p5_1p5")
+
+[node name="Asiento" type="MeshInstance3D" parent="BancoEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.425, 0)
+mesh = SubResource("Box_0p5_0p05_1p5_Mat_mostrador")
+
+
+[node name="Faldon" type="MeshInstance3D" parent="BancoEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.24, 0.35, 0)
+mesh = SubResource("Box_0p02_0p1_1p5_Mat_mostrador")
+
+
+[node name="Respaldo" type="MeshInstance3D" parent="BancoEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, 0.7, 0)
+mesh = SubResource("Box_0p04_0p5_1p5_Mat_mostrador")
+
+
+[node name="PataA" type="MeshInstance3D" parent="BancoEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.72)
+mesh = SubResource("Box_0p45_0p4_0p04_Mat_negro")
+
+
+[node name="PataB" type="MeshInstance3D" parent="BancoEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.72)
+mesh = SubResource("Box_0p45_0p4_0p04_Mat_negro")
+
+
+[node name="Revista" type="MeshInstance3D" parent="BancoEspera"]
+transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, 0.05, 0.455, 0.4)
+mesh = SubResource("Box_0p2_0p01_0p27_Mat_papel")
+
 
 [node name="Archivero" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.5, 6.6)
@@ -848,20 +914,18 @@ font_size = 40
 autowrap_mode = 3
 width = 400.0
 
-[node name="PlacaNombre" type="MeshInstance3D" parent="Escritorio"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82, -0.32)
-mesh = SubResource("Box_0p4_0p08_0p03_Mat_oro")
-
-
-[node name="Rotulo" type="Label3D" parent="Escritorio"]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.82, -0.34)
-pixel_size = 0.0025
-modulate = Color(0.1, 0.08, 0.05, 1)
-outline_size = 0
-text = "COMISARIO"
-font_size = 40
-autowrap_mode = 3
-width = 400.0
+[node name="PlacaNombre" type="Node3D" parent="Escritorio"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.84, -0.33)
+script = ExtResource("e7")
+Texto = "COMISARIO"
+Ancho = 0.4
+Margen = 0.0096
+TamFuente = 48
+TamMinimo = 12
+TamPixel = 0.0015
+ColorPapel = Color(0.9, 0.7, 0.2, 1)
+ColorTexto = Color(0.1, 0.1, 0.1, 1)
+AltoFijo = 0.08
 
 [node name="CajonEscritorio1" parent="." instance=ExtResource("e5")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 18.52, 0.9, 5.4)
@@ -1008,43 +1072,33 @@ mesh = SubResource("Cyl_0p2_0p2_0p04_Mat_blanco")
 
 [node name="CartelSeBusca" type="Node3D" parent="."]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 14.02, 2, 1.5)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelSeBusca"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p5_0p65_0p01_Mat_papel_rojo")
-
-
-[node name="Texto" type="Label3D" parent="CartelSeBusca"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "SE BUSCA
+script = ExtResource("e7")
+Texto = "SE BUSCA
 Ladrón de bolígrafos. Recompensa: un café."
-font_size = 32
-autowrap_mode = 3
-width = 180
+Ancho = 0.5
+Margen = 0.03
+TamFuente = 32
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.75, 0.25, 0.2, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.65
 
 [node name="CartelHorario" type="Node3D" parent="."]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 14.02, 2, -0.2)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelHorario"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p55_0p5_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="CartelHorario"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "HORARIO DE GUARDIA
+script = ExtResource("e7")
+Texto = "HORARIO DE GUARDIA
 22:00-02:00 Ruiz
 02:00-04:00 Porky
 04:00-08:00 Vega"
-font_size = 30
-autowrap_mode = 3
-width = 198
+Ancho = 0.55
+Margen = 0.03
+TamFuente = 30
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.5
 
 [node name="Tablon" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2, -1.95)

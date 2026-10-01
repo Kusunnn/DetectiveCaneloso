@@ -32,6 +32,9 @@ public partial class Configuracion : Node
 		}
 	}
 
+	// false: hay que mantener la tecla para seguir agachado; true: cada pulsación alterna.
+	public bool AgacharseAlternar { get; set; } = false;
+
 	public override void _EnterTree()
 	{
 		Instancia = this;
@@ -44,6 +47,7 @@ public partial class Configuracion : Node
 
 		VolumenGeneral = archivo.GetValue("audio", "volumen_general", VolumenGeneral).AsSingle();
 		PantallaCompleta = archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool();
+		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 	}
 
 	public void Guardar()
@@ -51,6 +55,7 @@ public partial class Configuracion : Node
 		var archivo = new ConfigFile();
 		archivo.SetValue("audio", "volumen_general", VolumenGeneral);
 		archivo.SetValue("video", "pantalla_completa", PantallaCompleta);
+		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
 
 		Error error = archivo.Save(RutaConfiguracion);
 		if (error != Error.Ok)

@@ -3,7 +3,8 @@
 [ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e1"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/Puerta.cs" id="e2"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e3"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso0/casillero.tscn" id="e4"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e4"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso0/casillero.tscn" id="e5"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_azulejo"]
 albedo_color = Color(0.72, 0.78, 0.72, 1)
@@ -266,14 +267,6 @@ size = Vector3(0.02, 0.7, 0.55)
 material = SubResource("Mat_agua")
 size = Vector3(0.6, 0.004, 0.5)
 
-[sub_resource type="BoxMesh" id="Box_0p7_0p4_0p01_Mat_papel"]
-material = SubResource("Mat_papel")
-size = Vector3(0.7, 0.4, 0.01)
-
-[sub_resource type="BoxMesh" id="Box_0p5_0p4_0p01_Mat_papel"]
-material = SubResource("Mat_papel")
-size = Vector3(0.5, 0.4, 0.01)
-
 [sub_resource type="BoxMesh" id="Box_0p1_0p05_1p4_Mat_tubo"]
 material = SubResource("Mat_tubo")
 size = Vector3(0.1, 0.05, 1.4)
@@ -380,57 +373,60 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.88, 1, 0.05)
 mesh = SubResource("Box_0p12_0p03_0p04_Mat_candado")
 
 
-[node name="Letrero" type="Label3D" parent="PuertaVestuario"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 0.12)
-pixel_size = 0.004
-modulate = Color(0.9, 0.85, 0.7, 1)
-outline_size = 0
-text = "VESTUARIO · SOLO PERSONAL"
-font_size = 40
-autowrap_mode = 3
-width = 400.0
+[node name="Letrero" type="Node3D" parent="PuertaVestuario"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.33, 0.12)
+script = ExtResource("e4")
+Texto = "VESTUARIO · SOLO PERSONAL"
+Ancho = 0.9
+Margen = 0.0168
+TamFuente = 48
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.1, 0.1, 0.1, 1)
+AltoFijo = 0.14
 
-[node name="Casillero01" parent="." instance=ExtResource("e4")]
+[node name="Casillero01" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, -1.75)
 Nombre = "Casillero"
 MensajeAlAbrir = "Solo hay un calcetín perdido. Espero que no sea de nadie que conozca."
 
-[node name="Nombre" parent="Casillero01/Bisagra/Hoja"]
-text = "R. PÉREZ"
+[node name="Placa" parent="Casillero01/Bisagra/Hoja"]
+Texto = "R. PÉREZ"
 
 [node name="Calcetin" type="MeshInstance3D" parent="Casillero01"]
 transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, -0.25, 0.13, 0.05)
 mesh = SubResource("Box_0p18_0p04_0p07_Mat_toalla2")
 
 
-[node name="Casillero02" parent="." instance=ExtResource("e4")]
+[node name="Casillero02" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, -1.25)
 Nombre = "Casillero"
 MensajeAlAbrir = "Huele a desinfectante. Nada útil."
 
-[node name="Nombre" parent="Casillero02/Bisagra/Hoja"]
-text = "M. RUIZ"
+[node name="Placa" parent="Casillero02/Bisagra/Hoja"]
+Texto = "M. RUIZ"
 
 [node name="Botella" type="MeshInstance3D" parent="Casillero02"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1.6, 0.1)
 mesh = SubResource("Cyl_0p04_0p05_0p2_Mat_agua")
 
 
-[node name="Casillero03" parent="." instance=ExtResource("e4")]
+[node name="Casillero03" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, -0.75)
 Nombre = "Casillero"
 MensajeAlAbrir = "Vacío. Solo polvo y una etiqueta despegada."
 
-[node name="Nombre" parent="Casillero03/Bisagra/Hoja"]
-text = "—"
+[node name="Placa" parent="Casillero03/Bisagra/Hoja"]
+Texto = "—"
 
-[node name="Casillero04" parent="." instance=ExtResource("e4")]
+[node name="Casillero04" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, -0.25)
 Nombre = "Casillero"
 MensajeAlAbrir = "Una foto de familia y un paraguas roto. Nada que ver con la cinta."
 
-[node name="Nombre" parent="Casillero04/Bisagra/Hoja"]
-text = "L. VEGA"
+[node name="Placa" parent="Casillero04/Bisagra/Hoja"]
+Texto = "L. VEGA"
 
 [node name="Foto" type="MeshInstance3D" parent="Casillero04"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.47, 1.3, 0)
@@ -442,17 +438,16 @@ transform = Transform3D(0.9848, -0.1736, 0, 0.1736, 0.9848, 0, 0, 0, 1, -0.3, 0.
 mesh = SubResource("Cyl_0p02_0p02_0p8_Mat_negro")
 
 
-[node name="CasilleroPorky" parent="." instance=ExtResource("e4")]
+[node name="CasilleroPorky" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 0.25)
 Nombre = "Casillero"
 MensajeAlAbrir = "3-1-2... ¡clic! Debajo de una bolsa de donas... ¡ahí está la cinta!"
 RequiereObjeto = "combinacion_porky"
 MensajeBloqueado = "Candado de combinación. Porky tendrá los números apuntados en algún sitio... quizá entre sus cosas, en la recepción."
-LiberarAlAbrir = true
 Nombre = "Casillero de Porky"
 
-[node name="Nombre" parent="CasilleroPorky/Bisagra/Hoja"]
-text = "PORKY"
+[node name="Placa" parent="CasilleroPorky/Bisagra/Hoja"]
+Texto = "PORKY"
 
 [node name="BolsaDonas" type="MeshInstance3D" parent="CasilleroPorky"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.57, -0.08)
@@ -464,25 +459,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.035, 1, 0.2)
 mesh = SubResource("Box_0p03_0p08_0p06_Mat_candado")
 
 
-[node name="Casillero06" parent="." instance=ExtResource("e4")]
+[node name="Casillero06" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 0.75)
 Nombre = "Casillero"
 MensajeAlAbrir = "Un uniforme recién planchado. Este agente sí cuida los detalles."
 
-[node name="Nombre" parent="Casillero06/Bisagra/Hoja"]
-text = "T. SOTO"
+[node name="Placa" parent="Casillero06/Bisagra/Hoja"]
+Texto = "T. SOTO"
 
 [node name="Uniforme" type="MeshInstance3D" parent="Casillero06"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0.95, 0)
 mesh = SubResource("Mesh_uniforme")
 
-[node name="Casillero07" parent="." instance=ExtResource("e4")]
+[node name="Casillero07" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 1.25)
 Nombre = "Casillero"
 MensajeAlAbrir = "Un casco de moto y una revista de crucigramas a medias."
 
-[node name="Nombre" parent="Casillero07/Bisagra/Hoja"]
-text = "A. DÍAZ"
+[node name="Placa" parent="Casillero07/Bisagra/Hoja"]
+Texto = "A. DÍAZ"
 
 [node name="Casco" type="MeshInstance3D" parent="Casillero07"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.63, 0)
@@ -494,13 +489,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.13, 0)
 mesh = SubResource("Box_0p25_0p02_0p2_Mat_papel")
 
 
-[node name="Casillero08" parent="." instance=ExtResource("e4")]
+[node name="Casillero08" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 1.75)
 Nombre = "Casillero"
 MensajeAlAbrir = "Envoltorios de caramelos. Muchos. Demasiados."
 
-[node name="Nombre" parent="Casillero08/Bisagra/Hoja"]
-text = "J. CAMPOS"
+[node name="Placa" parent="Casillero08/Bisagra/Hoja"]
+Texto = "J. CAMPOS"
 
 [node name="Envoltorio0" type="MeshInstance3D" parent="Casillero08"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.12, -0.12)
@@ -532,13 +527,13 @@ transform = Transform3D(-0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, -0.9397, -0.28, 0
 mesh = SubResource("Box_0p06_0p01_0p03_Mat_caramelo")
 
 
-[node name="Casillero09" parent="." instance=ExtResource("e4")]
+[node name="Casillero09" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -7.75, 0.5, -2.5)
 Nombre = "Casillero"
 MensajeAlAbrir = "Unas botas reglamentarias... limpias. Las del pasillo tenían barro, no son estas."
 
-[node name="Nombre" parent="Casillero09/Bisagra/Hoja"]
-text = "E. MORA"
+[node name="Placa" parent="Casillero09/Bisagra/Hoja"]
+Texto = "E. MORA"
 
 [node name="BotaIzq" type="MeshInstance3D" parent="Casillero09"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.2, -0.08)
@@ -550,39 +545,39 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 0.2, 0.08)
 mesh = SubResource("Box_0p25_0p2_0p09_Mat_bota")
 
 
-[node name="Casillero10" parent="." instance=ExtResource("e4")]
+[node name="Casillero10" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -7.25, 0.5, -2.5)
 Nombre = "Casillero"
 MensajeAlAbrir = "Un libro de recetas de tamales con la esquina doblada."
 
-[node name="Nombre" parent="Casillero10/Bisagra/Hoja"]
-text = "C. LEÓN"
+[node name="Placa" parent="Casillero10/Bisagra/Hoja"]
+Texto = "C. LEÓN"
 
 [node name="Recetas" type="MeshInstance3D" parent="Casillero10"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.54, 0)
 mesh = SubResource("Box_0p22_0p06_0p17_Mat_casco")
 
 
-[node name="Casillero11" parent="." instance=ExtResource("e4")]
+[node name="Casillero11" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.75, 0.5, -2.5)
 Nombre = "Casillero"
 MensajeAlAbrir = "Una toalla húmeda y un peine. Nada más."
 
-[node name="Nombre" parent="Casillero11/Bisagra/Hoja"]
-text = "S. REYES"
+[node name="Placa" parent="Casillero11/Bisagra/Hoja"]
+Texto = "S. REYES"
 
 [node name="Toalla" type="MeshInstance3D" parent="Casillero11"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.36, 1.2, 0)
 mesh = SubResource("Box_0p04_0p4_0p3_Mat_toalla")
 
 
-[node name="Casillero12" parent="." instance=ExtResource("e4")]
+[node name="Casillero12" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.25, 0.5, -2.5)
 Nombre = "Casillero"
 MensajeAlAbrir = "Una radio vieja sin pilas. Silencio total."
 
-[node name="Nombre" parent="Casillero12/Bisagra/Hoja"]
-text = "N. GIL"
+[node name="Placa" parent="Casillero12/Bisagra/Hoja"]
+Texto = "N. GIL"
 
 [node name="Radio" type="MeshInstance3D" parent="Casillero12"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, 1.58, 0)
@@ -715,41 +710,31 @@ mesh = SubResource("Box_0p6_0p004_0p5_Mat_agua")
 
 [node name="CartelUniforme" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -8.2, 2.3, 2.99)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelUniforme"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p7_0p4_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="CartelUniforme"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "¡UNIFORME IMPECABLE!
+script = ExtResource("e4")
+Texto = "¡UNIFORME IMPECABLE!
 Y las botas, sin barro."
-font_size = 34
-autowrap_mode = 3
-width = 252
+Ancho = 0.7
+Margen = 0.03
+TamFuente = 34
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.4
 
 [node name="CartelTurnos" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 2.1, -2.99)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelTurnos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p5_0p4_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="CartelTurnos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "Duchas: 5 minutos máximo.
+script = ExtResource("e4")
+Texto = "Duchas: 5 minutos máximo.
 — La dirección"
-font_size = 30
-autowrap_mode = 3
-width = 180
+Ancho = 0.5
+Margen = 0.03
+TamFuente = 30
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.4
 
 [node name="LuzSur" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.7, 3.25, -1.5)

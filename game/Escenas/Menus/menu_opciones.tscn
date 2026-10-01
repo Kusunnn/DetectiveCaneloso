@@ -68,6 +68,15 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
+[node name="EtiquetaAgacharse" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
+layout_mode = 2
+text = "Agacharse: alternar (C / Ctrl)"
+
+[node name="InterruptorAgacharse" type="CheckButton" parent="Centro/Panel/Margen/VBox/Rejilla"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+
 [node name="BotonVolver" type="Button" parent="Centro/Panel/Margen/VBox"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)

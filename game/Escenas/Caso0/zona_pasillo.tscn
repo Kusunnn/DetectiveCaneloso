@@ -5,8 +5,9 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/LuzParpadeante.cs" id="e3"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e4"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e5"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso0/casillero.tscn" id="e6"]
-[ext_resource type="PackedScene" path="res://Assets/Models/eriz.fbx" id="e7"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e6"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso0/casillero.tscn" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Models/eriz.fbx" id="e8"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_suelo"]
 albedo_color = Color(0.13, 0.14, 0.16, 1)
@@ -34,7 +35,7 @@ albedo_color = Color(0.03, 0.035, 0.045, 1)
 albedo_color = Color(0.3, 0.3, 0.28, 1)
 
 [sub_resource type="StandardMaterial3D" id="Mat_barro"]
-albedo_color = Color(0.22, 0.14, 0.07, 1)
+albedo_color = Color(0.42, 0.27, 0.12, 1)
 roughness = 1.0
 
 [sub_resource type="StandardMaterial3D" id="Mat_amarillo"]
@@ -96,22 +97,6 @@ height = 2.5
 [sub_resource type="BoxMesh" id="Box_1p8_0p06_0p06_Mat_hierro"]
 material = SubResource("Mat_hierro")
 size = Vector3(1.8, 0.06, 0.06)
-
-[sub_resource type="BoxMesh" id="Box_0p25_0p12_0p01_Mat_papel"]
-material = SubResource("Mat_papel")
-size = Vector3(0.25, 0.12, 0.01)
-
-[sub_resource type="BoxMesh" id="Box_0p5_0p7_0p01_Mat_papel"]
-material = SubResource("Mat_papel")
-size = Vector3(0.5, 0.7, 0.01)
-
-[sub_resource type="BoxMesh" id="Box_0p45_0p6_0p01_Mat_papel_rojo"]
-material = SubResource("Mat_papel_rojo")
-size = Vector3(0.45, 0.6, 0.01)
-
-[sub_resource type="BoxMesh" id="Box_0p5_0p3_0p01_Mat_papel"]
-material = SubResource("Mat_papel")
-size = Vector3(0.5, 0.3, 0.01)
 
 [sub_resource type="BoxShape3D" id="Shape_1p6_0p46_0p4"]
 size = Vector3(1.6, 0.46, 0.4)
@@ -229,6 +214,36 @@ height = 64
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_andamio"]
+albedo_color = Color(0.55, 0.45, 0.3, 1)
+roughness = 0.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_pintura"]
+albedo_color = Color(0.9, 0.9, 0.85, 1)
+
+[sub_resource type="BoxShape3D" id="Shape_0p3_0p6_2p2"]
+size = Vector3(0.3, 0.6, 2.2)
+
+[sub_resource type="BoxMesh" id="Box_0p3_0p08_2p2_Mat_andamio"]
+material = SubResource("Mat_andamio")
+size = Vector3(0.3, 0.08, 2.2)
+
+[sub_resource type="BoxMesh" id="Box_0p35_1p5_0p06_Mat_andamio"]
+material = SubResource("Mat_andamio")
+size = Vector3(0.35, 1.5, 0.06)
+
+[sub_resource type="BoxShape3D" id="Shape_0p35_1p5_0p06"]
+size = Vector3(0.35, 1.5, 0.06)
+
+[sub_resource type="CylinderMesh" id="Cyl_0p12_0p11_0p26_Mat_pintura"]
+material = SubResource("Mat_pintura")
+top_radius = 0.12
+bottom_radius = 0.11
+height = 0.26
+
+[sub_resource type="BoxShape3D" id="Shape_2_3_2p2"]
+size = Vector3(2, 3, 2.2)
 
 [sub_resource type="BoxMesh" id="Box_1p2_0p05_0p1_Mat_tubo"]
 material = SubResource("Mat_tubo")
@@ -412,21 +427,16 @@ mesh = SubResource("Box_1p8_0p06_0p06_Mat_hierro")
 
 [node name="Numero" type="Node3D" parent="Celda1"]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 2.65, -0.04)
-
-[node name="Papel" type="MeshInstance3D" parent="Celda1/Numero"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p25_0p12_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="Celda1/Numero"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "C-1"
-font_size = 60
-autowrap_mode = 3
-width = 90
+script = ExtResource("e6")
+Texto = "C-1"
+Ancho = 0.25
+Margen = 0.0144
+TamFuente = 60
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.12
 
 [node name="Celda2" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.5, 5.3)
@@ -503,21 +513,16 @@ mesh = SubResource("Box_1p8_0p06_0p06_Mat_hierro")
 
 [node name="Numero" type="Node3D" parent="Celda2"]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 2.65, -0.04)
-
-[node name="Papel" type="MeshInstance3D" parent="Celda2/Numero"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p25_0p12_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="Celda2/Numero"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "C-2"
-font_size = 60
-autowrap_mode = 3
-width = 90
+script = ExtResource("e6")
+Texto = "C-2"
+Ancho = 0.25
+Margen = 0.0144
+TamFuente = 60
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.12
 
 [node name="Celda3" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 0.5, 5.3)
@@ -594,78 +599,58 @@ mesh = SubResource("Box_1p8_0p06_0p06_Mat_hierro")
 
 [node name="Numero" type="Node3D" parent="Celda3"]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 2.65, -0.04)
-
-[node name="Papel" type="MeshInstance3D" parent="Celda3/Numero"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p25_0p12_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="Celda3/Numero"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "C-3"
-font_size = 60
-autowrap_mode = 3
-width = 90
+script = ExtResource("e6")
+Texto = "C-3"
+Ancho = 0.25
+Margen = 0.0144
+TamFuente = 60
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.12
 
 [node name="CartelBotas" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -2, 2, 5.38)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelBotas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p5_0p7_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="CartelBotas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "REGLAMENTO
+script = ExtResource("e6")
+Texto = "REGLAMENTO
 Los agentes de guardia deben llevar BOTAS REGLAMENTARIAS."
-font_size = 34
-autowrap_mode = 3
-width = 180
+Ancho = 0.5
+Margen = 0.03
+TamFuente = 34
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.7
 
 [node name="CartelSeBusca" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 6.4, 2, 5.38)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelSeBusca"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p45_0p6_0p01_Mat_papel_rojo")
-
-
-[node name="Texto" type="Label3D" parent="CartelSeBusca"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "SE BUSCA
+script = ExtResource("e6")
+Texto = "SE BUSCA
 El gato que se come los informes."
-font_size = 34
-autowrap_mode = 3
-width = 162
+Ancho = 0.45
+Margen = 0.03
+TamFuente = 34
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.75, 0.25, 0.2, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.6
 
 [node name="CartelSilencio" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 2.1, 3.22)
-
-[node name="Papel" type="MeshInstance3D" parent="CartelSilencio"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-mesh = SubResource("Box_0p5_0p3_0p01_Mat_papel")
-
-
-[node name="Texto" type="Label3D" parent="CartelSilencio"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
-pixel_size = 0.0025
-modulate = Color(0.12, 0.1, 0.08, 1)
-outline_size = 0
-text = "SILENCIO
+script = ExtResource("e6")
+Texto = "SILENCIO
 Zona de celdas"
-font_size = 36
-autowrap_mode = 3
-width = 180
+Ancho = 0.5
+Margen = 0.03
+TamFuente = 36
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.3
 
 [node name="Banco" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0.5, 3.45)
@@ -813,29 +798,32 @@ transform = Transform3D(1, 0, 0, 0, 0.9781, 0.2079, 0, -0.2079, 0.9781, 0, 0.32,
 mesh = SubResource("Box_0p3_0p65_0p01_Mat_amarillo")
 
 
-[node name="Aviso" type="Label3D" parent="PisoMojado"]
-transform = Transform3D(1, 0, 0, 0, 0.9781, -0.2079, 0, 0.2079, 0.9781, 0, 0.4, 0.08)
-pixel_size = 0.0025
-modulate = Color(0.1, 0.1, 0.1, 1)
-outline_size = 0
-text = "¡CUIDADO!
+[node name="Aviso" type="Node3D" parent="PisoMojado"]
+transform = Transform3D(1, 0, 0, 0, 0.9781, -0.2079, 0, 0.2079, 0.9781, 0, 0.42, 0.08)
+script = ExtResource("e6")
+Texto = "¡CUIDADO!
 PISO MOJADO"
-font_size = 40
-autowrap_mode = 3
-width = 400.0
+Ancho = 0.26
+Margen = 0.03
+TamFuente = 40
+TamMinimo = 12
+TamPixel = 0.0015
+ColorPapel = Color(0.85, 0.68, 0.1, 1)
+ColorTexto = Color(0.1, 0.1, 0.1, 1)
+AltoFijo = 0.3
 
 [node name="Charco" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.6, 0.505, 4.2)
 mesh = SubResource("Box_0p9_0p004_0p6_Mat_agua")
 
 
-[node name="ArmarioLimpieza" parent="." instance=ExtResource("e6")]
+[node name="ArmarioLimpieza" parent="." instance=ExtResource("e7")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 9.5, 0.5, 4.9)
 Nombre = "Armario de limpieza"
 MensajeAlAbrir = "Fregonas, cubos y un llavero enorme. Eriz tiene llave de casi todo... pero no del vestuario."
 
-[node name="Nombre" parent="ArmarioLimpieza/Bisagra/Hoja"]
-text = "LIMPIEZA"
+[node name="Placa" parent="ArmarioLimpieza/Bisagra/Hoja"]
+Texto = "LIMPIEZA"
 
 [node name="Fregona" type="MeshInstance3D" parent="ArmarioLimpieza"]
 transform = Transform3D(0.9903, -0.1392, 0, 0.1392, 0.9903, 0, 0, 0, 1, -0.25, 0.8, 0.1)
@@ -877,15 +865,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.33, 0)
 mesh = SubResource("Box_0p3_0p06_0p2_Mat_papel_rojo")
 
 
-[node name="Rotulo" type="Label3D" parent="CajaObjetosPerdidos"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0.205)
-pixel_size = 0.0025
-modulate = Color(0.1, 0.08, 0.05, 1)
-outline_size = 0
-text = "OBJETOS PERDIDOS"
-font_size = 36
-autowrap_mode = 3
-width = 400.0
+[node name="Rotulo" type="Node3D" parent="CajaObjetosPerdidos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.205)
+script = ExtResource("e6")
+Texto = "OBJETOS PERDIDOS"
+Ancho = 0.5
+Margen = 0.0144
+TamFuente = 40
+TamMinimo = 12
+TamPixel = 0.0015
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.1, 0.1, 0.1, 1)
+AltoFijo = 0.12
 
 [node name="Marca" type="Label3D" parent="CajaObjetosPerdidos"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.1, 0.205)
@@ -909,7 +900,7 @@ Cuerpo = NodePath("Modelo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
 shape = SubResource("Cap_0p45_1p7")
 
-[node name="Modelo" parent="Eriz" instance=ExtResource("e7")]
+[node name="Modelo" parent="Eriz" instance=ExtResource("e8")]
 transform = Transform3D(4.77, 0, 0, 0, 4.77, 0, 0, 0, 4.77, 0, 0, 0)
 
 [node name="Light" parent="Eriz/Modelo"]
@@ -958,6 +949,69 @@ size = Vector3(1.4, 0.6, 1.4)
 texture_albedo = SubResource("Tex_sombra")
 upper_fade = 0.5
 lower_fade = 0.5
+
+[node name="Andamio" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0.5, 4.3)
+collision_layer = 2
+collision_mask = 0
+
+[node name="ColisionTablon" type="CollisionShape3D" parent="Andamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+shape = SubResource("Shape_0p3_0p6_2p2")
+
+[node name="Tablon" type="MeshInstance3D" parent="Andamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+mesh = SubResource("Box_0p3_0p08_2p2_Mat_andamio")
+
+
+[node name="Tablon2" type="MeshInstance3D" parent="Andamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
+mesh = SubResource("Box_0p3_0p08_2p2_Mat_andamio")
+
+
+[node name="Caballete-10" type="MeshInstance3D" parent="Andamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.98)
+mesh = SubResource("Box_0p35_1p5_0p06_Mat_andamio")
+
+
+[node name="Caballete10" type="MeshInstance3D" parent="Andamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.98)
+mesh = SubResource("Box_0p35_1p5_0p06_Mat_andamio")
+
+
+[node name="ColisionCaballeteSur" type="CollisionShape3D" parent="Andamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.98)
+shape = SubResource("Shape_0p35_1p5_0p06")
+
+[node name="ColisionCaballeteNorte" type="CollisionShape3D" parent="Andamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.98)
+shape = SubResource("Shape_0p35_1p5_0p06")
+
+[node name="BotePintura" type="MeshInstance3D" parent="Andamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 0.13, -0.75)
+mesh = SubResource("Cyl_0p12_0p11_0p26_Mat_pintura")
+
+
+[node name="Aviso" type="Node3D" parent="Andamio"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.16, 1.3, 0)
+script = ExtResource("e6")
+Texto = "PINTURA FRESCA"
+Ancho = 0.6
+Margen = 0.0216
+TamFuente = 48
+TamMinimo = 12
+TamPixel = 0.002
+ColorPapel = Color(0.86, 0.83, 0.72, 1)
+ColorTexto = Color(0.1, 0.1, 0.1, 1)
+AltoFijo = 0.18
+
+[node name="AreaAndamio" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="Colision" type="CollisionShape3D" parent="AreaAndamio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2, 2, 4.3)
+shape = SubResource("Shape_2_3_2p2")
 
 [node name="FluorescenteParpadeante" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.5, 3.3, 4.3)

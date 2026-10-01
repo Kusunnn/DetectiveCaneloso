@@ -103,7 +103,7 @@ func _input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 			return
 		match event.keycode:
-			KEY_CTRL:
+			KEY_TAB:
 				_detalle = not _detalle
 				diario_abierto = false
 				if _detalle and not pistas.is_empty():
@@ -127,6 +127,13 @@ func _input(event: InputEvent) -> void:
 
 func _texto(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float = -1) -> void:
 	_lienzo.draw_string(fuente, p, texto, HORIZONTAL_ALIGNMENT_LEFT, ancho, tam, color)
+
+## Como _texto, pero si no cabe en el ancho baja la fuente (mínimo 60 %) en lugar de cortar el texto.
+func _texto_ajustado(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float) -> void:
+	var t := tam
+	while t > int(tam * 0.6) and fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x > ancho:
+		t -= 1
+	_texto(texto, p, fuente, t, color, ancho)
 
 func _parrafo(texto: String, p: Vector2, ancho: float, tam: int, color: Color, max_lineas: int = 4) -> void:
 	var parrafo := TextParagraph.new()
@@ -249,10 +256,10 @@ func _dibujar_expediente(w: float, h: float) -> void:
 				_lienzo.draw_rect(Rect2(fila, Vector2(340, 42)), Color(TINTA, 0.12))
 				_lienzo.draw_rect(Rect2(fila, Vector2(3, 42)), AMBAR)
 			_texto("%02d" % (i + 1), fila + Vector2(12, 28), MONO, 13, TINTA)
-			_texto(pistas[i].titulo, fila + Vector2(47, 29), _bold, 24, TINTA, 283)
+			_texto_ajustado(pistas[i].titulo, fila + Vector2(47, 29), _bold, 24, TINTA, 283)
 		_linea(origen + Vector2(396, 93), origen + Vector2(396, 472), Color(TINTA, 0.25))
 		var pista := pistas[indice_pista]
-		_texto(pista.titulo, origen + Vector2(425, 123), _bold, 32, TINTA, 535)
+		_texto_ajustado(pista.titulo, origen + Vector2(425, 123), _bold, 32, TINTA, 535)
 		_parrafo(pista.descripcion, origen + Vector2(425, 146), 530, 18, TINTA, 8)
 		if pista.imagen:
 			var medida := pista.imagen.get_size()
@@ -275,7 +282,7 @@ func _dibujar_pistas(w: float, h: float) -> void:
 	else:
 		var pista := pistas[indice_pista]
 		var ancho := 210.0 if pista.imagen else 311.0
-		_texto(pista.titulo, p + Vector2(22, 93), _bold, 30, TINTA, ancho)
+		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, TINTA, ancho)
 		if pista.imagen:
 			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), BLANCO)
 			var zona := Rect2(p + Vector2(254, 63), Vector2(76, 64))

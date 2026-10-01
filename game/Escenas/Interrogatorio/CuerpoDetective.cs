@@ -66,19 +66,77 @@ public partial class CuerpoDetective : Node3D
 		_animaciones.GetAnimationLibrary("").AddAnimation(Caminar, copia);
 	}
 
-	// Llamar cada frame de física: reposo o caminar, salvo que haya una acción en curso.
+	// Tramos de anim_agacharse (medidos en la animación): bajar 0–1.2 s, agachado 1.2–5.2 s, levantarse 5.8 s–final.
+	private const double FinBajar = 1.2;
+	private const double FinAgachado = 5.2;
+	private const double InicioLevantarse = 5.8;
+
+	private bool _agachado = false;
+	private bool _levantandose = false;
+
+	// Llamar cada frame de física: reposo o caminar (de pie o agachado), salvo que haya una acción en curso.
 	public void ActualizarMovimiento(bool moviendose)
 	{
 		if (_animaciones == null) return;
 
-		// Moverse interrumpe cualquier acción (bailar, agacharse...)
+		// Moverse interrumpe cualquier acción (bailar, caerse...)
 		if (moviendose) _accionActual = null;
 		if (HaciendoAccion) return;
+
+		if (_agachado || _levantandose)
+		{
+			ActualizarAgachado(moviendose);
+			return;
+		}
 
 		string deseada = moviendose ? Caminar : Reposo;
 		if (_animaciones.CurrentAnimation != deseada)
 		{
+			_animaciones.SpeedScale = 1f;
 			_animaciones.Play(deseada, Mezcla);
+		}
+	}
+
+	public void FijarAgachado(bool agachado)
+	{
+		if (_animaciones == null || agachado == _agachado) return;
+		_agachado = agachado;
+		_accionActual = null;
+		if (agachado)
+		{
+			_levantandose = false;
+			// Si estaba levantándose, se retoma desde la postura agachada sin saltos
+			if (_animaciones.CurrentAnimation != Agacharse) _animaciones.Play(Agacharse, Mezcla);
+			else if (_animaciones.CurrentAnimationPosition > FinAgachado) _animaciones.Seek(FinBajar, true);
+		}
+		else
+		{
+			_levantandose = true;
+			if (_animaciones.CurrentAnimation != Agacharse) _animaciones.Play(Agacharse, Mezcla);
+			double actual = _animaciones.CurrentAnimationPosition;
+			// Desde la postura agachada se salta al tramo de levantarse; si aún bajaba, se invierte
+			_animaciones.Seek(actual < FinBajar ? InicioLevantarse + (FinBajar - actual) * 0.5 : InicioLevantarse, true);
+		}
+	}
+
+	private void ActualizarAgachado(bool moviendose)
+	{
+		if (_animaciones.CurrentAnimation != Agacharse)
+		{
+			if (_levantandose) { _levantandose = false; return; }
+			_animaciones.Play(Agacharse, Mezcla);
+		}
+		double posicion = _animaciones.CurrentAnimationPosition;
+		if (_agachado)
+		{
+			// Idle agachado: bucle del tramo central. Al moverse va más rápido (no hay animación
+			// de caminar agachado en el repo, así que se reutiliza este tramo con balanceo).
+			_animaciones.SpeedScale = moviendose ? 1.8f : 1f;
+			if (posicion > FinAgachado) _animaciones.Seek(FinBajar + 0.3, true);
+		}
+		else
+		{
+			_animaciones.SpeedScale = 1.3f;
 		}
 	}
 
@@ -96,6 +154,13 @@ public partial class CuerpoDetective : Node3D
 		if (nombre == _accionActual && nombre != Morir)
 		{
 			_accionActual = null;
+		}
+		// Terminó de levantarse: vuelve a reposo
+		if (nombre == Agacharse && _levantandose)
+		{
+			_levantandose = false;
+			_animaciones.SpeedScale = 1f;
+			_animaciones.Play(Reposo, Mezcla);
 		}
 	}
 
