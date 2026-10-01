@@ -39,6 +39,9 @@ public partial class Configuracion : Node
 	private float _sensibilidad = 1f;
 	public float SensibilidadRaton { get => _sensibilidad; set => _sensibilidad = Mathf.Clamp(value, 0.3f, 2f); }
 
+	// Contador de FPS en la esquina, se muestra y oculta con F3
+	private Label _contadorFps;
+
 	public override void _EnterTree()
 	{
 		Instancia = this;
@@ -46,6 +49,9 @@ public partial class Configuracion : Node
 
 	public override void _Ready()
 	{
+		ProcessMode = ProcessModeEnum.Always;
+		CrearContadorFps();
+
 		var archivo = new ConfigFile();
 		if (archivo.Load(RutaConfiguracion) != Error.Ok) return; // Primera vez: valores por defecto
 
@@ -53,6 +59,33 @@ public partial class Configuracion : Node
 		PantallaCompleta = archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool();
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
+	}
+
+	private void CrearContadorFps()
+	{
+		var capa = new CanvasLayer { Layer = 100 };
+		AddChild(capa);
+		_contadorFps = new Label { Position = new Vector2(12, 8), Visible = false };
+		_contadorFps.AddThemeFontSizeOverride("font_size", 22);
+		_contadorFps.AddThemeColorOverride("font_color", new Color("efca08"));
+		_contadorFps.AddThemeColorOverride("font_outline_color", Colors.Black);
+		_contadorFps.AddThemeConstantOverride("outline_size", 6);
+		capa.AddChild(_contadorFps);
+		SetProcess(false);
+	}
+
+	public override void _Input(InputEvent evento)
+	{
+		if (evento is InputEventKey tecla && tecla.Pressed && !tecla.Echo && tecla.Keycode == Key.F3)
+		{
+			_contadorFps.Visible = !_contadorFps.Visible;
+			SetProcess(_contadorFps.Visible);
+		}
+	}
+
+	public override void _Process(double delta)
+	{
+		_contadorFps.Text = Engine.GetFramesPerSecond() + " FPS";
 	}
 
 	public void Guardar()

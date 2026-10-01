@@ -283,7 +283,7 @@ public partial class Caso0 : Node
 			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Enseñarle una prueba del expediente" });
 			lista.Add(new Opcion { Id = "adios", Texto = "Seguir investigando" });
 			var vistas = lista.Select(o => new OpcionVista(o.Texto, o.Tipo, p.Leidas.Contains(o.Id) && o.Id != "evidencia")).ToList();
-			int elegida = await Dialogo.Elegir(p.Hablante, "¿Qué le digo?", vistas);
+			int elegida = await Dialogo.Elegir(p.Hablante, "¿Qué le digo?", vistas, salir: vistas.Count - 1);
 			var opcion = lista[elegida];
 			if (opcion.Id == "adios") break;
 			p.Leidas.Add(opcion.Id);

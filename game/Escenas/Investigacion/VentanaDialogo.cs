@@ -59,6 +59,7 @@ public partial class VentanaDialogo : CanvasLayer
 	private GridContainer _evidencias;
 
 	private TaskCompletionSource<int> _espera;
+	private int _indiceSalir = -1;
 	private ulong _abiertoEn;
 	private Tween _escritura;
 	private Tween _temblor;
@@ -99,6 +100,7 @@ public partial class VentanaDialogo : CanvasLayer
 		panel.OffsetRight = -70;
 		panel.OffsetTop = -330;
 		panel.OffsetBottom = -30;
+		panel.GrowVertical = Control.GrowDirection.Begin; // Con muchas opciones crece hacia arriba, nunca se sale de la pantalla
 		_caja = panel;
 		AddChild(panel);
 
@@ -191,13 +193,15 @@ public partial class VentanaDialogo : CanvasLayer
 		return Elegir(HablantePorNombre(nombre), pregunta, vistas);
 	}
 
-	// Devuelve el índice de la opción elegida.
-	public async Task<int> Elegir(Hablante hablante, string pregunta, IList<OpcionVista> opciones)
+	// Devuelve el índice de la opción elegida. Si se pasa "salir", Esc o clic derecho eligen esa opción.
+	public async Task<int> Elegir(Hablante hablante, string pregunta, IList<OpcionVista> opciones, int salir = -1)
 	{
 		Abrir();
 		MostrarHablante(hablante);
 		Escribir(pregunta, instantaneo: true);
-		_ayuda.Text = "Elige con el ratón o con las teclas 1-" + opciones.Count;
+		_indiceSalir = salir;
+		_ayuda.Text = "Elige con el ratón o con las teclas 1-" + Math.Min(opciones.Count, 9)
+			+ (salir >= 0 ? "   ·   [Esc] o clic derecho: terminar la conversación" : "");
 		LiberarRaton();
 
 		_espera = new TaskCompletionSource<int>();
@@ -213,6 +217,7 @@ public partial class VentanaDialogo : CanvasLayer
 		((Button)_opciones.GetChild(0)).GrabFocus();
 
 		int elegida = await _espera.Task;
+		_indiceSalir = -1;
 		LimpiarOpciones();
 		RestaurarRaton();
 		Cerrar();
@@ -225,7 +230,7 @@ public partial class VentanaDialogo : CanvasLayer
 		Abrir();
 		MostrarHablante(hablante);
 		Escribir(pistas.Count == 0 ? "Todavía no tengo evidencias que enseñar." : "¿Qué evidencia le enseño?", instantaneo: true);
-		_ayuda.Text = "Elige una pista del expediente";
+		_ayuda.Text = "Elige una pista del expediente   ·   [Esc] o clic derecho: volver";
 		LiberarRaton();
 
 		_espera = new TaskCompletionSource<int>();
@@ -276,12 +281,12 @@ public partial class VentanaDialogo : CanvasLayer
 	{
 		var boton = new Button { Text = texto, Alignment = HorizontalAlignment.Left, Flat = false };
 		boton.AddThemeFontOverride("font", _mono);
-		boton.AddThemeFontSizeOverride("font_size", 22);
+		boton.AddThemeFontSizeOverride("font_size", 21);
 		var normal = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
-		normal.SetContentMarginAll(6);
+		normal.SetContentMarginAll(4);
 		var foco = new StyleBoxFlat { BgColor = new Color(Ambar, 0.35f), BorderColor = Ambar };
 		foco.BorderWidthLeft = 5;
-		foco.SetContentMarginAll(6);
+		foco.SetContentMarginAll(4);
 		boton.AddThemeStyleboxOverride("normal", normal);
 		boton.AddThemeStyleboxOverride("hover", foco);
 		boton.AddThemeStyleboxOverride("focus", foco);
@@ -375,6 +380,17 @@ public partial class VentanaDialogo : CanvasLayer
 	public override void _Input(InputEvent evento)
 	{
 		if (!_caja.Visible) return;
+
+		// Esc o clic derecho: salir de la conversación o volver del selector de evidencias
+		bool eligiendo = _opciones.GetChildCount() > 0 || _evidencias.GetChildCount() > 0;
+		bool cancelar = evento.IsActionPressed("ui_cancel") || evento.IsActionPressed("pausa")
+			|| (evento is InputEventMouseButton derecho && derecho.Pressed && derecho.ButtonIndex == MouseButton.Right);
+		if (eligiendo && cancelar)
+		{
+			if (_evidencias.GetChildCount() > 0) { GetViewport().SetInputAsHandled(); _espera?.TrySetResult(-1); }
+			else if (_indiceSalir >= 0) { GetViewport().SetInputAsHandled(); _espera?.TrySetResult(_indiceSalir); }
+			return;
+		}
 
 		// Teclas 1-9 para elegir opción
 		if (_opciones.GetChildCount() > 0 && evento is InputEventKey numero && numero.Pressed && !numero.Echo)
