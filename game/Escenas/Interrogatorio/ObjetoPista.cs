@@ -16,6 +16,8 @@ public partial class ObjetoPista : StaticBody3D, IInteractuable
 	[Export] public bool RequiereLinterna = false;
 	// Foto tipo polaroid que muestra el HUD en la tarjeta de la pista y en el expediente.
 	[Export] public Texture2D Imagen;
+	// Lo que piensa el detective la primera vez que lo mira (sin pulsar nada). Vacío = nada.
+	[Export(PropertyHint.MultilineText)] public string ComentarioAlMirar = "";
 
 	public bool Encontrada { get; private set; } = false;
 

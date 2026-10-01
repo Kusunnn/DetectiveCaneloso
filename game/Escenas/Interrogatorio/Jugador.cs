@@ -13,6 +13,7 @@ public partial class Jugador : CharacterBody3D
 	[Export] public float DistanciaInteraccion = 3.0f;
 	// Agacharse: velocidad relativa y alturas de la cápsula (de pie / agachado)
 	[Export] public float FactorVelocidadAgachado = 0.45f;
+	[Export] public float FactorVelocidadCorrer = 1.6f;
 	private const float AlturaDePie = 2.0f;
 	private const float AlturaAgachado = 0.9f;
 	private const float OjosDePie = 0.6f;
@@ -38,6 +39,7 @@ public partial class Jugador : CharacterBody3D
 	private CapsuleShape3D _capsula;
 	private bool _quiereAgacharse = false;   // Solo se usa en modo alternar
 	private float _mezclaAgachado = 0f;      // 0 = de pie, 1 = agachado (transición suave)
+	private readonly System.Collections.Generic.HashSet<ulong> _comentados = new System.Collections.Generic.HashSet<ulong>();
 	private Material _materialResaltado;
 	// Llaves, combinaciones... que abren contenedores en otras zonas
 	private readonly System.Collections.Generic.HashSet<string> _objetos = new System.Collections.Generic.HashSet<string>();
@@ -93,9 +95,10 @@ public partial class Jugador : CharacterBody3D
 		// Rotación de la vista con el ratón
 		if (@event is InputEventMouseMotion eventoRaton && Input.MouseMode == Input.MouseModeEnum.Captured)
 		{
-			RotateY(-eventoRaton.Relative.X * SensibilidadRaton);
+			float sensibilidad = SensibilidadRaton * (Configuracion.Instancia?.SensibilidadRaton ?? 1f);
+			RotateY(-eventoRaton.Relative.X * sensibilidad);
 
-			float giroVertical = -eventoRaton.Relative.Y * SensibilidadRaton;
+			float giroVertical = -eventoRaton.Relative.Y * sensibilidad;
 			Vector3 rotacionCamara = _camara.Rotation;
 			rotacionCamara.X = Mathf.Clamp(rotacionCamara.X + giroVertical, -Mathf.Pi / 2.5f, Mathf.Pi / 2.5f);
 			_camara.Rotation = rotacionCamara;
@@ -279,6 +282,8 @@ public partial class Jugador : CharacterBody3D
 			_apuntado = apuntado;
 			Resaltar(_apuntado, true);
 			if (apuntado != null) Sonidos.Reproducir(this, Sonidos.Tipo.Paso, GlobalPosition, -14f);
+			if (apuntado is ObjetoPista objeto && !string.IsNullOrEmpty(objeto.ComentarioAlMirar) && _comentados.Add(objeto.GetInstanceId()))
+				MostrarPensamiento(objeto.ComentarioAlMirar, 4.0);
 		}
 		// Se actualiza siempre: el texto cambia al abrir un contenedor ("Abrir" → "Revisado")
 		_hud.Set("interaccion", _apuntado?.TextoAccion ?? "");
@@ -341,6 +346,7 @@ public partial class Jugador : CharacterBody3D
 		ActualizarAgachado((float)delta);
 		Vector3 velocidadActual = Velocity;
 		float velocidad = Velocidad * Mathf.Lerp(1f, FactorVelocidadAgachado, _mezclaAgachado);
+		if (Input.IsActionPressed("correr") && !Agachado) velocidad *= FactorVelocidadCorrer;
 		if (!IsOnFloor())
 			velocidadActual.Y -= _gravedad * (float)delta;
 

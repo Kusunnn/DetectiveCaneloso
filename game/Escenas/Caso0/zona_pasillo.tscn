@@ -133,6 +133,28 @@ size = Vector3(7.8, 0.06, 0.9)
 material = SubResource("Mat_barro")
 size = Vector3(0.28, 0.006, 0.11)
 
+[sub_resource type="StandardMaterial3D" id="Mat_envoltorio"]
+albedo_color = Color(0.92, 0.9, 0.82, 1)
+roughness = 0.4
+
+[sub_resource type="BoxShape3D" id="Shape_0p4_0p08_0p35"]
+size = Vector3(0.4, 0.08, 0.35)
+
+[sub_resource type="BoxMesh" id="Box_0p22_0p015_0p16_Mat_envoltorio"]
+material = SubResource("Mat_envoltorio")
+size = Vector3(0.22, 0.015, 0.16)
+
+[sub_resource type="BoxMesh" id="Box_0p02_0p012_0p02_Mat_carton"]
+material = SubResource("Mat_carton")
+size = Vector3(0.02, 0.012, 0.02)
+
+[sub_resource type="BoxMesh" id="Box_0p015_0p01_0p015_Mat_carton"]
+material = SubResource("Mat_carton")
+size = Vector3(0.015, 0.01, 0.015)
+
+[sub_resource type="BoxShape3D" id="Shape_0p5_0p4_0p04"]
+size = Vector3(0.5, 0.4, 0.04)
+
 [sub_resource type="BoxShape3D" id="Shape_0p8_1_0p5"]
 size = Vector3(0.8, 1, 0.5)
 
@@ -429,9 +451,9 @@ mesh = SubResource("Box_1p8_0p06_0p06_Mat_hierro")
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 2.65, -0.04)
 script = ExtResource("e6")
 Texto = "C-1"
-Ancho = 0.25
+Ancho = 0.5
 Margen = 0.0144
-TamFuente = 60
+TamFuente = 40
 TamMinimo = 12
 TamPixel = 0.0025
 ColorPapel = Color(0.86, 0.83, 0.72, 1)
@@ -514,10 +536,10 @@ mesh = SubResource("Box_1p8_0p06_0p06_Mat_hierro")
 [node name="Numero" type="Node3D" parent="Celda2"]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 2.65, -0.04)
 script = ExtResource("e6")
-Texto = "C-2"
-Ancho = 0.25
+Texto = "C-2 · T. GARRAS"
+Ancho = 0.5
 Margen = 0.0144
-TamFuente = 60
+TamFuente = 40
 TamMinimo = 12
 TamPixel = 0.0025
 ColorPapel = Color(0.86, 0.83, 0.72, 1)
@@ -601,9 +623,9 @@ mesh = SubResource("Box_1p8_0p06_0p06_Mat_hierro")
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 2.65, -0.04)
 script = ExtResource("e6")
 Texto = "C-3"
-Ancho = 0.25
+Ancho = 0.5
 Margen = 0.0144
-TamFuente = 60
+TamFuente = 40
 TamMinimo = 12
 TamPixel = 0.0025
 ColorPapel = Color(0.86, 0.83, 0.72, 1)
@@ -760,6 +782,51 @@ mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 0.004, 0.12)
 mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
 
+
+[node name="Envoltorio" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.5, 5.05)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e1")
+Id = "envoltorio"
+Titulo = "Envoltorio de sándwich"
+Descripcion = "Papel de sándwich de mortadela con migas frescas, junto a la reja de la C-2, la celda de Tito Garras. Alguien le trajo la cena de madrugada."
+RequiereLinterna = true
+SeRecoge = true
+
+[node name="Colision" type="CollisionShape3D" parent="Envoltorio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+shape = SubResource("Shape_0p4_0p08_0p35")
+
+[node name="Marcas" type="Node3D" parent="Envoltorio" groups=["solo_con_linterna"]]
+
+[node name="Papel" type="MeshInstance3D" parent="Envoltorio/Marcas"]
+transform = Transform3D(0.9063, 0, 0.4226, 0, 1, 0, -0.4226, 0, 0.9063, 0, 0.01, 0)
+mesh = SubResource("Box_0p22_0p015_0p16_Mat_envoltorio")
+
+
+[node name="Miga1" type="MeshInstance3D" parent="Envoltorio/Marcas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.008, 0.08)
+mesh = SubResource("Box_0p02_0p012_0p02_Mat_carton")
+
+
+[node name="Miga2" type="MeshInstance3D" parent="Envoltorio/Marcas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.008, -0.06)
+mesh = SubResource("Box_0p015_0p01_0p015_Mat_carton")
+
+
+[node name="ComentarioBotas" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2, 5.36)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e1")
+Titulo = "Reglamento"
+Descripcion = "«Los agentes de guardia deben llevar botas reglamentarias.» Buen dato para un detective."
+EsEvidencia = false
+ComentarioAlMirar = "Botas reglamentarias para los agentes... Lo tendré en cuenta."
+
+[node name="Colision" type="CollisionShape3D" parent="ComentarioBotas"]
+shape = SubResource("Shape_0p5_0p4_0p04")
 
 [node name="CarritoLimpieza" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.5, 4.95)

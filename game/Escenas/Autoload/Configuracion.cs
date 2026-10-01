@@ -35,6 +35,10 @@ public partial class Configuracion : Node
 	// false: hay que mantener la tecla para seguir agachado; true: cada pulsación alterna.
 	public bool AgacharseAlternar { get; set; } = false;
 
+	// Multiplicador de la sensibilidad del ratón (0.3 a 2.0; 1 = normal).
+	private float _sensibilidad = 1f;
+	public float SensibilidadRaton { get => _sensibilidad; set => _sensibilidad = Mathf.Clamp(value, 0.3f, 2f); }
+
 	public override void _EnterTree()
 	{
 		Instancia = this;
@@ -48,6 +52,7 @@ public partial class Configuracion : Node
 		VolumenGeneral = archivo.GetValue("audio", "volumen_general", VolumenGeneral).AsSingle();
 		PantallaCompleta = archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool();
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
+		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
 	}
 
 	public void Guardar()
@@ -56,6 +61,7 @@ public partial class Configuracion : Node
 		archivo.SetValue("audio", "volumen_general", VolumenGeneral);
 		archivo.SetValue("video", "pantalla_completa", PantallaCompleta);
 		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
+		archivo.SetValue("controles", "sensibilidad_raton", SensibilidadRaton);
 
 		Error error = archivo.Save(RutaConfiguracion);
 		if (error != Error.Ok)

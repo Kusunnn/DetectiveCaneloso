@@ -20,6 +20,10 @@ var _aviso: float = 0.0
 var _detalle: bool = false
 var diario_abierto: bool = false
 var linterna_encendida: bool = false
+## Notas de la libreta (Q): testimonios y deducciones que el caso va apuntando.
+var notas: Array[String] = []
+var _aviso_titulo := "EXPEDIENTE ACTUALIZADO"
+var _aviso_detalle := "+1 PISTA"
 var _lienzo: Control
 var _bold: FontVariation
 var _medium: FontVariation
@@ -62,10 +66,24 @@ func agregar_pista(pista: Pista) -> bool:
 		if existente.id == pista.id:
 			return false
 	pistas.append(pista)
-	_aviso = 3.0
+	avisar("EXPEDIENTE ACTUALIZADO", "+1 PISTA")
 	if pistas.size() == 1:
 		pista_seleccionada.emit(pista)
 	return true
+
+## Añade una nota a la libreta (Q) y muestra el aviso. Devuelve false si ya estaba.
+func agregar_nota(texto: String) -> bool:
+	if texto.is_empty() or notas.has(texto):
+		return false
+	notas.append(texto)
+	avisar("LIBRETA ACTUALIZADA", "+1 NOTA")
+	return true
+
+## Aviso superior central (mismo estilo para pistas, notas y deducciones).
+func avisar(titulo: String, detalle: String) -> void:
+	_aviso_titulo = titulo
+	_aviso_detalle = detalle
+	_aviso = 3.0
 
 # Puente para los objetos de pista escritos en C#.
 func registrar_pista(id: String, titulo: String, descripcion: String) -> bool:
@@ -220,8 +238,10 @@ func _dibujar() -> void:
 	if _aviso > 0:
 		var a := minf(_aviso / 0.3, 1.0)
 		_nota(Rect2(w / 2 - 185, 52, 370, 100), Color(PAPEL, a))
-		_texto("EXPEDIENTE ACTUALIZADO", Vector2(w / 2 - 157, 91), _bold, 28, Color(TINTA, a))
-		_texto("+1 PISTA", Vector2(w / 2 - 42, 129), MONO, 17, Color(TINTA, a))
+		var ancho_titulo := _bold.get_string_size(_aviso_titulo, HORIZONTAL_ALIGNMENT_LEFT, -1, 28).x
+		var ancho_detalle := MONO.get_string_size(_aviso_detalle, HORIZONTAL_ALIGNMENT_LEFT, -1, 17).x
+		_texto_ajustado(_aviso_titulo, Vector2(w / 2 - minf(ancho_titulo, 320) / 2, 91), _bold, 28, Color(TINTA, a), 320)
+		_texto(_aviso_detalle, Vector2(w / 2 - ancho_detalle / 2, 129), MONO, 17, Color(TINTA, a))
 	# Retícula e interacción opcional.
 	_lienzo.draw_circle(Vector2(w / 2, h / 2), 2, Color(BLANCO, 0.65))
 	if not interaccion.is_empty():
@@ -235,8 +255,23 @@ func _dibujar() -> void:
 		_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.04, 0.06, 0.85))
 		var origen := Vector2(w / 2 - 420, h / 2 - 270)
 		_nota(Rect2(origen, Vector2(840, 540)))
-		_texto("DIARIO", origen + Vector2(35, 55), _bold, 34, TINTA)
+		_texto("LIBRETA", origen + Vector2(35, 55), _bold, 34, TINTA)
 		_linea(origen + Vector2(420, 30), origen + Vector2(420, 490), Color(TINTA, 0.22))
+		_dibujar_notas(origen)
+
+## Notas en dos columnas; si no caben, se muestran las más recientes.
+func _dibujar_notas(origen: Vector2) -> void:
+	if notas.is_empty():
+		_texto("Aún no has apuntado nada.", origen + Vector2(35, 110), MONO, 15, TINTA)
+		return
+	var por_columna := 6
+	var inicio := maxi(0, notas.size() - por_columna * 2)
+	for i in range(inicio, notas.size()):
+		var k := i - inicio
+		var columna := k / por_columna
+		var fila := k % por_columna
+		var p := origen + Vector2(35 + columna * 405, 90 + fila * 70)
+		_parrafo("• " + notas[i], p, 360, 14, TINTA, 4)
 
 func _dibujar_expediente(w: float, h: float) -> void:
 	_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.04, 0.06, 0.85))

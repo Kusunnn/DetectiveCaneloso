@@ -281,6 +281,13 @@ top_radius = 0.045
 bottom_radius = 0.04
 height = 0.1
 
+[sub_resource type="BoxShape3D" id="Shape_0p22_0p04_0p16"]
+size = Vector3(0.22, 0.04, 0.16)
+
+[sub_resource type="BoxMesh" id="Box_0p18_0p006_0p13_Mat_papel"]
+material = SubResource("Mat_papel")
+size = Vector3(0.18, 0.006, 0.13)
+
 [sub_resource type="CapsuleShape3D" id="Cap_0p45_1p9"]
 radius = 0.45
 height = 1.9
@@ -579,7 +586,7 @@ collision_mask = 0
 script = ExtResource("e1")
 Id = "libro_turnos"
 Titulo = "Libro de turnos"
-Descripcion = "Eriz (conserje): salida a la 1:00, firmado. Guardia de 2:00 a 4:00: agente Porky, puesto en recepción. Nadie más firmó esa noche."
+Descripcion = "Eriz (conserje): salida a la 1:00. Guardia de 2:00 a 4:00: agente Porky, en recepción. Nadie más firmó. Al margen, con la letra del comisario: «Grabadora Sala 1: NO TOCAR»."
 SeRecoge = true
 
 [node name="Colision" type="CollisionShape3D" parent="LibroTurnos"]
@@ -930,7 +937,24 @@ AltoFijo = 0.08
 [node name="CajonEscritorio1" parent="." instance=ExtResource("e5")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 18.52, 0.9, 5.4)
 Nombre = "Cajón del escritorio"
-MensajeAlAbrir = "Caramelos de menta y una foto del comisario de joven. ¡Menudo bigote!"
+MensajeAlAbrir = "Caramelos de menta, una foto del comisario de joven... y debajo, una nota con su letra."
+
+[node name="NotaComisario" type="StaticBody3D" parent="CajonEscritorio1/Movil"]
+transform = Transform3D(0.9848, 0, 0.1736, 0, 1, 0, -0.1736, 0, 0.9848, -0.2, 0.05, 0)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e1")
+Id = "nota_comisario"
+Titulo = "Nota del comisario"
+Descripcion = "«Dejar la grabadora de la Sala 1 en REC esta noche. Veremos quién duerme en la guardia. — B.»"
+SeRecoge = true
+
+[node name="Colision" type="CollisionShape3D" parent="CajonEscritorio1/Movil/NotaComisario"]
+shape = SubResource("Shape_0p22_0p04_0p16")
+
+[node name="Papel" type="MeshInstance3D" parent="CajonEscritorio1/Movil/NotaComisario"]
+mesh = SubResource("Box_0p18_0p006_0p13_Mat_papel")
+
 
 [node name="CajonEscritorio2" parent="." instance=ExtResource("e5")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 18.52, 0.58, 5.4)

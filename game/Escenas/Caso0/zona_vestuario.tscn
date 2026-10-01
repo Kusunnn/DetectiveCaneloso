@@ -591,7 +591,7 @@ collision_mask = 0
 script = ExtResource("e1")
 Id = "cinta"
 Titulo = "La cinta desaparecida"
-Descripcion = "La cinta de la grabadora, escondida en el casillero de Porky bajo una bolsa de donas."
+Descripcion = "La cinta con la confesión de Tito Garras, escondida bajo una bolsa de donas. Alguien la rebobinó hasta el minuto 03:12."
 SeRecoge = true
 
 [node name="Colision" type="CollisionShape3D" parent="Cinta"]

@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_recepcion.tscn" id="15_recepcion"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_vestuario.tscn" id="16_vestuario"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/ambiente_sala.tscn" id="17_ambiente"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/TableroDeduccion.cs" id="18_tablero"]
 
 [sub_resource type="StandardMaterial3D" id="Material_techo"]
 albedo_color = Color(0.1, 0.1, 0.1, 1)
@@ -262,6 +263,23 @@ size = Vector3(0.7, 1.6, 0.7)
 [sub_resource type="BoxShape3D" id="Forma_puerta_sala"]
 size = Vector3(0.06, 2.1, 1.0)
 
+[sub_resource type="BoxShape3D" id="Forma_reloj"]
+size = Vector3(0.42, 0.42, 0.08)
+
+[sub_resource type="BoxShape3D" id="Forma_rejilla"]
+size = Vector3(0.55, 0.08, 0.55)
+
+[sub_resource type="BoxShape3D" id="Forma_espejo"]
+size = Vector3(0.05, 1.2, 3.0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_pluma"]
+albedo_color = Color(0.03, 0.03, 0.04, 1)
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="Mesh_pluma"]
+material = SubResource("Mat_pluma")
+size = Vector3(0.03, 0.005, 0.22)
+
 [node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
 
 [node name="HUD" parent="." unique_id=993473331 instance=ExtResource("1_ar7rw")]
@@ -393,8 +411,9 @@ transform = Transform3D(0.9396926, 0, -0.34202015, 0, 1, 0, 0.34202015, 0, 0.939
 collision_layer = 8
 script = ExtResource("5_pista")
 Id = "grabadora"
-Titulo = "Grabadora sin cinta"
-Descripcion = "La tapa está abierta y no hay cinta. La máquina funciona: alguien sacó la cinta a mano."
+Titulo = "Grabadora en REC"
+Descripcion = "Tapa abierta, sin cinta y con la luz de REC encendida: alguien la dejó grabando. El contador se quedó en 03:12."
+ComentarioAlMirar = "Una grabadora grabando la nada. Qué poético... y qué raro."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GrabadoraPista" unique_id=290225050]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
@@ -587,11 +606,11 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.9, -4.975)
 mesh = SubResource("Mesh_reloj_aro")
 
 [node name="AgujaHora" type="MeshInstance3D" parent="Detalles" unique_id=185481194]
-transform = Transform3D(0.866, 0.5, 0, -0.5, 0.866, 0, 0, 0, 1, -0.0225, 2.939, -4.955)
+transform = Transform3D(-0.1045, 0.9945, 0, -0.9945, -0.1045, 0, 0, 0, 1, 0.0448, 2.8953, -4.955)
 mesh = SubResource("Mesh_aguja_hora")
 
 [node name="AgujaMinuto" type="MeshInstance3D" parent="Detalles" unique_id=2058131831]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.065, 2.9, -4.953)
+transform = Transform3D(0.951, -0.309, 0, 0.309, 0.951, 0, 0, 0, 1, 0.0618, 2.92, -4.953)
 mesh = SubResource("Mesh_aguja_minuto")
 
 [node name="RejillaVentilacion" type="MeshInstance3D" parent="Detalles" unique_id=1146853878]
@@ -632,7 +651,7 @@ transform = Transform3D(0.939, 0, -0.343, 0, 1, 0, 0.343, 0, 0.939, 1.1, 0.5, -3
 [node name="VentanaDialogo" type="CanvasLayer" parent="."]
 script = ExtResource("12_dialogo")
 
-[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio")]
+[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio", "Tablero")]
 script = ExtResource("13_caso")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
@@ -649,6 +668,7 @@ PuntoErizFinal = NodePath("../PuntoErizFinal")
 PuntoPorkyFinal = NodePath("../PuntoPorkyFinal")
 CasilleroPorky = NodePath("../ZonaVestuario/CasilleroPorky")
 ZonaAndamio = NodePath("../ZonaPasillo/AreaAndamio")
+Tablero = NodePath("../TableroDeduccion")
 
 [node name="PuertaSalaColision" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.03, 1.55, 3.7)
@@ -657,3 +677,60 @@ collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PuertaSalaColision"]
 shape = SubResource("Forma_puerta_sala")
+
+[node name="RelojPista" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -4.95)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("5_pista")
+Id = "reloj"
+Titulo = "Reloj parado a las 3:12"
+Descripcion = "El reloj de la Sala 1 marca las 3:12 y no avanza. El cristal está rajado: se cayó o lo golpearon."
+ComentarioAlMirar = "Las 3:12. O el reloj se cansó... o alguien lo cansó."
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RelojPista"]
+shape = SubResource("Forma_reloj")
+
+[node name="Contador" type="Label3D" parent="GrabadoraPista"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07, 0.035, 0.102)
+pixel_size = 0.0008
+modulate = Color(1, 0.25, 0.15, 1)
+outline_size = 0
+text = "03:12"
+font_size = 32
+
+[node name="PlumaSecreta" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 3.46, 1)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("5_pista")
+Id = "pluma"
+Titulo = "Pluma negra"
+Descripcion = "Una pluma negra y larga, enganchada en la rejilla de ventilación del techo de la Sala 1. Aquí no hay pájaros... ¿o sí?"
+RequiereLinterna = true
+SeRecoge = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlumaSecreta"]
+shape = SubResource("Forma_rejilla")
+
+[node name="Marcas" type="Node3D" parent="PlumaSecreta" groups=["solo_con_linterna"]]
+
+[node name="Pluma" type="MeshInstance3D" parent="PlumaSecreta/Marcas"]
+transform = Transform3D(0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, 0.9397, 0.08, -0.025, 0.05)
+mesh = SubResource("Mesh_pluma")
+
+[node name="EspejoComentario" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.97, 2, -2)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("5_pista")
+Titulo = "Espejo falso"
+Descripcion = "A estas horas no hay nadie detrás del espejo... espero."
+EsEvidencia = false
+ComentarioAlMirar = "Detrás de ese espejo siempre hay alguien mirando. Anoche, ¿quién?"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EspejoComentario"]
+shape = SubResource("Forma_espejo")
+
+[node name="TableroDeduccion" type="CanvasLayer" parent="."]
+script = ExtResource("18_tablero")
