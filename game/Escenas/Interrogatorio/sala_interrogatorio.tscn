@@ -2,15 +2,25 @@
 
 [ext_resource type="PackedScene" uid="uid://dd4o430kgktjx" path="res://Assets/Models/Caneloso/Archivo/player.tscn" id="1_7qr73"]
 [ext_resource type="PackedScene" path="res://hud/hud.tscn" id="1_ar7rw"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/CuerpoDetective.cs" id="10_cuerpo"]
 [ext_resource type="Script" uid="uid://kuuyc8r7mpwl" path="res://Escenas/Interrogatorio/Jugador.cs" id="4_c73no"]
 [ext_resource type="Script" uid="uid://bcimcbvav5i6g" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="5_pista"]
 [ext_resource type="PackedScene" path="res://Escenas/Interrogatorio/silla.tscn" id="6_silla"]
 [ext_resource type="PackedScene" path="res://Escenas/Menus/menu_pausa.tscn" id="7_pausa"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/PuntoInteraccion.cs" id="11_punto"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/VentanaDialogo.cs" id="12_dialogo"]
+[ext_resource type="Script" path="res://Escenas/Caso0/Caso0.cs" id="13_caso"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_pasillo.tscn" id="14_pasillo"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_recepcion.tscn" id="15_recepcion"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_vestuario.tscn" id="16_vestuario"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso0/ambiente_sala.tscn" id="17_ambiente"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/TableroDeduccion.cs" id="18_tablero"]
 
 [sub_resource type="StandardMaterial3D" id="Material_techo"]
 albedo_color = Color(0.1, 0.1, 0.1, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_je0k8"]
+radius = 0.3
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_htv4u"]
 size = Vector3(1.6, 0.78, 0.9)
@@ -75,6 +85,9 @@ outer_radius = 0.032
 [sub_resource type="Environment" id="Environment_je0k8"]
 background_mode = 1
 background_color = Color(0.018023593, 0.058232002, 0.1001626, 0.8509804)
+ambient_light_source = 2
+ambient_light_color = Color(0.35, 0.4, 0.5, 1)
+ambient_light_energy = 0.25
 ssao_enabled = true
 glow_enabled = true
 adjustment_enabled = true
@@ -244,33 +257,78 @@ top_radius = 0.16
 bottom_radius = 0.13
 height = 0.35
 
-[node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
+[sub_resource type="BoxShape3D" id="Forma_acusacion"]
+size = Vector3(0.7, 1.6, 0.7)
 
-[node name="Player" parent="." unique_id=171374625 instance=ExtResource("1_7qr73")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 0.5, -3)
+[sub_resource type="BoxShape3D" id="Forma_puerta_sala"]
+size = Vector3(0.06, 2.1, 1.0)
+
+[sub_resource type="BoxShape3D" id="Forma_reloj"]
+size = Vector3(0.42, 0.42, 0.08)
+
+[sub_resource type="BoxShape3D" id="Forma_rejilla"]
+size = Vector3(0.55, 0.08, 0.55)
+
+[sub_resource type="BoxShape3D" id="Forma_espejo"]
+size = Vector3(0.05, 1.2, 3.0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_pluma"]
+albedo_color = Color(0.03, 0.03, 0.04, 1)
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="Mesh_pluma"]
+material = SubResource("Mat_pluma")
+size = Vector3(0.03, 0.005, 0.22)
+
+[node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
 
 [node name="HUD" parent="." unique_id=993473331 instance=ExtResource("1_ar7rw")]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=2045918174]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.1)
 use_collision = true
-size = Vector3(15, 1, 15)
+size = Vector3(8.4, 1, 8.2)
 material = SubResource("Material_techo")
 
 [node name="Jugador" type="CharacterBody3D" parent="." unique_id=3319378]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+collision_layer = 4
+collision_mask = 115
 script = ExtResource("4_c73no")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Jugador" unique_id=132017566]
 shape = SubResource("CapsuleShape3D_je0k8")
 
 [node name="CamaraInterrogatorio" type="Camera3D" parent="Jugador" unique_id=678562413]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.82961166, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.15)
+
+[node name="Linterna" type="SpotLight3D" parent="Jugador/CamaraInterrogatorio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, -0.2, -0.65)
+visible = false
+light_color = Color(1, 0.95, 0.82, 1)
+light_energy = 4.0
+shadow_enabled = true
+spot_range = 12.0
+spot_angle = 24.0
+
+[node name="BrazoCamara" type="SpringArm3D" parent="Jugador"]
+transform = Transform3D(1, 0, 0, 0, 0.9800666, 0.19866933, 0, -0.19866933, 0.9800666, 0.35, 0.8, 0)
+spring_length = 3.0
+margin = 0.1
+
+[node name="CamaraTerceraPersona" type="Camera3D" parent="Jugador/BrazoCamara"]
+
+[node name="Modelo" parent="Jugador" instance=ExtResource("1_7qr73")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -2, 0)
+script = ExtResource("10_cuerpo")
 
 [node name="MesaPista" type="StaticBody3D" parent="." unique_id=64876306]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -2)
+collision_layer = 2
 script = ExtResource("5_pista")
-Titulo = "Mesa de Interrogatorio"
-Descripcion = "Superficie de madera con marcas de tensión. Hay un archivo confidencial sobre el sospechoso."
+Titulo = "Mesa de interrogatorio"
+Descripcion = "Mesa de interrogatorio: marcas de tensión y un archivo cerrado. Nada fuera de lugar."
+EsEvidencia = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MesaPista" unique_id=184764123]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39, 0)
@@ -333,20 +391,29 @@ mesh = SubResource("Mesh_argolla")
 [node name="TextoTutorial" type="Label" parent="CanvasLayer" unique_id=489829794]
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 60.0
-offset_bottom = 120.0
+offset_left = 300.0
+offset_top = 210.0
+offset_right = -300.0
+offset_bottom = 290.0
 grow_horizontal = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 26
 text = "Usa [W, A, S, D] para moverte"
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=265072308]
 environment = SubResource("Environment_je0k8")
 
 [node name="GrabadoraPista" type="StaticBody3D" parent="." unique_id=409678302]
 transform = Transform3D(0.9396926, 0, -0.34202015, 0, 1, 0, 0.34202015, 0, 0.9396926, 0.4, 1.28, -1.85)
+collision_layer = 8
 script = ExtResource("5_pista")
-Titulo = "Grabadora de Audio"
-Descripcion = "Una grabadora vieja con la cinta a medio rebobinar. Alguien la dejó encendida durante el último interrogatorio."
+Id = "grabadora"
+Titulo = "Grabadora en REC"
+Descripcion = "Tapa abierta, sin cinta y con la luz de REC encendida: alguien la dejó grabando. El contador se quedó en 03:12."
+ComentarioAlMirar = "Una grabadora grabando la nada. Qué poético... y qué raro."
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GrabadoraPista" unique_id=290225050]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
@@ -402,6 +469,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3.1)
 use_collision = true
 size = Vector3(8.4, 3, 0.2)
 material = SubResource("Material_pared")
+
+[node name="HuecoPuerta" type="CSGBox3D" parent="Sala/ParedFrente"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.45, 0)
+operation = 2
+size = Vector3(1, 2.1, 0.6)
 
 [node name="ParedIzquierda" type="CSGBox3D" parent="Sala" unique_id=1944414335]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.1, 2, -1)
@@ -487,16 +559,8 @@ box_projection = true
 interior = true
 
 [node name="Puerta" type="MeshInstance3D" parent="Detalles" unique_id=602001027]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.55, 2.975)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.03, 1.55, 3.7)
 mesh = SubResource("Mesh_puerta")
-
-[node name="VentanillaPuerta" type="MeshInstance3D" parent="Detalles" unique_id=1116095045]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.15, 2.945)
-mesh = SubResource("Mesh_ventanilla")
-
-[node name="ManijaPuerta" type="MeshInstance3D" parent="Detalles" unique_id=448494075]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.12, 1.5, 2.93)
-mesh = SubResource("Mesh_manija")
 
 [node name="MarcoPuertaIzq" type="MeshInstance3D" parent="Detalles" unique_id=1776311544]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.96, 1.6, 2.97)
@@ -542,11 +606,11 @@ transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.9, -4.975)
 mesh = SubResource("Mesh_reloj_aro")
 
 [node name="AgujaHora" type="MeshInstance3D" parent="Detalles" unique_id=185481194]
-transform = Transform3D(0.866, 0.5, 0, -0.5, 0.866, 0, 0, 0, 1, -0.0225, 2.939, -4.955)
+transform = Transform3D(-0.1045, 0.9945, 0, -0.9945, -0.1045, 0, 0, 0, 1, 0.0448, 2.8953, -4.955)
 mesh = SubResource("Mesh_aguja_hora")
 
 [node name="AgujaMinuto" type="MeshInstance3D" parent="Detalles" unique_id=2058131831]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.065, 2.9, -4.953)
+transform = Transform3D(0.951, -0.309, 0, 0.309, 0.951, 0, 0, 0, 1, 0.0618, 2.92, -4.953)
 mesh = SubResource("Mesh_aguja_minuto")
 
 [node name="RejillaVentilacion" type="MeshInstance3D" parent="Detalles" unique_id=1146853878]
@@ -558,3 +622,115 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.6, 0.675, 2.5)
 mesh = SubResource("Mesh_papelera")
 
 [node name="MenuPausa" parent="." unique_id=1503299220 instance=ExtResource("7_pausa")]
+
+[node name="SillaAcusacion" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -2.8)
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("11_punto")
+Accion = "Acusar al culpable"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SillaAcusacion"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("Forma_acusacion")
+
+[node name="PuntoErizFinal" type="Marker3D" parent="."]
+transform = Transform3D(0.9, 0, 0.435, 0, 1, 0, -0.435, 0, 0.9, -1.5, 0.5, -3.7)
+
+[node name="PuntoPorkyFinal" type="Marker3D" parent="."]
+transform = Transform3D(0.939, 0, -0.343, 0, 1, 0, 0.343, 0, 0.939, 1.1, 0.5, -3.6)
+
+[node name="ZonaPasillo" parent="." instance=ExtResource("14_pasillo")]
+
+[node name="ZonaRecepcion" parent="." instance=ExtResource("15_recepcion")]
+
+[node name="ZonaVestuario" parent="." instance=ExtResource("16_vestuario")]
+
+[node name="AmbienteSala" parent="." instance=ExtResource("17_ambiente")]
+
+[node name="VentanaDialogo" type="CanvasLayer" parent="."]
+script = ExtResource("12_dialogo")
+
+[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio", "Tablero")]
+script = ExtResource("13_caso")
+Jugador = NodePath("../Jugador")
+Hud = NodePath("../HUD")
+Dialogo = NodePath("../VentanaDialogo")
+PuertaVestuario = NodePath("../ZonaVestuario/PuertaVestuario")
+Eriz = NodePath("../ZonaPasillo/Eriz")
+Porky = NodePath("../ZonaRecepcion/Porky")
+Comisario = NodePath("../ZonaRecepcion/Comisario")
+SillaAcusacion = NodePath("../SillaAcusacion")
+ZonaPasillo = NodePath("../ZonaPasillo/AreaPasillo")
+ZonaRecepcion = NodePath("../ZonaRecepcion/AreaRecepcion")
+ZonaVestuario = NodePath("../ZonaVestuario/AreaVestuario")
+PuntoErizFinal = NodePath("../PuntoErizFinal")
+PuntoPorkyFinal = NodePath("../PuntoPorkyFinal")
+CasilleroPorky = NodePath("../ZonaVestuario/CasilleroPorky")
+ZonaAndamio = NodePath("../ZonaPasillo/AreaAndamio")
+Tablero = NodePath("../TableroDeduccion")
+
+[node name="PuertaSalaColision" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.03, 1.55, 3.7)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PuertaSalaColision"]
+shape = SubResource("Forma_puerta_sala")
+
+[node name="RelojPista" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -4.95)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("5_pista")
+Id = "reloj"
+Titulo = "Reloj parado a las 3:12"
+Descripcion = "El reloj de la Sala 1 marca las 3:12 y no avanza. El cristal está rajado: se cayó o lo golpearon."
+ComentarioAlMirar = "Las 3:12. O el reloj se cansó... o alguien lo cansó."
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RelojPista"]
+shape = SubResource("Forma_reloj")
+
+[node name="Contador" type="Label3D" parent="GrabadoraPista"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07, 0.035, 0.102)
+pixel_size = 0.0008
+modulate = Color(1, 0.25, 0.15, 1)
+outline_size = 0
+text = "03:12"
+font_size = 32
+
+[node name="PlumaSecreta" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 3.46, 1)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("5_pista")
+Id = "pluma"
+Titulo = "Pluma negra"
+Descripcion = "Una pluma negra y larga, enganchada en la rejilla de ventilación del techo de la Sala 1. Aquí no hay pájaros... ¿o sí?"
+RequiereLinterna = true
+SeRecoge = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlumaSecreta"]
+shape = SubResource("Forma_rejilla")
+
+[node name="Marcas" type="Node3D" parent="PlumaSecreta" groups=["solo_con_linterna"]]
+
+[node name="Pluma" type="MeshInstance3D" parent="PlumaSecreta/Marcas"]
+transform = Transform3D(0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, 0.9397, 0.08, -0.025, 0.05)
+mesh = SubResource("Mesh_pluma")
+
+[node name="EspejoComentario" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.97, 2, -2)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("5_pista")
+Titulo = "Espejo falso"
+Descripcion = "A estas horas no hay nadie detrás del espejo... espero."
+EsEvidencia = false
+ComentarioAlMirar = "Detrás de ese espejo siempre hay alguien mirando. Anoche, ¿quién?"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="EspejoComentario"]
+shape = SubResource("Forma_espejo")
+
+[node name="TableroDeduccion" type="CanvasLayer" parent="."]
+script = ExtResource("18_tablero")

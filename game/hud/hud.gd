@@ -20,6 +20,10 @@ var _aviso: float = 0.0
 var _detalle: bool = false
 var diario_abierto: bool = false
 var linterna_encendida: bool = false
+## Notas de la libreta (Q): testimonios y deducciones que el caso va apuntando.
+var notas: Array[String] = []
+var _aviso_titulo := "EXPEDIENTE ACTUALIZADO"
+var _aviso_detalle := "+1 PISTA"
 var _lienzo: Control
 var _bold: FontVariation
 var _medium: FontVariation
@@ -62,10 +66,24 @@ func agregar_pista(pista: Pista) -> bool:
 		if existente.id == pista.id:
 			return false
 	pistas.append(pista)
-	_aviso = 3.0
+	avisar("EXPEDIENTE ACTUALIZADO", "+1 PISTA")
 	if pistas.size() == 1:
 		pista_seleccionada.emit(pista)
 	return true
+
+## Añade una nota a la libreta (Q) y muestra el aviso. Devuelve false si ya estaba.
+func agregar_nota(texto: String) -> bool:
+	if texto.is_empty() or notas.has(texto):
+		return false
+	notas.append(texto)
+	avisar("LIBRETA ACTUALIZADA", "+1 NOTA")
+	return true
+
+## Aviso superior central (mismo estilo para pistas, notas y deducciones).
+func avisar(titulo: String, detalle: String) -> void:
+	_aviso_titulo = titulo
+	_aviso_detalle = detalle
+	_aviso = 3.0
 
 # Puente para los objetos de pista escritos en C#.
 func registrar_pista(id: String, titulo: String, descripcion: String) -> bool:
@@ -103,7 +121,7 @@ func _input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 			return
 		match event.keycode:
-			KEY_CTRL:
+			KEY_TAB:
 				_detalle = not _detalle
 				diario_abierto = false
 				if _detalle and not pistas.is_empty():
@@ -127,6 +145,13 @@ func _input(event: InputEvent) -> void:
 
 func _texto(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float = -1) -> void:
 	_lienzo.draw_string(fuente, p, texto, HORIZONTAL_ALIGNMENT_LEFT, ancho, tam, color)
+
+## Como _texto, pero si no cabe en el ancho baja la fuente (mínimo 60 %) en lugar de cortar el texto.
+func _texto_ajustado(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float) -> void:
+	var t := tam
+	while t > int(tam * 0.6) and fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x > ancho:
+		t -= 1
+	_texto(texto, p, fuente, t, color, ancho)
 
 func _parrafo(texto: String, p: Vector2, ancho: float, tam: int, color: Color, max_lineas: int = 4) -> void:
 	var parrafo := TextParagraph.new()
@@ -213,11 +238,15 @@ func _dibujar() -> void:
 	if _aviso > 0:
 		var a := minf(_aviso / 0.3, 1.0)
 		_nota(Rect2(w / 2 - 185, 52, 370, 100), Color(PAPEL, a))
-		_texto("EXPEDIENTE ACTUALIZADO", Vector2(w / 2 - 157, 91), _bold, 28, Color(TINTA, a))
-		_texto("+1 PISTA", Vector2(w / 2 - 42, 129), MONO, 17, Color(TINTA, a))
+		var ancho_titulo := _bold.get_string_size(_aviso_titulo, HORIZONTAL_ALIGNMENT_LEFT, -1, 28).x
+		var ancho_detalle := MONO.get_string_size(_aviso_detalle, HORIZONTAL_ALIGNMENT_LEFT, -1, 17).x
+		_texto_ajustado(_aviso_titulo, Vector2(w / 2 - minf(ancho_titulo, 320) / 2, 91), _bold, 28, Color(TINTA, a), 320)
+		_texto(_aviso_detalle, Vector2(w / 2 - ancho_detalle / 2, 129), MONO, 17, Color(TINTA, a))
 	# Retícula e interacción opcional.
 	_lienzo.draw_circle(Vector2(w / 2, h / 2), 2, Color(BLANCO, 0.65))
 	if not interaccion.is_empty():
+		# Anillo ámbar: la retícula está sobre algo que se puede usar
+		_lienzo.draw_arc(Vector2(w / 2, h / 2), 13, 0, TAU, 32, Color(AMBAR, 0.9), 2.0, true)
 		_texto("[ E ]  " + interaccion, Vector2(w / 2 - 75, h / 2 + 42), _bold, 26, BLANCO)
 	_dibujar_pistas(w, h)
 	if _detalle:
@@ -226,8 +255,23 @@ func _dibujar() -> void:
 		_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.04, 0.06, 0.85))
 		var origen := Vector2(w / 2 - 420, h / 2 - 270)
 		_nota(Rect2(origen, Vector2(840, 540)))
-		_texto("DIARIO", origen + Vector2(35, 55), _bold, 34, TINTA)
+		_texto("LIBRETA", origen + Vector2(35, 55), _bold, 34, TINTA)
 		_linea(origen + Vector2(420, 30), origen + Vector2(420, 490), Color(TINTA, 0.22))
+		_dibujar_notas(origen)
+
+## Notas en dos columnas; si no caben, se muestran las más recientes.
+func _dibujar_notas(origen: Vector2) -> void:
+	if notas.is_empty():
+		_texto("Aún no has apuntado nada.", origen + Vector2(35, 110), MONO, 15, TINTA)
+		return
+	var por_columna := 6
+	var inicio := maxi(0, notas.size() - por_columna * 2)
+	for i in range(inicio, notas.size()):
+		var k := i - inicio
+		var columna := k / por_columna
+		var fila := k % por_columna
+		var p := origen + Vector2(35 + columna * 405, 90 + fila * 70)
+		_parrafo("• " + notas[i], p, 360, 14, TINTA, 4)
 
 func _dibujar_expediente(w: float, h: float) -> void:
 	_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.04, 0.06, 0.85))
@@ -247,10 +291,10 @@ func _dibujar_expediente(w: float, h: float) -> void:
 				_lienzo.draw_rect(Rect2(fila, Vector2(340, 42)), Color(TINTA, 0.12))
 				_lienzo.draw_rect(Rect2(fila, Vector2(3, 42)), AMBAR)
 			_texto("%02d" % (i + 1), fila + Vector2(12, 28), MONO, 13, TINTA)
-			_texto(pistas[i].titulo, fila + Vector2(47, 29), _bold, 24, TINTA, 283)
+			_texto_ajustado(pistas[i].titulo, fila + Vector2(47, 29), _bold, 24, TINTA, 283)
 		_linea(origen + Vector2(396, 93), origen + Vector2(396, 472), Color(TINTA, 0.25))
 		var pista := pistas[indice_pista]
-		_texto(pista.titulo, origen + Vector2(425, 123), _bold, 32, TINTA, 535)
+		_texto_ajustado(pista.titulo, origen + Vector2(425, 123), _bold, 32, TINTA, 535)
 		_parrafo(pista.descripcion, origen + Vector2(425, 146), 530, 18, TINTA, 8)
 		if pista.imagen:
 			var medida := pista.imagen.get_size()
@@ -273,7 +317,7 @@ func _dibujar_pistas(w: float, h: float) -> void:
 	else:
 		var pista := pistas[indice_pista]
 		var ancho := 210.0 if pista.imagen else 311.0
-		_texto(pista.titulo, p + Vector2(22, 93), _bold, 30, TINTA, ancho)
+		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, TINTA, ancho)
 		if pista.imagen:
 			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), BLANCO)
 			var zona := Rect2(p + Vector2(254, 63), Vector2(76, 64))
