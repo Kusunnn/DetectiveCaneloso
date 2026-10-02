@@ -73,6 +73,7 @@ public partial class Caso0 : Node
 		public string Tipo;            // PREGUNTAR, PRESIONAR, EVIDENCIA o vacío (despedirse)
 		public string Texto;
 		public Func<bool> Visible = () => true;
+		public bool SeOcultaAlLeer = true;    // false: sigue en el menú aunque ya se haya elegido
 		public Func<Task> Accion;
 	}
 
@@ -276,14 +277,16 @@ public partial class Caso0 : Node
 		await Saludo(p);
 		while (true)
 		{
-			var lista = opciones(p).Where(o => o.Visible()).ToList();
+			// Una pregunta ya hecha desaparece (su respuesta queda en la libreta [Q]); vuelve a salir
+			// solo si ahora tiene algo nuevo que contar, porque el personaje confesó.
+			var lista = opciones(p).Where(o => o.Visible() && !(o.SeOcultaAlLeer && p.Leidas.Contains(Lectura(p, o)))).ToList();
 			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Mostrarle una prueba del expediente" });
 			lista.Add(new Opcion { Id = "adios", Texto = "Seguir investigando" });
-			var vistas = lista.Select(o => new OpcionVista(o.Texto, o.Tipo, p.Leidas.Contains(o.Id) && o.Id != "evidencia")).ToList();
+			var vistas = lista.Select(o => new OpcionVista(o.Texto, o.Tipo)).ToList();
 			int elegida = await Dialogo.Elegir(p.Hablante, "¿Qué le digo?", vistas, salir: vistas.Count - 1);
 			var opcion = lista[elegida];
 			if (opcion.Id == "adios") break;
-			p.Leidas.Add(opcion.Id);
+			if (opcion.Id != "evidencia") p.Leidas.Add(Lectura(p, opcion));
 			if (opcion.Id == "evidencia")
 			{
 				var pistas = Cartas().Where(c => c.Tipo == "PISTA").Select(c => (c.Id, c.Titulo, c.Imagen)).ToList();
@@ -300,6 +303,8 @@ public partial class Caso0 : Node
 			await opcion.Accion();
 		}
 	}
+
+	private static string Lectura(Personaje p, Opcion o) => o.Id + (p.Confeso ? "#confeso" : "");
 
 	private Task Saludo(Personaje p)
 	{
@@ -318,22 +323,19 @@ public partial class Caso0 : Node
 	{
 		new Opcion { Id = "e_noche", Tipo = "PREGUNTAR", Texto = "¿Qué hiciste anoche?", Accion = async () =>
 		{
-			if (p.Confeso) { await Habla(p, "Ya le dije: volví a las tres a llevarle un sándwich a Tito."); return; }
+			if (p.Confeso)
+			{
+				await Habla(p, "A las 3:12 oí un golpe en la Sala 1. Luego, la puerta de los vestidores.");
+				Nota("Eriz oyó un golpe en la Sala 1 a las 3:12 y luego la puerta de los vestidores.");
+				return;
+			}
 			await Habla(p, "Trapeé la Sala 1 y me fui a la una. Lo firmé en el libro de turnos.");
 			Nota("Eriz dice que se fue a la 1:00.");
 		} },
-		// Historia de fondo: opcional, no hace falta para avanzar
-		new Opcion { Id = "e_tito", Tipo = "PREGUNTAR", Texto = "¿Conoces a Tito Garras, el de la C-2?", Accion = async () =>
+		// Historia de fondo: opcional, solo aparece cuando ya confesó
+		new Opcion { Id = "e_tito", Tipo = "PREGUNTAR", Texto = "¿De dónde conoces a Tito?", Visible = () => p.Confeso, Accion = async () =>
 		{
-			if (p.Confeso) { await Habla(p, "Compartimos celda hace veinte años. No es mala persona."); return; }
-			await Habla(p, "¿Tito? Eh... de vista nada más.");
-			await Piensa("(Se le erizaron las púas. Está nervioso.)");
-		} },
-		new Opcion { Id = "e_312", Tipo = "PREGUNTAR", Texto = "¿Oíste algo a las 3:12?", Visible = () => _pistas.Contains(Reloj), Accion = async () =>
-		{
-			if (!p.Confeso) { await Habla(p, "¿A esa hora? Yo ya estaba dormido en mi casa."); return; }
-			await Habla(p, "Un golpe en la Sala 1. Luego, la puerta de los vestidores.");
-			Nota("Eriz oyó un golpe en la Sala 1 a las 3:12 y luego la puerta de los vestidores.");
+			await Habla(p, "Compartimos celda hace veinte años. No es mala persona.");
 		} },
 		new Opcion { Id = "e_presionar", Tipo = "PRESIONAR", Texto = "Tienes llave de todo... y un pasado de carterista, «Dedos».", Visible = () => !p.Confeso, Accion = async () =>
 		{
@@ -375,28 +377,22 @@ public partial class Caso0 : Node
 
 	private List<Opcion> OpcionesPorky(Personaje p) => new List<Opcion>
 	{
-		new Opcion { Id = "p_noche", Tipo = "PREGUNTAR", Texto = "¿Dónde estuviste durante la guardia?", Accion = async () =>
+		new Opcion { Id = "p_noche", Tipo = "PREGUNTAR", Texto = "¿Dónde estabas anoche?", Accion = async () =>
 		{
-			if (p.Confeso) { await Habla(p, "En la Sala 1... dormido. Ya lo sabe."); return; }
-			await Habla(p, "Aquí en recepción. Toda la guardia, bien despierto.");
-			Nota("Porky dice que pasó la guardia despierto en recepción.");
-		} },
-		new Opcion { Id = "p_raro", Tipo = "PREGUNTAR", Texto = "¿Viste algo raro anoche?", Accion = async () =>
-		{
-			await Habla(p, "Nada. Bueno... el conserje andaba por las celdas. Ese tiene llave de todo.");
-			Nota("Porky culpa al conserje: «tiene llave de todo».");
-		} },
-		new Opcion { Id = "p_312", Tipo = "PREGUNTAR", Texto = "¿Qué hacías a las 3:12?", Visible = () => _pistas.Contains(Reloj), Accion = async () =>
-		{
-			if (!p.Confeso)
+			if (p.Confeso)
 			{
-				CambiarAnimo(p, -1);
-				await Habla(p, "Vigilando. Muy... atento.");
-				await Piensa("(Se le cayó una migaja de dona. Está nervioso.)");
+				await Habla(p, "Desperté como a las 3:15. El reloj estaba en el piso y lo colgué.");
+				Nota("Porky despertó a las 3:15 con el reloj de la Sala 1 en el piso.");
 				return;
 			}
-			await Habla(p, "Desperté como a las 3:15. El reloj estaba en el piso y lo colgué.");
-			Nota("Porky despertó a las 3:15 con el reloj de la Sala 1 en el piso.");
+			await Habla(p, "Aquí en recepción, bien despierto.",
+				"Bueno... el conserje andaba por las celdas. Ese tiene llave de todo.");
+			Nota("Porky dice que estuvo despierto en recepción y culpa al conserje.");
+			if (_pistas.Contains(Reloj))
+			{
+				CambiarAnimo(p, -1);
+				await Piensa("(Se le cayó una migaja de dona. Está nervioso.)");
+			}
 		} },
 		new Opcion { Id = "p_presionar", Tipo = "PRESIONAR", Texto = "Tienes cara de haber dormido... y no en tu cama.", Visible = () => !p.Confeso && !_deducciones.Contains(D2), Accion = async () =>
 		{
@@ -455,25 +451,20 @@ public partial class Caso0 : Node
 
 	private List<Opcion> OpcionesComisario(Personaje p) => new List<Opcion>
 	{
-		new Opcion { Id = "c_grabadora", Tipo = "PREGUNTAR", Texto = "¿Qué sabe de la grabadora?", Accion = async () =>
+		new Opcion { Id = "c_grabadora", Tipo = "PREGUNTAR", Texto = "¿Qué pasó anoche con la grabadora?", Visible = () => !p.Confeso, Accion = async () =>
 		{
-			if (p.Confeso) { await Habla(p, "Ya lo sabe: la dejé en REC a propósito."); return; }
-			await Habla(p, "Tenía la confesión de Tito Garras. No la toco desde ayer a las seis.");
-			Nota("El comisario dice que no tocó la grabadora desde las 18:00.");
+			await Habla(p, "Tenía la confesión de Tito Garras. No la toco desde ayer a las seis.",
+				"De guardia estaba Porky, de dos a cuatro.");
+			Nota("El comisario dice que no tocó la grabadora desde las 18:00. Guardia: Porky, de 2:00 a 4:00.");
 		} },
-		new Opcion { Id = "c_guardia", Tipo = "PREGUNTAR", Texto = "¿Quién vigilaba anoche?", Accion = async () =>
-		{
-			await Habla(p, "Porky, de dos a cuatro. Buen muchacho... cuando está despierto.");
-			Nota("Guardia nocturna: Porky, de 2:00 a 4:00.");
-		} },
-		// Historia de fondo: opcional, no hace falta para avanzar
-		new Opcion { Id = "c_tito", Tipo = "PREGUNTAR", Texto = "¿Quién es Tito Garras?", Accion = async () =>
+		// Historia de fondo: opcional, solo aparece cuando ya confesó la trampa
+		new Opcion { Id = "c_tito", Tipo = "PREGUNTAR", Texto = "¿Quién es Tito Garras?", Visible = () => p.Confeso, Accion = async () =>
 		{
 			await Habla(p, "Un carterista. Confesó que robó la cartera del alcalde.",
 				"Dice que trabaja para un tal «La Garra». Puros cuentos.");
 			Nota("Tito Garras habló de alguien llamado «La Garra».");
 		} },
-		new Opcion { Id = "c_permiso", Tipo = "PREGUNTAR", Texto = "Necesito entrar a los vestidores.", Visible = () => !_autorizado, Accion = async () =>
+		new Opcion { Id = "c_permiso", Tipo = "PREGUNTAR", Texto = "Necesito entrar a los vestidores.", Visible = () => !_autorizado, SeOcultaAlLeer = false, Accion = async () =>
 		{
 			if (!_deducciones.Contains(D2))
 			{
