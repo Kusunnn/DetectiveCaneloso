@@ -353,7 +353,7 @@ collision_layer = 32
 collision_mask = 0
 script = ExtResource("e2")
 Bloqueada = true
-MensajeBloqueada = "Vestuario: solo personal autorizado."
+MensajeBloqueada = "Vestidores: solo personal autorizado."
 Bisagra = NodePath("Bisagra")
 
 [node name="Colision" type="CollisionShape3D" parent="PuertaVestuario"]
@@ -376,7 +376,7 @@ mesh = SubResource("Box_0p12_0p03_0p04_Mat_candado")
 [node name="Letrero" type="Node3D" parent="PuertaVestuario"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.33, 0.12)
 script = ExtResource("e4")
-Texto = "VESTUARIO · SOLO PERSONAL"
+Texto = "VESTIDORES · SOLO PERSONAL"
 Ancho = 0.9
 Margen = 0.0168
 TamFuente = 48
@@ -443,7 +443,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 0.25)
 Nombre = "Casillero"
 MensajeAlAbrir = "3-1-2... ¡clic! Debajo de una bolsa de donas... ¡ahí está la cinta!"
 RequiereObjeto = "combinacion_porky"
-MensajeBloqueado = "Candado de combinación. Porky tendrá los números apuntados en algún sitio... quizá entre sus cosas, en la recepción."
+MensajeBloqueado = "Candado de combinación. Porky tendrá los números anotados en algún lado... quizá entre sus cosas, en recepción."
 Nombre = "Casillero de Porky"
 
 [node name="Placa" parent="CasilleroPorky/Bisagra/Hoja"]
@@ -492,7 +492,7 @@ mesh = SubResource("Box_0p25_0p02_0p2_Mat_papel")
 [node name="Casillero08" parent="." instance=ExtResource("e5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.6, 0.5, 1.75)
 Nombre = "Casillero"
-MensajeAlAbrir = "Envoltorios de caramelos. Muchos. Demasiados."
+MensajeAlAbrir = "Envolturas de dulces. Muchas. Demasiadas."
 
 [node name="Placa" parent="Casillero08/Bisagra/Hoja"]
 Texto = "J. CAMPOS"
@@ -574,7 +574,7 @@ mesh = SubResource("Box_0p04_0p4_0p3_Mat_toalla")
 [node name="Casillero12" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.25, 0.5, -2.5)
 Nombre = "Casillero"
-MensajeAlAbrir = "Una radio vieja sin pilas. Silencio total."
+MensajeAlAbrir = "Un radio viejo sin pilas. Silencio total."
 
 [node name="Placa" parent="Casillero12/Bisagra/Hoja"]
 Texto = "N. GIL"

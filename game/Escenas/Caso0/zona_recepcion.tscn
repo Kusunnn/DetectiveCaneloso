@@ -660,7 +660,7 @@ mesh = SubResource("Tor_0p02_0p045_Mat_masa")
 [node name="CajonMostrador" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 17.8, 0.72, 0.49)
 Nombre = "Cajón del mostrador"
-MensajeAlAbrir = "Clips, gomas y el cuadrante de la semana que viene. De anoche, nada."
+MensajeAlAbrir = "Clips, ligas y el rol de la próxima semana. De anoche, nada."
 
 [node name="Porky" type="StaticBody3D" parent="." node_paths=PackedStringArray("Cuerpo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.2, 0.5, -0.45)
@@ -830,7 +830,7 @@ mesh = SubResource("Box_0p55_1p1_0p54_Mat_archivador")
 [node name="CajonArchivero1" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 15, 1.23, 6.3)
 Nombre = "Cajón del archivero"
-MensajeAlAbrir = "Multas de aparcamiento de 1987. Qué emoción."
+MensajeAlAbrir = "Multas de estacionamiento de 1987. Qué emoción."
 
 [node name="CajonArchivero2" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 15, 0.89, 6.3)
@@ -840,7 +840,7 @@ MensajeAlAbrir = "Formularios en blanco, cientos. Ninguno firmado anoche."
 [node name="CajonArchivero3" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 15, 0.55, 6.3)
 Nombre = "Cajón del archivero"
-MensajeAlAbrir = "Una grapadora rota y un ambientador de pino. Huele a coche nuevo."
+MensajeAlAbrir = "Una engrapadora rota y un aromatizante de pino. Huele a carro nuevo."
 
 [node name="ArmarioA" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.7, 1.15, 6.65)
@@ -937,7 +937,7 @@ AltoFijo = 0.08
 [node name="CajonEscritorio1" parent="." instance=ExtResource("e5")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 18.52, 0.9, 5.4)
 Nombre = "Cajón del escritorio"
-MensajeAlAbrir = "Caramelos de menta, una foto del comisario de joven... y debajo, una nota con su letra."
+MensajeAlAbrir = "Dulces de menta, una foto del comisario de joven... y abajo, una nota con su letra."
 
 [node name="NotaComisario" type="StaticBody3D" parent="CajonEscritorio1/Movil"]
 transform = Transform3D(0.9848, 0, 0.1736, 0, 1, 0, -0.1736, 0, 0.9848, -0.2, 0.05, 0)
@@ -1129,8 +1129,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2, -1.95)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("e1")
-Titulo = "Tablón de avisos"
-Descripcion = "El torneo de bolos, un gato perdido y el turno de limpieza. Nada que ver con la cinta."
+Titulo = "Pizarrón de avisos"
+Descripcion = "El torneo de boliche, un gato perdido y el rol de limpieza. Nada que ver con la cinta."
 EsEvidencia = false
 
 [node name="Colision" type="CollisionShape3D" parent="Tablon"]

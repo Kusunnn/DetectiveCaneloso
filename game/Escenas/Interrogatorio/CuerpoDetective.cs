@@ -67,9 +67,11 @@ public partial class CuerpoDetective : Node3D
 	}
 
 	// Tramos de anim_agacharse (medidos en la animación): bajar 0–1.2 s, agachado 1.2–5.2 s, levantarse 5.8 s–final.
+	// El tramo central es un emote (mira a los lados, se balancea): agachado se congela en una sola pose.
 	private const double FinBajar = 1.2;
 	private const double FinAgachado = 5.2;
 	private const double InicioLevantarse = 5.8;
+	private const double PoseAgachado = 1.35;
 
 	private bool _agachado = false;
 	private bool _levantandose = false;
@@ -129,10 +131,17 @@ public partial class CuerpoDetective : Node3D
 		double posicion = _animaciones.CurrentAnimationPosition;
 		if (_agachado)
 		{
-			// Idle agachado: bucle del tramo central. Al moverse va más rápido (no hay animación
-			// de caminar agachado en el repo, así que se reutiliza este tramo con balanceo).
-			_animaciones.SpeedScale = moviendose ? 1.8f : 1f;
-			if (posicion > FinAgachado) _animaciones.Seek(FinBajar + 0.3, true);
+			// Termina de bajar y se queda quieto en la pose agachada (antes se repetía el tramo
+			// central, que es un emote, y parecía que Caneloso no paraba de hacer gestos).
+			if (posicion >= PoseAgachado)
+			{
+				_animaciones.SpeedScale = 0f;
+				if (posicion > PoseAgachado + 0.05) _animaciones.Seek(PoseAgachado, true);
+			}
+			else
+			{
+				_animaciones.SpeedScale = 1f;
+			}
 		}
 		else
 		{
@@ -145,6 +154,7 @@ public partial class CuerpoDetective : Node3D
 	{
 		if (_animaciones == null || !_animaciones.HasAnimation(animacion)) return;
 		_accionActual = animacion;
+		_animaciones.SpeedScale = 1f; // Agachado la animación está congelada (velocidad 0)
 		_animaciones.Play(animacion, Mezcla);
 	}
 

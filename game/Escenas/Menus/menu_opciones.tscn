@@ -79,7 +79,7 @@ size_flags_horizontal = 0
 
 [node name="EtiquetaSensibilidad" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
 layout_mode = 2
-text = "Sensibilidad del ratón"
+text = "Sensibilidad del mouse"
 
 [node name="DeslizadorSensibilidad" type="HSlider" parent="Centro/Panel/Margen/VBox/Rejilla"]
 unique_name_in_owner = true

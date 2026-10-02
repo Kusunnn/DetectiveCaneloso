@@ -313,6 +313,7 @@ spot_angle = 24.0
 
 [node name="BrazoCamara" type="SpringArm3D" parent="Jugador"]
 transform = Transform3D(1, 0, 0, 0, 0.9800666, 0.19866933, 0, -0.19866933, 0.9800666, 0.35, 0.8, 0)
+collision_mask = 19
 spring_length = 3.0
 margin = 0.1
 
@@ -706,7 +707,7 @@ collision_mask = 0
 script = ExtResource("5_pista")
 Id = "pluma"
 Titulo = "Pluma negra"
-Descripcion = "Una pluma negra y larga, enganchada en la rejilla de ventilación del techo de la Sala 1. Aquí no hay pájaros... ¿o sí?"
+Descripcion = "Una pluma de ave, negra y larga, atorada en la rejilla de ventilación del techo de la Sala 1. Aquí no hay pájaros... ¿o sí?"
 RequiereLinterna = true
 SeRecoge = true
 

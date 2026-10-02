@@ -729,7 +729,7 @@ collision_mask = 0
 script = ExtResource("e1")
 Id = "huellas"
 Titulo = "Huellas de bota"
-Descripcion = "Huellas de barro con suela de bota reglamentaria, de las que usan los agentes. Van de la sala de interrogatorio hacia el vestuario."
+Descripcion = "Huellas de barro con suela de bota reglamentaria, de las que usan los agentes. Van de la sala de interrogatorio hacia los vestidores."
 RequiereLinterna = true
 
 [node name="Colision" type="CollisionShape3D" parent="Huellas"]
@@ -789,8 +789,8 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("e1")
 Id = "envoltorio"
-Titulo = "Envoltorio de sándwich"
-Descripcion = "Papel de sándwich de mortadela con migas frescas, junto a la reja de la C-2, la celda de Tito Garras. Alguien le trajo la cena de madrugada."
+Titulo = "Envoltura de sándwich"
+Descripcion = "Envoltura de sándwich de jamón con migas frescas, junto a la reja de la C-2, la celda de Tito Garras. Alguien le trajo la cena de madrugada."
 RequiereLinterna = true
 SeRecoge = true
 
@@ -887,7 +887,7 @@ mesh = SubResource("Box_0p9_0p004_0p6_Mat_agua")
 [node name="ArmarioLimpieza" parent="." instance=ExtResource("e7")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 9.5, 0.5, 4.9)
 Nombre = "Armario de limpieza"
-MensajeAlAbrir = "Fregonas, cubos y un llavero enorme. Eriz tiene llave de casi todo... pero no del vestuario."
+MensajeAlAbrir = "Trapeadores, cubetas y un llavero enorme. Eriz tiene llave de casi todo... menos de los vestidores."
 
 [node name="Placa" parent="ArmarioLimpieza/Bisagra/Hoja"]
 Texto = "LIMPIEZA"

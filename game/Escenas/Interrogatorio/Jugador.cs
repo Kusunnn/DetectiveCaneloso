@@ -166,6 +166,8 @@ public partial class Jugador : CharacterBody3D
 	{
 		_bloqueado = bloqueado;
 		if (bloqueado) Detenerse();
+		// Las teclas del HUD (Q, TAB, F, flechas) no deben cambiar paneles ocultos mientras se habla
+		_hud?.SetProcessInput(!bloqueado);
 		// Durante el diálogo se oculta el HUD para que no tape el texto
 		if (_hud is CanvasLayer capa) capa.Visible = !bloqueado;
 		if (bloqueado && _textoTutorial != null) _textoTutorial.Visible = false;

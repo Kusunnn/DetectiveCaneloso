@@ -200,7 +200,7 @@ public partial class VentanaDialogo : CanvasLayer
 		MostrarHablante(hablante);
 		Escribir(pregunta, instantaneo: true);
 		_indiceSalir = salir;
-		_ayuda.Text = "Elige con el ratón o con las teclas 1-" + Math.Min(opciones.Count, 9)
+		_ayuda.Text = "Elige con el mouse o con las teclas 1-" + Math.Min(opciones.Count, 9)
 			+ (salir >= 0 ? "   ·   [Esc] o clic derecho: terminar la conversación" : "");
 		LiberarRaton();
 
@@ -229,7 +229,7 @@ public partial class VentanaDialogo : CanvasLayer
 	{
 		Abrir();
 		MostrarHablante(hablante);
-		Escribir(pistas.Count == 0 ? "Todavía no tengo evidencias que enseñar." : "¿Qué evidencia le enseño?", instantaneo: true);
+		Escribir(pistas.Count == 0 ? "Todavía no tengo pruebas que mostrar." : "¿Qué prueba le muestro?", instantaneo: true);
 		_ayuda.Text = "Elige una pista del expediente   ·   [Esc] o clic derecho: volver";
 		LiberarRaton();
 
@@ -245,7 +245,7 @@ public partial class VentanaDialogo : CanvasLayer
 			tarjeta.Pressed += () => _espera?.TrySetResult(indice);
 			_evidencias.AddChild(tarjeta);
 		}
-		var cancelar = CrearBoton("Mejor no enseñarle nada", true);
+		var cancelar = CrearBoton("Mejor no mostrarle nada", true);
 		cancelar.Pressed += () => _espera?.TrySetResult(-1);
 		_evidencias.AddChild(cancelar);
 		((Button)_evidencias.GetChild(0)).GrabFocus();

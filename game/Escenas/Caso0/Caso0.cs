@@ -115,15 +115,15 @@ public partial class Caso0 : Node
 		Tablero.Probar = ProbarDeduccion;
 
 		PuertaVestuario.Bloqueada = true;
-		PuertaVestuario.MensajeBloqueada = "Vestuario: solo personal autorizado. Necesito el permiso del comisario.";
+		PuertaVestuario.MensajeBloqueada = "Vestidores: solo personal autorizado. Necesito permiso del comisario.";
 		CasilleroPorky.IntentoBloqueado += AlEncontrarCandado;
 
 		ZonaPasillo.BodyEntered += c => { if (c == Jugador) AlEntrarPasillo(); };
 		ZonaRecepcion.BodyEntered += c => { if (c == Jugador) AlEntrarRecepcion(); };
-		ZonaVestuario.BodyEntered += c => { if (c == Jugador) Indicar("vestuario", "Doce casilleros. Puedo revisarlos todos, pero el que me interesa es el de Porky."); };
-		ZonaAndamio.BodyEntered += c => { if (c == Jugador) Indicar("andamio", "Un andamio cruzado en mitad del pasillo... Tendré que pasar agachado [C]."); };
+		ZonaVestuario.BodyEntered += c => { if (c == Jugador) Indicar("vestuario", "Doce casilleros. El que me importa es el de Porky."); };
+		ZonaAndamio.BodyEntered += c => { if (c == Jugador) Indicar("andamio", "Un andamio en medio del pasillo. Paso agachado [C]."); };
 
-		Objetivo("Examina la grabadora y el reloj de la Sala 1.");
+		Objetivo("Revisa la grabadora y el reloj de la Sala 1.");
 		CallDeferred(MethodName.Presentacion);
 	}
 
@@ -140,16 +140,13 @@ public partial class Caso0 : Node
 	{
 		await ToSignal(GetTree().CreateTimer(0.6), SceneTreeTimer.SignalName.Timeout);
 		_enDialogo = true;
-		var lineas = new List<string>
-		{
-			"6:02 de la mañana. Sala 1. La confesión de Tito Garras estaba en esa grabadora... y ha desaparecido.",
-			"Pero la grabadora sigue grabando. Sin cinta. Y el reloj de la pared se paró a las 3:12.",
-			"¿Qué pasó en esta sala a las 3:12?",
-		};
-		if (_tutorial) lineas.Add("Bien: [W, A, S, D] para moverme, el ratón para mirar, [Mayús] para correr y [V] para verme desde fuera.");
-		await Dialogo.Decir(_caneloso, lineas.ToArray());
+		// El gancho en tres líneas; los controles se aprenden usándolos (indicación en pantalla)
+		await Dialogo.Decir(_caneloso,
+			"6:02 a. m. La confesión de Tito Garras desapareció de esta grabadora.",
+			"Sigue grabando, pero sin cinta. Y el reloj se paró a las 3:12.",
+			"¿Qué pasó aquí a las 3:12?");
 		_enDialogo = false;
-		Indicar("inicio", "Primero, la grabadora de la mesa. Me acerco y pulso [E].");
+		Indicar("inicio", "[W A S D] para caminar. Me acerco a la grabadora y presiono [E].");
 	}
 
 	// ---------- Pistas y progreso ----------
@@ -161,37 +158,37 @@ public partial class Caso0 : Node
 		switch (id)
 		{
 			case Grabadora:
-				Pensar("La tapa abierta, sin cinta... y la luz de REC encendida. Alguien la dejó grabando a propósito, o se le olvidó.");
+				Pensar("Sin cinta y en REC. Alguien la dejó grabando.");
 				break;
 			case Reloj:
-				Pensar("Las 3:12 en punto. El cristal está rajado: no se paró solo, alguien lo golpeó.");
+				Pensar("Las 3:12 en punto. Y el vidrio está estrellado.");
 				break;
 			case Huellas:
-				Indicar("hablar", "Botas de agente camino del vestuario. El conserje friega al fondo: hablaré con él [E].");
+				Indicar("hablar", "Botas de agente. El conserje está al fondo: le pregunto [E].");
 				break;
 			case Envoltorio:
-				Pensar("Un envoltorio de sándwich con migas frescas junto a la C-2. ¿Quién le lleva la cena a un detenido de madrugada?");
+				Pensar("Migas frescas junto a la C-2. ¿Quién le trajo de cenar a Tito?");
 				break;
 			case NotaComisario:
-				Pensar("«Dejar la grabadora de la Sala 1 en REC esta noche. Veremos quién duerme. — B.» La letra del comisario.");
+				Pensar("«Dejar la grabadora en REC. Veremos quién se duerme.» Es la letra del comisario.");
 				break;
 			case Pluma:
-				Pensar("Una pluma negra, larga, enganchada en la rejilla del techo. En esta comisaría no hay pájaros...");
+				Pensar("Una pluma negra en la rejilla del techo. Aquí no hay pájaros...");
 				break;
 			case Cinta:
 				EmpezarResolucion();
 				return;
 		}
 		if (_pistas.Contains(Grabadora) && _pistas.Contains(Reloj))
-			Indicar("tablero", "La grabadora... el reloj... Si los uno en mi tablero [R], quizá vea la relación.");
+			Indicar("tablero", "La grabadora y el reloj. Los uno en mi tablero [R].");
 		ActualizarObjetivo();
 	}
 
 	private void ActualizarObjetivo()
 	{
 		if (_resuelto) return;
-		if (_pistas.Contains(Cinta)) { Objetivo("Vuelve a la Sala 1 y explica lo ocurrido desde la silla del sospechoso."); return; }
-		if (!_pistas.Contains(Grabadora) || !_pistas.Contains(Reloj)) { Objetivo("Examina la grabadora y el reloj de la Sala 1."); return; }
+		if (_pistas.Contains(Cinta)) { Objetivo("Vuelve a la Sala 1 y siéntate en la silla del sospechoso."); return; }
+		if (!_pistas.Contains(Grabadora) || !_pistas.Contains(Reloj)) { Objetivo("Revisa la grabadora y el reloj de la Sala 1."); return; }
 		if (!_deducciones.Contains(D1)) { Objetivo("Une la grabadora y el reloj en el tablero [R]."); return; }
 		if (!_deducciones.Contains(D2))
 		{
@@ -200,14 +197,14 @@ public partial class Caso0 : Node
 			if (!_pistas.Contains(Turnos)) pendientes.Add("quién estaba de guardia (recepción)");
 			Objetivo(pendientes.Count > 0
 				? "¿Quién estaba despierto a las 3:12? Busca: " + string.Join(", ", pendientes) + "."
-				: "Une las huellas con el libro de turnos en el tablero [R].");
+				: "Une las huellas y el libro de turnos en el tablero [R].");
 			return;
 		}
-		if (!_autorizado) { Objetivo("Pide al comisario (recepción) permiso para entrar al vestuario."); return; }
+		if (!_autorizado) { Objetivo("Pídele al comisario (recepción) permiso para entrar a los vestidores."); return; }
 		if (!Jugador.TieneObjeto(Combinacion) && _vioCandado) { Objetivo("Consigue la combinación del candado de Porky."); return; }
 		Objetivo(Jugador.TieneObjeto(Combinacion)
 			? "Abre el casillero de Porky con la combinación 3-1-2."
-			: "Revisa los casilleros del vestuario, al oeste del pasillo.");
+			: "Revisa los casilleros de los vestidores, al oeste del pasillo.");
 	}
 
 	private void Progreso()
@@ -234,10 +231,10 @@ public partial class Caso0 : Node
 	{
 		bool Par(string x, string y) => (a == x && b == y) || (a == y && b == x);
 		if (Par(Grabadora, Reloj)) return Deducir(D1, "A las 3:12 pasó algo en la Sala 1 mientras la grabadora grababa.");
-		if (Par(Huellas, Turnos)) return Deducir(D2, "Las huellas de bota son de Porky: era el único agente de guardia.");
-		if (Par(Envoltorio, TEriz)) return Deducir(D3, "Eriz estuvo en las celdas con Tito, no en la Sala 1. No es nuestro hombre.");
+		if (Par(Huellas, Turnos)) return Deducir(D2, "Las huellas son de Porky: era el único agente de guardia.");
+		if (Par(Envoltorio, TEriz)) return Deducir(D3, "Eriz estaba con Tito en las celdas, no en la Sala 1. No fue él.");
 		if (Par(NotaComisario, Grabadora) || Par(TComisario, Grabadora))
-			return Deducir(D4, "El comisario dejó la grabadora en REC a propósito: una trampa para el que se duerme en la guardia.");
+			return Deducir(D4, "El comisario dejó la grabadora en REC: una trampa para quien se durmiera en la guardia.");
 		return null;
 	}
 
@@ -280,7 +277,7 @@ public partial class Caso0 : Node
 		while (true)
 		{
 			var lista = opciones(p).Where(o => o.Visible()).ToList();
-			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Enseñarle una prueba del expediente" });
+			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Mostrarle una prueba del expediente" });
 			lista.Add(new Opcion { Id = "adios", Texto = "Seguir investigando" });
 			var vistas = lista.Select(o => new OpcionVista(o.Texto, o.Tipo, p.Leidas.Contains(o.Id) && o.Id != "evidencia")).ToList();
 			int elegida = await Dialogo.Elegir(p.Hablante, "¿Qué le digo?", vistas, salir: vistas.Count - 1);
@@ -296,7 +293,7 @@ public partial class Caso0 : Node
 				{
 					CambiarAnimo(p, -1);
 					await Habla(p, "¿Y eso qué tiene que ver conmigo?");
-					await Piensa("(No ha funcionado. Mejor elegir la prueba que contradiga lo que me ha dicho.)");
+					await Piensa("(No. Necesito una prueba que contradiga lo que me dijo.)");
 				}
 				continue;
 			}
@@ -308,9 +305,9 @@ public partial class Caso0 : Node
 	{
 		string[] saludos = p.Nombre switch
 		{
-			"Eriz" => new[] { "No pienso decir nada más, detective.", "¿D-detective? Estoy fregando, ¿eh? Solo fregando.", "Dígame, detective.", "Lo que necesite, detective. Se lo debo." },
-			"Porky" => new[] { "Sin mi representante sindical no hablo.", "¿Q-qué pasa ahora?", "Buenos días, detective. *bostezo*", "Lo que quiera. Ya no tengo nada que esconder." },
-			_ => new[] { "Tengo trabajo, Caneloso. Abrevie.", "¿Y ahora qué, Caneloso?", "¿Novedades, Caneloso? El juicio es a las doce.", "Buen trabajo hasta ahora, Caneloso." },
+			"Eriz" => new[] { "Ya no voy a decir nada, detective.", "¿D-detective? Nomás estoy trapeando, ¿eh?", "Dígame, detective.", "Lo que necesite, detective. Se lo debo." },
+			"Porky" => new[] { "Sin mi representante sindical no hablo.", "¿Q-qué pasó ahora?", "Buenos días, detective. *bostezo*", "Lo que quiera. Ya no tengo nada que esconder." },
+			_ => new[] { "Tengo trabajo, Caneloso. Sé breve.", "¿Y ahora qué, Caneloso?", "¿Qué hay de nuevo? El juicio es a las doce.", "Buen trabajo, Caneloso." },
 		};
 		return Habla(p, saludos[Mathf.Clamp(p.Animo + 2, 0, 3)]);
 	}
@@ -321,29 +318,28 @@ public partial class Caso0 : Node
 	{
 		new Opcion { Id = "e_noche", Tipo = "PREGUNTAR", Texto = "¿Qué hiciste anoche?", Accion = async () =>
 		{
-			if (p.Confeso) { await Habla(p, "Ya se lo dije: volví a las tres para llevarle un sándwich a Tito. Nada más."); return; }
-			await Habla(p, "Fregué la Sala 1 y me fui a la una en punto. Está firmado en el libro de turnos.");
-			Nota("Eriz dice que se fue a la 1:00 y que lo firmó en el libro de turnos.");
+			if (p.Confeso) { await Habla(p, "Ya le dije: volví a las tres a llevarle un sándwich a Tito."); return; }
+			await Habla(p, "Trapeé la Sala 1 y me fui a la una. Lo firmé en el libro de turnos.");
+			Nota("Eriz dice que se fue a la 1:00.");
 		} },
-		new Opcion { Id = "e_tito", Tipo = "PREGUNTAR", Texto = "¿Conoces a Tito Garras, el detenido de la C-2?", Accion = async () =>
+		// Historia de fondo: opcional, no hace falta para avanzar
+		new Opcion { Id = "e_tito", Tipo = "PREGUNTAR", Texto = "¿Conoces a Tito Garras, el de la C-2?", Accion = async () =>
 		{
-			if (p.Confeso) { await Habla(p, "Compartimos celda hace veinte años. Tito no es mala gente... para ser carterista."); return; }
-			CambiarAnimo(p, 0);
-			await Habla(p, "¿Tito? Eh... de vista. Todo el mundo conoce a Tito.");
-			await Piensa("(Se le erizan las púas al oír el nombre. Miente... o tiene miedo.)");
-			Nota("Eriz se pone nervioso al hablar de Tito Garras.");
+			if (p.Confeso) { await Habla(p, "Compartimos celda hace veinte años. No es mala persona."); return; }
+			await Habla(p, "¿Tito? Eh... de vista nada más.");
+			await Piensa("(Se le erizaron las púas. Está nervioso.)");
 		} },
 		new Opcion { Id = "e_312", Tipo = "PREGUNTAR", Texto = "¿Oíste algo a las 3:12?", Visible = () => _pistas.Contains(Reloj), Accion = async () =>
 		{
-			if (!p.Confeso) { await Habla(p, "¿A las tres? Yo ya estaba en casa, durmiendo."); await Piensa("(Eso no cuadra con las migas frescas de la C-2... si las encuentro.)"); return; }
-			await Habla(p, "Sí... Un golpe seco en la Sala 1, como si se cayera algo. Y al rato, la puerta del vestuario.");
-			Nota("Eriz oyó un golpe en la Sala 1 hacia las 3:12 y después la puerta del vestuario.");
+			if (!p.Confeso) { await Habla(p, "¿A esa hora? Yo ya estaba dormido en mi casa."); return; }
+			await Habla(p, "Un golpe en la Sala 1. Luego, la puerta de los vestidores.");
+			Nota("Eriz oyó un golpe en la Sala 1 a las 3:12 y luego la puerta de los vestidores.");
 		} },
 		new Opcion { Id = "e_presionar", Tipo = "PRESIONAR", Texto = "Tienes llave de todo... y un pasado de carterista, «Dedos».", Visible = () => !p.Confeso, Accion = async () =>
 		{
 			CambiarAnimo(p, -1);
-			await Habla(p, "¡Eso fue hace veinte años! Ahora friego suelos y pago mis impuestos.");
-			await Piensa("(Sin pruebas solo consigo que se cierre. Necesito algo que le contradiga.)");
+			await Habla(p, "¡Eso fue hace veinte años! Ahora trapeo y pago mis impuestos.");
+			await Piensa("(Sin pruebas solo se cierra más.)");
 		} },
 	};
 
@@ -352,25 +348,24 @@ public partial class Caso0 : Node
 		switch (id)
 		{
 			case Envoltorio:
-				if (p.Confeso) { await Habla(p, "Sí, sí, el sándwich. Ya está confesado."); return true; }
+				if (p.Confeso) { await Habla(p, "Sí, lo del sándwich. Ya se lo conté."); return true; }
 				p.Confeso = true;
 				CambiarAnimo(p, 3);
 				_confrontaciones.Add("eriz_envoltorio");
-				await Habla(p, "...Vale. Vale. Volví a las tres. Le llevé un sándwich de mortadela a Tito, a la C-2. Aquí no le dan de cenar.",
-					"Fuimos compañeros de celda hace veinte años. Si el comisario se entera, me despide.",
-					"Pero no toqué ninguna grabadora, se lo juro. Y con estas zapatillas de goma no dejo ni huella.");
-				AñadirTestimonio(TEriz, "Eriz: volvió a las 3:00", "Eriz volvió a las 3:00 para llevar un sándwich a Tito Garras (C-2). Fueron compañeros de celda.");
-				Indicar("testimonio", "Lo que me cuentan también va a mi tablero [R]. Y lo apunto en la libreta [Q].");
+				await Habla(p, "...Está bien. Volví a las tres a llevarle un sándwich a Tito.",
+					"Si el comisario se entera, me corre. Pero no toqué la grabadora.");
+				AñadirTestimonio(TEriz, "Eriz: volvió a las 3:00", "Eriz volvió a las 3:00 a llevarle un sándwich a Tito Garras (C-2).");
+				Indicar("testimonio", "Lo que me cuentan también va a mi tablero [R].");
 				return true;
 			case Huellas:
-				await Habla(p, "¿Huellas de bota? Mire mis pies, detective: zapatillas de goma. Las botas son cosa de agentes.");
-				Nota("Eriz lleva zapatillas de goma: las huellas de bota no son suyas.");
+				await Habla(p, "¿Botas? Yo uso tenis, detective. Las botas son de los agentes.");
+				Nota("Eriz usa tenis: las huellas de bota no son suyas.");
 				return true;
 			case Turnos:
-				await Habla(p, p.Confeso ? "Me fui a la una, sí... y volví. Eso no lo firmé." : "Ahí lo pone: salida, una en punto. ¿Lo ve?");
+				await Habla(p, p.Confeso ? "Me fui a la una... y volví. Eso no lo firmé." : "Ahí dice: salida a la una. ¿Ya ve?");
 				return true;
 			case Reloj:
-				await Habla(p, "¿El reloj de la Sala 1? Lo limpié a las doce y funcionaba. Se lo juro.");
+				await Habla(p, "Lo limpié a las doce y funcionaba. Se lo juro.");
 				return true;
 		}
 		return false;
@@ -383,51 +378,50 @@ public partial class Caso0 : Node
 		new Opcion { Id = "p_noche", Tipo = "PREGUNTAR", Texto = "¿Dónde estuviste durante la guardia?", Accion = async () =>
 		{
 			if (p.Confeso) { await Habla(p, "En la Sala 1... dormido. Ya lo sabe."); return; }
-			await Habla(p, "Aquí, en esta silla. Toda la guardia, despierto como un búho.");
-			Nota("Porky dice que pasó toda la guardia en recepción, despierto.");
+			await Habla(p, "Aquí en recepción. Toda la guardia, bien despierto.");
+			Nota("Porky dice que pasó la guardia despierto en recepción.");
 		} },
 		new Opcion { Id = "p_raro", Tipo = "PREGUNTAR", Texto = "¿Viste algo raro anoche?", Accion = async () =>
 		{
-			await Habla(p, "Nada. Bueno... el conserje rondaba por las celdas. Ese tiene llave de todo, ¿eh?");
-			Nota("Porky señala al conserje: «tiene llave de todo».");
+			await Habla(p, "Nada. Bueno... el conserje andaba por las celdas. Ese tiene llave de todo.");
+			Nota("Porky culpa al conserje: «tiene llave de todo».");
 		} },
 		new Opcion { Id = "p_312", Tipo = "PREGUNTAR", Texto = "¿Qué hacías a las 3:12?", Visible = () => _pistas.Contains(Reloj), Accion = async () =>
 		{
 			if (!p.Confeso)
 			{
 				CambiarAnimo(p, -1);
-				await Habla(p, "Vigilar. Muy... intensamente.");
-				await Piensa("(Se le cae una miga de donut del hocico. Está nervioso.)");
+				await Habla(p, "Vigilando. Muy... atento.");
+				await Piensa("(Se le cayó una migaja de dona. Está nervioso.)");
 				return;
 			}
-			await Habla(p, "Me desperté a las tres y cuarto: el reloj de la sala estaba en el suelo. Lo colgué sin mirar la hora.");
-			Nota("Porky despertó hacia las 3:15 con el reloj de la Sala 1 tirado en el suelo.");
+			await Habla(p, "Desperté como a las 3:15. El reloj estaba en el piso y lo colgué.");
+			Nota("Porky despertó a las 3:15 con el reloj de la Sala 1 en el piso.");
 		} },
 		new Opcion { Id = "p_presionar", Tipo = "PRESIONAR", Texto = "Tienes cara de haber dormido... y no en tu cama.", Visible = () => !p.Confeso && !_deducciones.Contains(D2), Accion = async () =>
 		{
 			CambiarAnimo(p, -1);
-			await Habla(p, "¡Oiga! Llevo once años en el cuerpo. ¡Hablaré con el sindicato!");
-			await Piensa("(Se ha cerrado. Sin pruebas, presionar solo me complica las cosas.)");
+			await Habla(p, "¡Oiga! Llevo once años en la corporación. ¡Voy a ir con el sindicato!");
+			await Piensa("(Sin pruebas solo se cierra más.)");
 		} },
-		new Opcion { Id = "p_deduccion", Tipo = "PRESIONAR", Texto = "Eras el único agente de guardia... y tus botas fueron al vestuario.", Visible = () => !p.Confeso && _deducciones.Contains(D2), Accion = async () =>
+		new Opcion { Id = "p_deduccion", Tipo = "PRESIONAR", Texto = "Eras el único agente de guardia... y tus botas fueron a los vestidores.", Visible = () => !p.Confeso && _deducciones.Contains(D2), Accion = async () =>
 		{
 			p.Confeso = true;
 			_confrontaciones.Add("porky_deduccion");
 			bool coopera = p.Animo >= -1;
 			CambiarAnimo(p, 2);
-			await Habla(p, "...Está bien. Me quedé dormido en la Sala 1. La silla del sospechoso es comodísima.",
-				"Cuando desperté, la luz de REC estaba encendida. ¡Pensé que me había grabado roncando!",
-				"Saqué la cinta y la escondí en mi casillero. Iba a borrar lo mío y devolverla, lo juro.");
-			AñadirTestimonio(TPorky, "Porky: se durmió", "Porky se durmió en la Sala 1. Al despertar vio la grabadora en REC, sacó la cinta y la escondió en su casillero.");
+			await Habla(p, "...Está bien. Me quedé dormido en la Sala 1.",
+				"Desperté con la luz de REC prendida y escondí la cinta en mi casillero.");
+			AñadirTestimonio(TPorky, "Porky: se durmió", "Porky se durmió en la Sala 1, vio la grabadora en REC y escondió la cinta en su casillero.");
 			if (coopera)
 			{
-				await Habla(p, "La combinación es 3-1-2. Pero no se lo diga al comisario.");
+				await Habla(p, "La combinación es 3-1-2. No le diga al comisario.");
 				Jugador.DarObjeto(Combinacion, "3-1-2. La combinación del casillero de Porky.");
 			}
 			else
 			{
-				await Habla(p, "Y la combinación no se la pienso dar. Que la busque usted.");
-				await Piensa("(Por presionarle antes de tiempo. Tendré que encontrarla yo... ¿en sus cosas?)");
+				await Habla(p, "Y la combinación no se la doy. Búsquela usted.");
+				await Piensa("(Lo presioné de más. Tendré que buscar entre sus cosas.)");
 			}
 		} },
 	};
@@ -438,20 +432,20 @@ public partial class Caso0 : Node
 		{
 			case Huellas:
 				if (_confrontaciones.Add("porky_huellas")) CambiarAnimo(p, -1);
-				await Habla(p, "¿Botas? Todos los agentes llevamos botas. Bueno... anoche solo estaba yo.");
-				Nota("Porky admite que anoche era el único agente en la comisaría.");
+				await Habla(p, "Todos los agentes usamos botas. Bueno... anoche solo estaba yo.");
+				Nota("Porky admite que anoche era el único agente de guardia.");
 				return true;
 			case Turnos:
-				await Habla(p, "Sí, guardia de dos a cuatro. Firmé y todo. ¿Y qué?");
+				await Habla(p, "Sí, guardia de dos a cuatro. Hasta firmé. ¿Y?");
 				return true;
 			case Envoltorio:
-				await Habla(p, "¿Un envoltorio de sándwich? Yo soy más de donuts, detective.");
+				await Habla(p, "¿Un sándwich? Yo soy más de donas, detective.");
 				return true;
 			case Reloj:
-				await Habla(p, p.Confeso ? "Ese reloj estaba en el suelo cuando me desperté." : "Las 3:12... Ni idea. Yo estaba... aquí.");
+				await Habla(p, p.Confeso ? "Ese reloj estaba en el piso cuando desperté." : "Las 3:12... Ni idea. Yo estaba aquí.");
 				return true;
 			case NotaComisario:
-				await Habla(p, "¡¿El comisario la dejó grabando a propósito?! ¡Era una trampa! ...Y caí como un donut en el café.");
+				await Habla(p, "¡¿Era una trampa?! ...Y caí redondito.");
 				return true;
 		}
 		return false;
@@ -463,41 +457,41 @@ public partial class Caso0 : Node
 	{
 		new Opcion { Id = "c_grabadora", Tipo = "PREGUNTAR", Texto = "¿Qué sabe de la grabadora?", Accion = async () =>
 		{
-			if (p.Confeso) { await Habla(p, "Ya lo sabe: la dejé en REC a propósito. No hace falta que lo repita."); return; }
-			await Habla(p, "Que tenía la confesión de Tito Garras y que ha volado. Yo no la toco desde ayer a las seis.");
+			if (p.Confeso) { await Habla(p, "Ya lo sabe: la dejé en REC a propósito."); return; }
+			await Habla(p, "Tenía la confesión de Tito Garras. No la toco desde ayer a las seis.");
 			Nota("El comisario dice que no tocó la grabadora desde las 18:00.");
 		} },
 		new Opcion { Id = "c_guardia", Tipo = "PREGUNTAR", Texto = "¿Quién vigilaba anoche?", Accion = async () =>
 		{
-			await Habla(p, "Porky, de dos a cuatro. Un buen chico... cuando está despierto.");
+			await Habla(p, "Porky, de dos a cuatro. Buen muchacho... cuando está despierto.");
 			Nota("Guardia nocturna: Porky, de 2:00 a 4:00.");
 		} },
+		// Historia de fondo: opcional, no hace falta para avanzar
 		new Opcion { Id = "c_tito", Tipo = "PREGUNTAR", Texto = "¿Quién es Tito Garras?", Accion = async () =>
 		{
-			await Habla(p, "Un carterista con dedos de seda. Ayer confesó el robo de la cartera del alcalde. Sin cinta, mañana sale libre.",
-				"Juraba que trabaja para alguien al que llama «La Garra». Tonterías de ladrón.");
-			Nota("Tito Garras confesó el robo de la cartera del alcalde. Habló de alguien llamado «La Garra».");
+			await Habla(p, "Un carterista. Confesó que robó la cartera del alcalde.",
+				"Dice que trabaja para un tal «La Garra». Puros cuentos.");
+			Nota("Tito Garras habló de alguien llamado «La Garra».");
 		} },
-		new Opcion { Id = "c_permiso", Tipo = "PREGUNTAR", Texto = "Necesito entrar en el vestuario.", Visible = () => !_autorizado, Accion = async () =>
+		new Opcion { Id = "c_permiso", Tipo = "PREGUNTAR", Texto = "Necesito entrar a los vestidores.", Visible = () => !_autorizado, Accion = async () =>
 		{
 			if (!_deducciones.Contains(D2))
 			{
-				await Habla(p, "¿El vestuario de mis agentes? Tráeme algo sólido primero.");
-				await Piensa("(Algo sólido... Debería unir mis pistas en el tablero [R].)");
+				await Habla(p, "¿A los vestidores? Primero tráeme algo concreto.");
+				await Piensa("(Algo concreto... Uno mis pistas en el tablero [R].)");
 				return;
 			}
-			await Habla(p, "Botas de agente y un solo agente de guardia... Entendido. Toma la llave.",
-				"Y ojo: Porky le pone candado de combinación a todo.");
+			await Habla(p, "Botas de agente y un solo agente de guardia. Ten la llave.");
 			_autorizado = true;
 			PuertaVestuario.Desbloquear();
-			Jugador.MostrarAviso("Nueva zona disponible: Vestuario", 4.0);
+			Jugador.MostrarAviso("Nueva zona disponible: Vestidores", 4.0);
 			Progreso();
 		} },
 		new Opcion { Id = "c_presionar", Tipo = "PRESIONAR", Texto = "¿Seguro que no tocó la grabadora anoche?", Visible = () => !p.Confeso, Accion = async () =>
 		{
 			CambiarAnimo(p, -1);
-			await Habla(p, "¿Me está acusando a mí, Caneloso? Cuidado con lo que insinúa.");
-			await Piensa("(Ha mirado el cajón de su escritorio antes de contestar...)");
+			await Habla(p, "¿Me estás acusando, Caneloso? Cuidado.");
+			await Piensa("(Miró el cajón de su escritorio antes de contestar...)");
 		} },
 	};
 
@@ -506,24 +500,22 @@ public partial class Caso0 : Node
 		switch (id)
 		{
 			case NotaComisario:
-				if (p.Confeso) { await Habla(p, "Sí, Caneloso, esa nota es mía. Ya lo hemos hablado."); return true; }
+				if (p.Confeso) { await Habla(p, "Sí, esa nota es mía. Ya lo hablamos."); return true; }
 				p.Confeso = true;
 				_confrontaciones.Add("comisario_nota");
 				CambiarAnimo(p, 1);
-				await Habla(p, "...Ejem. Sí. La dejé grabando. Llevo semanas sospechando que alguien duerme en las guardias.",
-					"Pensé que la grabadora lo pillaría. No imaginé que el dormilón se llevaría la cinta... ni que nos jugaríamos el juicio.",
-					"Que esto no salga de aquí, Caneloso.");
-				AñadirTestimonio(TComisario, "Comisario: la trampa", "El comisario dejó la grabadora en REC a propósito para pillar al que se duerme en la guardia.");
+				await Habla(p, "...Sí. La dejé grabando para cachar al que se duerme en la guardia.",
+					"No pensé que se llevaría la cinta. Que esto no salga de aquí.");
+				AñadirTestimonio(TComisario, "Comisario: la trampa", "El comisario dejó la grabadora en REC a propósito para cachar al que se duerme en la guardia.");
 				return true;
 			case Turnos:
-				await Habla(p, "La nota del margen es mía: «Grabadora Sala 1: NO TOCAR». ¿Algún problema?");
-				await Piensa("(¿Por qué no se podía tocar una grabadora... de noche?)");
+				await Habla(p, "La nota del margen es mía: «NO TOCAR». ¿Algún problema?");
 				return true;
 			case Cinta:
-				await Habla(p, "¡La cinta! Ahora explícame quién y por qué. En la Sala 1, Caneloso.");
+				await Habla(p, "¡La cinta! Explícame quién y por qué. En la Sala 1.");
 				return true;
 			case Huellas:
-				await Habla(p, "Botas reglamentarias. Bien visto. ¿Y quién estaba de guardia?");
+				await Habla(p, "Botas de agente. Bien visto. ¿Y quién estaba de guardia?");
 				return true;
 		}
 		return false;
@@ -534,7 +526,7 @@ public partial class Caso0 : Node
 	private void EmpezarResolucion()
 	{
 		Progreso();
-		Indicar("resolver", "Todo empieza a encajar. De vuelta a la Sala 1: desde la silla del sospechoso explicaré lo ocurrido.");
+		Indicar("resolver", "Ya tengo la cinta. Vuelvo a la Sala 1, a la silla del sospechoso.");
 		Eriz.GlobalTransform = PuntoErizFinal.GlobalTransform;
 		Porky.GlobalTransform = PuntoPorkyFinal.GlobalTransform;
 		SillaAcusacion.Habilitar(true, CapaInteractuable);
@@ -544,7 +536,7 @@ public partial class Caso0 : Node
 	private async Task Resolver()
 	{
 		if (_resuelto) return;
-		await Piensa("Repasemos. Tres preguntas, tres respuestas. Si una falla, nada encaja.");
+		await Piensa("Tres preguntas. Si una falla, nada encaja.");
 		int quien = await Dialogo.Elegir(_caneloso, "¿Quién sacó la cinta de la grabadora?",
 			new List<OpcionVista> { new("Eriz, el conserje"), new("Porky, el agente de guardia"), new("El comisario") });
 		int porque = await Dialogo.Elegir(_caneloso, "¿Por qué la sacó?",
@@ -555,26 +547,23 @@ public partial class Caso0 : Node
 
 		if (quien != 1 || porque != 1 || rec != 2)
 		{
-			await Piensa("Algo no encaja todavía.", "Repasaré el tablero [R] y la libreta [Q]. Alguien me ha mentido... y no solo una persona.");
+			await Piensa("Algo no encaja. Repaso el tablero [R] y la libreta [Q].");
 			Progreso();
 			return;
 		}
 
 		_resuelto = true;
 		SillaAcusacion.Habilitar(false, CapaInteractuable);
-		await Habla(_porky, "Lo siento mucho, detective. La próxima guardia la hago de pie.");
-		await Habla(_comisario, "Y yo me guardaré mis trampas. La confesión está a salvo y el juicio seguirá. Buen trabajo, Caneloso.");
-		await Piensa("Antes de entregarla... escucharé la cinta entera.");
+		await Habla(_porky, "Perdón, detective. La próxima guardia la hago de pie.");
+		await Habla(_comisario, "Se acabaron mis trampas. El juicio sigue. Buen trabajo, Caneloso.");
 		await Dialogo.Decir(Dialogo.HablantePorNombre("Cinta"),
-			"[Voz de Tito Garras] «...y sí, me llevé la cartera del alcalde. Lo confieso.»",
-			"[Ronquidos. Alguien murmura: «...cinco minutitos más...»]",
-			"[03:12 · Un roce metálico. Una voz que nadie reconoce, muy cerca del micrófono:]",
-			"«La Garra no olvida, Caneloso.»",
-			"[Fin de la cinta]");
+			"[Tito Garras] «...sí, yo me robé la cartera del alcalde.»",
+			"[03:12 · Ronquidos. Un ruido metálico junto al micrófono]",
+			"«La Garra no olvida, Caneloso.»");
 		await Piensa(_pistas.Contains(Pluma)
-			? new[] { "Esa voz no es de nadie de esta comisaría. Alguien más estuvo aquí a las 3:12.", "La pluma negra de la rejilla... Entró por la ventilación. Y sabía que yo escucharía esto." }
-			: new[] { "Esa voz no es de nadie de esta comisaría. Alguien más estuvo aquí a las 3:12.", "¿Por dónde entró? La sala solo tiene una puerta... y una rejilla en el techo." });
-		Nota("En la cinta, a las 3:12, una voz desconocida: «La Garra no olvida, Caneloso». Caso abierto.");
+			? "Alguien más estuvo aquí a las 3:12... y entró por la rejilla de la pluma negra."
+			: "Alguien más estuvo aquí a las 3:12. ¿Por dónde entró?");
+		Nota("En la cinta, a las 3:12, una voz desconocida: «La Garra no olvida, Caneloso».");
 		Objetivo("Caso cerrado... por ahora. ¿Quién es «La Garra»?");
 		await MostrarCalificacion();
 		if (GestorPartida.Instancia != null)
@@ -595,10 +584,9 @@ public partial class Caso0 : Node
 		string nota = puntos >= 145 ? "S" : puntos >= 120 ? "A" : puntos >= 90 ? "B" : "C";
 		var tiempo = TimeSpan.FromSeconds(_tiempoCaso);
 		return Dialogo.Decir(Dialogo.HablantePorNombre("Informe del caso"),
-			$"Pistas: {pistas}/{PistasTotales}{(_pistas.Contains(Pluma) ? " (¡incluida la secreta!)" : "")} · Deducciones: {deducciones}/4",
-			$"Confrontaciones clave: {confrontaciones}/4 · Resuelto al primer intento: {(primera ? "sí" : "no (" + _intentosAcusacion + " intentos)")}",
-			$"Tiempo: {(int)tiempo.TotalMinutes} min {tiempo.Seconds:00} s · CALIFICACIÓN: {nota}",
-			nota == "S" ? "Impecable, detective." : "¿Te faltó algo? Hay más secretos en la comisaría de los que parece.");
+			$"Pistas: {pistas}/{PistasTotales}{(_pistas.Contains(Pluma) ? " (¡con la secreta!)" : "")} · Deducciones: {deducciones}/4 · Confrontaciones: {confrontaciones}/4",
+			$"Al primer intento: {(primera ? "sí" : "no (" + _intentosAcusacion + " intentos)")} · Tiempo: {(int)tiempo.TotalMinutes} min {tiempo.Seconds:00} s",
+			$"CALIFICACIÓN: {nota}. " + (nota == "S" ? "Impecable, detective." : "Todavía quedan secretos en la estación."));
 	}
 
 	// ---------- Zonas y tutorial ----------
@@ -606,28 +594,28 @@ public partial class Caso0 : Node
 	private void AlEntrarPasillo()
 	{
 		if (!Jugador.LinternaEncendida && !_pistas.Contains(Huellas))
-			Indicar("linterna", "No veo ni mis propias patas. Mi linterna [F]...");
+			Indicar("linterna", "No veo nada. Prendo la linterna [F].");
 	}
 
 	private void AlEntrarRecepcion()
 	{
 		if (_vioCandado && !Jugador.TieneObjeto(Combinacion))
-			Indicar("agacharse_banco", "Ese bulto bajo el banco de espera... Si me agacho [C], podré verlo.");
+			Indicar("agacharse_banco", "Algo hay bajo el banco. Me agacho [C] para verlo.");
 		else if (!_pistas.Contains(Turnos))
-			Indicar("recoger", "El libro de turnos, en el mostrador. Me lo llevo [E].");
+			Indicar("recoger", "El libro de turnos está en el mostrador. Lo tomo [E].");
 	}
 
 	private void AlCambiarLinterna(bool encendida)
 	{
 		if (encendida && !_pistas.Contains(Huellas))
-			Indicar("buscar_huellas", "Con luz directa se ven cosas que antes no... ¿Qué hay en el suelo?");
+			Indicar("buscar_huellas", "Con luz se ve mejor... ¿qué hay en el piso?");
 	}
 
 	private void AlEncontrarCandado()
 	{
 		if (Jugador.TieneObjeto(Combinacion)) return;
 		_vioCandado = true;
-		Indicar("mochila", "Candado de combinación. Porky no se separa de sus cosas... ¿Las dejó en recepción?");
+		Indicar("mochila", "Candado de combinación. ¿Porky dejó sus cosas en recepción?");
 		ActualizarObjetivo();
 	}
 
@@ -660,15 +648,15 @@ public partial class Caso0 : Node
 	private string Ayuda(int nivel)
 	{
 		bool claro = nivel >= 2;
-		if (!_pistas.Contains(Grabadora)) return claro ? "La grabadora de la mesa. Debería examinarla [E]." : "Esa luz roja de la mesa no deja de parpadear...";
+		if (!_pistas.Contains(Grabadora)) return claro ? "La grabadora de la mesa. La reviso [E]." : "Esa luz roja de la mesa no deja de parpadear...";
 		if (!_pistas.Contains(Reloj)) return claro ? "El reloj de la pared... ¿está parado?" : "Hay algo raro en esta sala... ¿qué hora es?";
 		if (!_deducciones.Contains(D1)) return claro ? "Si uno la grabadora y el reloj en el tablero [R]..." : "La grabadora y el reloj... ¿estarán relacionados?";
-		if (!_pistas.Contains(Huellas)) return claro ? "El suelo del pasillo está muy oscuro. Con la linterna [F]..." : "Si alguien salió de la sala de noche, habrá dejado rastro.";
+		if (!_pistas.Contains(Huellas)) return claro ? "El piso del pasillo está muy oscuro. Con la linterna [F]..." : "Si alguien salió de la sala de noche, habrá dejado rastro.";
 		if (!_pistas.Contains(Turnos)) return claro ? "En recepción tiene que haber un registro de turnos." : "¿Quién estaba de guardia anoche?";
 		if (!_deducciones.Contains(D2)) return claro ? "Huellas de bota y un solo agente de guardia. Al tablero [R]." : "Esas huellas... ¿de quién pueden ser?";
-		if (!_autorizado) return claro ? "Hablaré con el comisario en recepción." : "El comisario tiene la llave del vestuario.";
+		if (!_autorizado) return claro ? "Voy con el comisario a recepción." : "El comisario tiene la llave de los vestidores.";
 		if (_vioCandado && !Jugador.TieneObjeto(Combinacion)) return claro ? "¿Y si la mochila de Porky está bajo el banco de espera? Agachado [C]." : "Porky no se separa de sus cosas...";
-		if (!_pistas.Contains(Cinta)) return claro ? "El casillero de Porky, en el vestuario." : "Si yo escondiera algo aquí, ¿dónde sería?";
+		if (!_pistas.Contains(Cinta)) return claro ? "El casillero de Porky, en los vestidores." : "Si yo escondiera algo aquí, ¿dónde sería?";
 		return claro ? "La silla del sospechoso, en la Sala 1. Ya puedo explicarlo todo." : "Creo que ya tengo todas las piezas.";
 	}
 
