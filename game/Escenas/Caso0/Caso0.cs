@@ -337,7 +337,7 @@ public partial class Caso0 : Node
 		{
 			await Habla(p, "Compartimos celda hace veinte años. No es mala persona.");
 		} },
-		new Opcion { Id = "e_presionar", Tipo = "PRESIONAR", Texto = "Tienes llave de todo... y un pasado de carterista, «Dedos».", Visible = () => !p.Confeso, Accion = async () =>
+		new Opcion { Id = "e_presionar", Tipo = "PRESIONAR", Texto = "Tienes llave de todo... y un pasado de carterista.", Visible = () => !p.Confeso, Accion = async () =>
 		{
 			CambiarAnimo(p, -1);
 			await Habla(p, "¡Eso fue hace veinte años! Ahora trapeo y pago mis impuestos.");
