@@ -101,6 +101,9 @@ public partial class Caso0 : Node
 
 		Hud.Set("caso", "00");
 		Hud.Set("archivo", "La cinta");
+		Hud.Call("registrar_persona", "Eriz", "Conserje de la comisaría. Conoce las salas y sus accesos. Su recorrido durante la noche puede ayudar a reconstruir lo ocurrido.", Dialogo.Retrato("Eriz"));
+		Hud.Call("registrar_persona", "Porky", "Agente de la comisaría. Estaba de guardia la noche del incidente. Hay que contrastar su versión con las pistas de la Sala 1.", Dialogo.Retrato("Porky"));
+		Hud.Call("registrar_persona", "Comisario", "Responsable de la comisaría y de la investigación sobre la cinta. Puede aclarar el uso de la grabadora y autorizar el acceso a los vestidores.", Dialogo.Retrato("Comisario"));
 		Jugador.EvidenciaRegistrada += AlRegistrarEvidencia;
 		Jugador.ObjetoObtenido += _ => { Progreso(); ActualizarObjetivo(); };
 		Hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
