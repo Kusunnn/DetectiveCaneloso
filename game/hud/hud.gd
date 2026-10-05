@@ -13,6 +13,10 @@ signal linterna_cambiada(encendida: bool)
 @export var rueda_habilitada: bool = true
 var pistas: Array[Pista] = []
 var indice_pista: int = 0
+const DURACION_CAMBIO_PISTA := 0.24
+var _pista_anterior: int = 0
+var _cambio_pista: float = 0.0
+var _sentido_pista: int = 1
 var _quieto: float = 0.0
 var _moviendo: bool = false
 var _ayuda_alpha: float = 1.0
@@ -159,10 +163,17 @@ func registrar_pista(id: String, titulo: String, descripcion: String) -> bool:
 func cambiar_pista(paso: int) -> void:
 	if pistas.is_empty():
 		return
-	indice_pista = posmod(indice_pista + paso, pistas.size())
+	var siguiente := posmod(indice_pista + paso, pistas.size())
+	if siguiente == indice_pista:
+		return
+	_pista_anterior = indice_pista
+	_sentido_pista = 1 if paso > 0 else -1
+	_cambio_pista = DURACION_CAMBIO_PISTA
+	indice_pista = siguiente
 	pista_seleccionada.emit(pistas[indice_pista])
 
 func _process(delta: float) -> void:
+	_cambio_pista = maxf(0.0, _cambio_pista - delta)
 	_giro = move_toward(_giro, 0.0, delta * 4.5)
 	_quieto = 0.0 if _moviendo else _quieto + delta
 	var destino := 0.0 if _moviendo or _quieto < segundos_inactividad else 1.0
@@ -494,22 +505,36 @@ func _dibujar_pistas(w: float, h: float) -> void:
 	var p := Vector2(w - 405, h - 220)
 	for i in range(mini(pistas.size() - 1, 3), 0, -1):
 		_nota(Rect2(p + Vector2(i * 6, -i * 9), Vector2(355, 180)), PAPEL.darkened(i * 0.07))
-	_nota(Rect2(p, Vector2(355, 180)))
-	var contador := "%02d / %02d" % [indice_pista + 1, pistas.size()] if not pistas.is_empty() else "00 / 00"
-	_texto("PISTAS", p + Vector2(22, 39), _bold, 30, TINTA)
-	_texto(contador, p + Vector2(246, 36), MONO, 13, TINTA)
-	_lienzo.draw_rect(Rect2(p + Vector2(22, 48), Vector2(120, 4)), AMBAR)
-	if pistas.is_empty():
-		_texto("SIN EVIDENCIA", p + Vector2(22, 94), _bold, 28, TINTA)
-		_texto("Explora para reunir pistas.", p + Vector2(22, 124), MONO, 12, TINTA)
+	if _cambio_pista > 0.0 and pistas.size() > 1:
+		var t := 1.0 - _cambio_pista / DURACION_CAMBIO_PISTA
+		var avance := 1.0 - pow(1.0 - t, 3.0)
+		var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+		# La nota anterior se despega; la siguiente se acomoda sobre la pila.
+		_lienzo.draw_set_transform((p + Vector2(-_sentido_pista * avance * 100, -sin(t * PI) * 22)) * escala, -_sentido_pista * avance * 0.07, Vector2.ONE * escala)
+		_dibujar_postit_pista(Vector2.ZERO, _pista_anterior, 1.0 - avance)
+		_lienzo.draw_set_transform((p + Vector2(_sentido_pista * (1.0 - avance) * 90, -(1.0 - avance) * 16)) * escala, _sentido_pista * (1.0 - avance) * 0.045, Vector2.ONE * escala)
+		_dibujar_postit_pista(Vector2.ZERO, indice_pista, avance)
+		_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
 	else:
-		var pista := pistas[indice_pista]
+		_dibujar_postit_pista(p, indice_pista)
+
+func _dibujar_postit_pista(p: Vector2, indice: int, alfa: float = 1.0) -> void:
+	_nota(Rect2(p, Vector2(355, 180)), Color(PAPEL, alfa))
+	var contador := "%02d / %02d" % [indice + 1, pistas.size()] if not pistas.is_empty() else "00 / 00"
+	_texto("PISTAS", p + Vector2(22, 39), _bold, 30, Color(TINTA, alfa))
+	_texto(contador, p + Vector2(246, 36), MONO, 13, Color(TINTA, alfa))
+	_lienzo.draw_rect(Rect2(p + Vector2(22, 48), Vector2(120, 4)), Color(AMBAR, alfa))
+	if pistas.is_empty():
+		_texto("SIN EVIDENCIA", p + Vector2(22, 94), _bold, 28, Color(TINTA, alfa))
+		_texto("Explora para reunir pistas.", p + Vector2(22, 124), MONO, 12, Color(TINTA, alfa))
+	else:
+		var pista := pistas[indice]
 		var ancho := 210.0 if pista.imagen else 311.0
-		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, TINTA, ancho)
+		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, Color(TINTA, alfa), ancho)
 		if pista.imagen:
-			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), BLANCO)
+			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), Color(BLANCO, alfa))
 			var zona := Rect2(p + Vector2(254, 63), Vector2(76, 64))
 			var factor := minf(zona.size.x / pista.imagen.get_width(), zona.size.y / pista.imagen.get_height())
 			var medida := pista.imagen.get_size() * factor
-			_lienzo.draw_texture_rect(pista.imagen, Rect2(zona.position + (zona.size - medida) / 2, medida), false)
-	_linea(p + Vector2(22, 141), p + Vector2(333, 141), Color(TINTA, 0.2))
+			_lienzo.draw_texture_rect(pista.imagen, Rect2(zona.position + (zona.size - medida) / 2, medida), false, Color(1, 1, 1, alfa))
+	_linea(p + Vector2(22, 141), p + Vector2(333, 141), Color(TINTA, 0.2 * alfa))
