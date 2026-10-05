@@ -58,7 +58,7 @@ func _paginas_libro() -> Array[Dictionary]:
 	for persona in personas:
 		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen})
 	if personas.is_empty():
-		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Aún no hay personas registradas en este caso."})
+		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Habla con las personas del caso para añadir sus fichas al diario."})
 	return paginas
 
 func _pasar_hoja(destino: int) -> void:
