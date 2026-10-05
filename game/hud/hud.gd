@@ -13,6 +13,10 @@ signal linterna_cambiada(encendida: bool)
 @export var rueda_habilitada: bool = true
 var pistas: Array[Pista] = []
 var indice_pista: int = 0
+const DURACION_CAMBIO_PISTA := 0.24
+var _pista_anterior: int = 0
+var _cambio_pista: float = 0.0
+var _sentido_pista: int = 1
 var _quieto: float = 0.0
 var _moviendo: bool = false
 var _ayuda_alpha: float = 1.0
@@ -20,8 +24,69 @@ var _aviso: float = 0.0
 var _detalle: bool = false
 var diario_abierto: bool = false
 var linterna_encendida: bool = false
-## Notas de la libreta (Q): testimonios y deducciones que el caso va apuntando.
+## Diario del caso (Q): pistas, deducciones, testimonios y personas.
 var notas: Array[String] = []
+var personas: Array[Dictionary] = []
+const PISTAS_POR_HOJA := 9
+var _pista_diario: int = -1
+var _seccion: String = "PISTAS"
+var _hojas_seccion: Dictionary = {"PISTAS": 0, "DEDUCCIONES": 0, "PERSONAS": 0}
+const COLORES_SECCION := {"PISTAS": Color("dbb64f"), "DEDUCCIONES": Color("876348"), "PERSONAS": Color("993f40")}
+var _papeles_libro: Array[ImageTexture] = []
+var _hoja: int = 0
+var _giro: float = 0.0
+var _direccion: int = 1
+var _zonas_libro: Array[Dictionary] = []
+
+func registrar_persona(nombre: String, resumen: String, retrato: Texture2D) -> void:
+	for persona in personas:
+		if persona.nombre == nombre:
+			return
+	personas.append({"nombre": nombre, "resumen": resumen, "imagen": retrato})
+
+func _paginas_libro() -> Array[Dictionary]:
+	var paginas: Array[Dictionary] = []
+	# Cada hoja de fotos comparte una sola página de detalle.
+	for grupo in range(maxi(1, ceili(pistas.size() / float(PISTAS_POR_HOJA)))):
+		var inicio := grupo * PISTAS_POR_HOJA
+		paginas.append({"seccion": "PISTAS", "titulo": "Pistas reunidas", "galeria": inicio})
+		if _pista_diario >= inicio and _pista_diario < mini(inicio + PISTAS_POR_HOJA, pistas.size()):
+			var pista := pistas[_pista_diario]
+			paginas.append({"seccion": "PISTAS", "titulo": pista.titulo, "texto": pista.descripcion, "imagen": pista.imagen})
+		else:
+			paginas.append({"seccion": "PISTAS", "titulo": "Una mirada más de cerca", "texto": "Haz clic en una fotografía para consultar la pista." if not pistas.is_empty() else "Las pistas que encuentres aparecerán en la hoja de al lado."})
+	var conclusiones := notas.filter(func(n: String) -> bool: return n.begins_with("Deducción: "))
+	for conclusion in conclusiones:
+		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Una conexión confirmada", "texto": conclusion.trim_prefix("Deducción: ")})
+	if conclusiones.is_empty():
+		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Todo está por conectar", "texto": "Une las pistas en el tablero [R]. Las deducciones confirmadas quedarán anotadas aquí."})
+	for nota in notas:
+		if not nota.begins_with("Deducción: "):
+			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
+	for persona in personas:
+		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen})
+	if personas.is_empty():
+		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Habla con las personas del caso para añadir sus fichas al diario."})
+	return paginas.filter(func(pagina: Dictionary) -> bool: return pagina.seccion == _seccion)
+
+func _cambiar_seccion(seccion: String) -> void:
+	if seccion == _seccion or not COLORES_SECCION.has(seccion):
+		return
+	_hojas_seccion[_seccion] = _hoja
+	_seccion = seccion
+	_hoja = clampi(_hojas_seccion[seccion], 0, (_paginas_libro().size() - 1) / 2)
+	_direccion = 1
+	_giro = 1.0
+	_zonas_libro.clear()
+
+func _pasar_hoja(destino: int) -> void:
+	var nueva := clampi(destino, 0, (_paginas_libro().size() - 1) / 2)
+	if nueva == _hoja:
+		return
+	_direccion = 1 if nueva > _hoja else -1
+	_hoja = nueva
+	_giro = 1.0
+
 var _aviso_titulo := "EXPEDIENTE ACTUALIZADO"
 var _aviso_detalle := "+1 PISTA"
 var _lienzo: Control
@@ -40,6 +105,8 @@ func _ready() -> void:
 	_bold = _fuente(800)
 	_medium = _fuente(500)
 	_papel = _crear_papel()
+	for i in range(4):
+		_papeles_libro.append(_crear_papel_libro(i))
 	_lienzo = Control.new()
 	_lienzo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_lienzo.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -96,10 +163,18 @@ func registrar_pista(id: String, titulo: String, descripcion: String) -> bool:
 func cambiar_pista(paso: int) -> void:
 	if pistas.is_empty():
 		return
-	indice_pista = posmod(indice_pista + paso, pistas.size())
+	var siguiente := posmod(indice_pista + paso, pistas.size())
+	if siguiente == indice_pista:
+		return
+	_pista_anterior = indice_pista
+	_sentido_pista = 1 if paso > 0 else -1
+	_cambio_pista = DURACION_CAMBIO_PISTA
+	indice_pista = siguiente
 	pista_seleccionada.emit(pistas[indice_pista])
 
 func _process(delta: float) -> void:
+	_cambio_pista = maxf(0.0, _cambio_pista - delta)
+	_giro = move_toward(_giro, 0.0, delta * 4.5)
 	_quieto = 0.0 if _moviendo else _quieto + delta
 	var destino := 0.0 if _moviendo or _quieto < segundos_inactividad else 1.0
 	# Al iniciar, mantener ayuda visible hasta el primer movimiento.
@@ -110,13 +185,35 @@ func _process(delta: float) -> void:
 	_lienzo.queue_redraw()
 
 func _input(event: InputEvent) -> void:
+	if diario_abierto and event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+			for zona in _zonas_libro:
+				if zona.rect.has_point(event.position / escala):
+					if zona.has("pista"):
+						_pista_diario = zona.pista
+					elif zona.has("seccion"):
+						_cambiar_seccion(zona.seccion)
+					elif zona.destino == -1:
+						diario_abierto = false
+						panel_cambiado.emit(false, false)
+					else:
+						_pasar_hoja(zona.destino)
+					break
+		elif event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			_pasar_hoja(_hoja + (-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1))
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventMouseButton and event.pressed and rueda_habilitada and not diario_abierto and pistas.size() > 1:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			cambiar_pista(-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1)
 			get_viewport().set_input_as_handled()
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode in [KEY_UP, KEY_LEFT, KEY_DOWN, KEY_RIGHT]:
-			if not diario_abierto and pistas.size() > 1:
+			if diario_abierto:
+				_pasar_hoja(_hoja + (-1 if event.keycode in [KEY_UP, KEY_LEFT] else 1))
+				get_viewport().set_input_as_handled()
+			elif pistas.size() > 1:
 				cambiar_pista(-1 if event.keycode in [KEY_UP, KEY_LEFT] else 1)
 				get_viewport().set_input_as_handled()
 			return
@@ -128,6 +225,8 @@ func _input(event: InputEvent) -> void:
 					detalle_solicitado.emit(pistas[indice_pista])
 			KEY_Q:
 				diario_abierto = not diario_abierto
+				if diario_abierto:
+					_giro = 1.0
 				_detalle = false
 			KEY_F:
 				linterna_encendida = not linterna_encendida
@@ -185,6 +284,19 @@ func _crear_papel() -> ImageTexture:
 				luz -= exp(-absf(distancia) * 155.0) * 0.12
 				luz += exp(-absf(distancia - 0.012) * 140.0) * 0.07
 			img.set_pixel(x, y, Color(luz, luz * 0.975, luz * 0.91, 1.0))
+	return ImageTexture.create_from_image(img)
+
+# Papel de encuadernación: grano fino y tonos suaves, sin arrugas ni manchas.
+func _crear_papel_libro(variante: int) -> ImageTexture:
+	var ruido := FastNoiseLite.new()
+	ruido.seed = 781 + variante * 97
+	ruido.frequency = 0.38
+	var img := Image.create(256, 256, false, Image.FORMAT_RGBA8)
+	var base: Color = [Color("f5f0e4"), Color("f3eddf"), Color("f6f1e7"), Color("f1ebdf")][variante]
+	for y in range(256):
+		for x in range(256):
+			var grano := ruido.get_noise_2d(x, y) * 0.012
+			img.set_pixel(x, y, Color(base.r + grano, base.g + grano, base.b + grano))
 	return ImageTexture.create_from_image(img)
 
 func _nota(rect: Rect2, color: Color = PAPEL) -> void:
@@ -252,26 +364,113 @@ func _dibujar() -> void:
 	if _detalle:
 		_dibujar_expediente(w, h)
 	elif diario_abierto:
-		_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.04, 0.06, 0.85))
-		var origen := Vector2(w / 2 - 420, h / 2 - 270)
-		_nota(Rect2(origen, Vector2(840, 540)))
-		_texto("LIBRETA", origen + Vector2(35, 55), _bold, 34, TINTA)
-		_linea(origen + Vector2(420, 30), origen + Vector2(420, 490), Color(TINTA, 0.22))
-		_dibujar_notas(origen)
+		_dibujar_libro(w, h)
 
-## Notas en dos columnas; si no caben, se muestran las más recientes.
-func _dibujar_notas(origen: Vector2) -> void:
-	if notas.is_empty():
-		_texto("Aún no has apuntado nada.", origen + Vector2(35, 110), MONO, 15, TINTA)
+func _boton_libro(texto: String, rect: Rect2, destino: int, activo: bool = true) -> void:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	var hover := activo and rect.has_point(_lienzo.get_local_mouse_position() / escala)
+	_lienzo.draw_rect(rect, Color("b99a55") if hover else Color("483b30"))
+	_texto(texto, rect.position + Vector2(16, 28), MONO, 15, BLANCO if activo else Color("8c8275"))
+	if activo:
+		_zonas_libro.append({"rect": rect, "destino": destino})
+
+func _dibujar_libro(w: float, h: float) -> void:
+	_zonas_libro.clear()
+	var paginas := _paginas_libro()
+	_hoja = clampi(_hoja, 0, (paginas.size() - 1) / 2)
+	var origen := Vector2(w / 2 - 580, h / 2 - 330)
+	_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.03, 0.04, 0.88))
+	# Cubierta de cuero, cantos de papel y dos páginas unidas por el lomo.
+	_lienzo.draw_rect(Rect2(origen + Vector2(-18, 0), Vector2(1204, 688)), Color(0, 0, 0, 0.35))
+	_lienzo.draw_rect(Rect2(origen + Vector2(-16, -16), Vector2(1192, 688)), Color("483329"))
+	for canto in range(5, 0, -1):
+		_lienzo.draw_rect(Rect2(origen + Vector2(-canto, canto * 2), Vector2(1160 + canto * 2, 650)), Color("a99c80").lightened(canto * 0.025))
+	for lado in range(2):
+		var p := origen + Vector2(lado * 580, 0)
+		var variante := (_hoja * 2 + lado + int(COLORES_SECCION.keys().find(_seccion))) % _papeles_libro.size()
+		_lienzo.draw_texture_rect(_papeles_libro[variante], Rect2(p, Vector2(580, 650)), false)
+		_lienzo.draw_rect(Rect2(p + Vector2(38, 51), Vector2(54, 3)), COLORES_SECCION[_seccion])
+		_texto("CASO " + caso + "  /  " + archivo, p + Vector2(38, 37), MONO, 13, Color("75654e"))
+		_linea(p + Vector2(38, 52), p + Vector2(542, 52), Color(TINTA, 0.22))
+		var indice := _hoja * 2 + lado
+		if indice < paginas.size():
+			_dibujar_pagina(p, paginas[indice])
+		else:
+			_texto("La investigación continúa…", p + Vector2(38, 140), _medium, 30, Color("75654e"))
+		_linea(p + Vector2(38, 592), p + Vector2(542, 592), Color(TINTA, 0.22))
+		_texto("DETECTIVE CANELOSO", p + Vector2(38, 621), MONO, 12, Color("75654e"))
+		_texto("%02d" % (indice + 1), p + Vector2(510, 621), MONO, 14, TINTA)
+	for i in range(24):
+		_lienzo.draw_rect(Rect2(origen + Vector2(580 - i, 0), Vector2(i * 2, 650)), Color(0.21, 0.15, 0.08, 0.012))
+	_linea(origen + Vector2(580, 5), origen + Vector2(580, 645), Color("77664e"))
+	# Una hoja se estrecha hacia el lomo al pasar de página.
+	if _giro > 0:
+		var ancho := 560.0 * _giro
+		var x := 580.0 if _direccion > 0 else 580.0 - ancho
+		_lienzo.draw_rect(Rect2(origen + Vector2(x, 3), Vector2(ancho, 642)), Color("f3eddf"))
+		_lienzo.draw_rect(Rect2(origen + Vector2(x, 3), Vector2(5, 642)), Color(0.2, 0.13, 0.06, 0.2))
+	for i in range(3):
+		var seccion: String = ["PISTAS", "DEDUCCIONES", "PERSONAS"][i]
+		var activa := seccion == _seccion
+		var rect := Rect2(origen + Vector2(i * 210, -68 if activa else -56), Vector2(198, 52 if activa else 40))
+		var color: Color = COLORES_SECCION[seccion]
+		var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+		if rect.has_point(_lienzo.get_local_mouse_position() / escala):
+			color = color.lightened(0.1)
+		_lienzo.draw_rect(rect, color)
+		_texto(seccion, rect.position + Vector2(16, 27), MONO, 15, TINTA if seccion == "PISTAS" else Color("fff5e8"))
+		if activa:
+			_lienzo.draw_rect(Rect2(rect.position + Vector2(16, 36), Vector2(30, 3)), TINTA if seccion == "PISTAS" else Color("fff5e8"))
+		_zonas_libro.append({"rect": rect, "seccion": seccion})
+	_boton_libro("CERRAR [Q]", Rect2(origen + Vector2(1000, -60), Vector2(160, 42)), -1)
+	_boton_libro("← ANTERIOR", Rect2(origen + Vector2(0, 686), Vector2(174, 42)), _hoja - 1, _hoja > 0)
+	_texto("%s  ·  %02d / %02d  ·  ← / →" % [_seccion, _hoja + 1, ceili(paginas.size() / 2.0)], origen + Vector2(310, 714), MONO, 14, BLANCO)
+	_boton_libro("SIGUIENTE →", Rect2(origen + Vector2(976, 686), Vector2(184, 42)), _hoja + 1, (_hoja + 1) * 2 < paginas.size())
+
+func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
+	_texto(pagina.seccion, p + Vector2(38, 89), MONO, 14, Color("866134"))
+	_texto_ajustado(pagina.titulo, p + Vector2(38, 134), _bold, 36, TINTA, 504)
+	_lienzo.draw_rect(Rect2(p + Vector2(38, 152), Vector2(70, 3)), COLORES_SECCION[_seccion])
+	if pagina.has("galeria"):
+		_dibujar_galeria_pistas(p, pagina.galeria)
 		return
-	var por_columna := 6
-	var inicio := maxi(0, notas.size() - por_columna * 2)
-	for i in range(inicio, notas.size()):
+	var imagen: Texture2D = pagina.get("imagen")
+	var texto_y := 188.0
+	if imagen:
+		var marco := Rect2(p + Vector2(145, 179), Vector2(290, 218))
+		_lienzo.draw_rect(Rect2(marco.position + Vector2(4, 5), marco.size), Color(0, 0, 0, 0.17))
+		_lienzo.draw_rect(marco, Color("f5efdf"))
+		var medida := imagen.get_size()
+		medida *= minf(264.0 / medida.x, 192.0 / medida.y)
+		_lienzo.draw_texture_rect(imagen, Rect2(marco.get_center() - medida / 2, medida), false)
+		texto_y = 422.0
+	_parrafo(pagina.texto, p + Vector2(38, texto_y), 504, 17, TINTA, 7 if imagen else 16)
+
+func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
+	if pistas.is_empty():
+		_parrafo("Todavía no has reunido pistas. Explora la comisaría para empezar tu colección.", p + Vector2(38, 188), 504, 17, TINTA)
+		return
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	var raton := _lienzo.get_local_mouse_position() / escala
+	for i in range(inicio, mini(inicio + PISTAS_POR_HOJA, pistas.size())):
 		var k := i - inicio
-		var columna := k / por_columna
-		var fila := k % por_columna
-		var p := origen + Vector2(35 + columna * 405, 90 + fila * 70)
-		_parrafo("• " + notas[i], p, 360, 14, TINTA, 4)
+		var rect := Rect2(p + Vector2(38 + (k % 3) * 172, 179 + (k / 3) * 124), Vector2(160, 112))
+		var seleccionada := i == _pista_diario
+		var hover := rect.has_point(raton)
+		_lienzo.draw_rect(Rect2(rect.position + Vector2(3, 4), rect.size), Color(0, 0, 0, 0.15))
+		_lienzo.draw_rect(rect, Color("e0c48d") if seleccionada or hover else Color("f5efdf"))
+		var imagen := pistas[i].imagen
+		if imagen:
+			var medida := imagen.get_size()
+			medida *= minf(144.0 / medida.x, 86.0 / medida.y)
+			_lienzo.draw_texture_rect(imagen, Rect2(rect.position + Vector2(80, 49) - medida / 2, medida), false)
+		else:
+			_parrafo(pistas[i].titulo, rect.position + Vector2(10, 15), 140, 13, TINTA, 4)
+		_texto("%02d" % (i + 1), rect.position + Vector2(9, 105), MONO, 11, TINTA)
+		if seleccionada:
+			_lienzo.draw_rect(rect, Color("a77e3e"), false, 2.0)
+		_zonas_libro.append({"rect": rect, "pista": i})
+	_texto("%02d PISTAS  ·  CLIC PARA INSPECCIONAR" % pistas.size(), p + Vector2(38, 574), MONO, 12, Color("75654e"))
 
 func _dibujar_expediente(w: float, h: float) -> void:
 	_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.04, 0.06, 0.85))
@@ -306,22 +505,36 @@ func _dibujar_pistas(w: float, h: float) -> void:
 	var p := Vector2(w - 405, h - 220)
 	for i in range(mini(pistas.size() - 1, 3), 0, -1):
 		_nota(Rect2(p + Vector2(i * 6, -i * 9), Vector2(355, 180)), PAPEL.darkened(i * 0.07))
-	_nota(Rect2(p, Vector2(355, 180)))
-	var contador := "%02d / %02d" % [indice_pista + 1, pistas.size()] if not pistas.is_empty() else "00 / 00"
-	_texto("PISTAS", p + Vector2(22, 39), _bold, 30, TINTA)
-	_texto(contador, p + Vector2(246, 36), MONO, 13, TINTA)
-	_lienzo.draw_rect(Rect2(p + Vector2(22, 48), Vector2(120, 4)), AMBAR)
-	if pistas.is_empty():
-		_texto("SIN EVIDENCIA", p + Vector2(22, 94), _bold, 28, TINTA)
-		_texto("Explora para reunir pistas.", p + Vector2(22, 124), MONO, 12, TINTA)
+	if _cambio_pista > 0.0 and pistas.size() > 1:
+		var t := 1.0 - _cambio_pista / DURACION_CAMBIO_PISTA
+		var avance := 1.0 - pow(1.0 - t, 3.0)
+		var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+		# La nota anterior se despega; la siguiente se acomoda sobre la pila.
+		_lienzo.draw_set_transform((p + Vector2(-_sentido_pista * avance * 100, -sin(t * PI) * 22)) * escala, -_sentido_pista * avance * 0.07, Vector2.ONE * escala)
+		_dibujar_postit_pista(Vector2.ZERO, _pista_anterior, 1.0 - avance)
+		_lienzo.draw_set_transform((p + Vector2(_sentido_pista * (1.0 - avance) * 90, -(1.0 - avance) * 16)) * escala, _sentido_pista * (1.0 - avance) * 0.045, Vector2.ONE * escala)
+		_dibujar_postit_pista(Vector2.ZERO, indice_pista, avance)
+		_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
 	else:
-		var pista := pistas[indice_pista]
+		_dibujar_postit_pista(p, indice_pista)
+
+func _dibujar_postit_pista(p: Vector2, indice: int, alfa: float = 1.0) -> void:
+	_nota(Rect2(p, Vector2(355, 180)), Color(PAPEL, alfa))
+	var contador := "%02d / %02d" % [indice + 1, pistas.size()] if not pistas.is_empty() else "00 / 00"
+	_texto("PISTAS", p + Vector2(22, 39), _bold, 30, Color(TINTA, alfa))
+	_texto(contador, p + Vector2(246, 36), MONO, 13, Color(TINTA, alfa))
+	_lienzo.draw_rect(Rect2(p + Vector2(22, 48), Vector2(120, 4)), Color(AMBAR, alfa))
+	if pistas.is_empty():
+		_texto("SIN EVIDENCIA", p + Vector2(22, 94), _bold, 28, Color(TINTA, alfa))
+		_texto("Explora para reunir pistas.", p + Vector2(22, 124), MONO, 12, Color(TINTA, alfa))
+	else:
+		var pista := pistas[indice]
 		var ancho := 210.0 if pista.imagen else 311.0
-		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, TINTA, ancho)
+		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, Color(TINTA, alfa), ancho)
 		if pista.imagen:
-			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), BLANCO)
+			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), Color(BLANCO, alfa))
 			var zona := Rect2(p + Vector2(254, 63), Vector2(76, 64))
 			var factor := minf(zona.size.x / pista.imagen.get_width(), zona.size.y / pista.imagen.get_height())
 			var medida := pista.imagen.get_size() * factor
-			_lienzo.draw_texture_rect(pista.imagen, Rect2(zona.position + (zona.size - medida) / 2, medida), false)
-	_linea(p + Vector2(22, 141), p + Vector2(333, 141), Color(TINTA, 0.2))
+			_lienzo.draw_texture_rect(pista.imagen, Rect2(zona.position + (zona.size - medida) / 2, medida), false, Color(1, 1, 1, alfa))
+	_linea(p + Vector2(22, 141), p + Vector2(333, 141), Color(TINTA, 0.2 * alfa))
