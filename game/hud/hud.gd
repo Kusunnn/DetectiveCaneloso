@@ -25,6 +25,10 @@ var notas: Array[String] = []
 var personas: Array[Dictionary] = []
 const PISTAS_POR_HOJA := 9
 var _pista_diario: int = -1
+var _seccion: String = "PISTAS"
+var _hojas_seccion: Dictionary = {"PISTAS": 0, "DEDUCCIONES": 0, "PERSONAS": 0}
+const COLORES_SECCION := {"PISTAS": Color("dbb64f"), "DEDUCCIONES": Color("876348"), "PERSONAS": Color("993f40")}
+var _papeles_libro: Array[ImageTexture] = []
 var _hoja: int = 0
 var _giro: float = 0.0
 var _direccion: int = 1
@@ -59,7 +63,17 @@ func _paginas_libro() -> Array[Dictionary]:
 		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen})
 	if personas.is_empty():
 		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Habla con las personas del caso para añadir sus fichas al diario."})
-	return paginas
+	return paginas.filter(func(pagina: Dictionary) -> bool: return pagina.seccion == _seccion)
+
+func _cambiar_seccion(seccion: String) -> void:
+	if seccion == _seccion or not COLORES_SECCION.has(seccion):
+		return
+	_hojas_seccion[_seccion] = _hoja
+	_seccion = seccion
+	_hoja = clampi(_hojas_seccion[seccion], 0, (_paginas_libro().size() - 1) / 2)
+	_direccion = 1
+	_giro = 1.0
+	_zonas_libro.clear()
 
 func _pasar_hoja(destino: int) -> void:
 	var nueva := clampi(destino, 0, (_paginas_libro().size() - 1) / 2)
@@ -87,6 +101,8 @@ func _ready() -> void:
 	_bold = _fuente(800)
 	_medium = _fuente(500)
 	_papel = _crear_papel()
+	for i in range(4):
+		_papeles_libro.append(_crear_papel_libro(i))
 	_lienzo = Control.new()
 	_lienzo.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_lienzo.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -165,6 +181,8 @@ func _input(event: InputEvent) -> void:
 				if zona.rect.has_point(event.position / escala):
 					if zona.has("pista"):
 						_pista_diario = zona.pista
+					elif zona.has("seccion"):
+						_cambiar_seccion(zona.seccion)
 					elif zona.destino == -1:
 						diario_abierto = false
 						panel_cambiado.emit(false, false)
@@ -257,6 +275,19 @@ func _crear_papel() -> ImageTexture:
 			img.set_pixel(x, y, Color(luz, luz * 0.975, luz * 0.91, 1.0))
 	return ImageTexture.create_from_image(img)
 
+# Papel de encuadernación: grano fino y tonos suaves, sin arrugas ni manchas.
+func _crear_papel_libro(variante: int) -> ImageTexture:
+	var ruido := FastNoiseLite.new()
+	ruido.seed = 781 + variante * 97
+	ruido.frequency = 0.38
+	var img := Image.create(256, 256, false, Image.FORMAT_RGBA8)
+	var base: Color = [Color("f5f0e4"), Color("f3eddf"), Color("f6f1e7"), Color("f1ebdf")][variante]
+	for y in range(256):
+		for x in range(256):
+			var grano := ruido.get_noise_2d(x, y) * 0.012
+			img.set_pixel(x, y, Color(base.r + grano, base.g + grano, base.b + grano))
+	return ImageTexture.create_from_image(img)
+
 func _nota(rect: Rect2, color: Color = PAPEL) -> void:
 	var puntos := PackedVector2Array()
 	var uv := PackedVector2Array()
@@ -345,8 +376,9 @@ func _dibujar_libro(w: float, h: float) -> void:
 		_lienzo.draw_rect(Rect2(origen + Vector2(-canto, canto * 2), Vector2(1160 + canto * 2, 650)), Color("a99c80").lightened(canto * 0.025))
 	for lado in range(2):
 		var p := origen + Vector2(lado * 580, 0)
-		_lienzo.draw_texture_rect(_papel, Rect2(p, Vector2(580, 650)), false, Color("eee2c5"))
-		_lienzo.draw_rect(Rect2(p, Vector2(580, 650)), Color(0.94, 0.89, 0.77, 0.52))
+		var variante := (_hoja * 2 + lado + int(COLORES_SECCION.keys().find(_seccion))) % _papeles_libro.size()
+		_lienzo.draw_texture_rect(_papeles_libro[variante], Rect2(p, Vector2(580, 650)), false)
+		_lienzo.draw_rect(Rect2(p + Vector2(38, 51), Vector2(54, 3)), COLORES_SECCION[_seccion])
 		_texto("CASO " + caso + "  /  " + archivo, p + Vector2(38, 37), MONO, 13, Color("75654e"))
 		_linea(p + Vector2(38, 52), p + Vector2(542, 52), Color(TINTA, 0.22))
 		var indice := _hoja * 2 + lado
@@ -364,25 +396,30 @@ func _dibujar_libro(w: float, h: float) -> void:
 	if _giro > 0:
 		var ancho := 560.0 * _giro
 		var x := 580.0 if _direccion > 0 else 580.0 - ancho
-		_lienzo.draw_rect(Rect2(origen + Vector2(x, 3), Vector2(ancho, 642)), Color("d5c5a6"))
+		_lienzo.draw_rect(Rect2(origen + Vector2(x, 3), Vector2(ancho, 642)), Color("f3eddf"))
 		_lienzo.draw_rect(Rect2(origen + Vector2(x, 3), Vector2(5, 642)), Color(0.2, 0.13, 0.06, 0.2))
 	for i in range(3):
 		var seccion: String = ["PISTAS", "DEDUCCIONES", "PERSONAS"][i]
-		var inicio := 0
-		for n in range(paginas.size()):
-			if paginas[n].seccion == seccion:
-				inicio = n / 2
-				break
-		_boton_libro(seccion, Rect2(origen + Vector2(i * 210, -60), Vector2(198, 42)), inicio)
+		var activa := seccion == _seccion
+		var rect := Rect2(origen + Vector2(i * 210, -68 if activa else -56), Vector2(198, 52 if activa else 40))
+		var color: Color = COLORES_SECCION[seccion]
+		var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+		if rect.has_point(_lienzo.get_local_mouse_position() / escala):
+			color = color.lightened(0.1)
+		_lienzo.draw_rect(rect, color)
+		_texto(seccion, rect.position + Vector2(16, 27), MONO, 15, TINTA if seccion == "PISTAS" else Color("fff5e8"))
+		if activa:
+			_lienzo.draw_rect(Rect2(rect.position + Vector2(16, 36), Vector2(30, 3)), TINTA if seccion == "PISTAS" else Color("fff5e8"))
+		_zonas_libro.append({"rect": rect, "seccion": seccion})
 	_boton_libro("CERRAR [Q]", Rect2(origen + Vector2(1000, -60), Vector2(160, 42)), -1)
 	_boton_libro("← ANTERIOR", Rect2(origen + Vector2(0, 686), Vector2(174, 42)), _hoja - 1, _hoja > 0)
-	_texto("← / →  PASAR PÁGINAS   ·   %02d / %02d" % [_hoja + 1, ceili(paginas.size() / 2.0)], origen + Vector2(310, 714), MONO, 14, BLANCO)
+	_texto("%s  ·  %02d / %02d  ·  ← / →" % [_seccion, _hoja + 1, ceili(paginas.size() / 2.0)], origen + Vector2(310, 714), MONO, 14, BLANCO)
 	_boton_libro("SIGUIENTE →", Rect2(origen + Vector2(976, 686), Vector2(184, 42)), _hoja + 1, (_hoja + 1) * 2 < paginas.size())
 
 func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 	_texto(pagina.seccion, p + Vector2(38, 89), MONO, 14, Color("866134"))
 	_texto_ajustado(pagina.titulo, p + Vector2(38, 134), _bold, 36, TINTA, 504)
-	_lienzo.draw_rect(Rect2(p + Vector2(38, 152), Vector2(70, 3)), Color("a77e3e"))
+	_lienzo.draw_rect(Rect2(p + Vector2(38, 152), Vector2(70, 3)), COLORES_SECCION[_seccion])
 	if pagina.has("galeria"):
 		_dibujar_galeria_pistas(p, pagina.galeria)
 		return
