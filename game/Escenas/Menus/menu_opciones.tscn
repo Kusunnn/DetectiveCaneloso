@@ -59,6 +59,58 @@ max_value = 1.0
 step = 0.05
 value = 1.0
 
+[node name="EtiquetaMusica" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
+layout_mode = 2
+text = "Música"
+
+[node name="DeslizadorMusica" type="HSlider" parent="Centro/Panel/Margen/VBox/Rejilla"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="EtiquetaAmbiente" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
+layout_mode = 2
+text = "Ambiente"
+
+[node name="DeslizadorAmbiente" type="HSlider" parent="Centro/Panel/Margen/VBox/Rejilla"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="EtiquetaEfectos" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
+layout_mode = 2
+text = "Efectos"
+
+[node name="DeslizadorEfectos" type="HSlider" parent="Centro/Panel/Margen/VBox/Rejilla"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="EtiquetaInterfaz" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
+layout_mode = 2
+text = "Interfaz y diálogos"
+
+[node name="DeslizadorInterfaz" type="HSlider" parent="Centro/Panel/Margen/VBox/Rejilla"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 1.0
+step = 0.05
+value = 1.0
+
 [node name="EtiquetaPantallaCompleta" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
 layout_mode = 2
 text = "Pantalla completa"

@@ -7,15 +7,22 @@
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/cajon.tscn" id="e5"]
 [ext_resource type="PackedScene" path="res://Assets/Models/porky.fbx" id="e6"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e7"]
+[ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_suelo"]
 albedo_color = Color(0.3, 0.19, 0.1, 1)
 roughness = 0.75
-
+albedo_texture = ExtResource("ruido")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+uv1_triplanar = true
+uv1_world_triplanar = true
 [sub_resource type="StandardMaterial3D" id="Mat_pared"]
 albedo_color = Color(0.42, 0.33, 0.22, 1)
 roughness = 0.95
-
+albedo_texture = ExtResource("ruido")
+uv1_scale = Vector3(0.4, 0.4, 0.4)
+uv1_triplanar = true
+uv1_world_triplanar = true
 [sub_resource type="StandardMaterial3D" id="Mat_zocalo"]
 albedo_color = Color(0.22, 0.14, 0.08, 1)
 
@@ -131,7 +138,8 @@ material = SubResource("Mat_verde")
 top_radius = 0.06
 bottom_radius = 0.16
 height = 0.14
-
+radial_segments = 12
+rings = 1
 [sub_resource type="BoxMesh" id="Box_0p2_0p08_0p16_Mat_negro"]
 material = SubResource("Mat_negro")
 size = Vector3(0.2, 0.08, 0.16)
@@ -145,13 +153,15 @@ material = SubResource("Mat_lamina")
 top_radius = 0.05
 bottom_radius = 0.06
 height = 0.12
-
+radial_segments = 12
+rings = 1
 [sub_resource type="CylinderMesh" id="Cyl_0p04_0p035_0p08_Mat_blanco"]
 material = SubResource("Mat_blanco")
 top_radius = 0.04
 bottom_radius = 0.035
 height = 0.08
-
+radial_segments = 12
+rings = 1
 [sub_resource type="BoxMesh" id="Box_0p35_0p06_0p25_Mat_rosa"]
 material = SubResource("Mat_rosa")
 size = Vector3(0.35, 0.06, 0.25)
@@ -164,7 +174,8 @@ size = Vector3(0.35, 0.01, 0.25)
 material = SubResource("Mat_masa")
 inner_radius = 0.02
 outer_radius = 0.045
-
+rings = 16
+ring_segments = 8
 [sub_resource type="CapsuleShape3D" id="Cap_0p5_1p75"]
 radius = 0.5
 height = 1.75
@@ -173,7 +184,8 @@ height = 1.75
 material = SubResource("Mat_rosa")
 inner_radius = 0.03
 outer_radius = 0.07
-
+rings = 16
+ring_segments = 8
 [sub_resource type="Gradient" id="Grad_sombra"]
 colors = PackedColorArray(0, 0, 0, 0.55, 0, 0, 0, 0)
 
@@ -264,13 +276,15 @@ material = SubResource("Mat_verde")
 top_radius = 0.05
 bottom_radius = 0.16
 height = 0.14
-
+radial_segments = 12
+rings = 1
 [sub_resource type="CylinderMesh" id="Cyl_0p015_0p015_0p25_Mat_lamina"]
 material = SubResource("Mat_lamina")
 top_radius = 0.015
 bottom_radius = 0.015
 height = 0.25
-
+radial_segments = 6
+rings = 1
 [sub_resource type="BoxMesh" id="Box_0p3_0p02_0p22_Mat_papel"]
 material = SubResource("Mat_papel")
 size = Vector3(0.3, 0.02, 0.22)
@@ -280,7 +294,8 @@ material = SubResource("Mat_blanco")
 top_radius = 0.045
 bottom_radius = 0.04
 height = 0.1
-
+radial_segments = 12
+rings = 1
 [sub_resource type="BoxShape3D" id="Shape_0p22_0p04_0p16"]
 size = Vector3(0.22, 0.04, 0.16)
 
@@ -296,32 +311,38 @@ height = 1.9
 material = SubResource("Mat_uniforme")
 radius = 0.34
 height = 1.1
-
+radial_segments = 16
+rings = 4
 [sub_resource type="CapsuleMesh" id="Mesh_brazo"]
 material = SubResource("Mat_uniforme")
 radius = 0.09
 height = 0.6
-
+radial_segments = 16
+rings = 4
 [sub_resource type="SphereMesh" id="Sph_0p42_Mat_piel"]
 material = SubResource("Mat_piel")
 radius = 0.42
 height = 0.84
-
+radial_segments = 16
+rings = 8
 [sub_resource type="SphereMesh" id="Sph_0p12_Mat_piel"]
 material = SubResource("Mat_piel")
 radius = 0.12
 height = 0.24
-
+radial_segments = 16
+rings = 8
 [sub_resource type="SphereMesh" id="Sph_0p045_Mat_negro"]
 material = SubResource("Mat_negro")
 radius = 0.045
 height = 0.09
-
+radial_segments = 16
+rings = 8
 [sub_resource type="SphereMesh" id="Sph_0p06_Mat_negro"]
 material = SubResource("Mat_negro")
 radius = 0.06
 height = 0.12
-
+radial_segments = 16
+rings = 8
 [sub_resource type="BoxMesh" id="Box_0p34_0p07_0p07_Mat_negro"]
 material = SubResource("Mat_negro")
 size = Vector3(0.34, 0.07, 0.07)
@@ -331,7 +352,8 @@ material = SubResource("Mat_uniforme")
 top_radius = 0.36
 bottom_radius = 0.4
 height = 0.16
-
+radial_segments = 12
+rings = 1
 [sub_resource type="BoxMesh" id="Box_0p36_0p02_0p2_Mat_negro"]
 material = SubResource("Mat_negro")
 size = Vector3(0.36, 0.02, 0.2)
@@ -340,51 +362,60 @@ size = Vector3(0.36, 0.02, 0.2)
 material = SubResource("Mat_oro")
 radius = 0.05
 height = 0.1
-
+radial_segments = 16
+rings = 8
 [sub_resource type="SphereMesh" id="Sph_0p04_Mat_oro"]
 material = SubResource("Mat_oro")
 radius = 0.04
 height = 0.08
-
+radial_segments = 16
+rings = 8
 [sub_resource type="CylinderMesh" id="Cyl_0p025_0p025_1p8_Mat_mostrador"]
 material = SubResource("Mat_mostrador")
 top_radius = 0.025
 bottom_radius = 0.025
 height = 1.8
-
+radial_segments = 6
+rings = 1
 [sub_resource type="CapsuleMesh" id="Mesh_abrigo"]
 material = SubResource("Mat_abrigo")
 radius = 0.2
 height = 1.0
-
+radial_segments = 16
+rings = 4
 [sub_resource type="CylinderMesh" id="Cyl_0p12_0p15_0p1_Mat_negro"]
 material = SubResource("Mat_negro")
 top_radius = 0.12
 bottom_radius = 0.15
 height = 0.1
-
+radial_segments = 12
+rings = 1
 [sub_resource type="CylinderMesh" id="Cyl_0p2_0p16_0p4_Mat_maceta"]
 material = SubResource("Mat_maceta")
 top_radius = 0.2
 bottom_radius = 0.16
 height = 0.4
-
+radial_segments = 12
+rings = 1
 [sub_resource type="SphereMesh" id="Sph_0p38_Mat_hojas"]
 material = SubResource("Mat_hojas")
 radius = 0.38
 height = 0.76
-
+radial_segments = 16
+rings = 8
 [sub_resource type="SphereMesh" id="Sph_0p25_Mat_hojas"]
 material = SubResource("Mat_hojas")
 radius = 0.25
 height = 0.5
-
+radial_segments = 16
+rings = 8
 [sub_resource type="CylinderMesh" id="Cyl_0p2_0p2_0p04_Mat_blanco"]
 material = SubResource("Mat_blanco")
 top_radius = 0.2
 bottom_radius = 0.2
 height = 0.04
-
+radial_segments = 12
+rings = 1
 [sub_resource type="BoxShape3D" id="Shape_1p6_1_0p1"]
 size = Vector3(1.6, 1, 0.1)
 
@@ -400,13 +431,15 @@ size = Vector3(0.22, 0.28, 0.01)
 material = SubResource("Mat_foco")
 radius = 0.1
 height = 0.2
-
+radial_segments = 16
+rings = 8
 [sub_resource type="CylinderMesh" id="Cyl_0p01_0p01_0p3_Mat_negro"]
 material = SubResource("Mat_negro")
 top_radius = 0.01
 bottom_radius = 0.01
 height = 0.3
-
+radial_segments = 6
+rings = 1
 [sub_resource type="StandardMaterial3D" id="Mat_polvo"]
 transparency = 1
 blend_mode = 1
@@ -433,6 +466,119 @@ turbulence_noise_strength = 0.3
 
 [sub_resource type="BoxShape3D" id="Shape_7_3_9"]
 size = Vector3(7, 3, 9)
+
+
+[sub_resource type="StandardMaterial3D" id="Mat_tapete"]
+albedo_color = Color(0.32, 0.12, 0.09, 1)
+roughness = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_vidrio_ventana"]
+transparency = 1
+albedo_color = Color(0.08, 0.12, 0.18, 0.28)
+roughness = 0.05
+metallic = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_marco_ventana"]
+albedo_color = Color(0.14, 0.1, 0.07, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_fachada"]
+albedo_color = Color(0.05, 0.055, 0.07, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_ventana_calida"]
+albedo_color = Color(0.9, 0.62, 0.3, 1)
+roughness = 1
+emission_enabled = true
+emission = Color(1, 0.7, 0.35, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="Mat_ventana_fria"]
+albedo_color = Color(0.5, 0.6, 0.75, 1)
+roughness = 1
+emission_enabled = true
+emission = Color(0.55, 0.7, 1, 1)
+emission_energy_multiplier = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_silla_espera"]
+albedo_color = Color(0.2, 0.22, 0.24, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_poste"]
+albedo_color = Color(0.08, 0.08, 0.09, 1)
+roughness = 0.5
+metallic = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_gota"]
+transparency = 1
+albedo_color = Color(0.7, 0.8, 1, 0.35)
+roughness = 0.2
+shading_mode = 0
+billboard_mode = 2
+
+[sub_resource type="BoxMesh" id="Box_tapete"]
+material = SubResource("Mat_tapete")
+size = Vector3(2.6, 0.006, 1.6)
+
+[sub_resource type="BoxMesh" id="Box_vidrio"]
+material = SubResource("Mat_vidrio_ventana")
+size = Vector3(0.02, 1.2, 1.8)
+
+[sub_resource type="BoxMesh" id="Box_marco_v"]
+material = SubResource("Mat_marco_ventana")
+size = Vector3(0.08, 1.3, 0.06)
+
+[sub_resource type="BoxMesh" id="Box_marco_h"]
+material = SubResource("Mat_marco_ventana")
+size = Vector3(0.08, 0.06, 1.9)
+
+[sub_resource type="BoxMesh" id="Box_fachada"]
+material = SubResource("Mat_fachada")
+size = Vector3(0.3, 7, 16)
+
+[sub_resource type="BoxMesh" id="Box_ventana_calida"]
+material = SubResource("Mat_ventana_calida")
+size = Vector3(0.02, 0.5, 0.4)
+
+[sub_resource type="BoxMesh" id="Box_ventana_fria"]
+material = SubResource("Mat_ventana_fria")
+size = Vector3(0.02, 0.5, 0.4)
+
+[sub_resource type="BoxMesh" id="Box_asiento_espera"]
+material = SubResource("Mat_silla_espera")
+size = Vector3(0.45, 0.05, 0.45)
+
+[sub_resource type="BoxMesh" id="Box_respaldo_espera"]
+material = SubResource("Mat_silla_espera")
+size = Vector3(0.05, 0.45, 0.45)
+
+[sub_resource type="BoxMesh" id="Box_pata_espera"]
+material = SubResource("Mat_poste")
+size = Vector3(0.04, 0.45, 1.6)
+
+[sub_resource type="CylinderMesh" id="Cyl_poste_farola"]
+material = SubResource("Mat_poste")
+top_radius = 0.06
+bottom_radius = 0.07
+height = 4.5
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxShape3D" id="Shape_sillas_espera"]
+size = Vector3(0.5, 0.95, 1.65)
+
+[sub_resource type="QuadMesh" id="Quad_gota"]
+material = SubResource("Mat_gota")
+size = Vector2(0.012, 0.28)
+
+[sub_resource type="ParticleProcessMaterial" id="Proceso_lluvia"]
+emission_shape = 3
+emission_box_extents = Vector3(1.0, 0.2, 2.6)
+direction = Vector3(-0.15, -1, 0)
+spread = 4.0
+initial_velocity_min = 7.0
+initial_velocity_max = 9.0
+gravity = Vector3(0, -6, 0)
 
 [node name="ZonaRecepcion" type="Node3D"]
 
@@ -510,52 +656,52 @@ mesh = SubResource("Box_7p2_0p24_0p02_Mat_zocalo")
 [node name="Lamina0" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 1.75, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Lamina1" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 1.89, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Lamina2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.03, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Lamina3" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.17, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Lamina4" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.31, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Lamina5" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.45, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Lamina6" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.59, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Lamina7" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.73, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Lamina8" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.95, 2.87, 3.5)
 mesh = SubResource("Box_0p05_0p03_1p7_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="LuzFarola" type="SpotLight3D" parent="."]
 transform = Transform3D(0, -0.2588, 0.9659, 0, 0.9659, 0.2588, -1, 0, 0, 23.5, 3.2, 3.5)
 light_color = Color(1, 0.55, 0.2, 1)
-light_energy = 6.0
+light_energy = 3.0
 shadow_enabled = true
 spot_range = 12.0
 spot_angle = 30.0
@@ -572,13 +718,13 @@ shape = SubResource("Shape_3p2_1p1_0p56")
 [node name="Malla" type="MeshInstance3D" parent="Mostrador"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53, 0)
 mesh = SubResource("Box_3p2_1p06_0p6_Mat_mostrador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Encimera" type="MeshInstance3D" parent="Mostrador"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08, 0.05)
 mesh = SubResource("Box_3p3_0p04_0p72_Mat_encimera")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="LibroTurnos" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.4, 1.625, 0.8)
 collision_layer = 8
@@ -594,69 +740,72 @@ shape = SubResource("Shape_0p42_0p14_0p34")
 
 [node name="Malla" type="MeshInstance3D" parent="LibroTurnos"]
 mesh = SubResource("Box_0p32_0p05_0p24_Mat_libro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="FocoMostrador" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 16.6, 3.2, 0.8)
 light_color = Color(1, 0.85, 0.6, 1)
-light_energy = 2.5
-shadow_enabled = true
+light_energy = 3.5
+shadow_enabled = false
 spot_range = 3.5
 spot_angle = 22.0
 
 [node name="Lampara" type="MeshInstance3D" parent="FocoMostrador"]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 0.3, 0)
 mesh = SubResource("Cyl_0p06_0p16_0p14_Mat_verde")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Telefono" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.9659, 0, 0.2588, 0, 1, 0, -0.2588, 0, 0.9659, 17.1, 1.64, 0.95)
 mesh = SubResource("Box_0p2_0p08_0p16_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Cafetera" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 1.62, 0.95)
 
 [node name="Cuerpo" type="MeshInstance3D" parent="Cafetera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
 mesh = SubResource("Box_0p2_0p3_0p18_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Jarra" type="MeshInstance3D" parent="Cafetera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0.06)
 mesh = SubResource("Cyl_0p05_0p06_0p12_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Taza" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.15, 1.66, 1)
 mesh = SubResource("Cyl_0p04_0p035_0p08_Mat_blanco")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="CajaDonas" type="Node3D" parent="."]
 transform = Transform3D(0.9848, 0, -0.1736, 0, 1, 0, 0.1736, 0, 0.9848, 17.8, 1.62, 0.72)
 
 [node name="Base" type="MeshInstance3D" parent="CajaDonas"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 mesh = SubResource("Box_0p35_0p06_0p25_Mat_rosa")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Tapa" type="MeshInstance3D" parent="CajaDonas"]
 transform = Transform3D(1, 0, 0, 0, 0.342, 0.9397, 0, -0.9397, 0.342, 0, 0.13, -0.12)
 mesh = SubResource("Box_0p35_0p01_0p25_Mat_rosa")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Dona0" type="MeshInstance3D" parent="CajaDonas"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.07, 0)
 mesh = SubResource("Tor_0p02_0p045_Mat_masa")
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Dona1" type="MeshInstance3D" parent="CajaDonas"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
 mesh = SubResource("Tor_0p02_0p045_Mat_masa")
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Dona2" type="MeshInstance3D" parent="CajaDonas"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.07, 0)
 mesh = SubResource("Tor_0p02_0p045_Mat_masa")
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="CajonMostrador" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 17.8, 0.72, 0.49)
 Nombre = "Cajón del mostrador"
@@ -683,7 +832,8 @@ visible = false
 [node name="DonaMano" type="MeshInstance3D" parent="Porky"]
 transform = Transform3D(1, 0, 0, 0, 0.342, -0.9397, 0, 0.9397, 0.342, 0.5, 0.85, 0.3)
 mesh = SubResource("Tor_0p03_0p07_Mat_rosa")
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Sueno" type="Label3D" parent="Porky"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35, 1.95, 0)
 pixel_size = 0.004
@@ -702,7 +852,7 @@ upper_fade = 0.5
 lower_fade = 0.5
 
 [node name="MochilaPorky" type="StaticBody3D" parent="." node_paths=PackedStringArray("Parte", "MarcaRevisado")]
-transform = Transform3D(0.1216, 0, 0.6894, 0, 0.7, 0, -0.6894, 0, 0.1216, 14.24, 0.5, 0.9)
+transform = Transform3D(0.1216, 0, 0.6894, 0, 0.7, 0, -0.6894, 0, 0.1216, 14.42, 0.5, 0.9)
 collision_layer = 10
 collision_mask = 0
 script = ExtResource("e4")
@@ -723,26 +873,26 @@ shape = SubResource("Shape_0p36_0p44_0p24")
 [node name="Cuerpo" type="MeshInstance3D" parent="MochilaPorky"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 mesh = SubResource("Box_0p34_0p4_0p2_Mat_mochila")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Bolsillo" type="MeshInstance3D" parent="MochilaPorky"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0.11)
 mesh = SubResource("Box_0p26_0p16_0p04_Mat_mochila")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Solapa" type="Node3D" parent="MochilaPorky"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -0.1)
 
 [node name="Tela" type="MeshInstance3D" parent="MochilaPorky/Solapa"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.11)
 mesh = SubResource("Box_0p35_0p03_0p22_Mat_mochila")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Nota" type="MeshInstance3D" parent="MochilaPorky"]
 transform = Transform3D(0.9063, 0, 0.4226, 0, 1, 0, -0.4226, 0, 0.9063, 0, 0.41, 0)
 mesh = SubResource("Box_0p12_0p005_0p09_Mat_papel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Llavero" type="Node3D" parent="MochilaPorky"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.125)
 script = ExtResource("e7")
@@ -786,33 +936,33 @@ shape = SubResource("Shape_0p04_0p5_1p5")
 [node name="Asiento" type="MeshInstance3D" parent="BancoEspera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.425, 0)
 mesh = SubResource("Box_0p5_0p05_1p5_Mat_mostrador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Faldon" type="MeshInstance3D" parent="BancoEspera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.24, 0.35, 0)
 mesh = SubResource("Box_0p02_0p1_1p5_Mat_mostrador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Respaldo" type="MeshInstance3D" parent="BancoEspera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23, 0.7, 0)
 mesh = SubResource("Box_0p04_0p5_1p5_Mat_mostrador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="PataA" type="MeshInstance3D" parent="BancoEspera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, -0.72)
 mesh = SubResource("Box_0p45_0p4_0p04_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="PataB" type="MeshInstance3D" parent="BancoEspera"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0.72)
 mesh = SubResource("Box_0p45_0p4_0p04_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Revista" type="MeshInstance3D" parent="BancoEspera"]
 transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, 0.05, 0.455, 0.4)
 mesh = SubResource("Box_0p2_0p01_0p27_Mat_papel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Archivero" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.5, 6.6)
 collision_layer = 2
@@ -825,8 +975,8 @@ shape = SubResource("Shape_0p55_1p1_0p52")
 [node name="Cuerpo" type="MeshInstance3D" parent="Archivero"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0.03)
 mesh = SubResource("Box_0p55_1p1_0p54_Mat_archivador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="CajonArchivero1" parent="." instance=ExtResource("e5")]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 15, 1.23, 6.3)
 Nombre = "Cajón del archivero"
@@ -845,13 +995,13 @@ MensajeAlAbrir = "Una engrapadora rota y un aromatizante de pino. Huele a carro 
 [node name="ArmarioA" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.7, 1.15, 6.65)
 mesh = SubResource("Box_0p6_1p3_0p6_Mat_archivador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="ArmarioB" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.4, 1.15, 6.65)
 mesh = SubResource("Box_0p6_1p3_0p6_Mat_archivador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="ArmariosColision" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.05, 0.5, 6.65)
 collision_layer = 2
@@ -864,8 +1014,8 @@ shape = SubResource("Shape_1p3_1p3_0p6")
 [node name="PilaCarpetas" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.9903, 0, 0.1392, 0, 1, 0, -0.1392, 0, 0.9903, 16.1, 1.83, 6.6)
 mesh = SubResource("Box_0p35_0p06_0p28_Mat_papel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Escritorio" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.3, 0.5, 5.4)
 collision_layer = 2
@@ -878,23 +1028,23 @@ shape = SubResource("Shape_1p52_0p78_0p8")
 [node name="Tablero" type="MeshInstance3D" parent="Escritorio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.76, 0)
 mesh = SubResource("Box_1p6_0p04_0p8_Mat_mostrador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Cuerpo" type="MeshInstance3D" parent="Escritorio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.38, 0)
 mesh = SubResource("Box_1p5_0p74_0p76_Mat_mostrador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="PantallaLampara" type="MeshInstance3D" parent="Escritorio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 1.05, 0.1)
 mesh = SubResource("Cyl_0p05_0p16_0p14_Mat_verde")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="PieLampara" type="MeshInstance3D" parent="Escritorio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.9, 0.1)
 mesh = SubResource("Cyl_0p015_0p015_0p25_Mat_lamina")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="LuzLampara" type="OmniLight3D" parent="Escritorio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.95, 0.1)
 light_color = Color(1, 0.85, 0.55, 1)
@@ -904,13 +1054,13 @@ omni_range = 3.0
 [node name="Papeles" type="MeshInstance3D" parent="Escritorio"]
 transform = Transform3D(0.9781, 0, 0.2079, 0, 1, 0, -0.2079, 0, 0.9781, 0.2, 0.79, 0)
 mesh = SubResource("Box_0p3_0p02_0p22_Mat_papel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="TazaComisario" type="MeshInstance3D" parent="Escritorio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.83, 0.15)
 mesh = SubResource("Cyl_0p045_0p04_0p1_Mat_blanco")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="RotuloTaza" type="Label3D" parent="Escritorio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.83, 0.197)
 pixel_size = 0.002
@@ -954,8 +1104,8 @@ shape = SubResource("Shape_0p22_0p04_0p16")
 
 [node name="Papel" type="MeshInstance3D" parent="CajonEscritorio1/Movil/NotaComisario"]
 mesh = SubResource("Box_0p18_0p006_0p13_Mat_papel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="CajonEscritorio2" parent="." instance=ExtResource("e5")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 18.52, 0.58, 5.4)
 Nombre = "Cajón del escritorio"
@@ -978,75 +1128,78 @@ shape = SubResource("Cap_0p45_1p9")
 [node name="Torso" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 mesh = SubResource("Mesh_torso")
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="BrazoIzq" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(0.9781, 0.2079, 0, -0.2079, 0.9781, 0, 0, 0, 1, -0.38, 0.62, 0)
 mesh = SubResource("Mesh_brazo")
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="BrazoDer" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(0.9781, -0.2079, 0, 0.2079, 0.9781, 0, 0, 0, 1, 0.38, 0.62, 0)
 mesh = SubResource("Mesh_brazo")
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Cabeza" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
 mesh = SubResource("Sph_0p42_Mat_piel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="OrejaIzq" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.38, 1.55, 0)
 mesh = SubResource("Sph_0p12_Mat_piel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="OrejaDer" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38, 1.55, 0)
 mesh = SubResource("Sph_0p12_Mat_piel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="OjoIzq" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14, 1.5, 0.38)
 mesh = SubResource("Sph_0p045_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="OjoDer" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14, 1.5, 0.38)
 mesh = SubResource("Sph_0p045_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Nariz" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0.42)
 mesh = SubResource("Sph_0p06_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Bigote" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.33, 0.39)
 mesh = SubResource("Box_0p34_0p07_0p07_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Gorra" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.86, 0)
 mesh = SubResource("Cyl_0p36_0p4_0p16_Mat_uniforme")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Visera" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 0.9848, 0.1736, 0, -0.1736, 0.9848, 0, 1.8, 0.3)
 mesh = SubResource("Box_0p36_0p02_0p2_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Placa" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.87, 0.37)
 mesh = SubResource("Sph_0p05_Mat_oro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="PlacaPecho" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.85, 0.32)
 mesh = SubResource("Sph_0p04_Mat_oro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="TazaCafe" type="MeshInstance3D" parent="Comisario/Figura"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.4, 0.15)
 mesh = SubResource("Cyl_0p045_0p04_0p1_Mat_blanco")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Sombra" type="Decal" parent="Comisario"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 size = Vector3(1.2, 0.6, 1.2)
@@ -1060,40 +1213,41 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.5, 6.5)
 [node name="Palo" type="MeshInstance3D" parent="Perchero"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 mesh = SubResource("Cyl_0p025_0p025_1p8_Mat_mostrador")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Abrigo" type="MeshInstance3D" parent="Perchero"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 1.2, 0)
 mesh = SubResource("Mesh_abrigo")
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Sombrero" type="MeshInstance3D" parent="Perchero"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 1.8, 0)
 mesh = SubResource("Cyl_0p12_0p15_0p1_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Planta" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.5, -1.5)
 
 [node name="Maceta" type="MeshInstance3D" parent="Planta"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 mesh = SubResource("Cyl_0p2_0p16_0p4_Mat_maceta")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Hojas" type="MeshInstance3D" parent="Planta"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 mesh = SubResource("Sph_0p38_Mat_hojas")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Hojas2" type="MeshInstance3D" parent="Planta"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 1.05, 0.05)
 mesh = SubResource("Sph_0p25_Mat_hojas")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Reloj" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 17.5, 2.9, -1.98)
 mesh = SubResource("Cyl_0p2_0p2_0p04_Mat_blanco")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="CartelSeBusca" type="Node3D" parent="."]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 14.02, 2, 1.5)
 script = ExtResource("e7")
@@ -1125,7 +1279,7 @@ ColorTexto = Color(0.12, 0.1, 0.08, 1)
 AltoMaximo = 0.5
 
 [node name="Tablon" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2, -1.95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 2, -1.95)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("e1")
@@ -1138,40 +1292,44 @@ shape = SubResource("Shape_1p6_1_0p1")
 
 [node name="Malla" type="MeshInstance3D" parent="Tablon"]
 mesh = SubResource("Box_1p6_1_0p05_Mat_corcho")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Nota1" type="MeshInstance3D" parent="Tablon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.2, 0.035)
 mesh = SubResource("Box_0p22_0p28_0p01_Mat_papel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Nota2" type="MeshInstance3D" parent="Tablon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, -0.15, 0.035)
 mesh = SubResource("Box_0p22_0p28_0p01_Mat_papel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Nota3" type="MeshInstance3D" parent="Tablon"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.18, 0.035)
 mesh = SubResource("Box_0p22_0p28_0p01_Mat_papel")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="LuzTecho" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.1, 2.5)
 light_color = Color(1, 0.72, 0.45, 1)
 light_energy = 1.2
 shadow_enabled = true
-omni_range = 9.0
-
+omni_range = 7.0
+distance_fade_enabled = true
+distance_fade_begin = 14.0
+distance_fade_shadow = 10.0
+distance_fade_length = 4.0
 [node name="Bombilla" type="MeshInstance3D" parent="LuzTecho"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 mesh = SubResource("Sph_0p1_Mat_foco")
-
-
+cast_shadow = 0
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Cable" type="MeshInstance3D" parent="LuzTecho"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
 mesh = SubResource("Cyl_0p01_0p01_0p3_Mat_negro")
-
-
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
 [node name="Polvo" type="GPUParticles3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, 2.1, 3.5)
 amount = 70
@@ -1196,3 +1354,178 @@ collision_mask = 4
 [node name="Colision" type="CollisionShape3D" parent="AreaRecepcion"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2, 2.5)
 shape = SubResource("Shape_7_3_9")
+
+[node name="LuzMochila" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.62, 0.72, 0.9)
+light_color = Color(1, 0.82, 0.6, 1)
+light_energy = 0.3
+omni_range = 1.0
+
+[node name="Tapete" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.8, 0.503, 3)
+cast_shadow = 0
+mesh = SubResource("Box_tapete")
+
+
+[node name="SillasEspera" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.72, 0.5, 1.8)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Colision" type="CollisionShape3D" parent="SillasEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.475, 0)
+shape = SubResource("Shape_sillas_espera")
+
+[node name="Asiento1" type="MeshInstance3D" parent="SillasEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, -0.55)
+mesh = SubResource("Box_asiento_espera")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Asiento2" type="MeshInstance3D" parent="SillasEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, 0)
+mesh = SubResource("Box_asiento_espera")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Asiento3" type="MeshInstance3D" parent="SillasEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.47, 0.55)
+mesh = SubResource("Box_asiento_espera")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Respaldo1" type="MeshInstance3D" parent="SillasEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.72, -0.55)
+mesh = SubResource("Box_respaldo_espera")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Respaldo2" type="MeshInstance3D" parent="SillasEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.72, 0)
+mesh = SubResource("Box_respaldo_espera")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Respaldo3" type="MeshInstance3D" parent="SillasEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.72, 0.55)
+mesh = SubResource("Box_respaldo_espera")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Larguero" type="MeshInstance3D" parent="SillasEspera"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+mesh = SubResource("Box_pata_espera")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Ventana" type="Node3D" parent="."]
+
+[node name="Vidrio" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.12, 2.3, 3.5)
+cast_shadow = 0
+mesh = SubResource("Box_vidrio")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="MarcoIzq" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 2.3, 2.6)
+mesh = SubResource("Box_marco_v")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="MarcoDer" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 2.3, 4.4)
+mesh = SubResource("Box_marco_v")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="MarcoArriba" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 2.92, 3.5)
+mesh = SubResource("Box_marco_h")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="MarcoAbajo" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, 1.68, 3.5)
+mesh = SubResource("Box_marco_h")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Fachada" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.5, 2.5, 3.5)
+cast_shadow = 0
+mesh = SubResource("Box_fachada")
+
+[node name="VentanaLejana1" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.34, 2.4, 1.8)
+cast_shadow = 0
+mesh = SubResource("Box_ventana_calida")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="VentanaLejana2" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.34, 3.3, 4.9)
+cast_shadow = 0
+mesh = SubResource("Box_ventana_fria")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="VentanaLejana3" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25.34, 1.7, 5.6)
+cast_shadow = 0
+mesh = SubResource("Box_ventana_calida")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="PosteFarola" type="MeshInstance3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.7, 1.85, 4.4)
+mesh = SubResource("Cyl_poste_farola")
+visibility_range_end = 22
+visibility_range_end_margin = 2.0
+[node name="Lluvia" type="GPUParticles3D" parent="Ventana"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.4, 4.2, 3.5)
+amount = 160
+lifetime = 0.8
+preprocess = 1.0
+fixed_fps = 30
+visibility_aabb = AABB(-1.5, -4.5, -3, 3, 5, 6)
+process_material = SubResource("Proceso_lluvia")
+draw_pass_1 = SubResource("Quad_gota")
+
+[node name="RelojAmbiente" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 2.9, -1.9)
+volume_db = -14.0
+unit_size = 2.0
+max_distance = 9.0
+script = ExtResource("e3")
+Tipo = 26
+
+[node name="Narrativa" type="Node3D" parent="."]
+
+[node name="Calendario" type="Node3D" parent="Narrativa"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.8, 2, -1.99)
+script = ExtResource("e7")
+Texto = "OCTUBRE
+¡11 años, Porky!"
+Ancho = 0.36
+Margen = 0.03
+TamFuente = 30
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.92, 0.9, 0.85, 1)
+ColorTexto = Color(0.55, 0.1, 0.08, 1)
+AltoMaximo = 0.6
+
+[node name="FotoAlcalde" type="Node3D" parent="Narrativa"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 20.5, 2.2, 6.99)
+script = ExtResource("e7")
+Texto = "El comisario y el alcalde
+«Mano dura contra el crimen»"
+Ancho = 0.42
+Margen = 0.03
+TamFuente = 26
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.66, 0.62, 0.52, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.6
+
+[node name="RecortePeriodico" type="Node3D" parent="Narrativa"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 20.99, 1.9, 0.6)
+script = ExtResource("e7")
+Texto = "EL DIARIO
+Ola de carteristas en el centro:
+¿una sola mano detrás?"
+Ancho = 0.38
+Margen = 0.03
+TamFuente = 26
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.82, 0.8, 0.72, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.6

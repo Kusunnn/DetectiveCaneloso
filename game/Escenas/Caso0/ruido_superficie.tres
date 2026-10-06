@@ -1,0 +1,17 @@
+[gd_resource type="NoiseTexture2D" load_steps=3 format=3]
+
+[sub_resource type="FastNoiseLite" id="Ruido"]
+frequency = 0.03
+fractal_octaves = 4
+fractal_gain = 0.55
+
+[sub_resource type="Gradient" id="Rampa"]
+offsets = PackedFloat32Array(0, 0.55, 1)
+colors = PackedColorArray(0.8, 0.79, 0.77, 1, 0.93, 0.93, 0.92, 1, 1, 1, 1, 1)
+
+[resource]
+width = 512
+height = 512
+seamless = true
+color_ramp = SubResource("Rampa")
+noise = SubResource("Ruido")
