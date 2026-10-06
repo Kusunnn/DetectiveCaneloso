@@ -119,6 +119,8 @@ public partial class Caso0
 			_pasoMostrado = null;
 			_esperaSiguiente = 0.9;
 			Progreso();
+			Cambio();
+			Autoguardar("Paso del tutorial");
 		}
 		if (_esperaSiguiente > 0) { _esperaSiguiente -= delta; return; }
 

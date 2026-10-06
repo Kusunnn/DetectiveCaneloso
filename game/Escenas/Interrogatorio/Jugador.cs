@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 // Detective Caneloso: movimiento, cámaras, linterna e interacción con lo que apunta la retícula.
 // No conoce el guion del caso: avisa con EvidenciaRegistrada y el caso decide qué pasa.
@@ -241,6 +242,18 @@ public partial class Jugador : CharacterBody3D
 	// Usa el sistema de pistas del HUD del equipo (aviso "Expediente actualizado", tarjeta y expediente)
 	public void RegistrarEvidencia(string id, string titulo, string descripcion, Texture2D imagen = null, bool animar = true)
 	{
+		bool nueva = AgregarPistaAlHud(id, titulo, descripcion, imagen);
+		if (!nueva) return;
+		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
+		// Siempre el mismo sonido de "pista encontrada" y, detrás, el sello del expediente actualizado
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.Pista);
+		GetTree().CreateTimer(0.55).Timeout += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Sello);
+		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
+		EmitSignal(SignalName.EvidenciaRegistrada, id);
+	}
+
+	private bool AgregarPistaAlHud(string id, string titulo, string descripcion, Texture2D imagen)
+	{
 		// Si el objeto no trae foto, se usa la de Assets/Pistas/<id>.png
 		string rutaFoto = "res://Assets/Pistas/" + id + ".png";
 		if (imagen == null && ResourceLoader.Exists(rutaFoto)) imagen = GD.Load<Texture2D>(rutaFoto);
@@ -249,14 +262,58 @@ public partial class Jugador : CharacterBody3D
 		pista.Set("titulo", titulo);
 		pista.Set("descripcion", descripcion);
 		pista.Set("imagen", imagen);
-		bool nueva = _hud.Call("agregar_pista", pista).AsBool();
-		if (!nueva) return;
-		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
-		// Siempre el mismo sonido de "pista encontrada" y, detrás, el sello del expediente actualizado
-		Sonidos.ReproducirUI(this, Sonidos.Tipo.Pista);
-		GetTree().CreateTimer(0.55).Timeout += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Sello);
-		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
-		EmitSignal(SignalName.EvidenciaRegistrada, id);
+		return _hud.Call("agregar_pista", pista).AsBool();
+	}
+
+	// ---------- Partida guardada ----------
+
+	// Al cargar: la pista vuelve al expediente sin sonido, animación ni aviso al caso
+	public void RestaurarEvidencia(string id, string titulo, string descripcion, Texture2D imagen = null)
+	{
+		AgregarPistaAlHud(id, titulo, descripcion, imagen);
+		_hud.Set("_aviso", 0.0);
+	}
+
+	public Godot.Collections.Dictionary CapturarEstado() => new()
+	{
+		{ "posicion", new Godot.Collections.Array { GlobalPosition.X, GlobalPosition.Y, GlobalPosition.Z } },
+		{ "giro", Rotation.Y },
+		{ "inclinacion", _camara.Rotation.X },
+		{ "inclinacion_brazo", _brazoCamara.Rotation.X },
+		{ "tercera_persona", _terceraPersona },
+		{ "agachado", Agachado },
+		{ "linterna", LinternaEncendida },
+		{ "objetos", new Godot.Collections.Array(_objetos.Select(o => Variant.From(o))) },
+		{ "distancia", DistanciaRecorrida },
+		{ "giro_acumulado", GiroAcumulado },
+	};
+
+	public void RestaurarEstado(Godot.Collections.Dictionary estado)
+	{
+		var p = estado["posicion"].AsGodotArray();
+		GlobalPosition = new Vector3(p[0].AsSingle(), p[1].AsSingle(), p[2].AsSingle());
+		Rotation = new Vector3(0, estado["giro"].AsSingle(), 0);
+		_camara.Rotation = new Vector3(estado["inclinacion"].AsSingle(), _camara.Rotation.Y, _camara.Rotation.Z);
+		_brazoCamara.Rotation = new Vector3(estado["inclinacion_brazo"].AsSingle(), _brazoCamara.Rotation.Y, _brazoCamara.Rotation.Z);
+		_terceraPersona = estado["tercera_persona"].AsBool();
+		AplicarPerspectiva();
+		// Si se guardó agachado (bajo el andamio) se carga agachado; se levanta solo cuando haya espacio
+		if (estado["agachado"].AsBool())
+		{
+			Agachado = true;
+			_quiereAgacharse = true;
+			_mezclaAgachado = 1f;
+		}
+		foreach (Variant objeto in estado["objetos"].AsGodotArray()) _objetos.Add(objeto.AsString());
+		DistanciaRecorrida = estado["distancia"].AsSingle();
+		GiroAcumulado = estado["giro_acumulado"].AsSingle();
+		if (estado["linterna"].AsBool() && !LinternaEncendida)
+		{
+			_linternaLista = false;
+			_hud.Set("linterna_encendida", true);
+			_hud.EmitSignal("linterna_cambiada", true);
+			_linternaLista = true;
+		}
 	}
 
 	// Pensamiento del detective que guía el tutorial: se queda hasta el siguiente

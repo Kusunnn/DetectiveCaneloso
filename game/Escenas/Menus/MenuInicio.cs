@@ -50,7 +50,7 @@ public partial class MenuInicio : Control
 		}
 
 		_botonNuevaPartida.Pressed += AlPresionarNuevaPartida;
-		_botonContinuar.Pressed += GestorPartida.Instancia.ContinuarPartida;
+		_botonContinuar.Pressed += () => _ = AlPresionarContinuar();
 		_botonOpciones.Pressed += () => AbrirPanel(_menuOpciones, _botonOpciones);
 		_botonCreditos.Pressed += () => AbrirPanel(_pantallaCreditos, _botonCreditos);
 		_botonSalir.Pressed += AlPresionarSalir;
@@ -138,6 +138,25 @@ public partial class MenuInicio : Control
 		if (await _dialogoConfirmacion.Preguntar("¿Seguro que quieres salir del juego?", "Salir"))
 		{
 			GetTree().Quit();
+		}
+	}
+
+	// Carga la partida más reciente. Si el archivo está dañado no se cierra el juego: se ofrece el respaldo.
+	private async System.Threading.Tasks.Task AlPresionarContinuar()
+	{
+		var reciente = GestorPartida.Instancia.MasReciente();
+		if (reciente == null) return;
+		if (!reciente.Danada && GestorPartida.Instancia.CargarRanura(reciente.Numero)) return;
+
+		if (reciente.HayRespaldo && await _dialogoConfirmacion.Preguntar(
+			"La partida guardada está dañada.\n¿Cargar la copia de respaldo?", "Cargar respaldo"))
+		{
+			if (GestorPartida.Instancia.CargarRanura(reciente.Numero, desdeRespaldo: true)) return;
+			await _dialogoConfirmacion.Preguntar("El respaldo también está dañado. No se pudo cargar la partida.", "Aceptar", "Cerrar");
+		}
+		else if (!reciente.HayRespaldo)
+		{
+			await _dialogoConfirmacion.Preguntar("La partida guardada está dañada y no hay copia de respaldo.", "Aceptar", "Cerrar");
 		}
 	}
 }

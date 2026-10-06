@@ -45,8 +45,14 @@ public partial class ObjetoPista : StaticBody3D, IInteractuable
 			return;
 		}
 
-		Encontrada = true;
+		MarcarEncontrada();
 		jugador.RegistrarEvidencia(IdPista, Titulo, Descripcion, Imagen);
+	}
+
+	// También al cargar una partida: queda examinada y, si se recoge, desaparece de la escena
+	public void MarcarEncontrada()
+	{
+		Encontrada = true;
 		if (SeRecoge)
 		{
 			Visible = false;

@@ -37,6 +37,16 @@ public partial class Puerta : StaticBody3D, IInteractuable
 			if (senal != null) senal.Visible = false;
 	}
 
+	// Al cargar una partida: abierta y desbloqueada sin animación ni sonido
+	public void RestaurarEstado(bool bloqueada, bool abierta)
+	{
+		if (!bloqueada) Desbloquear();
+		if (!abierta || EstaAbierta) return;
+		EstaAbierta = true;
+		CollisionLayer = 0;
+		if (Bisagra != null) Bisagra.Rotation += new Vector3(0, Mathf.DegToRad(AnguloApertura), 0);
+	}
+
 	public void Abrir()
 	{
 		EstaAbierta = true;

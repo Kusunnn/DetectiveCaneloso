@@ -108,7 +108,7 @@ public partial class Caso0 : Node
 		Hud.Set("caso", "00");
 		Hud.Set("archivo", "La cinta");
 		Jugador.EvidenciaRegistrada += AlRegistrarEvidencia;
-		Jugador.ObjetoObtenido += _ => { Progreso(); ActualizarObjetivo(); };
+		Jugador.ObjetoObtenido += _ => { Progreso(); ActualizarObjetivo(); Cambio(); };
 		Hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
 
 		Eriz.Usado += () => Conversar(() => Interrogar(_eriz, OpcionesEriz, EvidenciaEriz));
@@ -132,7 +132,10 @@ public partial class Caso0 : Node
 
 		Objetivo("Revisa la grabadora y el reloj de la Sala 1.");
 		PrepararGuia();
-		CallDeferred(MethodName.Presentacion);
+		PrepararPartida();
+		// Partida cargada: se restaura en vez de la presentación
+		if (GestorPartida.Instancia?.EstadoPendiente != null) CallDeferred(MethodName.RestaurarPendiente);
+		else CallDeferred(MethodName.Presentacion);
 	}
 
 	private Personaje CrearPersonaje(string nombre, Npc npc, int animo)
@@ -163,6 +166,7 @@ public partial class Caso0 : Node
 	{
 		_pistas.Add(id);
 		Progreso();
+		Autoguardar("Pista: " + id);
 		switch (id)
 		{
 			case Grabadora:
@@ -252,6 +256,7 @@ public partial class Caso0 : Node
 		if (_deducciones.Add(id))
 		{
 			_conclusiones.Add(conclusion);
+			Cambio();
 			Hud.Call("avisar", "DEDUCCIÓN", "+1 CONCLUSIÓN");
 			Hud.Call("agregar_nota", "Deducción: " + conclusion);
 			Sonidos.ReproducirUI(this, Sonidos.Tipo.Deduccion);
@@ -293,7 +298,7 @@ public partial class Caso0 : Node
 			_ => "Responsable de la comisaría y de la investigación sobre la cinta. Puede aclarar el uso de la grabadora y autorizar el acceso a los vestidores.",
 		};
 		Hud.Call("registrar_persona", p.Nombre, resumen, Dialogo.Retrato(p.Nombre));
-		_hablados.Add(p.Nombre);
+		if (_hablados.Add(p.Nombre)) Cambio();
 		while (true)
 		{
 			// Una pregunta ya hecha desaparece (su respuesta queda en la libreta [Q]); vuelve a salir
@@ -306,13 +311,14 @@ public partial class Caso0 : Node
 			int elegida = await Dialogo.Elegir(p.Hablante, "¿Qué le digo?", vistas, salir: vistas.Count - 1);
 			var opcion = lista[elegida];
 			if (opcion.Id == "adios") break;
-			if (opcion.Id != "evidencia") p.Leidas.Add(Lectura(p, opcion));
+			if (opcion.Id != "evidencia" && p.Leidas.Add(Lectura(p, opcion))) Cambio();
 			if (opcion.Id == "evidencia")
 			{
 				var pistas = Cartas().Where(c => c.Tipo == "PISTA").Select(c => (c.Id, c.Titulo, c.Imagen)).ToList();
 				SugerirEnDialogo(p, evidencia: true);
 				string id = await Dialogo.ElegirEvidencia(p.Hablante, pistas);
 				if (id == null) continue;
+				Cambio();
 				if (!await evidencia(p, id))
 				{
 					CambiarAnimo(p, -1);
@@ -499,6 +505,8 @@ public partial class Caso0 : Node
 			PuertaVestuario.Desbloquear();
 			Jugador.MostrarAviso("Nueva zona disponible: Vestidores", 4.0);
 			Progreso();
+			Cambio();
+			Autoguardar("Zona desbloqueada");
 		} },
 		new Opcion { Id = "c_presionar", Tipo = "PRESIONAR", Texto = "¿Seguro que no tocó la grabadora anoche?", Visible = () => !p.Confeso, Accion = async () =>
 		{
@@ -558,6 +566,7 @@ public partial class Caso0 : Node
 		int rec = await Dialogo.Elegir(_caneloso, "¿Por qué estaba la grabadora grabando de madrugada?",
 			new List<OpcionVista> { new("Porky la dejó encendida"), new("Eriz la puso en marcha al limpiar"), new("El comisario la dejó en REC como trampa") });
 		_intentosAcusacion++;
+		Cambio();
 
 		if (quien != 1 || porque != 1 || rec != 2)
 		{
@@ -716,6 +725,7 @@ public partial class Caso0 : Node
 	private void Nota(string texto)
 	{
 		Hud.Call("agregar_nota", texto);
+		Cambio();
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Nota);
 		Indicar("libreta", "Lo apunto en mi libreta [Q].");
 	}
