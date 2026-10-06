@@ -283,6 +283,14 @@ public partial class Caso0 : Node
 	private async Task Interrogar(Personaje p, Func<Personaje, List<Opcion>> opciones, Func<Personaje, string, Task<bool>> evidencia)
 	{
 		await Saludo(p);
+		// La ficha se descubre después del primer saludo; el HUD evita duplicados.
+		string resumen = p.Nombre switch
+		{
+			"Eriz" => "Conserje de la comisaría. Conoce las salas y sus accesos. Su recorrido durante la noche puede ayudar a reconstruir lo ocurrido.",
+			"Porky" => "Agente de la comisaría. Estaba de guardia la noche del incidente. Hay que contrastar su versión con las pistas de la Sala 1.",
+			_ => "Responsable de la comisaría y de la investigación sobre la cinta. Puede aclarar el uso de la grabadora y autorizar el acceso a los vestidores.",
+		};
+		Hud.Call("registrar_persona", p.Nombre, resumen, Dialogo.Retrato(p.Nombre));
 		while (true)
 		{
 			// Una pregunta ya hecha desaparece (su respuesta queda en la libreta [Q]); vuelve a salir
@@ -346,7 +354,7 @@ public partial class Caso0 : Node
 		{
 			await Habla(p, "Compartimos celda hace veinte años. No es mala persona.");
 		} },
-		new Opcion { Id = "e_presionar", Tipo = "PRESIONAR", Texto = "Tienes llave de todo... y un pasado de carterista, «Dedos».", Visible = () => !p.Confeso, Accion = async () =>
+		new Opcion { Id = "e_presionar", Tipo = "PRESIONAR", Texto = "Tienes llave de todo... y un pasado de carterista.", Visible = () => !p.Confeso, Accion = async () =>
 		{
 			CambiarAnimo(p, -1);
 			await Habla(p, "¡Eso fue hace veinte años! Ahora trapeo y pago mis impuestos.");
