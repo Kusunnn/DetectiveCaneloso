@@ -9,6 +9,7 @@ public partial class MenuOpciones : PanelMenu
 	private readonly Dictionary<string, HSlider> _volumenes = new();
 	private CheckButton _interruptorPantallaCompleta;
 	private CheckButton _interruptorAgacharse;
+	private CheckButton _interruptorAyudas;
 	private HSlider _deslizadorSensibilidad;
 	private ulong _ultimaMuestra;
 
@@ -21,6 +22,7 @@ public partial class MenuOpciones : PanelMenu
 		_volumenes["Interfaz"] = GetNode<HSlider>("%DeslizadorInterfaz");
 		_interruptorPantallaCompleta = GetNode<CheckButton>("%InterruptorPantallaCompleta");
 		_interruptorAgacharse = GetNode<CheckButton>("%InterruptorAgacharse");
+		_interruptorAyudas = GetNode<CheckButton>("%InterruptorAyudas");
 		_deslizadorSensibilidad = GetNode<HSlider>("%DeslizadorSensibilidad");
 		base._Ready();
 
@@ -40,6 +42,7 @@ public partial class MenuOpciones : PanelMenu
 		}
 		_interruptorPantallaCompleta.Toggled += activado => Configuracion.Instancia.PantallaCompleta = activado;
 		_interruptorAgacharse.Toggled += activado => Configuracion.Instancia.AgacharseAlternar = activado;
+		_interruptorAyudas.Toggled += activado => Configuracion.Instancia.AyudasVisuales = activado;
 		_deslizadorSensibilidad.ValueChanged += valor => Configuracion.Instancia.SensibilidadRaton = (float)valor;
 	}
 
@@ -49,6 +52,7 @@ public partial class MenuOpciones : PanelMenu
 			deslizador.SetValueNoSignal(Configuracion.Instancia.Volumen(bus));
 		_interruptorPantallaCompleta.SetPressedNoSignal(Configuracion.Instancia.PantallaCompleta);
 		_interruptorAgacharse.SetPressedNoSignal(Configuracion.Instancia.AgacharseAlternar);
+		_interruptorAyudas.SetPressedNoSignal(Configuracion.Instancia.AyudasVisuales);
 		_deslizadorSensibilidad.SetValueNoSignal(Configuracion.Instancia.SensibilidadRaton);
 		base.Abrir();
 	}

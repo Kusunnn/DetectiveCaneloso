@@ -122,6 +122,16 @@ public partial class TableroDeduccion : CanvasLayer
 		if (Abierto) Cerrar(); else Abrir();
 	}
 
+	// Guía paso a paso: cartas que conviene unir y una nota que lo explica (se borra al cerrar)
+	private string[] _sugeridas = Array.Empty<string>();
+	private string _notaSugerida = "";
+
+	public void Sugerir(string nota, params string[] ids)
+	{
+		_sugeridas = ids;
+		_notaSugerida = string.IsNullOrEmpty(nota) ? "" : "▶ " + nota;
+	}
+
 	public void Abrir()
 	{
 		_seleccion.Clear();
@@ -158,9 +168,22 @@ public partial class TableroDeduccion : CanvasLayer
 				boton.AddThemeColorOverride(c, Tinta);
 			boton.Toggled += activo => AlMarcar(boton, activo);
 			_rejilla.AddChild(boton);
+			// Guía: las cartas sugeridas laten en ámbar
+			if (Array.IndexOf(_sugeridas, carta.Id) >= 0)
+			{
+				var sugerida = new StyleBoxFlat { BgColor = new Color(Ambar, 0.18f), BorderColor = Ambar };
+				sugerida.SetBorderWidthAll(3);
+				sugerida.SetContentMarginAll(8);
+				boton.AddThemeStyleboxOverride("normal", sugerida);
+				boton.AddThemeStyleboxOverride("hover", sugerida);
+				var latido = boton.CreateTween().SetLoops();
+				latido.TweenProperty(boton, "modulate", new Color(1.12f, 1.08f, 0.85f), 0.5);
+				latido.TweenProperty(boton, "modulate", Colors.White, 0.5);
+			}
 		}
 		ActualizarConclusiones();
-		_mensaje.Text = _rejilla.GetChildCount() < 2 ? "Necesito más pistas antes de sacar conclusiones." : "";
+		_mensaje.Text = _rejilla.GetChildCount() < 2 ? "Necesito más pistas antes de sacar conclusiones." : _notaSugerida;
+		_mensaje.AddThemeColorOverride("font_color", Tinta);
 		_raiz.Show();
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Expediente);
 		Input.MouseMode = Input.MouseModeEnum.Visible;
@@ -170,6 +193,8 @@ public partial class TableroDeduccion : CanvasLayer
 	public void Cerrar()
 	{
 		_raiz.Hide();
+		_sugeridas = Array.Empty<string>();
+		_notaSugerida = "";
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.LibretaCerrar);
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		JugadorActual()?.Bloquear(false);

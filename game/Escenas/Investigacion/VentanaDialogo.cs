@@ -217,7 +217,7 @@ public partial class VentanaDialogo : CanvasLayer
 			boton.Pressed += () => _espera?.TrySetResult(indice);
 			_opciones.AddChild(boton);
 		}
-		((Button)_opciones.GetChild(0)).GrabFocus();
+		if (!AplicarSugerencia(_opciones)) ((Button)_opciones.GetChild(0)).GrabFocus();
 
 		int elegida = await _espera.Task;
 		_indiceSalir = -1;
@@ -251,13 +251,48 @@ public partial class VentanaDialogo : CanvasLayer
 		var cancelar = CrearBoton("Mejor no mostrarle nada", true);
 		cancelar.Pressed += () => _espera?.TrySetResult(-1);
 		_evidencias.AddChild(cancelar);
-		((Button)_evidencias.GetChild(0)).GrabFocus();
+		if (!AplicarSugerencia(_evidencias)) ((Button)_evidencias.GetChild(0)).GrabFocus();
 
 		int elegida = await _espera.Task;
 		foreach (Node n in _evidencias.GetChildren()) n.QueueFree();
 		RestaurarRaton();
 		Cerrar();
 		return elegida < 0 ? null : pistas[elegida].Id;
+	}
+
+	// Guía paso a paso: la próxima vez que haya opciones, la que contenga "fragmento" se marca en ámbar,
+	// recibe el foco y la línea de ayuda explica el paso. Se usa una sola vez.
+	private string _sugerencia;
+	private string _notaSugerencia;
+
+	public void Sugerir(string fragmento, string nota)
+	{
+		_sugerencia = fragmento;
+		_notaSugerencia = nota;
+	}
+
+	private bool AplicarSugerencia(Node contenedor)
+	{
+		if (string.IsNullOrEmpty(_sugerencia)) return false;
+		string fragmento = _sugerencia;
+		_sugerencia = null;
+		foreach (Node n in contenedor.GetChildren())
+		{
+			if (n is not Button boton || boton.Text.FindN(fragmento) < 0) continue;
+			var marcada = new StyleBoxFlat { BgColor = new Color(Ambar, 0.3f), BorderColor = Ambar };
+			marcada.SetBorderWidthAll(3);
+			marcada.SetContentMarginAll(4);
+			foreach (string estilo in new[] { "normal", "hover", "focus", "pressed" })
+				boton.AddThemeStyleboxOverride(estilo, marcada);
+			boton.Text = "▶ " + boton.Text;
+			var latido = boton.CreateTween().SetLoops();
+			latido.TweenProperty(boton, "modulate", new Color(1.15f, 1.1f, 0.85f), 0.45);
+			latido.TweenProperty(boton, "modulate", Colors.White, 0.45);
+			boton.GrabFocus();
+			if (!string.IsNullOrEmpty(_notaSugerencia)) _ayuda.Text = "▶ " + _notaSugerencia;
+			return true;
+		}
+		return false;
 	}
 
 	// Retratos en Assets/Retratos/<nombre>.png (Caneloso, Eriz, Porky, Comisario...)

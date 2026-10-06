@@ -140,8 +140,9 @@ public static class Sonidos
 	// y también con el juego en pausa.
 	public static void ReproducirUI(Node padre, Tipo tipo, float volumenDb = 0f, float tono = 1f)
 	{
+		// Un temporizador puede llegar cuando el nodo ya salió de la escena (al cerrar o cambiar de escena)
+		if (padre == null || !GodotObject.IsInstanceValid(padre) || !padre.IsInsideTree()) return;
 		var arbol = padre.GetTree();
-		if (arbol == null) return;
 		var reproductor = new AudioStreamPlayer
 		{
 			Stream = Obtener(tipo),

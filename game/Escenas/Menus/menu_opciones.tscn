@@ -129,6 +129,16 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 
+[node name="EtiquetaAyudas" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
+layout_mode = 2
+text = "Ayudas visuales del tutorial"
+
+[node name="InterruptorAyudas" type="CheckButton" parent="Centro/Panel/Margen/VBox/Rejilla"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+button_pressed = true
+
 [node name="EtiquetaSensibilidad" type="Label" parent="Centro/Panel/Margen/VBox/Rejilla"]
 layout_mode = 2
 text = "Sensibilidad del mouse"

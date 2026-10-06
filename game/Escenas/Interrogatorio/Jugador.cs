@@ -104,17 +104,7 @@ public partial class Jugador : CharacterBody3D
 		if (@event is InputEventMouseMotion eventoRaton && Input.MouseMode == Input.MouseModeEnum.Captured)
 		{
 			float sensibilidad = SensibilidadRaton * (Configuracion.Instancia?.SensibilidadRaton ?? 1f);
-			RotateY(-eventoRaton.Relative.X * sensibilidad);
-
-			float giroVertical = -eventoRaton.Relative.Y * sensibilidad;
-			Vector3 rotacionCamara = _camara.Rotation;
-			rotacionCamara.X = Mathf.Clamp(rotacionCamara.X + giroVertical, -Mathf.Pi / 2.5f, Mathf.Pi / 2.5f);
-			_camara.Rotation = rotacionCamara;
-
-			// En tercera persona se inclina el brazo de la cámara, con un rango más corto para no atravesar el suelo
-			Vector3 rotacionBrazo = _brazoCamara.Rotation;
-			rotacionBrazo.X = Mathf.Clamp(rotacionBrazo.X + giroVertical, -1.1f, 0.5f);
-			_brazoCamara.Rotation = rotacionBrazo;
+			GirarVista(-eventoRaton.Relative.X * sensibilidad, -eventoRaton.Relative.Y * sensibilidad);
 		}
 
 		// Teclas del protagonista: V cambia de cámara; C o Ctrl agacharse; B bailar y K caerse.
@@ -140,6 +130,26 @@ public partial class Jugador : CharacterBody3D
 			}
 		}
 	}
+
+	// Gira la vista (radianes): horizontal el cuerpo, vertical la cámara. Lo usan el mouse y el stick derecho.
+	private void GirarVista(float horizontal, float vertical)
+	{
+		RotateY(horizontal);
+		Vector3 rotacionCamara = _camara.Rotation;
+		rotacionCamara.X = Mathf.Clamp(rotacionCamara.X + vertical, -Mathf.Pi / 2.5f, Mathf.Pi / 2.5f);
+		_camara.Rotation = rotacionCamara;
+
+		// En tercera persona se inclina el brazo de la cámara, con un rango más corto para no atravesar el suelo
+		Vector3 rotacionBrazo = _brazoCamara.Rotation;
+		rotacionBrazo.X = Mathf.Clamp(rotacionBrazo.X + vertical, -1.1f, 0.5f);
+		_brazoCamara.Rotation = rotacionBrazo;
+		GiroAcumulado += Mathf.Abs(horizontal) + Mathf.Abs(vertical);
+	}
+
+	// Cuánto ha girado la vista desde el inicio (el tutorial lo usa para saber si ya miró alrededor)
+	public float GiroAcumulado { get; private set; } = 0f;
+	public float DistanciaRecorrida { get; private set; } = 0f;
+	[Export] public float VelocidadStick = 2.6f; // rad/s con el stick a fondo
 
 	// Activa la cámara de primera o tercera persona y muestra u oculta el cuerpo de Caneloso
 	private void AplicarPerspectiva()
@@ -364,6 +374,7 @@ public partial class Jugador : CharacterBody3D
 			return;
 		}
 		_distanciaPaso += new Vector2(Velocity.X, Velocity.Z).Length() * delta;
+		DistanciaRecorrida += new Vector2(Velocity.X, Velocity.Z).Length() * delta;
 		float zancada = Agachado ? 0.6f : 0.75f;
 		if (_distanciaPaso < zancada) return;
 		_distanciaPaso = 0f;
@@ -393,6 +404,13 @@ public partial class Jugador : CharacterBody3D
 		}
 
 		ActualizarAgachado((float)delta);
+		// Stick derecho del control: mirar
+		Vector2 stick = Input.GetVector("mirar_izquierda", "mirar_derecha", "mirar_arriba", "mirar_abajo");
+		if (stick != Vector2.Zero)
+		{
+			float giro = VelocidadStick * (Configuracion.Instancia?.SensibilidadRaton ?? 1f) * (float)delta;
+			GirarVista(-stick.X * giro, -stick.Y * giro * 0.7f);
+		}
 		Vector3 velocidadActual = Velocity;
 		float velocidad = Velocidad * Mathf.Lerp(1f, FactorVelocidadAgachado, _mezclaAgachado);
 		if (Input.IsActionPressed("correr") && !Agachado) velocidad *= FactorVelocidadCorrer;
