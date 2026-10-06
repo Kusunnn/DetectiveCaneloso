@@ -15,6 +15,10 @@
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/zona_vestuario.tscn" id="16_vestuario"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/ambiente_sala.tscn" id="17_ambiente"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/TableroDeduccion.cs" id="18_tablero"]
+[ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="21_musica"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/Musica/investigacion.ogg" id="22_musica_ogg"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="23_cartel"]
 
 [sub_resource type="StandardMaterial3D" id="Material_techo"]
 albedo_color = Color(0.1, 0.1, 0.1, 1)
@@ -65,13 +69,15 @@ material = SubResource("Material_vidrio")
 top_radius = 0.035
 bottom_radius = 0.03
 height = 0.1
-
+radial_segments = 12
+rings = 1
 [sub_resource type="CylinderMesh" id="Mesh_cenicero"]
 material = SubResource("Material_patas")
 top_radius = 0.06
 bottom_radius = 0.05
 height = 0.025
-
+radial_segments = 12
+rings = 1
 [sub_resource type="StandardMaterial3D" id="Material_cromo"]
 albedo_color = Color(0.75, 0.75, 0.72, 1)
 metallic = 1.0
@@ -81,17 +87,31 @@ roughness = 0.25
 material = SubResource("Material_cromo")
 inner_radius = 0.022
 outer_radius = 0.032
-
+rings = 16
+ring_segments = 8
 [sub_resource type="Environment" id="Environment_je0k8"]
 background_mode = 1
 background_color = Color(0.018023593, 0.058232002, 0.1001626, 0.8509804)
 ambient_light_source = 2
 ambient_light_color = Color(0.35, 0.4, 0.5, 1)
-ambient_light_energy = 0.25
+ambient_light_energy = 0.32
 ssao_enabled = true
 glow_enabled = true
 adjustment_enabled = true
-
+tonemap_mode = 2
+tonemap_exposure = 1.3
+ssao_radius = 1.2
+ssao_intensity = 2.2
+glow_intensity = 0.6
+glow_hdr_threshold = 1.1
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.005
+volumetric_fog_albedo = Color(0.85, 0.85, 0.9, 1)
+volumetric_fog_length = 24.0
+volumetric_fog_ambient_inject = 0.15
+adjustment_brightness = 1.0
+adjustment_contrast = 1.06
+adjustment_saturation = 0.88
 [sub_resource type="BoxShape3D" id="BoxShape3D_je0k8"]
 size = Vector3(0.32, 0.1, 0.22)
 
@@ -108,7 +128,8 @@ material = SubResource("Material_cromo")
 top_radius = 0.045
 bottom_radius = 0.045
 height = 0.012
-
+radial_segments = 12
+rings = 1
 [sub_resource type="BoxMesh" id="Mesh_rejilla"]
 material = SubResource("Material_cromo")
 size = Vector3(0.09, 0.004, 0.06)
@@ -127,11 +148,15 @@ emission_energy_multiplier = 4.0
 material = SubResource("Material_luz_roja")
 radius = 0.007
 height = 0.014
-
+radial_segments = 16
+rings = 8
 [sub_resource type="StandardMaterial3D" id="Material_pared"]
 albedo_color = Color(0.2, 0.21, 0.19, 1)
 roughness = 0.95
-
+albedo_texture = ExtResource("ruido")
+uv1_scale = Vector3(0.4, 0.4, 0.4)
+uv1_triplanar = true
+uv1_world_triplanar = true
 [sub_resource type="StandardMaterial3D" id="Material_metal"]
 cull_mode = 2
 albedo_color = Color(0.08, 0.09, 0.08, 1)
@@ -145,7 +170,8 @@ bottom_radius = 0.3
 height = 0.25
 cap_top = false
 cap_bottom = false
-
+radial_segments = 12
+rings = 1
 [sub_resource type="StandardMaterial3D" id="Material_foco"]
 albedo_color = Color(1, 0.9, 0.7, 1)
 emission_enabled = true
@@ -156,7 +182,8 @@ emission_energy_multiplier = 6.0
 material = SubResource("Material_foco")
 radius = 0.07
 height = 0.14
-
+radial_segments = 16
+rings = 8
 [sub_resource type="StandardMaterial3D" id="Material_espejo"]
 albedo_color = Color(0.3, 0.32, 0.35, 1)
 metallic = 1.0
@@ -233,12 +260,14 @@ material = SubResource("Material_reloj_cara")
 top_radius = 0.18
 bottom_radius = 0.18
 height = 0.04
-
+radial_segments = 12
+rings = 1
 [sub_resource type="TorusMesh" id="Mesh_reloj_aro"]
 material = SubResource("Material_patas")
 inner_radius = 0.17
 outer_radius = 0.2
-
+rings = 16
+ring_segments = 8
 [sub_resource type="BoxMesh" id="Mesh_aguja_hora"]
 material = SubResource("Material_patas")
 size = Vector3(0.018, 0.09, 0.005)
@@ -256,7 +285,8 @@ material = SubResource("Material_patas")
 top_radius = 0.16
 bottom_radius = 0.13
 height = 0.35
-
+radial_segments = 12
+rings = 1
 [sub_resource type="BoxShape3D" id="Forma_acusacion"]
 size = Vector3(0.7, 1.6, 0.7)
 
@@ -264,7 +294,7 @@ size = Vector3(0.7, 1.6, 0.7)
 size = Vector3(0.06, 2.1, 1.0)
 
 [sub_resource type="BoxShape3D" id="Forma_reloj"]
-size = Vector3(0.42, 0.42, 0.08)
+size = Vector3(0.6, 0.6, 0.15)
 
 [sub_resource type="BoxShape3D" id="Forma_rejilla"]
 size = Vector3(0.55, 0.08, 0.55)
@@ -280,6 +310,63 @@ roughness = 0.3
 material = SubResource("Mat_pluma")
 size = Vector3(0.03, 0.005, 0.22)
 
+
+[sub_resource type="StandardMaterial3D" id="Material_suelo_sala"]
+albedo_color = Color(0.17, 0.16, 0.145, 1)
+roughness = 0.8
+albedo_texture = ExtResource("ruido")
+uv1_scale = Vector3(0.3, 0.3, 0.3)
+uv1_triplanar = true
+uv1_world_triplanar = true
+[sub_resource type="StandardMaterial3D" id="Mat_zocalo_sala"]
+albedo_color = Color(0.09, 0.09, 0.085, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_mancha_sala"]
+transparency = 1
+albedo_color = Color(0.04, 0.035, 0.03, 0.5)
+roughness = 1
+
+[sub_resource type="BoxMesh" id="Box_zocalo_largo"]
+material = SubResource("Mat_zocalo_sala")
+size = Vector3(6, 0.24, 0.02)
+
+[sub_resource type="BoxMesh" id="Box_zocalo_corto"]
+material = SubResource("Mat_zocalo_sala")
+size = Vector3(0.96, 0.24, 0.02)
+
+[sub_resource type="BoxMesh" id="Box_zocalo_fondo"]
+material = SubResource("Mat_zocalo_sala")
+size = Vector3(8, 0.24, 0.02)
+
+[sub_resource type="BoxMesh" id="Box_zocalo_lado"]
+material = SubResource("Mat_zocalo_sala")
+size = Vector3(0.02, 0.24, 8)
+
+[sub_resource type="BoxMesh" id="Box_mancha_grande"]
+material = SubResource("Mat_mancha_sala")
+size = Vector3(1.3, 0.002, 0.9)
+
+[sub_resource type="BoxMesh" id="Box_mancha_chica"]
+material = SubResource("Mat_mancha_sala")
+size = Vector3(0.5, 0.002, 0.35)
+
+[sub_resource type="BoxMesh" id="Box_raspon"]
+material = SubResource("Mat_mancha_sala")
+size = Vector3(0.9, 0.002, 0.05)
+
+[sub_resource type="Gradient" id="Grad_vineta"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.18, 0, 0, 0, 0.62)
+
+[sub_resource type="GradientTexture2D" id="Tex_vineta"]
+gradient = SubResource("Grad_vineta")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1.05, 0.5)
+
 [node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
 
 [node name="HUD" parent="." unique_id=993473331 instance=ExtResource("1_ar7rw")]
@@ -288,7 +375,7 @@ size = Vector3(0.03, 0.005, 0.22)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.1)
 use_collision = true
 size = Vector3(8.4, 1, 8.2)
-material = SubResource("Material_techo")
+material = SubResource("Material_suelo_sala")
 
 [node name="Jugador" type="CharacterBody3D" parent="." unique_id=3319378]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
@@ -560,7 +647,7 @@ box_projection = true
 interior = true
 
 [node name="Puerta" type="MeshInstance3D" parent="Detalles" unique_id=602001027]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.03, 1.55, 3.7)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.97, 1.55, 2.5)
 mesh = SubResource("Mesh_puerta")
 
 [node name="MarcoPuertaIzq" type="MeshInstance3D" parent="Detalles" unique_id=1776311544]
@@ -599,19 +686,19 @@ cast_shadow = 0
 mesh = SubResource("Mesh_luz_roja")
 
 [node name="Reloj" type="MeshInstance3D" parent="Detalles" unique_id=1858869959]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.9, -4.98)
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.55, -4.98)
 mesh = SubResource("Mesh_reloj_cara")
 
 [node name="RelojAro" type="MeshInstance3D" parent="Detalles" unique_id=2128148804]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.9, -4.975)
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, 2.55, -4.975)
 mesh = SubResource("Mesh_reloj_aro")
 
 [node name="AgujaHora" type="MeshInstance3D" parent="Detalles" unique_id=185481194]
-transform = Transform3D(-0.1045, 0.9945, 0, -0.9945, -0.1045, 0, 0, 0, 1, 0.0448, 2.8953, -4.955)
+transform = Transform3D(-0.1045, 0.9945, 0, -0.9945, -0.1045, 0, 0, 0, 1, 0.0448, 2.5453, -4.955)
 mesh = SubResource("Mesh_aguja_hora")
 
 [node name="AgujaMinuto" type="MeshInstance3D" parent="Detalles" unique_id=2058131831]
-transform = Transform3D(0.951, -0.309, 0, 0.309, 0.951, 0, 0, 0, 1, 0.0618, 2.92, -4.953)
+transform = Transform3D(0.951, -0.309, 0, 0.309, 0.951, 0, 0, 0, 1, 0.0618, 2.57, -4.953)
 mesh = SubResource("Mesh_aguja_minuto")
 
 [node name="RejillaVentilacion" type="MeshInstance3D" parent="Detalles" unique_id=1146853878]
@@ -652,7 +739,7 @@ transform = Transform3D(0.939, 0, -0.343, 0, 1, 0, 0.343, 0, 0.939, 1.1, 0.5, -3
 [node name="VentanaDialogo" type="CanvasLayer" parent="."]
 script = ExtResource("12_dialogo")
 
-[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio", "Tablero")]
+[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio", "Tablero", "Musica")]
 script = ExtResource("13_caso")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
@@ -670,17 +757,17 @@ PuntoPorkyFinal = NodePath("../PuntoPorkyFinal")
 CasilleroPorky = NodePath("../ZonaVestuario/CasilleroPorky")
 ZonaAndamio = NodePath("../ZonaPasillo/AreaAndamio")
 Tablero = NodePath("../TableroDeduccion")
-
+Musica = NodePath("../MusicaFondo")
 [node name="PuertaSalaColision" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.03, 1.55, 3.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.97, 1.55, 2.5)
 collision_layer = 2
 collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PuertaSalaColision"]
 shape = SubResource("Forma_puerta_sala")
 
-[node name="RelojPista" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -4.95)
+[node name="RelojPista" type="StaticBody3D" parent="." node_paths=PackedStringArray("Visuales")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, -4.95)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("5_pista")
@@ -688,7 +775,7 @@ Id = "reloj"
 Titulo = "Reloj parado a las 3:12"
 Descripcion = "El reloj de la Sala 1 marca las 3:12 y no avanza. El cristal está rajado: se cayó o lo golpearon."
 ComentarioAlMirar = "Las 3:12. O el reloj se cansó... o alguien lo cansó."
-
+Visuales = [NodePath("../Detalles/Reloj"), NodePath("../Detalles/RelojAro"), NodePath("../Detalles/AgujaHora"), NodePath("../Detalles/AgujaMinuto")]
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RelojPista"]
 shape = SubResource("Forma_reloj")
 
@@ -720,7 +807,7 @@ shape = SubResource("Forma_rejilla")
 transform = Transform3D(0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, 0.9397, 0.08, -0.025, 0.05)
 mesh = SubResource("Mesh_pluma")
 
-[node name="EspejoComentario" type="StaticBody3D" parent="."]
+[node name="EspejoComentario" type="StaticBody3D" parent="." node_paths=PackedStringArray("Visuales")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.97, 2, -2)
 collision_layer = 8
 collision_mask = 0
@@ -729,9 +816,128 @@ Titulo = "Espejo falso"
 Descripcion = "A estas horas no hay nadie detrás del espejo... espero."
 EsEvidencia = false
 ComentarioAlMirar = "Detrás de ese espejo siempre hay alguien mirando. Anoche, ¿quién?"
-
+Visuales = [NodePath("../Detalles/MarcoEspejoArriba"), NodePath("../Detalles/MarcoEspejoAbajo"), NodePath("../Detalles/MarcoEspejoIzq"), NodePath("../Detalles/MarcoEspejoDer")]
 [node name="CollisionShape3D" type="CollisionShape3D" parent="EspejoComentario"]
 shape = SubResource("Forma_espejo")
 
 [node name="TableroDeduccion" type="CanvasLayer" parent="."]
 script = ExtResource("18_tablero")
+
+[node name="FocoReloj" type="SpotLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.77147, 0.63626, 0, -0.63626, 0.77147, 0, 3.35, -4)
+light_color = Color(1, 0.86, 0.62, 1)
+light_energy = 1.4
+light_volumetric_fog_energy = 0.4
+spot_range = 2.6
+spot_angle = 16.0
+distance_fade_enabled = true
+distance_fade_begin = 14.0
+distance_fade_length = 4.0
+
+[node name="Zocalos" type="Node3D" parent="."]
+
+[node name="ZocaloFrenteIzq" type="MeshInstance3D" parent="Zocalos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.62, 2.99)
+mesh = SubResource("Box_zocalo_largo")
+
+[node name="ZocaloFrenteDer" type="MeshInstance3D" parent="Zocalos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.52, 0.62, 2.99)
+mesh = SubResource("Box_zocalo_corto")
+
+[node name="ZocaloFondo" type="MeshInstance3D" parent="Zocalos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, -4.99)
+mesh = SubResource("Box_zocalo_fondo")
+
+[node name="ZocaloIzq" type="MeshInstance3D" parent="Zocalos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.99, 0.62, -1)
+mesh = SubResource("Box_zocalo_lado")
+
+[node name="ZocaloDer" type="MeshInstance3D" parent="Zocalos"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.99, 0.62, -1)
+mesh = SubResource("Box_zocalo_lado")
+
+
+[node name="Desgaste" type="Node3D" parent="."]
+
+[node name="ManchaBajoMesa" type="MeshInstance3D" parent="Desgaste"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.502, -2)
+cast_shadow = 0
+mesh = SubResource("Box_mancha_grande")
+
+[node name="ManchaSilla" type="MeshInstance3D" parent="Desgaste"]
+transform = Transform3D(0.97815, 0, 0.20791, 0, 1, 0, -0.20791, 0, 0.97815, 0.15, 0.502, -2.9)
+cast_shadow = 0
+mesh = SubResource("Box_mancha_chica")
+
+[node name="RasponSilla1" type="MeshInstance3D" parent="Desgaste"]
+transform = Transform3D(0.99027, 0, 0.13917, 0, 1, 0, -0.13917, 0, 0.99027, -0.2, 0.502, -1)
+cast_shadow = 0
+mesh = SubResource("Box_raspon")
+
+[node name="RasponSilla2" type="MeshInstance3D" parent="Desgaste"]
+transform = Transform3D(0.99452, 0, -0.10453, 0, 1, 0, 0.10453, 0, 0.99452, 0.25, 0.502, -0.85)
+cast_shadow = 0
+mesh = SubResource("Box_raspon")
+
+[node name="ManchaPuerta" type="MeshInstance3D" parent="Desgaste"]
+transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 2.4, 0.502, 2.3)
+cast_shadow = 0
+mesh = SubResource("Box_mancha_chica")
+
+
+[node name="CartelEmpleadoMes" type="Node3D" parent="."]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 3.98, 2, -0.5)
+script = ExtResource("23_cartel")
+Texto = "EMPLEADO DEL MES
+Agte. Porky · 2019"
+Ancho = 0.42
+Margen = 0.03
+TamFuente = 30
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.74, 0.7, 0.58, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.6
+
+[node name="HojaLimpieza" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -3.98, 1.5, 2.2)
+script = ExtResource("23_cartel")
+Texto = "SALA 1 · LIMPIEZA
+Trapeada 00:40 ✓ —E."
+Ancho = 0.3
+Margen = 0.03
+TamFuente = 24
+TamMinimo = 12
+TamPixel = 0.0025
+ColorPapel = Color(0.9, 0.9, 0.86, 1)
+ColorTexto = Color(0.12, 0.1, 0.08, 1)
+AltoMaximo = 0.6
+
+
+[node name="RotuloExpediente" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.35, 1.302, -1.9)
+pixel_size = 0.0011
+modulate = Color(0.12, 0.1, 0.08, 1)
+outline_size = 0
+text = "EXP. 0347 · T. GARRAS
+¿«La Garra»? Puros cuentos. —B."
+font_size = 26
+width = 260.0
+autowrap_mode = 2
+
+[node name="MusicaFondo" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("22_musica_ogg")
+script = ExtResource("21_musica")
+
+[node name="Vineta" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="Degradado" type="TextureRect" parent="Vineta"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("Tex_vineta")
+expand_mode = 1
