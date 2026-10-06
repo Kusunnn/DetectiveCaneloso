@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="InformeCaso" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://hud/expediente/informe_caso.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+titulo = "\"LA NOCHE DEL CIERVO DE LUZ\""
+lugar = "Campamento Pino Lunar, orilla norte del Lago Espejo."
+fecha = "Noche del 14 al 15 de agosto."
+etiqueta_victima = "VÍCTIMA"
+victima = "Porky, 34 años, cocinero y encargado de mantenimiento del campamento."
+pie_foto = "Embarcadero · 23:47"
+sello = "CONFIDENCIAL"
+a_cargo = "Det. Caneloso"
+estado = "ABIERTO"
+examen = PackedStringArray("Golpe contundente en la nuca, hecho con un objeto largo y duro.", "Agua en los pulmones: estaba vivo al caer al lago, así que el golpe lo dejó inconsciente y murió ahogado.", "Hora estimada de la muerte: entre las 23:10 y las 23:30.")
+hallazgo = "A las 23:47, la bióloga Eriz encontró el cuerpo flotando boca abajo junto al embarcadero. El agua brillaba azul a su alrededor por un fenómeno de algas luminosas."
+circunstancias = "El campamento cierra este año. Para despedirlo, se han reunido siete antiguos campistas que pasaron aquí sus veranos de niños; algunos trabajan hoy en el campamento."
+linea_tiempo = PackedStringArray("Fogata|Durante la fogata, Miawrio contaba la leyenda del Ciervo de Luz: un venado con la cornamenta encendida que arrastra al lago a quien lo sigue.", "23:00|A las 23:00 se apagó todo el campamento. Hubo bramidos en el bosque y varios testigos vieron una silueta con cornamenta entre los árboles.", "23:10–23:30|Hora estimada de la muerte.|!", "23:40|La luz volvió a las 23:40.", "23:47|Eriz encuentra el cuerpo junto al embarcadero.|!")
+notas = PackedStringArray("En el sendero del lago había huellas de pezuña de gran tamaño.")
+antecedente = "Hace exactamente 20 años, Daniel, de 12 años, hermano menor de la víctima, murió ahogado en este mismo lago. Todos los presentes eran campistas aquel verano. El caso se cerró como accidente."
+titulo_personas = "PERSONAS PRESENTES ESA NOCHE"
+personas = PackedStringArray("Tony|36|Director del campamento|Monitor auxiliar, con 16 años", "Juan Carlos|35|Inversor; negocia la compra del terreno para un hotel|Campista", "Miawrio|34|Monitor y cuentacuentos|Campista; mejor amigo de Daniel", "Eriz|33|Bióloga; estudia el lago|Campista", "Aya|32|Fotógrafa de naturaleza, invitada para la temporada|Campista", "Mimita|31|Enfermera del campamento|—")
+etiqueta_pasado = "HACE 20 AÑOS"
+objetivo = "Examinar el campamento y el lago, reunir pruebas e interrogar a los implicados para determinar quién mató a Porky."
