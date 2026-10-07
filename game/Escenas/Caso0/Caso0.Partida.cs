@@ -48,7 +48,7 @@ public partial class Caso0 : IEstadoPartida
 	// ---------- IEstadoPartida ----------
 
 	public bool PuedeGuardar =>
-		!_restaurando && !_enDialogo && !Tablero.Abierto && !Dialogo.Abierto && !Todos<Contenedor>().Any(c => c.Animando);
+		_cerrandoCaso || (!_restaurando && !_enDialogo && !Tablero.Abierto && !Dialogo.Abierto && !Todos<Contenedor>().Any(c => c.Animando));
 
 	private string ZonaActual()
 	{
@@ -61,6 +61,8 @@ public partial class Caso0 : IEstadoPartida
 	public Diccionario Resumen() => new()
 	{
 		{ "caso", "00" },
+		{ "capitulo", IdCapitulo },
+		{ "fase", Capitulos.Fase(FaseActual())?.Nombre ?? "" },
 		{ "zona", ZonaActual() },
 		{ "pistas", _pistas.Count },
 		{ "total_pistas", PistasTotales },

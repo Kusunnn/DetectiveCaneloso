@@ -109,7 +109,7 @@ public partial class PanelRanuras : Control
 		var ranuras = GestorPartida.Instancia.Ranuras();
 		var auto = ranuras[GestorPartida.RanuraAuto];
 		_autoguardado.Text = auto.Ocupada && !auto.Danada
-			? $"Autoguardado: {auto.Zona} · {auto.Fecha}"
+			? $"Autoguardado: {Capitulos.Obtener(auto.Capitulo)?.Etiqueta} · {auto.Fase} · {auto.Zona} · {auto.Fecha}"
 			: "Autoguardado: todavía no hay.";
 		foreach (var r in ranuras)
 		{
@@ -136,7 +136,9 @@ public partial class PanelRanuras : Control
 		if (!r.Ocupada) return $"RANURA {r.Numero}  ·  vacía";
 		if (r.Danada) return $"RANURA {r.Numero}  ·  archivo dañado (se puede sobrescribir)";
 		var t = TimeSpan.FromSeconds(r.Tiempo);
-		return $"RANURA {r.Numero}  ·  Caso {r.Caso} · {r.Zona}\n" +
+		string capitulo = Capitulos.Obtener(r.Capitulo)?.Etiqueta ?? "Caso " + r.Caso;
+		string fase = string.IsNullOrEmpty(r.Fase) ? "" : " · " + r.Fase;
+		return $"RANURA {r.Numero}  ·  {capitulo}{fase} · {r.Zona}\n" +
 			$"Pistas {r.Pistas}/{r.TotalPistas}  ·  Tiempo {(int)t.TotalMinutes} min {t.Seconds:00} s\n{r.Fecha}";
 	}
 

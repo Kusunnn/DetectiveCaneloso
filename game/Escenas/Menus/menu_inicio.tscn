@@ -121,6 +121,28 @@ mouse_default_cursor_shape = 2
 text = "CONTINUAR"
 alignment = 0
 
+[node name="FilaCapitulos" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+
+[node name="HBox" type="HBoxContainer" parent="PantallaPrincipal/ListaOpciones/FilaCapitulos"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaCapitulos/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "03"
+
+[node name="BotonCapitulos" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaCapitulos/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "CAPÍTULOS"
+alignment = 0
+
 [node name="FilaOpciones" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
 layout_mode = 2
 mouse_filter = 2
@@ -134,7 +156,7 @@ theme_override_constants/separation = 18
 [node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaOpciones/HBox"]
 layout_mode = 2
 size_flags_vertical = 4
-text = "03"
+text = "04"
 
 [node name="BotonOpciones" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaOpciones/HBox"]
 unique_name_in_owner = true
@@ -156,7 +178,7 @@ theme_override_constants/separation = 18
 [node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaCreditos/HBox"]
 layout_mode = 2
 size_flags_vertical = 4
-text = "04"
+text = "05"
 
 [node name="BotonCreditos" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaCreditos/HBox"]
 unique_name_in_owner = true
@@ -178,7 +200,7 @@ theme_override_constants/separation = 18
 [node name="Numero" type="Label" parent="PantallaPrincipal/ListaOpciones/FilaSalir/HBox"]
 layout_mode = 2
 size_flags_vertical = 4
-text = "05"
+text = "06"
 
 [node name="BotonSalir" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaSalir/HBox"]
 unique_name_in_owner = true

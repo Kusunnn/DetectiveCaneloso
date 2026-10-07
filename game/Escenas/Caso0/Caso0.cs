@@ -133,9 +133,9 @@ public partial class Caso0 : Node
 		Objetivo("Revisa la grabadora y el reloj de la Sala 1.");
 		PrepararGuia();
 		PrepararPartida();
-		// Partida cargada: se restaura en vez de la presentación
-		if (GestorPartida.Instancia?.EstadoPendiente != null) CallDeferred(MethodName.RestaurarPendiente);
-		else CallDeferred(MethodName.Presentacion);
+		PrepararCapitulo();
+		// Partida cargada: se restaura; nueva: tarjeta de título y presentación
+		CallDeferred(MethodName.Empezar);
 	}
 
 	private Personaje CrearPersonaje(string nombre, Npc npc, int animo)
@@ -282,6 +282,7 @@ public partial class Caso0 : Node
 		_enDialogo = true;
 		Dialogo.Retener();
 		await conversacion();
+		if (!IsInsideTree()) return; // El caso se cerró y ya se cambió de escena
 		Dialogo.Soltar();
 		_enDialogo = false;
 		ActualizarObjetivo();
@@ -589,28 +590,7 @@ public partial class Caso0 : Node
 			: "Alguien más estuvo aquí a las 3:12. ¿Por dónde entró?");
 		Nota("En la cinta, a las 3:12, una voz desconocida: «La Garra no olvida, Caneloso».");
 		Objetivo("Caso cerrado... por ahora. ¿Quién es «La Garra»?");
-		await MostrarCalificacion();
-		if (GestorPartida.Instancia != null)
-		{
-			GestorPartida.Instancia.SaltarTutorial = true;
-			GestorPartida.Instancia.GuardarPartida();
-		}
-	}
-
-	// Calificación final para motivar a rejugar
-	private Task MostrarCalificacion()
-	{
-		int pistas = _pistas.Count;
-		int deducciones = _deducciones.Count;
-		int confrontaciones = _confrontaciones.Count;
-		bool primera = _intentosAcusacion == 1;
-		int puntos = pistas * 10 + deducciones * 10 + confrontaciones * 5 + (primera ? 20 : 0);
-		string nota = puntos >= 145 ? "S" : puntos >= 120 ? "A" : puntos >= 90 ? "B" : "C";
-		var tiempo = TimeSpan.FromSeconds(_tiempoCaso);
-		return Dialogo.Decir(Dialogo.HablantePorNombre("Informe del caso"),
-			$"Pistas: {pistas}/{PistasTotales}{(_pistas.Contains(Pluma) ? " (¡con la secreta!)" : "")} · Deducciones: {deducciones}/4 · Confrontaciones: {confrontaciones}/4",
-			$"Al primer intento: {(primera ? "sí" : "no (" + _intentosAcusacion + " intentos)")} · Tiempo: {(int)tiempo.TotalMinutes} min {tiempo.Seconds:00} s",
-			$"CALIFICACIÓN: {nota}. " + (nota == "S" ? "Impecable, detective." : "Todavía quedan secretos en la estación."));
+		await CerrarCaso();
 	}
 
 	// ---------- Zonas y tutorial ----------

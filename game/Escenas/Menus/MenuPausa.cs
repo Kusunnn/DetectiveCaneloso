@@ -99,6 +99,12 @@ public partial class MenuPausa : CanvasLayer
 
 	private void AbrirRanuras()
 	{
+		// Al repetir un capítulo resuelto la partida principal no se toca
+		if (GestorPartida.Instancia.Rejugando)
+		{
+			GestorPartida.Instancia.MostrarAviso("Repetición: no se guarda en tus ranuras", sello: false);
+			return;
+		}
 		// No se guarda a mitad de un diálogo o una animación
 		if (!GestorPartida.Instancia.PuedeGuardar)
 		{

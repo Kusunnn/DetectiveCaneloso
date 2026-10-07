@@ -21,6 +21,7 @@ public class InfoRanura
 	public bool Danada;
 	public bool HayRespaldo;
 	public string Caso = "", Zona = "", Fecha = "";
+	public string Capitulo = "", Fase = "";
 	public int Pistas, TotalPistas;
 	public double Tiempo;
 	public long GuardadoEn;
@@ -61,6 +62,18 @@ public partial class GestorPartida : Node
 	public int RanuraActiva { get; private set; } = RanuraAuto;
 	public double SegundosDesdeUltimoGuardado => _ultimoGuardado < 0 ? -1 : (Time.GetTicksMsec() / 1000.0) - _ultimoGuardado;
 
+	// Capítulo que se está jugando (id de Datos/capitulos.json)
+	public string CapituloActual { get; private set; } = "caso0";
+	// Rejugando un capítulo ya resuelto: no se guarda en las ranuras, así la partida principal no cambia
+	public bool Rejugando { get; private set; }
+	// Capítulo sin escena todavía: el menú de inicio muestra su tarjeta y avisa que está en preparación
+	public string CapituloEnPreparacion { get; set; }
+
+	// Qué presentar al entrar a la escena del capítulo: tarjeta de título (nuevo) o "Anteriormente..." (cargado)
+	private enum Presentacion { Nada, Inicio, Carga }
+	private Presentacion _presentacion = Presentacion.Nada;
+	private PresentacionCapitulo _tarjeta;
+
 	private double _ultimoGuardado = -1;
 	private double _ultimoAutoguardado = -1000;
 	private string _autoguardadoPendiente;
@@ -90,12 +103,59 @@ public partial class GestorPartida : Node
 
 	public void NuevaPartida(bool saltarTutorial = false)
 	{
-		SaltarTutorial = saltarTutorial;
-		EstadoPendiente = null;
 		RanuraActiva = RanuraAuto;
+		IniciarCapitulo(Capitulos.Lista.FirstOrDefault()?.Id ?? "caso0", rejugar: false, saltarTutorial);
+	}
+
+	// Empieza un capítulo desde el principio. rejugar = capítulo ya resuelto: no toca las ranuras.
+	public void IniciarCapitulo(string id, bool rejugar, bool saltarTutorial = false)
+	{
+		var capitulo = Capitulos.Obtener(id);
+		if (capitulo == null) return;
+		SaltarTutorial = saltarTutorial;
+		Rejugando = rejugar;
+		EstadoPendiente = null;
 		HayCambiosSinGuardar = false;
 		_ultimoGuardado = -1;
-		CambiarEscena(EscenaJuego);
+		if (!capitulo.TieneEscena)
+		{
+			CapituloEnPreparacion = id;
+			_presentacion = Presentacion.Nada;
+			CambiarEscena(EscenaMenuInicio);
+			return;
+		}
+		CapituloActual = id;
+		_presentacion = Presentacion.Inicio;
+		CambiarEscena(capitulo.Escena);
+	}
+
+	// Lo llama la escena del capítulo al empezar: tarjeta de título si es nuevo, "Anteriormente..." si se cargó.
+	// extra: líneas que la escena añade al resumen (lo último que anotó el jugador...).
+	public async Task PresentarCapitulo(IEnumerable<string> extra = null)
+	{
+		var modo = _presentacion;
+		_presentacion = Presentacion.Nada;
+		var capitulo = Capitulos.Obtener(CapituloActual);
+		if (capitulo == null || modo == Presentacion.Nada) return;
+		var lineas = capitulo.Anteriormente.ToList();
+		if (modo == Presentacion.Inicio)
+		{
+			await _tarjeta.MostrarTitulo(capitulo);
+			// El primer caso no tiene "anteriormente"; los demás lo muestran al empezar
+			if (capitulo.Numero > 0 && lineas.Count > 0) await _tarjeta.MostrarAnteriormente(lineas);
+		}
+		else
+		{
+			if (extra != null) lineas.AddRange(extra);
+			if (lineas.Count > 0) await _tarjeta.MostrarAnteriormente(lineas.Take(4).ToList());
+		}
+	}
+
+	// Tarjeta y "Anteriormente..." de un capítulo en preparación (desde el menú de inicio)
+	public async Task PresentarCapituloEnPreparacion(InfoCapitulo capitulo)
+	{
+		await _tarjeta.MostrarTitulo(capitulo);
+		if (capitulo.Anteriormente.Count > 0) await _tarjeta.MostrarAnteriormente(capitulo.Anteriormente);
 	}
 
 	public bool HayPartidaGuardada() => Ranuras().Any(r => r.Ocupada);
@@ -118,8 +178,12 @@ public partial class GestorPartida : Node
 		EstadoPendiente = datos.TryGetValue("estado", out Variant estado) ? estado.AsGodotDictionary() : null;
 		RanuraActiva = ranura;
 		HayCambiosSinGuardar = false;
+		Rejugando = false;
+		CapituloActual = datos.TryGetValue("capitulo", out Variant capitulo) ? capitulo.AsString() : "caso0";
+		_presentacion = Presentacion.Carga;
 		_ultimoGuardado = Time.GetTicksMsec() / 1000.0;
-		CambiarEscena(EscenaJuego);
+		string escena = datos.TryGetValue("escena", out Variant e) && ResourceLoader.Exists(e.AsString()) ? e.AsString() : EscenaJuego;
+		CambiarEscena(escena);
 		return true;
 	}
 
@@ -130,6 +194,8 @@ public partial class GestorPartida : Node
 	{
 		HayCambiosSinGuardar = false;
 		EstadoPendiente = null;
+		Rejugando = false;
+		_presentacion = Presentacion.Nada;
 		CambiarEscena(EscenaMenuInicio);
 	}
 
@@ -161,6 +227,7 @@ public partial class GestorPartida : Node
 	// Autoguardado en momentos clave; si ahora no se puede (diálogo), se guarda en cuanto se pueda
 	public void Autoguardar(string motivo, bool forzar = false)
 	{
+		if (Rejugando) return; // Repetir un capítulo no toca la partida principal
 		if (!forzar && Time.GetTicksMsec() / 1000.0 - _ultimoAutoguardado < PausaEntreAutoguardados)
 		{
 			_autoguardadoPendiente ??= motivo;
@@ -184,6 +251,11 @@ public partial class GestorPartida : Node
 	public bool Guardar(int ranura, bool mostrarAviso = true, string texto = "Partida guardada")
 	{
 		var escena = EscenaDeJuego();
+		if (Rejugando)
+		{
+			if (mostrarAviso) MostrarAviso("Repetición: no se guarda en tus ranuras", sello: false);
+			return false;
+		}
 		if (escena == null || !escena.PuedeGuardar)
 		{
 			if (mostrarAviso) MostrarAviso("No puedes guardar ahora", sello: false);
@@ -196,7 +268,8 @@ public partial class GestorPartida : Node
 			{ "fecha", Time.GetDatetimeStringFromSystem(false, true) },
 			{ "ranura", ranura },
 			{ "saltar_tutorial", SaltarTutorial },
-			{ "escena", EscenaJuego },
+			{ "escena", Capitulos.Obtener(CapituloActual)?.Escena ?? EscenaJuego },
+			{ "capitulo", CapituloActual },
 			{ "resumen", resumen },
 			{ "estado", escena.CapturarEstado() },
 		};
@@ -219,7 +292,7 @@ public partial class GestorPartida : Node
 	private static string RutaJson(int ranura) => Carpeta + $"ranura_{ranura}.json";
 
 	// Escribe a .tmp, comprueba que se puede leer, el actual pasa a .bak y el .tmp lo reemplaza
-	private static bool EscribirArchivo(string ruta, Godot.Collections.Dictionary datos)
+	public static bool EscribirArchivo(string ruta, Godot.Collections.Dictionary datos)
 	{
 		string cuerpo = Json.Stringify(datos);
 		var envoltorio = new Godot.Collections.Dictionary
@@ -285,6 +358,8 @@ public partial class GestorPartida : Node
 				{
 					var r = datos["resumen"].AsGodotDictionary();
 					info.Caso = r.TryGetValue("caso", out Variant c) ? c.AsString() : "";
+					info.Capitulo = r.TryGetValue("capitulo", out Variant cap) ? cap.AsString() : "caso0";
+					info.Fase = r.TryGetValue("fase", out Variant fase) ? fase.AsString() : "";
 					info.Zona = r.TryGetValue("zona", out Variant z) ? z.AsString() : "";
 					info.Pistas = r.TryGetValue("pistas", out Variant p) ? p.AsInt32() : 0;
 					info.TotalPistas = r.TryGetValue("total_pistas", out Variant tp) ? tp.AsInt32() : 0;
@@ -315,7 +390,7 @@ public partial class GestorPartida : Node
 	// Menú de inicio o salir del juego: si hay cambios, pregunta [Guardar y salir] [Salir sin guardar] [Cancelar]
 	public async Task<bool> ConfirmarSalida()
 	{
-		if (!HayCambiosSinGuardar || EscenaDeJuego() == null) return true;
+		if (!HayCambiosSinGuardar || Rejugando || EscenaDeJuego() == null) return true;
 		var respuesta = await _dialogoSalida.Preguntar(TextoUltimoGuardado());
 		if (respuesta == DialogoSalida.Respuesta.Cancelar) return false;
 		if (respuesta == DialogoSalida.Respuesta.GuardarYSalir)
@@ -361,6 +436,8 @@ public partial class GestorPartida : Node
 		AddChild(_capa);
 		_dialogoSalida = new DialogoSalida();
 		_capa.AddChild(_dialogoSalida);
+		_tarjeta = new PresentacionCapitulo();
+		_capa.AddChild(_tarjeta);
 
 		var mono = GD.Load<Font>("res://hud/fonts/IBMPlexMono-Regular.ttf");
 		var fondo = new StyleBoxFlat { BgColor = new Color(0.84f, 0.81f, 0.72f), BorderColor = new Color("efca08"), ShadowColor = new Color(0, 0, 0, 0.4f), ShadowSize = 6 };
