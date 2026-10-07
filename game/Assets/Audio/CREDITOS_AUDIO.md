@@ -36,3 +36,16 @@ CC0 no exige atribución, pero la dejamos por cortesía.
 | Ambiente/zumbido_sala.ogg (`machine_06.ogg`) | OpenGameArt · 30 CC0 SFX Loops | rubberduck | CC0 1.0 | https://opengameart.org/content/30-cc0-sfx-loops |
 | Ambiente/agua_vestidores.ogg (`water_flowing.ogg`) | OpenGameArt · 30 CC0 SFX Loops | rubberduck | CC0 1.0 | https://opengameart.org/content/30-cc0-sfx-loops |
 | Musica/investigacion.ogg (`IswearIsawit_0.ogg`) | OpenGameArt | yd | CC0 1.0 | https://opengameart.org/content/i-swear-i-saw-it-background-track |
+
+## Caso 1 · Escenario 1 (campamento)
+
+Están en `Assets/Caso1/Sonidos/`. Las grabaciones largas se recortaron a 40 s en su parte más estable, el final de cada bucle se funde con su inicio para que no se note el corte y todas tienen el pico a −3 dBFS. El búho es un solo disparo: `SonidoAmbiente` lo repite con pausas al azar.
+
+| Archivo | Fuente | Autor | Licencia | Enlace |
+|---|---|---|---|---|
+| Caso1/Sonidos/grillos.ogg (`crickets_1.mp3`) | OpenGameArt · Crickets Ambient Noise (loopable) | Wolfgang_ | CC0 1.0 | https://opengameart.org/content/crickets-ambient-noise-loopable |
+| Caso1/Sonidos/viento_pinos.ogg (#0904) | BigSoundBank · Forest: Wind in the Trees | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/forest-wind-in-the-trees-s0904.html |
+| Caso1/Sonidos/brasas.ogg (#2856) | BigSoundBank · Fireplace #4 | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/fireplace-4-s2856.html |
+| Caso1/Sonidos/buho.ogg (#1764) | BigSoundBank · Tawny Owl #2 | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/tawny-owl-2-s1764.html |
+| Caso1/Sonidos/agua_lago.ogg (#1444) | BigSoundBank · Pontoon, marina | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/pontoon-marina-s1444.html |
+| Caso1/Sonidos/generador.ogg (`loop_generator_1.mp3`) | OpenGameArt · Generator (loop) | YCbCr | CC0 1.0 | https://opengameart.org/content/generator-loop |

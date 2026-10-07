@@ -1,0 +1,698 @@
+[gd_scene load_steps=62 format=3]
+
+[ext_resource type="Script" path="res://Escenas/Investigacion/Puerta.cs" id="e1"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-door-rotate.glb" id="e2"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-window-a.glb" id="e3"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall.glb" id="e4"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-roof.glb" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-roof-top.glb" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/floor-wood.glb" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall-roof-center.glb" id="e8"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-corner-logs.glb" id="e9"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-window-b.glb" id="e10"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-roof-chimney.glb" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/bedBunk.glb" id="e12"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/supervivencia/bedroll-packed.glb" id="e14"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e15"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(1.456, 2.184, 0.312)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2"]
+size = Vector3(0.572, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3"]
+size = Vector3(0.572, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4"]
+size = Vector3(2.6, 0.416, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_9"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_10"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_11"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_12"]
+albedo_color = Color(0.16, 0.1, 0.06, 1.0)
+roughness = 0.95
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_13"]
+size = Vector2(5.0, 5.0)
+material = SubResource("StandardMaterial3D_12")
+
+[sub_resource type="FogMaterial" id="FogMaterial_14"]
+density = -0.3
+edge_fade = 0.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_15"]
+size = Vector3(1.456, 2.184, 0.312)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
+size = Vector3(0.572, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_17"]
+size = Vector3(0.572, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_18"]
+size = Vector3(2.6, 0.416, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_22"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_24"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_25"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_26"]
+albedo_color = Color(0.16, 0.1, 0.06, 1.0)
+roughness = 0.95
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_27"]
+size = Vector2(5.0, 5.0)
+material = SubResource("StandardMaterial3D_26")
+
+[sub_resource type="FogMaterial" id="FogMaterial_28"]
+density = -0.3
+edge_fade = 0.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_29"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_30"]
+size = Vector3(1.456, 2.184, 0.312)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_31"]
+size = Vector3(0.572, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_32"]
+size = Vector3(0.572, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33"]
+size = Vector3(2.6, 0.416, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_34"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_35"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_36"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_37"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_38"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_39"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_40"]
+albedo_color = Color(0.16, 0.1, 0.06, 1.0)
+roughness = 0.95
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_41"]
+size = Vector2(5.0, 5.0)
+material = SubResource("StandardMaterial3D_40")
+
+[sub_resource type="FogMaterial" id="FogMaterial_42"]
+density = -0.3
+edge_fade = 0.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_43"]
+size = Vector3(1.2, 1.7, 2.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_44"]
+size = Vector3(1.2, 1.7, 2.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_45"]
+size = Vector3(0.85, 0.35, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_46"]
+size = Vector3(0.85, 0.35, 0.4)
+
+[node name="Campistas" type="Node3D"]
+
+[node name="CabanaA" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -13.5, 0.0, -24.0)
+
+[node name="Muros" type="StaticBody3D" parent="CabanaA"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="PuertaA" type="StaticBody3D" parent="CabanaA" node_paths=PackedStringArray("Bisagra")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 0.0, 1.3)
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("e1")
+Bisagra = NodePath("Modelo/cabin-door-rotate/door")
+AnguloApertura = -100.0
+Bloqueada = true
+MensajeBloqueada = "Cabaña 2. Cerraron para el invierno."
+
+[node name="Modelo" parent="CabanaA/PuertaA" instance=ExtResource("e2")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0)
+
+[node name="Forma" type="CollisionShape3D" parent="CabanaA/PuertaA"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.092, 1.495)
+shape = SubResource("BoxShape3D_1")
+
+[node name="Ffrente0_0" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.314, 1.3, 2.6)
+shape = SubResource("BoxShape3D_2")
+
+[node name="Ffrente0_1" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.286, 1.3, 2.6)
+shape = SubResource("BoxShape3D_3")
+
+[node name="Ffrente0_2" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 2.392, 2.6)
+shape = SubResource("BoxShape3D_4")
+
+[node name="CabinWindowA" parent="CabanaA" instance=ExtResource("e3")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 0.0, 1.3)
+
+[node name="Ffrente1" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.3, 1.3, 2.6)
+shape = SubResource("BoxShape3D_5")
+
+[node name="CabinWall" parent="CabanaA" instance=ExtResource("e4")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -1.3)
+
+[node name="Fatras0" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 1.3, 1.3, -2.6)
+shape = SubResource("BoxShape3D_6")
+
+[node name="CabinWall2" parent="CabanaA" instance=ExtResource("e4")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 0.0, -1.3)
+
+[node name="Fatras1" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.3, 1.3, -2.6)
+shape = SubResource("BoxShape3D_7")
+
+[node name="CabinWindowA2" parent="CabanaA" instance=ExtResource("e3")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 1.3)
+
+[node name="Fder0" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 1.3)
+shape = SubResource("BoxShape3D_8")
+
+[node name="CabinWall3" parent="CabanaA" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, -1.3)
+
+[node name="Fder1" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -1.3)
+shape = SubResource("BoxShape3D_9")
+
+[node name="CabinWall4" parent="CabanaA" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -1.3)
+
+[node name="Fizq0" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, -1.3)
+shape = SubResource("BoxShape3D_10")
+
+[node name="CabinWall5" parent="CabanaA" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, 1.3)
+
+[node name="Fizq1" type="CollisionShape3D" parent="CabanaA/Muros"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, 1.3)
+shape = SubResource("BoxShape3D_11")
+
+[node name="CabinRoof" parent="CabanaA" instance=ExtResource("e5")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, -1.3)
+
+[node name="CabinRoof2" parent="CabanaA" instance=ExtResource("e5")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, -1.3)
+
+[node name="CabinRoofTop" parent="CabanaA" instance=ExtResource("e6")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, -1.3)
+
+[node name="FloorWood" parent="CabanaA" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, -1.3)
+
+[node name="FloorWood2" parent="CabanaA" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, -1.3)
+
+[node name="CabinRoof3" parent="CabanaA" instance=ExtResource("e5")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, 1.3)
+
+[node name="CabinRoof4" parent="CabanaA" instance=ExtResource("e5")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, 1.3)
+
+[node name="CabinRoofTop2" parent="CabanaA" instance=ExtResource("e6")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 1.3)
+
+[node name="FloorWood3" parent="CabanaA" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, 1.3)
+
+[node name="FloorWood4" parent="CabanaA" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, 1.3)
+
+[node name="CabinWallRoofCenter" parent="CabanaA" instance=ExtResource("e8")]
+transform = Transform3D(5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 1.3)
+
+[node name="CabinWallRoofCenter2" parent="CabanaA" instance=ExtResource("e8")]
+transform = Transform3D(-5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 0.0, 2.6, -1.3)
+
+[node name="CabinCornerLogs" parent="CabanaA" instance=ExtResource("e9")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, 0.0, 1.3)
+
+[node name="CabinCornerLogs2" parent="CabanaA" instance=ExtResource("e9")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 1.3)
+
+[node name="CabinCornerLogs3" parent="CabanaA" instance=ExtResource("e9")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -1.3)
+
+[node name="CabinCornerLogs4" parent="CabanaA" instance=ExtResource("e9")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -1.3)
+
+[node name="Subsuelo" type="MeshInstance3D" parent="CabanaA"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.012, 0.0)
+mesh = SubResource("PlaneMesh_13")
+cast_shadow = 0
+
+[node name="SinNiebla" type="FogVolume" parent="CabanaA"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.4, 0.0)
+size = Vector3(5.2, 2.8, 5.2)
+material = SubResource("FogMaterial_14")
+
+[node name="CabanaB" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 13.5, 0.0, -15.5)
+
+[node name="Muros" type="StaticBody3D" parent="CabanaB"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="PuertaB" type="StaticBody3D" parent="CabanaB" node_paths=PackedStringArray("Bisagra")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 0.0, 1.3)
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("e1")
+Bisagra = NodePath("Modelo/cabin-door-rotate/door")
+AnguloApertura = -100.0
+
+[node name="Modelo" parent="CabanaB/PuertaB" instance=ExtResource("e2")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0)
+
+[node name="Forma" type="CollisionShape3D" parent="CabanaB/PuertaB"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.092, 1.495)
+shape = SubResource("BoxShape3D_15")
+
+[node name="Ffrente0_0" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.314, 1.3, 2.6)
+shape = SubResource("BoxShape3D_16")
+
+[node name="Ffrente0_1" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.286, 1.3, 2.6)
+shape = SubResource("BoxShape3D_17")
+
+[node name="Ffrente0_2" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 2.392, 2.6)
+shape = SubResource("BoxShape3D_18")
+
+[node name="CabinWall" parent="CabanaB" instance=ExtResource("e4")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 0.0, 1.3)
+
+[node name="Ffrente1" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.3, 1.3, 2.6)
+shape = SubResource("BoxShape3D_19")
+
+[node name="CabinWall2" parent="CabanaB" instance=ExtResource("e4")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -1.3)
+
+[node name="Fatras0" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 1.3, 1.3, -2.6)
+shape = SubResource("BoxShape3D_20")
+
+[node name="CabinWall3" parent="CabanaB" instance=ExtResource("e4")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 0.0, -1.3)
+
+[node name="Fatras1" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.3, 1.3, -2.6)
+shape = SubResource("BoxShape3D_21")
+
+[node name="CabinWindowB" parent="CabanaB" instance=ExtResource("e10")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 1.3)
+
+[node name="Fder0" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 1.3)
+shape = SubResource("BoxShape3D_22")
+
+[node name="CabinWall4" parent="CabanaB" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, -1.3)
+
+[node name="Fder1" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -1.3)
+shape = SubResource("BoxShape3D_23")
+
+[node name="CabinWall5" parent="CabanaB" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -1.3)
+
+[node name="Fizq0" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, -1.3)
+shape = SubResource("BoxShape3D_24")
+
+[node name="CabinWindowA" parent="CabanaB" instance=ExtResource("e3")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, 1.3)
+
+[node name="Fizq1" type="CollisionShape3D" parent="CabanaB/Muros"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, 1.3)
+shape = SubResource("BoxShape3D_25")
+
+[node name="CabinRoof" parent="CabanaB" instance=ExtResource("e5")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, -1.3)
+
+[node name="CabinRoof2" parent="CabanaB" instance=ExtResource("e5")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, -1.3)
+
+[node name="CabinRoofTop" parent="CabanaB" instance=ExtResource("e6")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, -1.3)
+
+[node name="FloorWood" parent="CabanaB" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, -1.3)
+
+[node name="FloorWood2" parent="CabanaB" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, -1.3)
+
+[node name="CabinRoof3" parent="CabanaB" instance=ExtResource("e5")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, 1.3)
+
+[node name="CabinRoof4" parent="CabanaB" instance=ExtResource("e5")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, 1.3)
+
+[node name="CabinRoofTop2" parent="CabanaB" instance=ExtResource("e6")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 1.3)
+
+[node name="FloorWood3" parent="CabanaB" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, 1.3)
+
+[node name="FloorWood4" parent="CabanaB" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, 1.3)
+
+[node name="CabinWallRoofCenter" parent="CabanaB" instance=ExtResource("e8")]
+transform = Transform3D(5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 1.3)
+
+[node name="CabinWallRoofCenter2" parent="CabanaB" instance=ExtResource("e8")]
+transform = Transform3D(-5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 0.0, 2.6, -1.3)
+
+[node name="CabinCornerLogs" parent="CabanaB" instance=ExtResource("e9")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, 0.0, 1.3)
+
+[node name="CabinCornerLogs2" parent="CabanaB" instance=ExtResource("e9")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 1.3)
+
+[node name="CabinCornerLogs3" parent="CabanaB" instance=ExtResource("e9")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -1.3)
+
+[node name="CabinCornerLogs4" parent="CabanaB" instance=ExtResource("e9")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -1.3)
+
+[node name="Subsuelo" type="MeshInstance3D" parent="CabanaB"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.012, 0.0)
+mesh = SubResource("PlaneMesh_27")
+cast_shadow = 0
+
+[node name="SinNiebla" type="FogVolume" parent="CabanaB"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.4, 0.0)
+size = Vector3(5.2, 2.8, 5.2)
+material = SubResource("FogMaterial_28")
+
+[node name="LuzInterior" type="OmniLight3D" parent="CabanaB"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+light_color = Color(1.0, 0.66, 0.42, 1.0)
+light_energy = 0.45
+omni_range = 5.5
+omni_attenuation = 1.4
+
+[node name="CabanaC" type="Node3D" parent="."]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 31.0, 0.0, -11.5)
+
+[node name="Muros" type="StaticBody3D" parent="CabanaC"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="CabinWindowB" parent="CabanaC" instance=ExtResource("e10")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, 0.0, 1.3)
+
+[node name="Ffrente0" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 1.3, 2.6)
+shape = SubResource("BoxShape3D_29")
+
+[node name="PuertaC" type="StaticBody3D" parent="CabanaC" node_paths=PackedStringArray("Bisagra")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.3, 0.0, 1.3)
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("e1")
+Bisagra = NodePath("Modelo/cabin-door-rotate/door")
+AnguloApertura = -100.0
+Bloqueada = true
+MensajeBloqueada = "Cabaña 5. Adentro solo hay colchones apilados."
+
+[node name="Modelo" parent="CabanaC/PuertaC" instance=ExtResource("e2")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0)
+
+[node name="Forma" type="CollisionShape3D" parent="CabanaC/PuertaC"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.092, 1.495)
+shape = SubResource("BoxShape3D_30")
+
+[node name="Ffrente1_0" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.286, 1.3, 2.6)
+shape = SubResource("BoxShape3D_31")
+
+[node name="Ffrente1_1" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.314, 1.3, 2.6)
+shape = SubResource("BoxShape3D_32")
+
+[node name="Ffrente1_2" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.3, 2.392, 2.6)
+shape = SubResource("BoxShape3D_33")
+
+[node name="CabinWall" parent="CabanaC" instance=ExtResource("e4")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -1.3)
+
+[node name="Fatras0" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 1.3, 1.3, -2.6)
+shape = SubResource("BoxShape3D_34")
+
+[node name="CabinWall2" parent="CabanaC" instance=ExtResource("e4")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 0.0, -1.3)
+
+[node name="Fatras1" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.3, 1.3, -2.6)
+shape = SubResource("BoxShape3D_35")
+
+[node name="CabinWall3" parent="CabanaC" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 1.3)
+
+[node name="Fder0" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 1.3)
+shape = SubResource("BoxShape3D_36")
+
+[node name="CabinWall4" parent="CabanaC" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, -1.3)
+
+[node name="Fder1" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -1.3)
+shape = SubResource("BoxShape3D_37")
+
+[node name="CabinWindowA" parent="CabanaC" instance=ExtResource("e3")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -1.3)
+
+[node name="Fizq0" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, -1.3)
+shape = SubResource("BoxShape3D_38")
+
+[node name="CabinWall5" parent="CabanaC" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, 1.3)
+
+[node name="Fizq1" type="CollisionShape3D" parent="CabanaC/Muros"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, 1.3)
+shape = SubResource("BoxShape3D_39")
+
+[node name="CabinRoofChimney" parent="CabanaC" instance=ExtResource("e11")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, -1.3)
+
+[node name="CabinRoof" parent="CabanaC" instance=ExtResource("e5")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, -1.3)
+
+[node name="CabinRoofTop" parent="CabanaC" instance=ExtResource("e6")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, -1.3)
+
+[node name="FloorWood" parent="CabanaC" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, -1.3)
+
+[node name="FloorWood2" parent="CabanaC" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, -1.3)
+
+[node name="CabinRoof2" parent="CabanaC" instance=ExtResource("e5")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, 1.3)
+
+[node name="CabinRoof3" parent="CabanaC" instance=ExtResource("e5")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, 1.3)
+
+[node name="CabinRoofTop2" parent="CabanaC" instance=ExtResource("e6")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 1.3)
+
+[node name="FloorWood3" parent="CabanaC" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, 1.3)
+
+[node name="FloorWood4" parent="CabanaC" instance=ExtResource("e7")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, 1.3)
+
+[node name="CabinWallRoofCenter" parent="CabanaC" instance=ExtResource("e8")]
+transform = Transform3D(5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 1.3)
+
+[node name="CabinWallRoofCenter2" parent="CabanaC" instance=ExtResource("e8")]
+transform = Transform3D(-5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 0.0, 2.6, -1.3)
+
+[node name="CabinCornerLogs" parent="CabanaC" instance=ExtResource("e9")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, 0.0, 1.3)
+
+[node name="CabinCornerLogs2" parent="CabanaC" instance=ExtResource("e9")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 1.3)
+
+[node name="CabinCornerLogs3" parent="CabanaC" instance=ExtResource("e9")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -1.3)
+
+[node name="CabinCornerLogs4" parent="CabanaC" instance=ExtResource("e9")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -1.3)
+
+[node name="Subsuelo" type="MeshInstance3D" parent="CabanaC"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.012, 0.0)
+mesh = SubResource("PlaneMesh_41")
+cast_shadow = 0
+
+[node name="SinNiebla" type="FogVolume" parent="CabanaC"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.4, 0.0)
+size = Vector3(5.2, 2.8, 5.2)
+material = SubResource("FogMaterial_42")
+
+[node name="Litera0" parent="." instance=ExtResource("e12")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, 11.15, 0.04, -17.9)
+
+[node name="ColLitera0" type="StaticBody3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 11.72, 0.85, -16.8)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColLitera0"]
+shape = SubResource("BoxShape3D_43")
+
+[node name="Litera1" parent="." instance=ExtResource("e12")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, 15.85, 0.04, -17.9)
+
+[node name="ColLitera1" type="StaticBody3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 16.42, 0.85, -16.8)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColLitera1"]
+shape = SubResource("BoxShape3D_44")
+
+[node name="Saco0" type="StaticBody3D" parent="."]
+transform = Transform3D(0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, 0.9397, 12.4, 0.04, -14.0)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e13")
+Nombre = "Saco de dormir"
+MensajeAlAbrir = "Un saco de dormir con olor a humedad. Adentro, una linterna de juguete con forma de ciervo."
+SonidoAbrir = 2
+
+[node name="Forma" type="CollisionShape3D" parent="Saco0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.15, 0.0)
+shape = SubResource("BoxShape3D_45")
+
+[node name="Modelo" parent="Saco0" instance=ExtResource("e14")]
+transform = Transform3D(3.2, 0.0, 0.0, 0.0, 3.2, 0.0, 0.0, 0.0, 3.2, 0.0, 0.0, 0.0)
+
+[node name="Saco1" type="StaticBody3D" parent="."]
+transform = Transform3D(0.866, 0.0, -0.5, 0.0, 1.0, 0.0, 0.5, 0.0, 0.866, 14.6, 0.04, -14.3)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e13")
+Nombre = "Saco de dormir"
+MensajeAlAbrir = "Otro saco de dormir. Un gafete de «Campista del año» de hace veinte veranos."
+SonidoAbrir = 2
+
+[node name="Forma" type="CollisionShape3D" parent="Saco1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.15, 0.0)
+shape = SubResource("BoxShape3D_46")
+
+[node name="Modelo" parent="Saco1" instance=ExtResource("e14")]
+transform = Transform3D(3.2, 0.0, 0.0, 0.0, 3.2, 0.0, 0.0, 0.0, 3.2, 0.0, 0.0, 0.0)
+
+[node name="Placa" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 13.5, 1.75, -17.88)
+script = ExtResource("e15")
+Texto = "CABAÑA 3 — VERANO DE HACE 20 AÑOS
+Porky · Juan Carlos · Miawrio · Daniel"
+Ancho = 1.2
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 34
+TamMinimo = 12
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Dibujo0" type="Node3D" parent="."]
+transform = Transform3D(0.9976, 0.0, 0.0698, 0.0, 1.0, 0.0, -0.0698, 0.0, 0.9976, 12.2, 1.2, -17.88)
+script = ExtResource("e15")
+Texto = "(dibujo)
+la fogata y
+las estrellas"
+Ancho = 0.4
+ColorPapel = Color(0.92, 0.9, 0.82, 1.0)
+ColorTexto = Color(0.7, 0.3, 0.1, 1.0)
+TamFuente = 26
+TamMinimo = 10
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0015
+
+[node name="Dibujo1" type="Node3D" parent="."]
+transform = Transform3D(0.9976, 0.0, -0.0698, 0.0, 1.0, 0.0, 0.0698, 0.0, 0.9976, 14.8, 1.2, -17.88)
+script = ExtResource("e15")
+Texto = "(dibujo)
+«yo y mi canoa»
+— Daniel"
+Ancho = 0.4
+ColorPapel = Color(0.92, 0.9, 0.82, 1.0)
+ColorTexto = Color(0.1, 0.3, 0.6, 1.0)
+TamFuente = 26
+TamMinimo = 10
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0015

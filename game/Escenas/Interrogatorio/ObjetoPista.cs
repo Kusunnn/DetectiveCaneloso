@@ -14,6 +14,8 @@ public partial class ObjetoPista : StaticBody3D, IInteractuable
 	[Export] public bool SeRecoge = false;
 	// true: en la oscuridad solo se puede examinar con la linterna encendida.
 	[Export] public bool RequiereLinterna = false;
+	// true: solo se alcanza agachado (algo en el suelo, entre cenizas o bajo un mueble)
+	[Export] public bool SoloAgachado = false;
 	// Foto tipo polaroid que muestra el HUD en la tarjeta de la pista y en el expediente.
 	[Export] public Texture2D Imagen;
 	// Mallas que se resaltan al apuntar cuando no son hijas de esta pista (un reloj de pared, un cartel)

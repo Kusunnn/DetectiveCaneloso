@@ -1,0 +1,279 @@
+[gd_scene load_steps=24 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/coches/sedan.glb" id="e1"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e2"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/registro_llamadas.png" id="e3"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e4"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/pueblo/pillar-wood.glb" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log.glb" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/fence_simple.glb" id="e8"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/pueblo/lantern.glb" id="e9"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/circle_05.png" id="e10"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(2.7, 1.7, 4.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2"]
+size = Vector3(0.2, 0.6, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3"]
+size = Vector3(2.0, 0.7, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4"]
+size = Vector3(0.2, 0.5, 0.7)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_5"]
+radius = 0.2
+height = 3.6
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_6"]
+radius = 0.2
+height = 3.6
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_7"]
+radius = 0.15
+height = 3.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8"]
+albedo_color = Color(1.0, 0.85, 0.6, 1.0)
+roughness = 0.5
+emission_enabled = true
+emission = Color(1.0, 0.75, 0.45, 1.0)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_9"]
+radius = 0.09
+height = 0.16
+material = SubResource("StandardMaterial3D_8")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_10"]
+emission_shape = 3
+emission_box_extents = Vector3(0.7, 0.6, 0.7)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.01
+initial_velocity_max = 0.04
+gravity = Vector3(0.0, -0.01, 0.0)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.4
+turbulence_noise_scale = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_11"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.0, 0.85, 0.6, 0.5)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+albedo_texture = ExtResource("e10")
+blend_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_12"]
+size = Vector2(0.03, 0.03)
+material = SubResource("StandardMaterial3D_11")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_13"]
+size = Vector3(20.0, 3.0, 12.0)
+
+[node name="Estacionamiento" type="Node3D"]
+
+[node name="Coche" type="Node3D" parent="."]
+transform = Transform3D(0.9063, 0.0, 0.4226, 0.0, 1.0, 0.0, -0.4226, 0.0, 0.9063, 26.5, 0.0, 28.0)
+
+[node name="Modelo" parent="Coche" instance=ExtResource("e1")]
+transform = Transform3D(1.75, 0.0, 0.0, 0.0, 1.75, 0.0, 0.0, 0.0, 1.75, 0.0, 0.0, 0.0)
+
+[node name="Col" type="StaticBody3D" parent="Coche"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.85, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Coche/Col"]
+shape = SubResource("BoxShape3D_1")
+
+[node name="Guantera" type="StaticBody3D" parent="Coche"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.4, 1.05, -0.5)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e2")
+Nombre = "Guantera"
+MensajeAlAbrir = "Mapas de carretera, un cargador de celular y tarjetas de una inmobiliaria: «Juan Carlos, asesor»."
+SonidoAbrir = 1
+
+[node name="Forma" type="CollisionShape3D" parent="Coche/Guantera"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+shape = SubResource("BoxShape3D_2")
+
+[node name="Cajuela" type="StaticBody3D" parent="Coche"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 2.4)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e2")
+Nombre = "Cajuela"
+MensajeAlAbrir = "Una maleta pequeña y una caja de vino sin abrir. Pensaba quedarse a celebrar."
+SonidoAbrir = 1
+
+[node name="Forma" type="CollisionShape3D" parent="Coche/Cajuela"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+shape = SubResource("BoxShape3D_3")
+
+[node name="RegistroLlamadas" type="StaticBody3D" parent="Coche"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.42, 1.15, -0.4)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e4")
+Id = "registro_llamadas"
+Titulo = "Registro de llamadas de Juan Carlos"
+Descripcion = "Una hoja impresa con las llamadas del celular de Juan Carlos. Varias a medianoche al mismo número."
+EsEvidencia = true
+ComentarioAlMirar = "Una hoja impresa en el asiento del copiloto."
+Imagen = ExtResource("e3")
+
+[node name="Forma" type="CollisionShape3D" parent="Coche/RegistroLlamadas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+shape = SubResource("BoxShape3D_4")
+
+[node name="Hoja" type="Node3D" parent="Coche/RegistroLlamadas"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -0.02, 0.0, 0.0)
+script = ExtResource("e5")
+Texto = "REGISTRO DE LLAMADAS
+23:58 — 3 min
+00:12 — 1 min
+00:31 — 6 min"
+Ancho = 0.26
+ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
+ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
+TamFuente = 22
+TamMinimo = 8
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0011
+
+[node name="Entrada" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 24.0, 0.0, 33.6)
+
+[node name="Poste-2" parent="Entrada" instance=ExtResource("e6")]
+transform = Transform3D(2.4, 0.0, 0.0, 0.0, 3.6, 0.0, 0.0, 0.0, 2.4, -2.6, 0.0, 0.0)
+
+[node name="Col-2" type="StaticBody3D" parent="Entrada"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.6, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Entrada/Col-2"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.8, 0.0)
+shape = SubResource("CylinderShape3D_5")
+
+[node name="Poste2" parent="Entrada" instance=ExtResource("e6")]
+transform = Transform3D(2.4, 0.0, 0.0, 0.0, 3.6, 0.0, 0.0, 0.0, 2.4, 2.6, 0.0, 0.0)
+
+[node name="Col2" type="StaticBody3D" parent="Entrada"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.6, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Entrada/Col2"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.8, 0.0)
+shape = SubResource("CylinderShape3D_6")
+
+[node name="Travesano" parent="Entrada" instance=ExtResource("e7")]
+transform = Transform3D(0.0, 0.0, 8.4, 0.0, 2.4, 0.0, -2.4, 0.0, 0.0, 0.0, 3.5, 0.0)
+
+[node name="Bienvenida" type="Node3D" parent="Entrada"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 2.8, -0.15)
+script = ExtResource("e5")
+Texto = "CAMPAMENTO PINO LUNAR
+Bienvenidos, campistas"
+Ancho = 3.6
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 60
+TamMinimo = 20
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.004
+
+[node name="SeVende" type="Node3D" parent="Entrada"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 2.6, 1.6, -0.2)
+script = ExtResource("e5")
+Texto = "SE VENDE
+Inmobiliaria Lago Espejo"
+Ancho = 0.8
+ColorPapel = Color(0.85, 0.15, 0.1, 1.0)
+ColorTexto = Color(0.98, 0.95, 0.9, 1.0)
+TamFuente = 40
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Cerca0" parent="." instance=ExtResource("e8")]
+transform = Transform3D(4.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 3.0, 15.0, 0.0, 33.4)
+
+[node name="Cerca1" parent="." instance=ExtResource("e8")]
+transform = Transform3D(4.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 3.0, 19.0, 0.0, 33.4)
+
+[node name="Cerca2" parent="." instance=ExtResource("e8")]
+transform = Transform3D(4.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 3.0, 29.5, 0.0, 33.4)
+
+[node name="Cerca3" parent="." instance=ExtResource("e8")]
+transform = Transform3D(4.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 3.0, 33.5, 0.0, 33.4)
+
+[node name="CercaE0" parent="." instance=ExtResource("e8")]
+transform = Transform3D(0.0, 0.0, 3.0, 0.0, 3.0, 0.0, -4.0, 0.0, 0.0, 35.3, 0.0, 26.0)
+
+[node name="CercaE1" parent="." instance=ExtResource("e8")]
+transform = Transform3D(0.0, 0.0, 3.0, 0.0, 3.0, 0.0, -4.0, 0.0, 0.0, 35.3, 0.0, 30.0)
+
+[node name="FarolaEstacionamiento" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 19.5, 0.0, 24.5)
+
+[node name="Lantern" parent="FarolaEstacionamiento" instance=ExtResource("e9")]
+transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
+
+[node name="Poste" type="StaticBody3D" parent="FarolaEstacionamiento"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="FarolaEstacionamiento/Poste"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
+shape = SubResource("CylinderShape3D_7")
+
+[node name="Foco" type="MeshInstance3D" parent="FarolaEstacionamiento"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
+mesh = SubResource("SphereMesh_9")
+cast_shadow = 0
+
+[node name="Luz" type="OmniLight3D" parent="FarolaEstacionamiento"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.0, 0.0)
+light_color = Color(1.0, 0.72, 0.42, 1.0)
+light_energy = 1.5
+omni_range = 10.0
+omni_attenuation = 1.4
+
+[node name="Polvo" type="GPUParticles3D" parent="FarolaEstacionamiento"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.7, 0.0)
+amount = 14
+lifetime = 6.0
+preprocess = 6.0
+process_material = SubResource("ParticleProcessMaterial_10")
+draw_pass_1 = SubResource("QuadMesh_12")
+cast_shadow = 0
+visibility_aabb = AABB(-3.0, -3.0, -3.0, 6.0, 6.0, 6.0)
+
+[node name="Estacionamiento" type="Area3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 24.5, 1.5, 28.0)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="Forma" type="CollisionShape3D" parent="Estacionamiento"]
+shape = SubResource("BoxShape3D_13")

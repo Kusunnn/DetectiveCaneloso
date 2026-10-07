@@ -1,0 +1,788 @@
+[gd_scene load_steps=68 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/campfire_stones.glb" id="e1"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/campfire_logs.glb" id="e2"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/LuzParpadeante.cs" id="e3"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/libro_guardia_quemado.png" id="e4"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e5"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e6"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/smoke_04.png" id="e7"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/spark_01.png" id="e8"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e9"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log_large.glb" id="e10"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/comida/mug.glb" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/supervivencia/bedroll.glb" id="e12"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/radio.glb" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/lantern-hanging.glb" id="e14"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/lena_intacta.png" id="e15"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log_stackLarge.glb" id="e16"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log_stack.glb" id="e17"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/supervivencia/tool-axe.glb" id="e18"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/pueblo/pillar-wood.glb" id="e19"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/lights-colored.glb" id="e20"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/pueblo/planks.glb" id="e21"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall-low.glb" id="e22"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log.glb" id="e23"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/chair.glb" id="e24"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/lantern.glb" id="e25"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
+albedo_color = Color(0.12, 0.11, 0.1, 1.0)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2"]
+top_radius = 0.62
+bottom_radius = 0.7
+height = 0.06
+material = SubResource("StandardMaterial3D_1")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3"]
+albedo_color = Color(0.2, 0.05, 0.02, 1.0)
+roughness = 0.8
+emission_enabled = true
+emission = Color(1.0, 0.28, 0.05, 1.0)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="SphereMesh" id="SphereMesh_4"]
+radius = 0.05
+height = 0.06
+material = SubResource("StandardMaterial3D_3")
+
+[sub_resource type="SphereMesh" id="SphereMesh_5"]
+radius = 0.06
+height = 0.06
+material = SubResource("StandardMaterial3D_3")
+
+[sub_resource type="SphereMesh" id="SphereMesh_6"]
+radius = 0.05
+height = 0.06
+material = SubResource("StandardMaterial3D_3")
+
+[sub_resource type="SphereMesh" id="SphereMesh_7"]
+radius = 0.06
+height = 0.06
+material = SubResource("StandardMaterial3D_3")
+
+[sub_resource type="SphereMesh" id="SphereMesh_8"]
+radius = 0.05
+height = 0.06
+material = SubResource("StandardMaterial3D_3")
+
+[sub_resource type="SphereMesh" id="SphereMesh_9"]
+radius = 0.06
+height = 0.06
+material = SubResource("StandardMaterial3D_3")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_10"]
+radius = 0.95
+height = 0.16
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_11"]
+size = Vector3(0.8, 0.36, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_12"]
+albedo_color = Color(0.32, 0.27, 0.2, 1.0)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_13"]
+albedo_color = Color(0.05, 0.045, 0.04, 1.0)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_14"]
+size = Vector3(0.2, 0.008, 0.14)
+material = SubResource("StandardMaterial3D_12")
+
+[sub_resource type="BoxMesh" id="BoxMesh_15"]
+size = Vector3(0.2, 0.008, 0.14)
+material = SubResource("StandardMaterial3D_13")
+
+[sub_resource type="BoxMesh" id="BoxMesh_16"]
+size = Vector3(0.2, 0.008, 0.14)
+material = SubResource("StandardMaterial3D_12")
+
+[sub_resource type="Gradient" id="Gradient_17"]
+offsets = PackedFloat32Array(0.0, 0.2, 1.0)
+colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 0.5, 1.0, 1.0, 1.0, 0.0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_18"]
+gradient = SubResource("Gradient_17")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_19"]
+emission_shape = 3
+emission_box_extents = Vector3(0.35, 0.05, 0.35)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 12
+initial_velocity_min = 0.25
+initial_velocity_max = 0.5
+gravity = Vector3(0.03, 0.04, 0.0)
+scale_min = 0.8
+scale_max = 2.2
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.3
+turbulence_noise_scale = 4.0
+color_ramp = SubResource("GradientTexture1D_18")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_20"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.55, 0.55, 0.58, 0.35)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+albedo_texture = ExtResource("e7")
+
+[sub_resource type="QuadMesh" id="QuadMesh_21"]
+size = Vector2(0.9, 0.9)
+material = SubResource("StandardMaterial3D_20")
+
+[sub_resource type="Gradient" id="Gradient_22"]
+offsets = PackedFloat32Array(0.0, 0.7, 1.0)
+colors = PackedColorArray(1.0, 1.0, 1.0, 1.0, 1.0, 0.6, 0.3, 0.8, 1.0, 0.3, 0.1, 0.0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_23"]
+gradient = SubResource("Gradient_22")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_24"]
+emission_shape = 3
+emission_box_extents = Vector3(0.3, 0.02, 0.3)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 20
+initial_velocity_min = 0.3
+initial_velocity_max = 0.8
+gravity = Vector3(0.0, 0.1, 0.0)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.6
+turbulence_noise_scale = 4.0
+color_ramp = SubResource("GradientTexture1D_23")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_25"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.0, 0.5, 0.15, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+albedo_texture = ExtResource("e8")
+blend_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_26"]
+size = Vector2(0.06, 0.06)
+material = SubResource("StandardMaterial3D_25")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_27"]
+size = Vector3(2.6, 0.56, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_28"]
+size = Vector3(2.6, 0.56, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_29"]
+size = Vector3(2.6, 0.56, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_30"]
+size = Vector3(2.6, 0.56, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_31"]
+size = Vector3(2.4, 1.25, 2.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_32"]
+size = Vector3(2.0, 1.0, 2.3)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_33"]
+radius = 0.2
+height = 4.2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_34"]
+radius = 0.2
+height = 4.2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_35"]
+radius = 0.2
+height = 4.2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_36"]
+radius = 0.2
+height = 4.2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_37"]
+radius = 0.2
+height = 4.2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_38"]
+radius = 0.2
+height = 4.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_39"]
+size = Vector3(4.0, 0.6, 8.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_40"]
+size = Vector3(1.8, 0.1, 3.8)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_41"]
+albedo_color = Color(0.42, 0.27, 0.16, 1.0)
+roughness = 0.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_42"]
+size = Vector3(24.0, 4.0, 20.0)
+
+[node name="ZonaFogata" type="Node3D"]
+
+[node name="Fuego" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -4.0)
+
+[node name="CampfireStones" parent="Fuego" instance=ExtResource("e1")]
+transform = Transform3D(3.2841, 0.0, 0.88, 0.0, 3.4, 0.0, -0.88, 0.0, 3.2841, 0.0, 0.05, 0.0)
+
+[node name="CampfireLogs" parent="Fuego" instance=ExtResource("e2")]
+transform = Transform3D(1.9917, 0.0, 1.6712, 0.0, 2.6, 0.0, -1.6712, 0.0, 1.9917, 0.0, 0.06, 0.0)
+
+[node name="Ceniza" type="MeshInstance3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.04, 0.0)
+mesh = SubResource("CylinderMesh_2")
+
+[node name="Brasa0" type="MeshInstance3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.2, 0.08, 0.1)
+mesh = SubResource("SphereMesh_4")
+cast_shadow = 0
+
+[node name="Brasa1" type="MeshInstance3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.25, 0.08, 0.15)
+mesh = SubResource("SphereMesh_5")
+cast_shadow = 0
+
+[node name="Brasa2" type="MeshInstance3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.05, 0.08, -0.28)
+mesh = SubResource("SphereMesh_6")
+cast_shadow = 0
+
+[node name="Brasa3" type="MeshInstance3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.1, 0.08, -0.05)
+mesh = SubResource("SphereMesh_7")
+cast_shadow = 0
+
+[node name="Brasa4" type="MeshInstance3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.3, 0.08, -0.2)
+mesh = SubResource("SphereMesh_8")
+cast_shadow = 0
+
+[node name="Brasa5" type="MeshInstance3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.3, 0.08, -0.25)
+mesh = SubResource("SphereMesh_9")
+cast_shadow = 0
+
+[node name="Brasas" type="OmniLight3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.45, 0.0)
+light_color = Color(1.0, 0.32, 0.08, 1.0)
+light_energy = 1.4
+omni_range = 5.5
+omni_attenuation = 1.4
+script = ExtResource("e3")
+EnergiaNormal = 1.4
+
+[node name="Piedras" type="StaticBody3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Fuego/Piedras"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.08, 0.0)
+shape = SubResource("CylinderShape3D_10")
+
+[node name="LibroQuemado" type="StaticBody3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.15, 0.0, 0.1)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e5")
+Id = "libro_guardia_quemado"
+Titulo = "Libro de guardia quemado"
+Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... monitor auxiliar Antonio R.... olor a alcohol...»."
+EsEvidencia = true
+ComentarioAlMirar = "Entre las cenizas hay hojas que no terminaron de quemarse."
+RequiereLinterna = true
+SoloAgachado = true
+Imagen = ExtResource("e4")
+
+[node name="Forma" type="CollisionShape3D" parent="Fuego/LibroQuemado"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.18, 0.0)
+shape = SubResource("BoxShape3D_11")
+
+[node name="Hoja0" type="MeshInstance3D" parent="Fuego/LibroQuemado"]
+transform = Transform3D(0.9374, 0.0655, 0.342, -0.0698, 0.9976, 0.0, -0.3412, -0.0239, 0.9397, -0.12, 0.085, 0.05)
+mesh = SubResource("BoxMesh_14")
+
+[node name="Hoja1" type="MeshInstance3D" parent="Fuego/LibroQuemado"]
+transform = Transform3D(0.8192, 0.0, -0.5736, 0.0, 1.0, 0.0, 0.5736, 0.0, 0.8192, 0.1, 0.085, -0.08)
+mesh = SubResource("BoxMesh_15")
+
+[node name="Hoja2" type="MeshInstance3D" parent="Fuego/LibroQuemado"]
+transform = Transform3D(0.3412, -0.0239, 0.9397, 0.0698, 0.9976, 0.0, -0.9374, 0.0655, 0.342, 0.02, 0.085, 0.14)
+mesh = SubResource("BoxMesh_16")
+
+[node name="Fragmento" type="Node3D" parent="Fuego/LibroQuemado"]
+transform = Transform3D(0.9848, -0.1736, 0.0, 0.0, 0.0, 1.0, -0.1736, -0.9848, 0.0, 0.0, 0.092, 0.0)
+script = ExtResource("e6")
+Texto = "Guardia nocturna, 14 de ag...
+monitor auxiliar Antonio R...
+...olor a alcohol..."
+Ancho = 0.24
+ColorPapel = Color(0.36, 0.3, 0.22, 1.0)
+ColorTexto = Color(0.08, 0.06, 0.05, 1.0)
+TamFuente = 22
+TamMinimo = 8
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0012
+
+[node name="Humo" type="GPUParticles3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.3, 0.0)
+amount = 22
+lifetime = 7.0
+preprocess = 7.0
+process_material = SubResource("ParticleProcessMaterial_19")
+draw_pass_1 = SubResource("QuadMesh_21")
+cast_shadow = 0
+visibility_aabb = AABB(-6.0, -6.0, -6.0, 12.0, 12.0, 12.0)
+
+[node name="Chispas" type="GPUParticles3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.15, 0.0)
+amount = 8
+lifetime = 2.0
+preprocess = 2.0
+process_material = SubResource("ParticleProcessMaterial_24")
+draw_pass_1 = SubResource("QuadMesh_26")
+cast_shadow = 0
+visibility_aabb = AABB(-3.0, -3.0, -3.0, 6.0, 6.0, 6.0)
+
+[node name="SonidoBrasas" type="AudioStreamPlayer3D" parent="Fuego"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.3, 0.0)
+volume_db = -2.0
+unit_size = 2.0
+max_distance = 16.0
+script = ExtResource("e9")
+Tipo = 29
+
+[node name="Troncos" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -4.0)
+
+[node name="Tronco0" parent="Troncos" instance=ExtResource("e10")]
+transform = Transform3D(0.8893, 0.0, 1.2216, 0.0, 1.3, 0.0, -2.4432, 0.0, 0.4446, 3.7588, 0.04, 1.3681)
+
+[node name="ColTronco0" type="StaticBody3D" parent="Troncos"]
+transform = Transform3D(0.342, 0.0, 0.9397, 0.0, 1.0, 0.0, -0.9397, 0.0, 0.342, 3.7588, 0.28, 1.3681)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Troncos/ColTronco0"]
+shape = SubResource("BoxShape3D_27")
+
+[node name="Tronco1" parent="Troncos" instance=ExtResource("e10")]
+transform = Transform3D(2.4432, 0.0, -0.4446, 0.0, 1.3, 0.0, 0.8893, 0.0, 1.2216, -1.3681, 0.04, 3.7588)
+
+[node name="ColTronco1" type="StaticBody3D" parent="Troncos"]
+transform = Transform3D(0.9397, 0.0, -0.342, 0.0, 1.0, 0.0, 0.342, 0.0, 0.9397, -1.3681, 0.28, 3.7588)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Troncos/ColTronco1"]
+shape = SubResource("BoxShape3D_28")
+
+[node name="Tronco2" parent="Troncos" instance=ExtResource("e10")]
+transform = Transform3D(-0.8893, 0.0, -1.2216, 0.0, 1.3, 0.0, 2.4432, 0.0, -0.4446, -3.7588, 0.04, -1.3681)
+
+[node name="ColTronco2" type="StaticBody3D" parent="Troncos"]
+transform = Transform3D(-0.342, 0.0, -0.9397, 0.0, 1.0, 0.0, 0.9397, 0.0, -0.342, -3.7588, 0.28, -1.3681)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Troncos/ColTronco2"]
+shape = SubResource("BoxShape3D_29")
+
+[node name="Tronco3" parent="Troncos" instance=ExtResource("e10")]
+transform = Transform3D(-2.4432, 0.0, 0.4446, 0.0, 1.3, 0.0, -0.8893, 0.0, -1.2216, 1.3681, 0.04, -3.7588)
+
+[node name="ColTronco3" type="StaticBody3D" parent="Troncos"]
+transform = Transform3D(-0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, -0.9397, 1.3681, 0.28, -3.7588)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Troncos/ColTronco3"]
+shape = SubResource("BoxShape3D_30")
+
+[node name="Taza0" parent="Troncos" instance=ExtResource("e11")]
+transform = Transform3D(0.3947, 0.0, 0.1436, 0.0, 0.42, 0.0, -0.1436, 0.0, 0.3947, 3.6, 0.56, 1.9)
+
+[node name="Taza1" parent="Troncos" instance=ExtResource("e11")]
+transform = Transform3D(0.0729, 0.0, 0.4136, 0.0, 0.42, 0.0, -0.4136, 0.0, 0.0729, -1.2, 0.56, 3.9)
+
+[node name="Taza2" parent="Troncos" instance=ExtResource("e11")]
+transform = Transform3D(0.3217, 0.0, -0.27, 0.0, 0.42, 0.0, 0.27, 0.0, 0.3217, -3.9, 0.56, -1.0)
+
+[node name="Manta" parent="Troncos" instance=ExtResource("e12")]
+transform = Transform3D(0.8844, -0.0536, 2.0673, 0.2718, 1.4918, 0.0, -2.4298, 0.1473, 0.7524, 1.5, 0.56, -3.75)
+
+[node name="MantaSuelo" parent="Troncos" instance=ExtResource("e12")]
+transform = Transform3D(2.5114, 0.0, -0.6729, 0.0, 2.6, 0.0, 0.6729, 0.0, 2.5114, -3.75, 0.02, 1.8)
+
+[node name="Radio" parent="Troncos" instance=ExtResource("e13")]
+transform = Transform3D(-1.5035, 0.0, 0.5472, 0.0, 1.6, 0.0, -0.5472, 0.0, -1.5035, -1.9, 0.56, 3.6)
+
+[node name="LinternaOlvidada" parent="Troncos" instance=ExtResource("e14")]
+transform = Transform3D(0.1203, -0.6823, 0.4, 0.7878, 0.1389, 0.0, -0.0695, 0.3939, 0.6928, 2.6, 0.38, 2.6)
+
+[node name="Lena" type="StaticBody3D" parent="."]
+transform = Transform3D(0.866, 0.0, -0.5, 0.0, 1.0, 0.0, 0.5, 0.0, 0.866, 5.6, 0.0, -8.8)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e5")
+Id = "lena_intacta"
+Titulo = "Leña intacta"
+Descripcion = "Un montón de leña seca junto a la fogata, apilado y sin tocar. Nadie trajo leña nueva anoche."
+EsEvidencia = true
+ComentarioAlMirar = "Leña de sobra... y la fogata se apagó sola."
+Imagen = ExtResource("e15")
+
+[node name="Forma" type="CollisionShape3D" parent="Lena"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.62, 0.0)
+shape = SubResource("BoxShape3D_31")
+
+[node name="Pila" parent="Lena" instance=ExtResource("e16")]
+transform = Transform3D(3.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.0, 0.0)
+
+[node name="Pila2" parent="Lena" instance=ExtResource("e17")]
+transform = Transform3D(2.1751, 0.0, 1.0143, 0.0, 2.4, 0.0, -1.0143, 0.0, 2.1751, 0.9, 0.0, 1.25)
+
+[node name="Hacha" parent="Lena" instance=ExtResource("e18")]
+transform = Transform3D(1.2614, 0.3145, 2.2517, -0.629, 2.5228, 0.0, -2.1848, -0.5447, 1.3, -1.1, 0.0, 0.6)
+
+[node name="Solido" type="StaticBody3D" parent="Lena"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.5, 0.2)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Lena/Solido"]
+shape = SubResource("BoxShape3D_32")
+
+[node name="Guirnaldas" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -4.0)
+
+[node name="Poste0" parent="Guirnaldas" instance=ExtResource("e19")]
+transform = Transform3D(2.2, 0.0, 0.0, 0.0, 4.2, 0.0, 0.0, 0.0, 2.2, 8.8865, 0.0, 2.3811)
+
+[node name="ColPoste0" type="StaticBody3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 8.8865, 0.0, 2.3811)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Guirnaldas/ColPoste0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+shape = SubResource("CylinderShape3D_33")
+
+[node name="Poste1" parent="Guirnaldas" instance=ExtResource("e19")]
+transform = Transform3D(2.1039, 0.0, 0.6432, 0.0, 4.2, 0.0, -0.6432, 0.0, 2.1039, 2.3811, 0.0, 8.8865)
+
+[node name="ColPoste1" type="StaticBody3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.3811, 0.0, 8.8865)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Guirnaldas/ColPoste1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+shape = SubResource("CylinderShape3D_34")
+
+[node name="Poste2" parent="Guirnaldas" instance=ExtResource("e19")]
+transform = Transform3D(1.8239, 0.0, 1.2302, 0.0, 4.2, 0.0, -1.2302, 0.0, 1.8239, -6.5054, 0.0, 6.5054)
+
+[node name="ColPoste2" type="StaticBody3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -6.5054, 0.0, 6.5054)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Guirnaldas/ColPoste2"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+shape = SubResource("CylinderShape3D_35")
+
+[node name="Poste3" parent="Guirnaldas" instance=ExtResource("e19")]
+transform = Transform3D(1.3845, 0.0, 1.7097, 0.0, 4.2, 0.0, -1.7097, 0.0, 1.3845, -8.8865, 0.0, -2.3811)
+
+[node name="ColPoste3" type="StaticBody3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -8.8865, 0.0, -2.3811)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Guirnaldas/ColPoste3"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+shape = SubResource("CylinderShape3D_36")
+
+[node name="Poste4" parent="Guirnaldas" instance=ExtResource("e19")]
+transform = Transform3D(0.8241, 0.0, 2.0398, 0.0, 4.2, 0.0, -2.0398, 0.0, 0.8241, -2.3811, 0.0, -8.8865)
+
+[node name="ColPoste4" type="StaticBody3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.3811, 0.0, -8.8865)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Guirnaldas/ColPoste4"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+shape = SubResource("CylinderShape3D_37")
+
+[node name="Poste5" parent="Guirnaldas" instance=ExtResource("e19")]
+transform = Transform3D(0.1917, 0.0, 2.1916, 0.0, 4.2, 0.0, -2.1916, 0.0, 0.1917, 6.5054, 0.0, -6.5054)
+
+[node name="ColPoste5" type="StaticBody3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 6.5054, 0.0, -6.5054)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Guirnaldas/ColPoste5"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+shape = SubResource("CylinderShape3D_38")
+
+[node name="Luces0_0" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.91, -0.1864, -0.9192, -0.2665, 1.273, 0.0, 0.91, 0.1864, -0.9192, 8.4218, 3.6276, 2.8458)
+
+[node name="Luces0_1" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.9169, -0.1499, -0.9192, -0.2142, 1.2826, 0.0, 0.9169, 0.1499, -0.9192, 7.4925, 3.4071, 3.7751)
+
+[node name="Luces0_2" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.9255, -0.0834, -0.9192, -0.1193, 1.2946, 0.0, 0.9255, 0.0834, -0.9192, 6.5632, 3.2545, 4.7045)
+
+[node name="Luces0_3" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.9293, 0.0, -0.9192, 0.0, 1.3, 0.0, 0.9293, 0.0, -0.9192, 5.6338, 3.2, 5.6338)
+
+[node name="Luces0_4" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.9255, 0.0834, -0.9192, 0.1193, 1.2946, 0.0, 0.9255, -0.0834, -0.9192, 4.7045, 3.2545, 6.5632)
+
+[node name="Luces0_5" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.9169, 0.1499, -0.9192, 0.2142, 1.2826, 0.0, 0.9169, -0.1499, -0.9192, 3.7751, 3.4071, 7.4925)
+
+[node name="Luces0_6" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.91, 0.1864, -0.9192, 0.2665, 1.273, 0.0, 0.91, -0.1864, -0.9192, 2.8458, 3.6276, 8.4218)
+
+[node name="LuzGuirnalda0" type="OmniLight3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 5.6338, 3.3, 5.6338)
+light_color = Color(1.0, 0.62, 0.4, 1.0)
+light_energy = 0.55
+omni_range = 7.0
+omni_attenuation = 1.4
+
+[node name="Luces1_0" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-1.2431, -0.2546, 0.3365, -0.2665, 1.273, 0.0, -0.3331, -0.0682, -1.2557, 1.7464, 3.6276, 8.7164)
+
+[node name="Luces1_1" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-1.2525, -0.2047, 0.3365, -0.2142, 1.2826, 0.0, -0.3356, -0.0548, -1.2557, 0.4769, 3.4071, 8.3763)
+
+[node name="Luces1_2" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-1.2643, -0.114, 0.3365, -0.1193, 1.2946, 0.0, -0.3388, -0.0305, -1.2557, -0.7926, 3.2545, 8.0361)
+
+[node name="Luces1_3" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-1.2695, 0.0, 0.3365, 0.0, 1.3, 0.0, -0.3402, 0.0, -1.2557, -2.0621, 3.2, 7.6959)
+
+[node name="Luces1_4" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-1.2643, 0.114, 0.3365, 0.1193, 1.2946, 0.0, -0.3388, 0.0305, -1.2557, -3.3316, 3.2545, 7.3558)
+
+[node name="Luces1_5" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-1.2525, 0.2047, 0.3365, 0.2142, 1.2826, 0.0, -0.3356, 0.0548, -1.2557, -4.6011, 3.4071, 7.0156)
+
+[node name="Luces1_6" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-1.2431, 0.2546, 0.3365, 0.2665, 1.273, 0.0, -0.3331, 0.0682, -1.2557, -5.8706, 3.6276, 6.6755)
+
+[node name="Luces2_0" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.3331, -0.0682, 1.2557, -0.2665, 1.273, 0.0, -1.2431, -0.2546, -0.3365, -6.6755, 3.6276, 5.8706)
+
+[node name="Luces2_1" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.3356, -0.0548, 1.2557, -0.2142, 1.2826, 0.0, -1.2525, -0.2047, -0.3365, -7.0156, 3.4071, 4.6011)
+
+[node name="Luces2_2" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.3388, -0.0305, 1.2557, -0.1193, 1.2946, 0.0, -1.2643, -0.114, -0.3365, -7.3558, 3.2545, 3.3316)
+
+[node name="Luces2_3" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.3402, 0.0, 1.2557, 0.0, 1.3, 0.0, -1.2695, 0.0, -0.3365, -7.6959, 3.2, 2.0621)
+
+[node name="Luces2_4" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.3388, 0.0305, 1.2557, 0.1193, 1.2946, 0.0, -1.2643, 0.114, -0.3365, -8.0361, 3.2545, 0.7926)
+
+[node name="Luces2_5" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.3356, 0.0548, 1.2557, 0.2142, 1.2826, 0.0, -1.2525, 0.2047, -0.3365, -8.3763, 3.4071, -0.4769)
+
+[node name="Luces2_6" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(-0.3331, 0.0682, 1.2557, 0.2665, 1.273, 0.0, -1.2431, 0.2546, -0.3365, -8.7164, 3.6276, -1.7464)
+
+[node name="LuzGuirnalda2" type="OmniLight3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -7.6959, 3.3, 2.0621)
+light_color = Color(1.0, 0.62, 0.4, 1.0)
+light_energy = 0.55
+omni_range = 7.0
+omni_attenuation = 1.4
+
+[node name="Luces4_0" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(1.2431, 0.2546, -0.3365, -0.2665, 1.273, 0.0, 0.3331, 0.0682, 1.2557, -1.7464, 3.6276, -8.7164)
+
+[node name="Luces4_1" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(1.2525, 0.2047, -0.3365, -0.2142, 1.2826, 0.0, 0.3356, 0.0548, 1.2557, -0.4769, 3.4071, -8.3763)
+
+[node name="Luces4_2" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(1.2643, 0.114, -0.3365, -0.1193, 1.2946, 0.0, 0.3388, 0.0305, 1.2557, 0.7926, 3.2545, -8.0361)
+
+[node name="Luces4_3" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(1.2695, 0.0, -0.3365, 0.0, 1.3, 0.0, 0.3402, 0.0, 1.2557, 2.0621, 3.2, -7.6959)
+
+[node name="Luces4_4" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(1.2643, -0.114, -0.3365, 0.1193, 1.2946, 0.0, 0.3388, -0.0305, 1.2557, 3.3316, 3.2545, -7.3558)
+
+[node name="Luces4_5" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(1.2525, -0.2047, -0.3365, 0.2142, 1.2826, 0.0, 0.3356, -0.0548, 1.2557, 4.6011, 3.4071, -7.0156)
+
+[node name="Luces4_6" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(1.2431, -0.2546, -0.3365, 0.2665, 1.273, 0.0, 0.3331, -0.0682, 1.2557, 5.8706, 3.6276, -6.6755)
+
+[node name="LuzGuirnalda4" type="OmniLight3D" parent="Guirnaldas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.0621, 3.3, -7.6959)
+light_color = Color(1.0, 0.62, 0.4, 1.0)
+light_energy = 0.55
+omni_range = 7.0
+omni_attenuation = 1.4
+
+[node name="Luces5_0" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(0.3331, 0.0682, -1.2557, -0.2665, 1.273, 0.0, 1.2431, 0.2546, 0.3365, 6.6755, 3.6276, -5.8706)
+
+[node name="Luces5_1" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(0.3356, 0.0548, -1.2557, -0.2142, 1.2826, 0.0, 1.2525, 0.2047, 0.3365, 7.0156, 3.4071, -4.6011)
+
+[node name="Luces5_2" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(0.3388, 0.0305, -1.2557, -0.1193, 1.2946, 0.0, 1.2643, 0.114, 0.3365, 7.3558, 3.2545, -3.3316)
+
+[node name="Luces5_3" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(0.3402, 0.0, -1.2557, 0.0, 1.3, 0.0, 1.2695, 0.0, 0.3365, 7.6959, 3.2, -2.0621)
+
+[node name="Luces5_4" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(0.3388, -0.0305, -1.2557, 0.1193, 1.2946, 0.0, 1.2643, -0.114, 0.3365, 8.0361, 3.2545, -0.7926)
+
+[node name="Luces5_5" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(0.3356, -0.0548, -1.2557, 0.2142, 1.2826, 0.0, 1.2525, -0.2047, 0.3365, 8.3763, 3.4071, 0.4769)
+
+[node name="Luces5_6" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(0.3331, -0.0682, -1.2557, 0.2665, 1.273, 0.0, 1.2431, -0.2546, 0.3365, 8.7164, 3.6276, 1.7464)
+
+[node name="LucesCaidas" parent="Guirnaldas" instance=ExtResource("e20")]
+transform = Transform3D(3.0642, -1.5418, 0.0538, 0.0, 0.0838, 2.3985, -2.5712, -1.8374, 0.0642, -9.8865, 0.05, -1.1811)
+
+[node name="Escenario" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -12.0, 0.0, -4.0)
+
+[node name="Tablon00" parent="Escenario" instance=ExtResource("e21")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 2.0, -1.0, 0.55, -3.0)
+
+[node name="Tablon01" parent="Escenario" instance=ExtResource("e21")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 2.0, -1.0, 0.55, -1.0)
+
+[node name="Tablon02" parent="Escenario" instance=ExtResource("e21")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 2.0, -1.0, 0.55, 1.0)
+
+[node name="Tablon03" parent="Escenario" instance=ExtResource("e21")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 2.0, -1.0, 0.55, 3.0)
+
+[node name="Tablon10" parent="Escenario" instance=ExtResource("e21")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 2.0, 1.0, 0.55, -3.0)
+
+[node name="Tablon11" parent="Escenario" instance=ExtResource("e21")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 2.0, 1.0, 0.55, -1.0)
+
+[node name="Tablon12" parent="Escenario" instance=ExtResource("e21")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 2.0, 1.0, 0.55, 1.0)
+
+[node name="Tablon13" parent="Escenario" instance=ExtResource("e21")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.5, 0.0, 0.0, 0.0, 2.0, 1.0, 0.55, 3.0)
+
+[node name="Faldon0" parent="Escenario" instance=ExtResource("e22")]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.4, 0.0, -2.0, 0.0, 0.0, 2.0, 0.0, -3.0)
+
+[node name="Faldon3" parent="Escenario" instance=ExtResource("e22")]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.4, 0.0, -2.0, 0.0, 0.0, 2.0, 0.0, 3.0)
+
+[node name="FaldonLadoN1" parent="Escenario" instance=ExtResource("e22")]
+transform = Transform3D(-2.0, 0.0, 0.0, 0.0, 1.4, 0.0, 0.0, 0.0, -1.0, -1.0, 0.0, -4.0)
+
+[node name="FaldonLadoN2" parent="Escenario" instance=ExtResource("e22")]
+transform = Transform3D(-2.0, 0.0, 0.0, 0.0, 1.4, 0.0, 0.0, 0.0, -1.0, 1.0, 0.0, -4.0)
+
+[node name="FaldonLadoS1" parent="Escenario" instance=ExtResource("e22")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.4, 0.0, 0.0, 0.0, 1.0, -1.0, 0.0, 4.0)
+
+[node name="FaldonLadoS2" parent="Escenario" instance=ExtResource("e22")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 1.4, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 4.0)
+
+[node name="Plataforma" type="StaticBody3D" parent="Escenario"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.3, 0.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Escenario/Plataforma"]
+shape = SubResource("BoxShape3D_39")
+
+[node name="Rampa" type="StaticBody3D" parent="Escenario"]
+transform = Transform3D(0.9455, 0.3256, 0.0, -0.3256, 0.9455, 0.0, 0.0, 0.0, 1.0, 2.85, 0.27, 0.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Escenario/Rampa"]
+shape = SubResource("BoxShape3D_40")
+
+[node name="Escalon" parent="Escenario" instance=ExtResource("e10")]
+transform = Transform3D(0.0, 0.0, 0.9, 0.0, 0.85, 0.0, -3.6, 0.0, 0.0, 3.05, 0.0, 0.0)
+
+[node name="PosteFondo-3" parent="Escenario" instance=ExtResource("e19")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 3.6, 0.0, 0.0, 0.0, 2.0, -1.8, 0.6, -3.8)
+
+[node name="PosteFondo3" parent="Escenario" instance=ExtResource("e19")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 3.6, 0.0, 0.0, 0.0, 2.0, -1.8, 0.6, 3.8)
+
+[node name="Travesano" parent="Escenario" instance=ExtResource("e23")]
+transform = Transform3D(2.4, 0.0, 0.0, 0.0, 2.4, 0.0, 0.0, 0.0, 11.0, -1.8, 4.1, 0.0)
+
+[node name="Manta" type="Node3D" parent="Escenario"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -1.75, 3.2, 0.0)
+script = ExtResource("e6")
+Texto = "NOCHE DE CUENTOS
+«La leyenda del Ciervo de Luz»"
+Ancho = 4.2
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 64
+TamMinimo = 24
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.004
+
+[node name="Silla" parent="Escenario" instance=ExtResource("e24")]
+transform = Transform3D(-0.3473, 0.0, 1.9696, 0.0, 2.0, 0.0, -1.9696, 0.0, -0.3473, -0.4, 0.62, 0.3)
+
+[node name="chair(Clone)" parent="Escenario/Silla"]
+material_override = SubResource("StandardMaterial3D_41")
+
+[node name="Farol" parent="Escenario" instance=ExtResource("e25")]
+transform = Transform3D(0.6, 0.0, 0.0, 0.0, 0.6, 0.0, 0.0, 0.0, 0.6, -0.9, 0.62, -2.6)
+
+[node name="LuzFarol" type="OmniLight3D" parent="Escenario"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.9, 1.5, -2.6)
+light_color = Color(1.0, 0.7, 0.4, 1.0)
+light_energy = 0.6
+omni_range = 4.5
+omni_attenuation = 1.4
+
+[node name="Fogata" type="Area3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.0, 2.0, -4.0)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="Forma" type="CollisionShape3D" parent="Fogata"]
+shape = SubResource("BoxShape3D_42")

@@ -1,0 +1,298 @@
+[gd_scene load_steps=28 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/pueblo/pillar-wood.glb" id="e1"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log.glb" id="e2"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e3"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/sign.glb" id="e4"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/PuntoInteraccion.cs" id="e5"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/canoe.glb" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/canoe_paddle.glb" id="e8"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e9"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/supervivencia/box.glb" id="e10"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e11"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/light_01.png" id="e12"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1"]
+radius = 0.22
+height = 4.8
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_2"]
+radius = 0.22
+height = 4.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3"]
+size = Vector3(4.2, 3.0, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4"]
+size = Vector3(1.1, 0.8, 3.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5"]
+size = Vector3(0.9, 0.8, 3.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6"]
+size = Vector3(0.7, 0.7, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7"]
+size = Vector3(0.6, 0.6, 0.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8"]
+size = Vector3(0.7, 0.7, 0.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_9"]
+size = Vector3(0.6, 0.6, 0.6)
+
+[sub_resource type="Gradient" id="Gradient_10"]
+offsets = PackedFloat32Array(0.0, 0.3, 0.7, 1.0)
+colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_11"]
+gradient = SubResource("Gradient_10")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_12"]
+emission_shape = 3
+emission_box_extents = Vector3(9.0, 1.0, 3.0)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.02
+initial_velocity_max = 0.1
+gravity = Vector3(0.0, 0.0, 0.0)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.8
+turbulence_noise_scale = 4.0
+color_ramp = SubResource("GradientTexture1D_11")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_13"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.75, 1.0, 0.45, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+albedo_texture = ExtResource("e12")
+blend_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_14"]
+size = Vector2(0.12, 0.12)
+material = SubResource("StandardMaterial3D_13")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_15"]
+size = Vector3(12.0, 3.0, 8.0)
+
+[node name="SalidaSendero" type="Node3D"]
+
+[node name="Arco" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -31.0)
+
+[node name="Poste-2" parent="Arco" instance=ExtResource("e1")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 4.8, 0.0, 0.0, 0.0, 2.6, -2.3, 0.0, 0.0)
+
+[node name="Col-2" type="StaticBody3D" parent="Arco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.3, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Arco/Col-2"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.4, 0.0)
+shape = SubResource("CylinderShape3D_1")
+
+[node name="Poste2" parent="Arco" instance=ExtResource("e1")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 4.8, 0.0, 0.0, 0.0, 2.6, 2.3, 0.0, 0.0)
+
+[node name="Col2" type="StaticBody3D" parent="Arco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.3, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Arco/Col2"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.4, 0.0)
+shape = SubResource("CylinderShape3D_2")
+
+[node name="Travesano" parent="Arco" instance=ExtResource("e2")]
+transform = Transform3D(0.0, 0.0, 7.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 0.0, 4.7, 0.0)
+
+[node name="Letrero" type="Node3D" parent="Arco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 4.0, 0.2)
+script = ExtResource("e3")
+Texto = "SENDERO AL LAGO ESPEJO"
+Ancho = 3.6
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 64
+TamMinimo = 24
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.004
+
+[node name="Proximamente" type="Node3D" parent="Arco"]
+transform = Transform3D(0.9848, 0.0, -0.1736, 0.0, 1.0, 0.0, 0.1736, 0.0, 0.9848, 1.5, 1.4, 0.3)
+script = ExtResource("e3")
+Texto = "Escenario 2:
+Lago y bosque
+— PRÓXIMAMENTE —"
+Ancho = 0.9
+ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
+ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
+TamFuente = 36
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Poste" parent="Arco" instance=ExtResource("e4")]
+transform = Transform3D(2.8191, 0.0, -1.0261, 0.0, 3.0, 0.0, 1.0261, 0.0, 2.8191, 4.2, 0.0, 2.0)
+
+[node name="Prohibido" type="Node3D" parent="Arco"]
+transform = Transform3D(0.9397, 0.0, -0.342, 0.0, 1.0, 0.0, 0.342, 0.0, 0.9397, 4.17, 0.9, 2.18)
+script = ExtResource("e3")
+Texto = "PROHIBIDO NADAR DE NOCHE"
+Ancho = 0.85
+ColorPapel = Color(0.85, 0.82, 0.7, 1.0)
+ColorTexto = Color(0.6, 0.08, 0.06, 1.0)
+TamFuente = 36
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Salida" type="StaticBody3D" parent="Arco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -0.4)
+collision_layer = 40
+collision_mask = 0
+script = ExtResource("e5")
+Accion = "Seguir el sendero"
+
+[node name="Forma" type="CollisionShape3D" parent="Arco/Salida"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.5, 0.0)
+shape = SubResource("BoxShape3D_3")
+
+[node name="PuntoEscenario2" type="Marker3D" parent="Arco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -4.0)
+
+[node name="Canoa" type="StaticBody3D" parent="."]
+transform = Transform3D(0.9659, 0.0, 0.2588, 0.0, 1.0, 0.0, -0.2588, 0.0, 0.9659, 6.5, 0.0, -27.0)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e6")
+Id = "canoa_daniel"
+Titulo = "Canoa vieja"
+Descripcion = "Una canoa vieja, volteada sobre dos troncos. En el casco alguien grabó con navaja: «DANIEL»."
+EsEvidencia = false
+
+[node name="Forma" type="CollisionShape3D" parent="Canoa"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.45, 0.0)
+shape = SubResource("BoxShape3D_4")
+
+[node name="Modelo" parent="Canoa" instance=ExtResource("e7")]
+transform = Transform3D(-3.0, 0.0, 0.0, 0.0, -3.0, 0.0, 0.0, 0.0, 3.0, 0.0, 0.72, 0.0)
+
+[node name="Apoyo-1" parent="Canoa" instance=ExtResource("e2")]
+transform = Transform3D(0.0, 0.0, 1.6, 0.0, 1.8, 0.0, -1.8, 0.0, 0.0, 0.0, 0.0, -1.0)
+
+[node name="Apoyo1" parent="Canoa" instance=ExtResource("e2")]
+transform = Transform3D(0.0, 0.0, 1.6, 0.0, 1.8, 0.0, -1.8, 0.0, 0.0, 0.0, 0.0, 1.0)
+
+[node name="Remo" parent="Canoa" instance=ExtResource("e8")]
+transform = Transform3D(1.0261, 0.0, 2.8191, 0.0, 3.0, 0.0, -2.8191, 0.0, 1.0261, 0.9, 0.02, 0.4)
+
+[node name="Nombre" type="Node3D" parent="Canoa"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.46, 0.55, 0.3)
+script = ExtResource("e3")
+Texto = "DANIEL"
+Ancho = 0.4
+ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
+ColorTexto = Color(0.2, 0.12, 0.06, 1.0)
+TamFuente = 40
+TamMinimo = 14
+ConFondo = false
+AltoMaximo = 1.2
+TamPixel = 0.0018
+
+[node name="Solido" type="StaticBody3D" parent="Canoa"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.4, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Canoa/Solido"]
+shape = SubResource("BoxShape3D_5")
+
+[node name="CajaPesca0" type="StaticBody3D" parent="."]
+transform = Transform3D(0.866, 0.0, 0.5, 0.0, 1.0, 0.0, -0.5, 0.0, 0.866, 8.6, 0.0, -25.4)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e9")
+Nombre = "Caja de pesca"
+MensajeAlAbrir = "Caja de pesca: anzuelos oxidados y una boya despintada."
+SonidoAbrir = 1
+
+[node name="Forma" type="CollisionShape3D" parent="CajaPesca0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.33, 0.0)
+shape = SubResource("BoxShape3D_6")
+
+[node name="Solido" type="StaticBody3D" parent="CajaPesca0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.3, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="CajaPesca0/Solido"]
+shape = SubResource("BoxShape3D_7")
+
+[node name="Modelo" parent="CajaPesca0" instance=ExtResource("e10")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0)
+
+[node name="CajaPesca1" type="StaticBody3D" parent="."]
+transform = Transform3D(0.9848, 0.0, -0.1736, 0.0, 1.0, 0.0, 0.1736, 0.0, 0.9848, 8.9, 0.0, -26.6)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e9")
+Nombre = "Caja de pesca"
+MensajeAlAbrir = "Otra caja de pesca. Hilo enredado y una foto del lago en invierno."
+SonidoAbrir = 1
+
+[node name="Forma" type="CollisionShape3D" parent="CajaPesca1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.33, 0.0)
+shape = SubResource("BoxShape3D_8")
+
+[node name="Solido" type="StaticBody3D" parent="CajaPesca1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.3, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="CajaPesca1/Solido"]
+shape = SubResource("BoxShape3D_9")
+
+[node name="Modelo" parent="CajaPesca1" instance=ExtResource("e10")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0)
+
+[node name="Lago" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.5, -40.0)
+volume_db = 0.0
+unit_size = 8.0
+max_distance = 32.0
+script = ExtResource("e11")
+Tipo = 31
+
+[node name="Luciernagas" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.2, -32.0)
+amount = 26
+lifetime = 8.0
+preprocess = 8.0
+process_material = SubResource("ParticleProcessMaterial_12")
+draw_pass_1 = SubResource("QuadMesh_14")
+cast_shadow = 0
+visibility_aabb = AABB(-12.0, -12.0, -12.0, 24.0, 24.0, 24.0)
+
+[node name="Sendero" type="Area3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.5, -29.0)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="Forma" type="CollisionShape3D" parent="Sendero"]
+shape = SubResource("BoxShape3D_15")

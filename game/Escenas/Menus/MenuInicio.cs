@@ -74,6 +74,8 @@ public partial class MenuInicio : Control
 		MoveChild(_tableroCapitulos, _dialogoConfirmacion.GetIndex());
 		_tableroCapitulos.Cerrado += AlCerrarPanel;
 
+		CrearAccesoDePrueba();
+
 		UtilidadesUI.ConectarFocoConRaton(this);
 		UtilidadesUI.EncadenarFoco(botones);
 		(puedeContinuar ? _botonContinuar : _botonNuevaPartida).GrabFocus();
@@ -99,6 +101,21 @@ public partial class MenuInicio : Control
 		if (capitulo == null) return;
 		await GestorPartida.Instancia.PresentarCapituloEnPreparacion(capitulo);
 		AbrirTablero($"{capitulo.Etiqueta} todavía está en preparación. Aquí aparecerá cuando esté listo.");
+	}
+
+	// Solo en compilaciones de depuración: botón para probar el Escenario 1 del Caso 1 (HU-20.5).
+	// Carga la escena directo: no pasa por los capítulos ni toca las ranuras de guardado.
+	private void CrearAccesoDePrueba()
+	{
+		const string escena = "res://Escenas/Caso1/escenario_campamento.tscn";
+		if (!OS.IsDebugBuild() || !ResourceLoader.Exists(escena)) return;
+		var boton = new Button { Text = "Probar Escenario 1 (depuración)", FocusMode = FocusModeEnum.None };
+		boton.SetAnchorsAndOffsetsPreset(LayoutPreset.BottomRight, LayoutPresetMode.KeepSize, 16);
+		boton.GrowHorizontal = GrowDirection.Begin;
+		boton.GrowVertical = GrowDirection.Begin;
+		boton.Modulate = new Color(1, 1, 1, 0.6f);
+		boton.Pressed += () => GetTree().ChangeSceneToFile(escena);
+		_pantallaPrincipal.AddChild(boton);
 	}
 
 	// Carga las fuentes del diseño; si faltan en Assets/Fuentes/, usa la de Godot.

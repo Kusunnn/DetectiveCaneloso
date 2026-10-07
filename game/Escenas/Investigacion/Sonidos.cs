@@ -40,6 +40,13 @@ public static class Sonidos
 		PuertaAbrir,
 		PuertaTrabada,
 		RelojPared,
+		// Exteriores (Caso 1, campamento)
+		Grillos,
+		VientoPinos,
+		Brasas,
+		Buho,
+		AguaLago,
+		ZumbidoGenerador,
 	}
 
 	public const string BusMusica = "Musica";
@@ -84,7 +91,17 @@ public static class Sonidos
 		[Tipo.GoteoVestuario] = new(new[] { "Ambiente/agua_vestidores.ogg" }, 19.1f, false, true),
 		[Tipo.TonoSala] = new(new[] { "Ambiente/zumbido_sala.ogg" }, 7.3f, false, true),
 		[Tipo.RelojPared] = new(new[] { "Ambiente/reloj_pared.wav" }, 0f, false, true),
+		// Exteriores: archivos de Assets/Caso1/Sonidos (créditos en el mismo CREDITOS_AUDIO.md)
+		[Tipo.Grillos] = new(new[] { "res://Assets/Caso1/Sonidos/grillos.ogg" }, -10f, false, true),
+		[Tipo.VientoPinos] = new(new[] { "res://Assets/Caso1/Sonidos/viento_pinos.ogg" }, -12f, false, true),
+		[Tipo.Brasas] = new(new[] { "res://Assets/Caso1/Sonidos/brasas.ogg" }, -9f, false, true),
+		[Tipo.Buho] = new(new[] { "res://Assets/Caso1/Sonidos/buho.ogg" }, -8f, Variar: true),
+		[Tipo.AguaLago] = new(new[] { "res://Assets/Caso1/Sonidos/agua_lago.ogg" }, -10f, false, true),
+		[Tipo.ZumbidoGenerador] = new(new[] { "res://Assets/Caso1/Sonidos/generador.ogg" }, -9f, false, true),
 	};
+
+	// Las rutas cortas son relativas a Assets/Audio; las que empiezan con res:// se usan tal cual
+	private static string Ruta(string archivo) => archivo.StartsWith("res://") ? archivo : Carpeta + archivo;
 
 	public static float VolumenDe(Tipo tipo) => Definiciones[tipo].VolumenDb;
 	public static bool EsBucle(Tipo tipo) => Definiciones[tipo].Bucle;
@@ -96,11 +113,11 @@ public static class Sonidos
 		var def = Definiciones[tipo];
 		if (def.Bucle)
 		{
-			sonido = ComoBucle(GD.Load<AudioStream>(Carpeta + def.Archivos[0]));
+			sonido = ComoBucle(GD.Load<AudioStream>(Ruta(def.Archivos[0])));
 		}
 		else if (!def.Variar && def.Archivos.Length == 1)
 		{
-			sonido = GD.Load<AudioStream>(Carpeta + def.Archivos[0]);
+			sonido = GD.Load<AudioStream>(Ruta(def.Archivos[0]));
 		}
 		else
 		{
@@ -112,7 +129,7 @@ public static class Sonidos
 				PlaybackMode = AudioStreamRandomizer.PlaybackModeEnum.RandomNoRepeats,
 			};
 			for (int i = 0; i < def.Archivos.Length; i++)
-				azar.AddStream(i, GD.Load<AudioStream>(Carpeta + def.Archivos[i]));
+				azar.AddStream(i, GD.Load<AudioStream>(Ruta(def.Archivos[i])));
 			sonido = azar;
 		}
 		return sonido;

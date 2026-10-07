@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/Jugador.cs" id="1_jugador"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/CuerpoDetective.cs" id="2_cuerpo"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Caneloso/Archivo/player.tscn" id="3_modelo"]
+
+[sub_resource type="CapsuleShape3D" id="Capsula"]
+radius = 0.3
+
+[node name="Jugador" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 115
+script = ExtResource("1_jugador")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Capsula")
+
+[node name="CamaraInterrogatorio" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -0.15)
+
+[node name="Linterna" type="SpotLight3D" parent="CamaraInterrogatorio"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, -0.2, -0.65)
+visible = false
+light_color = Color(1, 0.95, 0.82, 1)
+light_energy = 4.0
+shadow_enabled = true
+spot_range = 12.0
+spot_angle = 24.0
+
+[node name="BrazoCamara" type="SpringArm3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9800666, 0.19866933, 0, -0.19866933, 0.9800666, 0.35, 0.8, 0)
+collision_mask = 19
+spring_length = 3.0
+margin = 0.1
+
+[node name="CamaraTerceraPersona" type="Camera3D" parent="BrazoCamara"]
+
+[node name="Modelo" parent="." instance=ExtResource("3_modelo")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -2, 0)
+script = ExtResource("2_cuerpo")

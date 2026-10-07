@@ -232,7 +232,7 @@ public partial class Jugador : CharacterBody3D
 		Node nodo = resultado["collider"].As<Node>();
 		for (int nivel = 0; nivel < 4 && nodo != null; nivel++, nodo = nodo.GetParent())
 		{
-			if (nodo is Contenedor { SoloAgachado: true } && !Agachado) return null; // Hay que agacharse para alcanzarlo
+			if ((nodo is Contenedor { SoloAgachado: true } || nodo is ObjetoPista { SoloAgachado: true }) && !Agachado) return null; // Hay que agacharse para alcanzarlo
 			if (nodo is IInteractuable interactuable) return interactuable;
 		}
 		return null;
