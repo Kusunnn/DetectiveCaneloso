@@ -1,11 +1,12 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/porky.glb" id="e1"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/eriz.glb" id="e2"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/tony.glb" id="e3"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/lala.glb" id="e4"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/miami.glb" id="e5"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/aya.glb" id="e6"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/AnimacionPersonaje.cs" id="e2"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/eriz.glb" id="e3"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/tony.glb" id="e4"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/lala.glb" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/miami.glb" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/aya.glb" id="e7"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.32
@@ -39,6 +40,11 @@ transform = Transform3D(-0.9929, 0.0, -0.1191, 0.0, 1.0, 0.0, 0.1191, 0.0, -0.99
 [node name="Modelo" parent="Porky" instance=ExtResource("e1")]
 transform = Transform3D(6.67, 0.0, 0.0, 0.0, 6.67, 0.0, 0.0, 0.0, 6.67, 0.0, 0.0, 0.05)
 
+[node name="Animacion" type="Node" parent="Porky" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.38
+
 [node name="Colision" type="StaticBody3D" parent="Porky"]
 collision_layer = 16
 collision_mask = 0
@@ -50,8 +56,13 @@ shape = SubResource("CapsuleShape3D_1")
 [node name="Eriz" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(-0.907, 0.0, 0.4211, 0.0, 1.0, 0.0, -0.4211, 0.0, -0.907, -2.6, 0.0, 1.6)
 
-[node name="Modelo" parent="Eriz" instance=ExtResource("e2")]
+[node name="Modelo" parent="Eriz" instance=ExtResource("e3")]
 transform = Transform3D(4.77, 0.0, 0.0, 0.0, 4.77, 0.0, 0.0, 0.0, 4.77, 0.0, 0.0, 0.0076)
+
+[node name="Animacion" type="Node" parent="Eriz" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.35
 
 [node name="Colision" type="StaticBody3D" parent="Eriz"]
 collision_layer = 16
@@ -64,8 +75,13 @@ shape = SubResource("CapsuleShape3D_2")
 [node name="Tony" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -25.6, 0.0, -13.4)
 
-[node name="Modelo" parent="Tony" instance=ExtResource("e3")]
+[node name="Modelo" parent="Tony" instance=ExtResource("e4")]
 transform = Transform3D(5.3731, 0.0, 0.0, 0.0, 5.3731, 0.0, 0.0, 0.0, 5.3731, 0.0, 0.0, 0.2923)
+
+[node name="Animacion" type="Node" parent="Tony" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.44
 
 [node name="Colision" type="StaticBody3D" parent="Tony"]
 collision_layer = 16
@@ -78,8 +94,13 @@ shape = SubResource("CapsuleShape3D_3")
 [node name="JuanCarlos" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(-0.813, 0.0, -0.5823, 0.0, 1.0, 0.0, 0.5823, 0.0, -0.813, 21.2, 0.0, 25.6)
 
-[node name="Modelo" parent="JuanCarlos" instance=ExtResource("e4")]
+[node name="Modelo" parent="JuanCarlos" instance=ExtResource("e5")]
 transform = Transform3D(6.3707, 0.0, 0.0, 0.0, 6.3707, 0.0, 0.0, 0.0, 6.3707, 0.0, 0.0, 0.5447)
+
+[node name="Animacion" type="Node" parent="JuanCarlos" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.32
 
 [node name="Colision" type="StaticBody3D" parent="JuanCarlos"]
 collision_layer = 16
@@ -92,8 +113,13 @@ shape = SubResource("CapsuleShape3D_4")
 [node name="Miami" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(-0.8548, 0.0, -0.519, 0.0, 1.0, 0.0, 0.519, 0.0, -0.8548, 3.4, 0.0, 1.6)
 
-[node name="Modelo" parent="Miami" instance=ExtResource("e5")]
+[node name="Modelo" parent="Miami" instance=ExtResource("e6")]
 transform = Transform3D(9.7403, 0.0, 0.0, 0.0, 9.7403, 0.0, 0.0, 0.0, 9.7403, 0.0, 0.0, -0.0029)
+
+[node name="Animacion" type="Node" parent="Miami" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.2
 
 [node name="Colision" type="StaticBody3D" parent="Miami"]
 collision_layer = 16
@@ -106,8 +132,13 @@ shape = SubResource("CapsuleShape3D_5")
 [node name="Aya" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(0.5493, 0.0, -0.8356, 0.0, 1.0, 0.0, 0.8356, 0.0, 0.5493, 21.6, 0.0, -18.2)
 
-[node name="Modelo" parent="Aya" instance=ExtResource("e6")]
+[node name="Modelo" parent="Aya" instance=ExtResource("e7")]
 transform = Transform3D(0.0363, 0.0, 0.0, 0.0, 0.0363, 0.0, 0.0, 0.0, 0.0363, 0.0, 0.0, -0.122)
+
+[node name="Animacion" type="Node" parent="Aya" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.28
 
 [node name="Colision" type="StaticBody3D" parent="Aya"]
 collision_layer = 16
