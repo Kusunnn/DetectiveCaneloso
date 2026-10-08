@@ -38,7 +38,8 @@ public partial class Configuracion : Node
 
 	private static string ClaveVolumen(string bus) => bus == "Master" ? "volumen_general" : "volumen_" + bus.ToLower();
 
-	private bool _pantallaCompleta = false;
+	// El juego arranca en pantalla completa; [F11] o [Alt]+[Enter] la alternan en cualquier momento.
+	private bool _pantallaCompleta = true;
 	public bool PantallaCompleta
 	{
 		get => _pantallaCompleta;
@@ -82,9 +83,15 @@ public partial class Configuracion : Node
 		bool hayArchivo = archivo.Load(RutaConfiguracion) == Error.Ok;
 		foreach (string bus in Buses)
 			FijarVolumen(bus, hayArchivo ? archivo.GetValue("audio", ClaveVolumen(bus), Volumen(bus)).AsSingle() : Volumen(bus));
-		if (!hayArchivo) return; // Primera vez: valores por defecto
+		if (!hayArchivo)
+		{
+			PantallaCompleta = PantallaCompleta; // Primera vez: valores por defecto
+			return;
+		}
 
-		PantallaCompleta = archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool();
+		// Los archivos de antes de la versión 2 guardaban «ventana» porque era lo predeterminado, no porque se eligiera
+		bool eleccionGuardada = archivo.GetValue("video", "version", 1).AsInt32() >= 2;
+		PantallaCompleta = eleccionGuardada ? archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool() : PantallaCompleta;
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
 		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
@@ -126,6 +133,14 @@ public partial class Configuracion : Node
 			_contadorFps.Visible = !_contadorFps.Visible;
 			SetProcess(_contadorFps.Visible);
 		}
+
+		if (evento is InputEventKey teclaVentana && teclaVentana.Pressed && !teclaVentana.Echo
+			&& (teclaVentana.Keycode == Key.F11 || (teclaVentana.Keycode == Key.Enter && teclaVentana.AltPressed)))
+		{
+			PantallaCompleta = !PantallaCompleta;
+			Guardar();
+			GetViewport().SetInputAsHandled();
+		}
 	}
 
 	public override void _Process(double delta)
@@ -139,6 +154,7 @@ public partial class Configuracion : Node
 		foreach (string bus in Buses)
 			archivo.SetValue("audio", ClaveVolumen(bus), Volumen(bus));
 		archivo.SetValue("video", "pantalla_completa", PantallaCompleta);
+		archivo.SetValue("video", "version", 2);
 		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
 		archivo.SetValue("controles", "sensibilidad_raton", SensibilidadRaton);
 		archivo.SetValue("controles", "ayudas_visuales", AyudasVisuales);
