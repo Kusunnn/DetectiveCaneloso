@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e3"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e4"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/cajon.tscn" id="e5"]
-[ext_resource type="PackedScene" path="res://Assets/Models/porky.fbx" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/porky.glb" id="e6"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e7"]
 [ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
 
@@ -825,9 +825,6 @@ shape = SubResource("Cap_0p5_1p75")
 
 [node name="Modelo" parent="Porky" instance=ExtResource("e6")]
 transform = Transform3D(6.67, 0, 0, 0, 6.67, 0, 0, 0, 6.67, 0, 0, 0)
-
-[node name="Light" parent="Porky/Modelo"]
-visible = false
 
 [node name="DonaMano" type="MeshInstance3D" parent="Porky"]
 transform = Transform3D(1, 0, 0, 0, 0.342, -0.9397, 0, 0.9397, 0.342, 0.5, 0.85, 0.3)

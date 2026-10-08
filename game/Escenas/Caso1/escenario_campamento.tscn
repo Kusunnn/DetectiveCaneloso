@@ -1,4 +1,4 @@
-[gd_scene load_steps=156 format=3]
+[gd_scene load_steps=157 format=3]
 
 [ext_resource type="Shader" path="res://Escenas/Caso1/cielo_noche.gdshader" id="e1"]
 [ext_resource type="Shader" path="res://Escenas/Caso1/suelo_campamento.gdshader" id="e2"]
@@ -51,17 +51,18 @@
 [ext_resource type="PackedScene" path="res://Escenas/Caso1/estacionamiento.tscn" id="e49"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso1/salida_sendero.tscn" id="e50"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso1/detalles_ambiente.tscn" id="e51"]
-[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/light_01.png" id="e52"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e53"]
-[ext_resource type="PackedScene" path="res://hud/hud.tscn" id="e54"]
-[ext_resource type="PackedScene" path="res://Escenas/Interrogatorio/jugador.tscn" id="e55"]
-[ext_resource type="PackedScene" path="res://Escenas/Menus/menu_pausa.tscn" id="e56"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/VentanaDialogo.cs" id="e57"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/TableroDeduccion.cs" id="e58"]
-[ext_resource type="AudioStream" path="res://Assets/Audio/Musica/investigacion.ogg" id="e59"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="e60"]
-[ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="e61"]
-[ext_resource type="Script" path="res://Escenas/Caso1/Caso1.cs" id="e62"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/personajes_vista_previa.tscn" id="e52"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/light_01.png" id="e53"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e54"]
+[ext_resource type="PackedScene" path="res://hud/hud.tscn" id="e55"]
+[ext_resource type="PackedScene" path="res://Escenas/Interrogatorio/jugador.tscn" id="e56"]
+[ext_resource type="PackedScene" path="res://Escenas/Menus/menu_pausa.tscn" id="e57"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/VentanaDialogo.cs" id="e58"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/TableroDeduccion.cs" id="e59"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/Musica/investigacion.ogg" id="e60"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="e61"]
+[ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="e62"]
+[ext_resource type="Script" path="res://Escenas/Caso1/Caso1.cs" id="e63"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
 shader = ExtResource("e1")
@@ -553,7 +554,7 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e52")
+albedo_texture = ExtResource("e53")
 blend_mode = 1
 
 [sub_resource type="QuadMesh" id="QuadMesh_81"]
@@ -593,7 +594,7 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e52")
+albedo_texture = ExtResource("e53")
 blend_mode = 1
 
 [sub_resource type="QuadMesh" id="QuadMesh_86"]
@@ -633,7 +634,7 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e52")
+albedo_texture = ExtResource("e53")
 blend_mode = 1
 
 [sub_resource type="QuadMesh" id="QuadMesh_91"]
@@ -1409,6 +1410,8 @@ omni_attenuation = 1.4
 
 [node name="Detalles" parent="." instance=ExtResource("e51")]
 
+[node name="Personajes" parent="." instance=ExtResource("e52")]
+
 [node name="AgujasPino" type="GPUParticles3D" parent="."]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 9.0, -2.0)
 amount = 45
@@ -1457,7 +1460,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -20.0, 0.5,
 volume_db = -3.0
 unit_size = 10.0
 max_distance = 40.0
-script = ExtResource("e53")
+script = ExtResource("e54")
 Tipo = 27
 
 [node name="Grillos1" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1465,7 +1468,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 22.0, 0.5, 
 volume_db = -3.0
 unit_size = 10.0
 max_distance = 40.0
-script = ExtResource("e53")
+script = ExtResource("e54")
 Tipo = 27
 
 [node name="Grillos2" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1473,7 +1476,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -22.0, 0.5,
 volume_db = -3.0
 unit_size = 10.0
 max_distance = 40.0
-script = ExtResource("e53")
+script = ExtResource("e54")
 Tipo = 27
 
 [node name="Grillos3" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1481,7 +1484,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 12.0, 0.5, 
 volume_db = -3.0
 unit_size = 10.0
 max_distance = 40.0
-script = ExtResource("e53")
+script = ExtResource("e54")
 Tipo = 27
 
 [node name="Viento0" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1489,7 +1492,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -36.0, 8.0,
 volume_db = -4.0
 unit_size = 14.0
 max_distance = 60.0
-script = ExtResource("e53")
+script = ExtResource("e54")
 Tipo = 28
 
 [node name="Viento1" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1497,7 +1500,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 36.0, 8.0, 
 volume_db = -4.0
 unit_size = 14.0
 max_distance = 60.0
-script = ExtResource("e53")
+script = ExtResource("e54")
 Tipo = 28
 
 [node name="Viento2" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1505,7 +1508,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 8.0, -
 volume_db = -4.0
 unit_size = 14.0
 max_distance = 60.0
-script = ExtResource("e53")
+script = ExtResource("e54")
 Tipo = 28
 
 [node name="Buho" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1513,14 +1516,14 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -40.0, 10.0
 volume_db = -2.0
 unit_size = 12.0
 max_distance = 90.0
-script = ExtResource("e53")
+script = ExtResource("e54")
 Tipo = 30
 PausaMinima = 14
 PausaMaxima = 35
 
-[node name="HUD" parent="." instance=ExtResource("e54")]
+[node name="HUD" parent="." instance=ExtResource("e55")]
 
-[node name="Jugador" parent="." instance=ExtResource("e55")]
+[node name="Jugador" parent="." instance=ExtResource("e56")]
 transform = Transform3D(0.848, 0.0, 0.5299, 0.0, 1.0, 0.0, -0.5299, 0.0, 0.848, 22.0, 1.1, 30.2)
 
 [node name="Linterna" parent="Jugador/CamaraInterrogatorio"]
@@ -1528,20 +1531,20 @@ spot_range = 18.0
 spot_angle = 26.0
 light_energy = 5.0
 
-[node name="MenuPausa" parent="." instance=ExtResource("e56")]
+[node name="MenuPausa" parent="." instance=ExtResource("e57")]
 
 [node name="VentanaDialogo" type="CanvasLayer" parent="."]
-script = ExtResource("e57")
-
-[node name="TableroDeduccion" type="CanvasLayer" parent="."]
 script = ExtResource("e58")
 
+[node name="TableroDeduccion" type="CanvasLayer" parent="."]
+script = ExtResource("e59")
+
 [node name="MusicaFondo" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("e59")
-script = ExtResource("e60")
+stream = ExtResource("e60")
+script = ExtResource("e61")
 
 [node name="MandoHud" type="Node" parent="."]
-script = ExtResource("e61")
+script = ExtResource("e62")
 
 [node name="Vineta" type="CanvasLayer" parent="."]
 layer = 1
@@ -1557,7 +1560,7 @@ texture = SubResource("GradientTexture2D_93")
 expand_mode = 1
 
 [node name="Caso1" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "Tablero", "PuertaPorky", "Salida", "PistaLlamadas", "Musica", "Entorno", "ContenedoresConPista", "PistasDentro", "Zonas")]
-script = ExtResource("e62")
+script = ExtResource("e63")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
 Dialogo = NodePath("../VentanaDialogo")

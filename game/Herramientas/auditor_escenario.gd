@@ -10,6 +10,7 @@ extends RefCounted
 ##   auditoria_estructura→ muros, techos y pisos de construcciones (pueden tocarse entre sí)
 ##   auditoria_fuera_ok  → puede estar fuera del área jugable (bosque lejano, lago, cielo)
 ##   auditoria_invisible_ok → colisión sin malla a propósito (bordes del mapa, rampas)
+##   auditoria_personaje → personaje con esqueleto (se revisa solo su colisión)
 
 const CAPA_AUDITORIA := 1 << 19          # Capa temporal con las mallas convertidas en colisión
 const MASCARA_JUGADOR := 1 | 2 | 16 | 32 | 64
@@ -82,6 +83,8 @@ func _calcular_limites() -> AABB:
 func _buscar_objetos(nodo: Node) -> Array[Node3D]:
 	var lista: Array[Node3D] = []
 	for hijo in nodo.get_children():
+		# Un personaje con esqueleto: su AABB es la de la pose de origen, no la visible; solo cuenta su colisión
+		if hijo.is_in_group("auditoria_personaje"): continue
 		if hijo is MultiMeshInstance3D or hijo is GPUParticles3D or hijo is Light3D or hijo is CharacterBody3D: continue
 		if hijo is Node3D and (_es_modelo(hijo) or _es_compuesto(hijo)):
 			# Un objeto compuesto (una bota hecha de piezas, una pista con su malla) se revisa entero

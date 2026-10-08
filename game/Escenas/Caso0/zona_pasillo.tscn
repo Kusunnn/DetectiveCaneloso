@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e5"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e6"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/casillero.tscn" id="e7"]
-[ext_resource type="PackedScene" path="res://Assets/Models/eriz.fbx" id="e8"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/eriz.glb" id="e8"]
 [ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_suelo"]
@@ -1098,12 +1098,6 @@ shape = SubResource("Cap_0p45_1p7")
 
 [node name="Modelo" parent="Eriz" instance=ExtResource("e8")]
 transform = Transform3D(4.77, 0, 0, 0, 4.77, 0, 0, 0, 4.77, 0, 0, 0)
-
-[node name="Light" parent="Eriz/Modelo"]
-visible = false
-
-[node name="Light_001" parent="Eriz/Modelo"]
-visible = false
 
 [node name="PaloFregona" type="MeshInstance3D" parent="Eriz"]
 transform = Transform3D(0.9848, -0.1736, 0, 0.1736, 0.9848, 0, 0, 0, 1, -0.6, 0.75, 0.25)
