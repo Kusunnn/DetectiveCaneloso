@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/plant_bush.glb" id="e1"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1"]
+radius = 0.54
+height = 0.7407
+
+[node name="Arbusto" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(3.0303, 0.0, 0.0, 0.0, 3.0303, 0.0, 0.0, 0.0, 3.0303, 0.0, 0.1515, 0.0)
+
+[node name="Colision" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.3704, 0.0)
+shape = SubResource("CylinderShape3D_1")

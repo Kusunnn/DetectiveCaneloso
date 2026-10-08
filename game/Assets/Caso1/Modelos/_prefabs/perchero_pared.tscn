@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/coatRack.glb" id="e1"]
+
+[node name="PercheroPared" type="Node3D" groups=["auditoria_pared"]]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(1.7857, 0.0, 0.0, 0.0, 1.7857, 0.0, 0.0, 0.0, 1.7857, -0.4, 0.0, 0.12)

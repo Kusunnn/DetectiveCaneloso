@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/canoe_paddle.glb" id="e1"]
+
+[node name="Remo" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(2.711, 0.0, 0.0, 0.0, 2.711, 0.0, 0.0, 0.0, 2.711, 0.0, 0.1355, 0.1075)

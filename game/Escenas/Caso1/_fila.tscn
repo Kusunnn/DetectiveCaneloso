@@ -1,0 +1,74 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Models/Caneloso/Archivo/player.tscn" id="e1"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/canoa.tscn" id="e2"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tronco.tscn" id="e3"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tronco_grande.tscn" id="e4"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/lena_grande.tscn" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tocon.tscn" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_a.tscn" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/arbusto.tscn" id="e8"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/junco.tscn" id="e9"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/cerca.tscn" id="e10"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/porton.tscn" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/letrero_poste.tscn" id="e12"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/farola.tscn" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/banca_parque.tscn" id="e14"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/casa_campana.tscn" id="e15"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/poste_madera.tscn" id="e16"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1"]
+size = Vector2(80, 10)
+
+[node name="Fila" type="Node3D"]
+
+[node name="Caneloso" parent="." instance=ExtResource("e1")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.0, 0.0, 0.0)
+
+[node name="canoa" parent="." instance=ExtResource("e2")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.4435, 0.0, 0.0)
+
+[node name="tronco" parent="." instance=ExtResource("e3")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.4994, 0.0, 0.0)
+
+[node name="tronco_grande" parent="." instance=ExtResource("e4")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 3.6119, 0.0, 0.0)
+
+[node name="lena_grande" parent="." instance=ExtResource("e5")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 6.2312, 0.0, 0.0)
+
+[node name="tocon" parent="." instance=ExtResource("e6")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 7.7518, 0.0, 0.0)
+
+[node name="roca_a" parent="." instance=ExtResource("e7")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 9.3307, 0.0, 0.0)
+
+[node name="arbusto" parent="." instance=ExtResource("e8")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 11.1083, 0.0, 0.0)
+
+[node name="junco" parent="." instance=ExtResource("e9")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 12.7634, 0.0, 0.0)
+
+[node name="cerca" parent="." instance=ExtResource("e10")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 15.3185, 0.0, 0.0)
+
+[node name="porton" parent="." instance=ExtResource("e11")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 18.5685, 0.0, 0.0)
+
+[node name="letrero_poste" parent="." instance=ExtResource("e12")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 20.7955, 0.0, 0.0)
+
+[node name="farola" parent="." instance=ExtResource("e13")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 21.7591, 0.0, 0.0)
+
+[node name="banca_parque" parent="." instance=ExtResource("e14")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 22.8977, 0.0, 0.0)
+
+[node name="casa_campana" parent="." instance=ExtResource("e15")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 24.5318, 0.0, 0.0)
+
+[node name="poste_madera" parent="." instance=ExtResource("e16")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 25.7538, 0.0, 0.0)
+
+[node name="Suelo" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_1")

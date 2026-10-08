@@ -1,4 +1,4 @@
-[gd_scene load_steps=61 format=3]
+[gd_scene load_steps=72 format=3]
 
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall.glb" id="e1"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-window-a.glb" id="e2"]
@@ -7,26 +7,39 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-roof-chimney.glb" id="e5"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-roof.glb" id="e6"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-roof-top.glb" id="e7"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/floor-wood.glb" id="e8"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall-roof-center.glb" id="e9"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-corner-logs.glb" id="e10"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/table.glb" id="e11"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/bench.glb" id="e12"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/kitchenStove.glb" id="e13"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/kitchenSink.glb" id="e14"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/kitchenFridge.glb" id="e15"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e16"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/muebles/kitchenCabinetDrawer.glb" id="e17"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/comida/pot-stew.glb" id="e18"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/comida/pot.glb" id="e19"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/comida/frying-pan.glb" id="e20"]
-[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/taza_delantal.png" id="e21"]
-[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e22"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/comida/mug.glb" id="e23"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e24"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall-roof-center.glb" id="e8"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-corner-logs.glb" id="e9"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/madera_piso_color.jpg" id="e10"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/madera_piso_normal.jpg" id="e11"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e12"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/mesa_comedor.tscn" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/banca_larga.tscn" id="e14"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/plato.tscn" id="e15"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tazon.tscn" id="e16"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/plato_chico.tscn" id="e17"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/taza_cafe.tscn" id="e18"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/menu_mesa.tscn" id="e19"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/taza_delantal.png" id="e20"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e21"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/taza.tscn" id="e22"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/refri_k.tscn" id="e23"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/cocina_tarja.tscn" id="e24"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e25"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/alacena_cajon.tscn" id="e26"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/estufa_chica.tscn" id="e27"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/campana.tscn" id="e28"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/alacena_pared.tscn" id="e29"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/repisa_cocina.tscn" id="e30"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/olla_grande.tscn" id="e31"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/olla.tscn" id="e32"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tabla_picar.tscn" id="e33"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/escurridor.tscn" id="e34"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/bote_basura.tscn" id="e35"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/sarten.tscn" id="e36"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/sarten2.tscn" id="e37"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
-size = Vector3(2.6, 2.6, 0.78)
+size = Vector3(5.2, 2.6, 0.78)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2"]
 size = Vector3(2.6, 2.6, 0.78)
@@ -38,19 +51,19 @@ size = Vector3(2.6, 2.6, 0.78)
 size = Vector3(2.6, 2.6, 0.78)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5"]
-size = Vector3(2.6, 2.6, 0.78)
+size = Vector3(2.9, 2.6, 0.78)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_6"]
-size = Vector3(2.6, 2.6, 0.78)
+size = Vector3(0.48, 2.6, 0.78)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7"]
-size = Vector3(0.572, 2.6, 0.78)
+size = Vector3(0.48, 2.6, 0.78)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8"]
-size = Vector3(0.572, 2.6, 0.78)
+size = Vector3(2.0, 0.416, 0.78)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_9"]
-size = Vector3(2.6, 0.416, 0.78)
+size = Vector3(2.9, 2.6, 0.78)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_10"]
 size = Vector3(2.6, 2.6, 0.78)
@@ -70,295 +83,271 @@ size = Vector3(2.6, 2.6, 0.78)
 [sub_resource type="BoxShape3D" id="BoxShape3D_15"]
 size = Vector3(2.6, 2.6, 0.78)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
-size = Vector3(2.6, 2.6, 0.78)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_16"]
+albedo_texture = ExtResource("e10")
+normal_enabled = true
+normal_texture = ExtResource("e11")
+albedo_color = Color(0.62, 0.5, 0.42, 1.0)
+roughness = 0.85
+uv1_triplanar = true
+uv1_world_triplanar = false
+uv1_scale = Vector3(0.7, 0.7, 0.7)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_17"]
-albedo_color = Color(0.16, 0.1, 0.06, 1.0)
-roughness = 0.95
+[sub_resource type="BoxMesh" id="BoxMesh_17"]
+size = Vector3(4.72, 0.08, 12.52)
+material = SubResource("StandardMaterial3D_16")
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_18"]
-size = Vector2(5.0, 12.8)
-material = SubResource("StandardMaterial3D_17")
+[sub_resource type="BoxShape3D" id="BoxShape3D_18"]
+size = Vector3(4.72, 0.08, 12.52)
 
 [sub_resource type="FogMaterial" id="FogMaterial_19"]
 density = -0.3
 edge_fade = 0.2
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_20"]
-albedo_color = Color(0.42, 0.27, 0.16, 1.0)
-roughness = 0.8
+[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
+size = Vector3(0.35, 0.3, 0.35)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
-size = Vector3(2.2, 0.76, 1.15)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_22"]
-size = Vector3(2.2, 0.76, 1.15)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
-size = Vector3(2.2, 0.76, 1.15)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_24"]
-albedo_color = Color(0.36, 0.23, 0.14, 1.0)
-roughness = 0.8
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_25"]
-size = Vector3(0.95, 0.9, 4.4)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_26"]
-size = Vector3(0.95, 0.9, 0.9)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_27"]
-size = Vector3(0.45, 0.35, 0.45)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_28"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21"]
 albedo_color = Color(0.18, 0.09, 0.05, 1.0)
 roughness = 0.4
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_29"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_22"]
 top_radius = 0.035
 bottom_radius = 0.035
-height = 0.01
-material = SubResource("StandardMaterial3D_28")
+height = 0.008
+material = SubResource("StandardMaterial3D_21")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_30"]
-size = Vector3(0.12, 0.95, 0.6)
+[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
+size = Vector3(0.986, 0.99, 1.03)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_31"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_24"]
+albedo_color = Color(0.25, 0.18, 0.1, 1.0)
+roughness = 0.7
+
+[sub_resource type="BoxMesh" id="BoxMesh_25"]
+size = Vector3(1.3, 0.05, 0.05)
+material = SubResource("StandardMaterial3D_24")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_26"]
+size = Vector3(0.6, 0.95, 0.14)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_27"]
 albedo_color = Color(0.78, 0.74, 0.66, 1.0)
 roughness = 1.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_32"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_28"]
 albedo_color = Color(0.55, 0.14, 0.12, 1.0)
 roughness = 1.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_33"]
+[sub_resource type="BoxMesh" id="BoxMesh_29"]
 size = Vector3(0.5, 0.85, 0.03)
-material = SubResource("StandardMaterial3D_31")
+material = SubResource("StandardMaterial3D_27")
 
-[sub_resource type="BoxMesh" id="BoxMesh_34"]
+[sub_resource type="BoxMesh" id="BoxMesh_30"]
 size = Vector3(0.3, 0.16, 0.012)
-material = SubResource("StandardMaterial3D_32")
+material = SubResource("StandardMaterial3D_28")
 
-[sub_resource type="BoxMesh" id="BoxMesh_35"]
+[sub_resource type="BoxMesh" id="BoxMesh_31"]
 size = Vector3(0.06, 0.12, 0.02)
+material = SubResource("StandardMaterial3D_28")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_32"]
+albedo_color = Color(0.4, 0.4, 0.4, 1.0)
+roughness = 0.4
+metallic = 0.8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_33"]
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.06
 material = SubResource("StandardMaterial3D_32")
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_36"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_34"]
 size = Vector3(13.0, 3.0, 5.2)
 
 [node name="Cocina" type="Node3D"]
 
-[node name="Edificio" type="Node3D" parent="."]
+[node name="Edificio" type="Node3D" parent="." groups=["auditoria_estructura"]]
 transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 15.0)
 
 [node name="Muros" type="StaticBody3D" parent="Edificio"]
 collision_layer = 1
 collision_mask = 0
 
-[node name="CabinWall" parent="Edificio" instance=ExtResource("e1")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, 0.0, 5.2)
+[node name="Muro_frente0" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 5.2)
 
-[node name="Ffrente0" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 1.3, 6.5)
+[node name="F0" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.3, 6.5)
 shape = SubResource("BoxShape3D_1")
 
-[node name="CabinWall2" parent="Edificio" instance=ExtResource("e1")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 0.0, 5.2)
+[node name="Muro_atras0" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -5.2)
 
-[node name="Ffrente1" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.3, 1.3, 6.5)
+[node name="F1" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 1.3, 1.3, -6.5)
 shape = SubResource("BoxShape3D_2")
 
-[node name="CabinWall3" parent="Edificio" instance=ExtResource("e1")]
-transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -5.2)
-
-[node name="Fatras0" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 1.3, 1.3, -6.5)
-shape = SubResource("BoxShape3D_3")
-
-[node name="CabinWindowA" parent="Edificio" instance=ExtResource("e2")]
+[node name="Ventana_atras1" parent="Edificio" instance=ExtResource("e2")]
 transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 0.0, -5.2)
 
-[node name="Fatras1" type="CollisionShape3D" parent="Edificio/Muros"]
+[node name="F2" type="CollisionShape3D" parent="Edificio/Muros"]
 transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, -1.3, 1.3, -6.5)
+shape = SubResource("BoxShape3D_3")
+
+[node name="Ventana_der0" parent="Edificio" instance=ExtResource("e2")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 5.2)
+
+[node name="F3" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 5.2)
 shape = SubResource("BoxShape3D_4")
 
-[node name="CabinWindowA2" parent="Edificio" instance=ExtResource("e2")]
-transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 5.2)
+[node name="Muro_der1" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.9, 0.0, 0.0, 1.3, 0.0, 2.45)
 
-[node name="Fder0" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 5.2)
+[node name="F4" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 2.45)
 shape = SubResource("BoxShape3D_5")
 
-[node name="CabinWall4" parent="Edificio" instance=ExtResource("e1")]
-transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 2.6)
+[node name="Hueco_der2" parent="Edificio" instance=ExtResource("e3")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.0, 0.0, 0.0, 1.3, 0.0, 0.0)
 
-[node name="Fder1" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 2.6)
+[node name="F5" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 0.72)
 shape = SubResource("BoxShape3D_6")
 
-[node name="CabinDoorway" parent="Edificio" instance=ExtResource("e3")]
-transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 0.0)
-
-[node name="Fder2_0" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 1.014)
+[node name="F6" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -0.72)
 shape = SubResource("BoxShape3D_7")
 
-[node name="Fder2_1" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -1.014)
+[node name="F7" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 2.392, 0.0)
 shape = SubResource("BoxShape3D_8")
 
-[node name="Fder2_2" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 2.392, 0.0)
+[node name="Muro_der3" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.9, 0.0, 0.0, 1.3, 0.0, -2.45)
+
+[node name="F8" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -2.45)
 shape = SubResource("BoxShape3D_9")
 
-[node name="CabinWall5" parent="Edificio" instance=ExtResource("e1")]
-transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, -2.6)
-
-[node name="Fder3" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -2.6)
-shape = SubResource("BoxShape3D_10")
-
-[node name="CabinWindowA3" parent="Edificio" instance=ExtResource("e2")]
+[node name="Ventana_der4" parent="Edificio" instance=ExtResource("e2")]
 transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, -5.2)
 
-[node name="Fder4" type="CollisionShape3D" parent="Edificio/Muros"]
+[node name="F9" type="CollisionShape3D" parent="Edificio/Muros"]
 transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -5.2)
+shape = SubResource("BoxShape3D_10")
+
+[node name="Muro_izq0" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -5.2)
+
+[node name="F10" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, -5.2)
 shape = SubResource("BoxShape3D_11")
 
-[node name="CabinWall6" parent="Edificio" instance=ExtResource("e1")]
-transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -5.2)
-
-[node name="Fizq0" type="CollisionShape3D" parent="Edificio/Muros"]
-transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, -5.2)
-shape = SubResource("BoxShape3D_12")
-
-[node name="CabinWindowB" parent="Edificio" instance=ExtResource("e4")]
+[node name="Ventana_izq1" parent="Edificio" instance=ExtResource("e4")]
 transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -2.6)
 
-[node name="Fizq1" type="CollisionShape3D" parent="Edificio/Muros"]
+[node name="F11" type="CollisionShape3D" parent="Edificio/Muros"]
 transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, -2.6)
-shape = SubResource("BoxShape3D_13")
+shape = SubResource("BoxShape3D_12")
 
-[node name="CabinWall7" parent="Edificio" instance=ExtResource("e1")]
+[node name="Muro_izq2" parent="Edificio" instance=ExtResource("e1")]
 transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, 0.0)
 
-[node name="Fizq2" type="CollisionShape3D" parent="Edificio/Muros"]
+[node name="F12" type="CollisionShape3D" parent="Edificio/Muros"]
 transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, 0.0)
-shape = SubResource("BoxShape3D_14")
+shape = SubResource("BoxShape3D_13")
 
-[node name="CabinWindowB2" parent="Edificio" instance=ExtResource("e4")]
+[node name="Ventana_izq3" parent="Edificio" instance=ExtResource("e4")]
 transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, 2.6)
 
-[node name="Fizq3" type="CollisionShape3D" parent="Edificio/Muros"]
+[node name="F13" type="CollisionShape3D" parent="Edificio/Muros"]
 transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, 2.6)
-shape = SubResource("BoxShape3D_15")
+shape = SubResource("BoxShape3D_14")
 
-[node name="CabinWall8" parent="Edificio" instance=ExtResource("e1")]
+[node name="Muro_izq4" parent="Edificio" instance=ExtResource("e1")]
 transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, 5.2)
 
-[node name="Fizq4" type="CollisionShape3D" parent="Edificio/Muros"]
+[node name="F14" type="CollisionShape3D" parent="Edificio/Muros"]
 transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, 5.2)
-shape = SubResource("BoxShape3D_16")
+shape = SubResource("BoxShape3D_15")
 
-[node name="CabinRoofChimney" parent="Edificio" instance=ExtResource("e5")]
+[node name="TechoE0" parent="Edificio" instance=ExtResource("e5")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, -5.2)
 
-[node name="CabinRoof" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoO0" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, -5.2)
 
-[node name="CabinRoofTop" parent="Edificio" instance=ExtResource("e7")]
+[node name="Cumbrera0" parent="Edificio" instance=ExtResource("e7")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, -5.2)
 
-[node name="FloorWood" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, -5.2)
-
-[node name="FloorWood2" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, -5.2)
-
-[node name="CabinRoof2" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoE1" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, -2.6)
 
-[node name="CabinRoof3" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoO1" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, -2.6)
 
-[node name="CabinRoofTop2" parent="Edificio" instance=ExtResource("e7")]
+[node name="Cumbrera1" parent="Edificio" instance=ExtResource("e7")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, -2.6)
 
-[node name="FloorWood3" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, -2.6)
-
-[node name="FloorWood4" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, -2.6)
-
-[node name="CabinRoof4" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoE2" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, 0.0)
 
-[node name="CabinRoof5" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoO2" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, 0.0)
 
-[node name="CabinRoofTop3" parent="Edificio" instance=ExtResource("e7")]
+[node name="Cumbrera2" parent="Edificio" instance=ExtResource("e7")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 0.0)
 
-[node name="FloorWood5" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, 0.0)
-
-[node name="FloorWood6" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, 0.0)
-
-[node name="CabinRoof6" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoE3" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, 2.6)
 
-[node name="CabinRoof7" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoO3" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, 2.6)
 
-[node name="CabinRoofTop4" parent="Edificio" instance=ExtResource("e7")]
+[node name="Cumbrera3" parent="Edificio" instance=ExtResource("e7")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 2.6)
 
-[node name="FloorWood7" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, 2.6)
-
-[node name="FloorWood8" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, 2.6)
-
-[node name="CabinRoof8" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoE4" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, 5.2)
 
-[node name="CabinRoof9" parent="Edificio" instance=ExtResource("e6")]
+[node name="TechoO4" parent="Edificio" instance=ExtResource("e6")]
 transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, 5.2)
 
-[node name="CabinRoofTop5" parent="Edificio" instance=ExtResource("e7")]
+[node name="Cumbrera4" parent="Edificio" instance=ExtResource("e7")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 5.2)
 
-[node name="FloorWood9" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, -0.17, 5.2)
-
-[node name="FloorWood10" parent="Edificio" instance=ExtResource("e8")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, -0.17, 5.2)
-
-[node name="CabinWallRoofCenter" parent="Edificio" instance=ExtResource("e9")]
+[node name="HastialFrente" parent="Edificio" instance=ExtResource("e8")]
 transform = Transform3D(5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 5.2)
 
-[node name="CabinWallRoofCenter2" parent="Edificio" instance=ExtResource("e9")]
+[node name="HastialAtras" parent="Edificio" instance=ExtResource("e8")]
 transform = Transform3D(-5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 0.0, 2.6, -5.2)
 
-[node name="CabinCornerLogs" parent="Edificio" instance=ExtResource("e10")]
+[node name="Esquina0" parent="Edificio" instance=ExtResource("e9")]
 transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, 0.0, 5.2)
 
-[node name="CabinCornerLogs2" parent="Edificio" instance=ExtResource("e10")]
+[node name="Esquina1" parent="Edificio" instance=ExtResource("e9")]
 transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 5.2)
 
-[node name="CabinCornerLogs3" parent="Edificio" instance=ExtResource("e10")]
+[node name="Esquina2" parent="Edificio" instance=ExtResource("e9")]
 transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -5.2)
 
-[node name="CabinCornerLogs4" parent="Edificio" instance=ExtResource("e10")]
+[node name="Esquina3" parent="Edificio" instance=ExtResource("e9")]
 transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -5.2)
 
-[node name="Subsuelo" type="MeshInstance3D" parent="Edificio"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.012, 0.0)
-mesh = SubResource("PlaneMesh_18")
+[node name="Piso" type="MeshInstance3D" parent="Edificio"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.02, 0.0)
+mesh = SubResource("BoxMesh_17")
 cast_shadow = 0
+
+[node name="ColPiso" type="StaticBody3D" parent="Edificio"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.02, 0.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Edificio/ColPiso"]
+shape = SubResource("BoxShape3D_18")
 
 [node name="SinNiebla" type="FogVolume" parent="Edificio"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.4, 0.0)
@@ -366,183 +355,204 @@ size = Vector3(5.2, 2.8, 13.0)
 material = SubResource("FogMaterial_19")
 
 [node name="LuzInterior" type="OmniLight3D" parent="Edificio"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.2, 0.0)
 light_color = Color(1.0, 0.68, 0.4, 1.0)
 light_energy = 1.1
 omni_range = 9.0
 omni_attenuation = 1.4
 shadow_enabled = true
 
-[node name="LuzCocina" type="OmniLight3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 4.5, 2.1, 15.0)
-light_color = Color(1.0, 0.72, 0.45, 1.0)
-light_energy = 0.8
-omni_range = 6.0
-omni_attenuation = 1.4
+[node name="Rotulo" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -1.7, 1.75, 12.035)
+script = ExtResource("e12")
+Texto = "COMEDOR"
+Ancho = 1.0
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 50
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
 
-[node name="Mesa0" parent="." instance=ExtResource("e11")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.3, 0.0, 0.0, 0.0, 2.6, -5.6, 0.0, 14.6)
+[node name="Mesa0" parent="." instance=ExtResource("e13") groups=["apoyar_suelo"]]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, -4.6, 0.06, 15.0)
 
-[node name="table(Clone)" parent="Mesa0"]
-material_override = SubResource("StandardMaterial3D_20")
+[node name="Banca0S" parent="." instance=ExtResource("e14") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -4.6, 0.06, 15.7997)
 
-[node name="ColMesa0" type="StaticBody3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -4.5, 0.38, 14.0)
-collision_layer = 2
-collision_mask = 0
+[node name="Banca0N" parent="." instance=ExtResource("e14") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -4.6, 0.06, 14.2003)
 
-[node name="Forma" type="CollisionShape3D" parent="ColMesa0"]
-shape = SubResource("BoxShape3D_21")
+[node name="Mesa1" parent="." instance=ExtResource("e13") groups=["apoyar_suelo"]]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, -2.3, 0.06, 15.0)
 
-[node name="Mesa1" parent="." instance=ExtResource("e11")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.3, 0.0, 0.0, 0.0, 2.6, -3.4, 0.0, 14.6)
+[node name="Banca1S" parent="." instance=ExtResource("e14") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -2.3, 0.06, 15.7997)
 
-[node name="table(Clone)" parent="Mesa1"]
-material_override = SubResource("StandardMaterial3D_20")
+[node name="Banca1N" parent="." instance=ExtResource("e14") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -2.3, 0.06, 14.2003)
 
-[node name="ColMesa1" type="StaticBody3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.3, 0.38, 14.0)
-collision_layer = 2
-collision_mask = 0
+[node name="Mesa2" parent="." instance=ExtResource("e13") groups=["apoyar_suelo"]]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.06, 15.0)
 
-[node name="Forma" type="CollisionShape3D" parent="ColMesa1"]
-shape = SubResource("BoxShape3D_22")
+[node name="Banca2S" parent="." instance=ExtResource("e14") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.06, 15.7997)
 
-[node name="Mesa2" parent="." instance=ExtResource("e11")]
-transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.3, 0.0, 0.0, 0.0, 2.6, -1.2, 0.0, 14.6)
+[node name="Banca2N" parent="." instance=ExtResource("e14") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.06, 14.2003)
 
-[node name="table(Clone)" parent="Mesa2"]
-material_override = SubResource("StandardMaterial3D_20")
+[node name="Vajilla0" parent="." instance=ExtResource("e15") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.9971, 0.0, 0.0755, 0.0, 1.0, 0.0, -0.0755, 0.0, -0.9971, -5.1, 0.82, 15.25)
 
-[node name="ColMesa2" type="StaticBody3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.1, 0.38, 14.0)
-collision_layer = 2
-collision_mask = 0
+[node name="Vajilla1" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(0.2743, 0.0, -0.9616, 0.0, 1.0, 0.0, 0.9616, 0.0, 0.2743, -4.2, 0.82, 14.75)
 
-[node name="Forma" type="CollisionShape3D" parent="ColMesa2"]
-shape = SubResource("BoxShape3D_23")
+[node name="Vajilla2" parent="." instance=ExtResource("e17") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.7292, 0.0, -0.6843, 0.0, 1.0, 0.0, 0.6843, 0.0, -0.7292, -2.7, 0.82, 15.25)
 
-[node name="Banca0" parent="." instance=ExtResource("e12")]
-transform = Transform3D(4.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, -5.6, 0.0, 12.95)
+[node name="Vajilla3" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.6075, 0.0, -0.7943, 0.0, 1.0, 0.0, 0.7943, 0.0, 0.6075, -1.9, 0.82, 14.75)
 
-[node name="bench(Clone)" parent="Banca0"]
-material_override = SubResource("StandardMaterial3D_24")
+[node name="Vajilla4" parent="." instance=ExtResource("e15") groups=["apoyar_suelo"]]
+transform = Transform3D(0.7103, 0.0, -0.7039, 0.0, 1.0, 0.0, 0.7039, 0.0, 0.7103, -0.5, 0.82, 15.25)
 
-[node name="Banca1" parent="." instance=ExtResource("e12")]
-transform = Transform3D(4.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, -2.3, 0.0, 12.95)
+[node name="Vajilla5" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.4002, 0.0, 0.9164, 0.0, 1.0, 0.0, -0.9164, 0.0, -0.4002, -0.2, 0.82, 14.75)
 
-[node name="bench(Clone)" parent="Banca1"]
-material_override = SubResource("StandardMaterial3D_24")
+[node name="Vajilla6" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.0826, 0, 0.9966, 0, 1, 0, -0.9966, 0, -0.0826, -3.4, 0.060000062, 15)
 
-[node name="Banca02" parent="." instance=ExtResource("e12")]
-transform = Transform3D(4.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, -5.6, 0.0, 15.1)
-
-[node name="bench(Clone)" parent="Banca02"]
-material_override = SubResource("StandardMaterial3D_24")
-
-[node name="Banca12" parent="." instance=ExtResource("e12")]
-transform = Transform3D(4.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, -2.3, 0.0, 15.1)
-
-[node name="bench(Clone)" parent="Banca12"]
-material_override = SubResource("StandardMaterial3D_24")
-
-[node name="KitchenStove" parent="." instance=ExtResource("e13")]
-transform = Transform3D(0.0, 0.0, -2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 5.95, 0.0, 13.0)
-
-[node name="KitchenSink" parent="." instance=ExtResource("e14")]
-transform = Transform3D(0.0, 0.0, -2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 5.95, 0.0, 13.9)
-
-[node name="ColCocina" type="StaticBody3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 5.5, 0.45, 14.7)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ColCocina"]
-shape = SubResource("BoxShape3D_25")
-
-[node name="Refrigerador" parent="." instance=ExtResource("e15")]
-transform = Transform3D(0.0, 0.0, -2.0, 0.0, 2.0, 0.0, 2.0, 0.0, 0.0, 5.95, 0.0, 16.6)
-
-[node name="CajonCubiertos" type="StaticBody3D" parent="." node_paths=PackedStringArray("Parte")]
-transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 5.95, 0.0, 14.8)
+[node name="TazaDelantal" type="StaticBody3D" parent="." groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.75, 0.82, 14.8)
 collision_layer = 8
 collision_mask = 0
-script = ExtResource("e16")
-Nombre = "Cajón de cubiertos"
-MensajeAlAbrir = "Cucharas de madera, un abrelatas y un menú de hace años: «Martes de chocolate»."
-SonidoAbrir = 1
-Parte = NodePath("Modelo/kitchenCabinetDrawer(Clone)/drawer")
-TipoMovimiento = 1
-Desplazamiento = Vector3(0.0, 0.0, 0.22)
-
-[node name="Forma" type="CollisionShape3D" parent="CajonCubiertos"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.43, 0.45, -0.43)
-shape = SubResource("BoxShape3D_26")
-
-[node name="Modelo" parent="CajonCubiertos" instance=ExtResource("e17")]
-transform = Transform3D(2.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0)
-
-[node name="Olla" parent="." instance=ExtResource("e18")]
-transform = Transform3D(0.6578, 0.0, 0.2394, 0.0, 0.7, 0.0, -0.2394, 0.0, 0.6578, 5.55, 0.92, 12.65)
-
-[node name="Olla2" parent="." instance=ExtResource("e19")]
-transform = Transform3D(0.4596, 0.0, -0.3857, 0.0, 0.6, 0.0, 0.3857, 0.0, 0.4596, 5.6, 0.92, 13.35)
-
-[node name="Sarten" parent="." instance=ExtResource("e20")]
-transform = Transform3D(-0.275, 0.0, 0.4763, 0.0, 0.55, 0.0, -0.4763, 0.0, -0.275, 5.45, 0.94, 14.0)
-
-[node name="TazaDelantal" type="StaticBody3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.55, 0.76, 13.85)
-collision_layer = 8
-collision_mask = 0
-script = ExtResource("e22")
+script = ExtResource("e21")
 Id = "taza_delantal"
 Titulo = "Taza a medias y delantal"
 Descripcion = "Una taza de chocolate a medio tomar, todavía tibia, y el delantal de Porky colgado de prisa junto a la estufa."
 EsEvidencia = true
 ComentarioAlMirar = "Todavía está tibia..."
-Imagen = ExtResource("e21")
+Imagen = ExtResource("e20")
 
 [node name="Forma" type="CollisionShape3D" parent="TazaDelantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.17, 0.0)
-shape = SubResource("BoxShape3D_27")
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.15, 0.0)
+shape = SubResource("BoxShape3D_20")
 
-[node name="Taza" parent="TazaDelantal" instance=ExtResource("e23")]
-transform = Transform3D(0.344, 0.0, 0.2409, 0.0, 0.42, 0.0, -0.2409, 0.0, 0.344, 0.0, 0.0, 0.0)
+[node name="Taza" parent="TazaDelantal" instance=ExtResource("e22")]
+transform = Transform3D(0.8192, 0.0, 0.5736, 0.0, 1.0, 0.0, -0.5736, 0.0, 0.8192, 0.0, 0.0, 0.0)
 
 [node name="Chocolate" type="MeshInstance3D" parent="TazaDelantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.06, 0.0)
-mesh = SubResource("CylinderMesh_29")
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.065, 0.0)
+mesh = SubResource("CylinderMesh_22")
 
-[node name="Delantal" type="StaticBody3D" parent="."]
-transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 6.15, 1.0, 12.35)
+[node name="Refrigerador" parent="." instance=ExtResource("e23") groups=["apoyar_suelo"]]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 2.9, 0.06, 16.8689)
+
+[node name="Tarja" parent="." instance=ExtResource("e24") groups=["apoyar_suelo"]]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 3.9, 0.06, 16.695)
+
+[node name="CajonCubiertos" type="StaticBody3D" parent="." node_paths=PackedStringArray("Parte")]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 4.85, 0.06, 16.695)
 collision_layer = 8
 collision_mask = 0
-script = ExtResource("e16")
+script = ExtResource("e25")
+Nombre = "Cajón de cubiertos"
+MensajeAlAbrir = "Cucharas de madera, un abrelatas y un menú de hace años: «Martes de chocolate»."
+SonidoAbrir = 1
+Parte = NodePath("Modelo/Modelo/kitchenCabinetDrawer(Clone)/drawer")
+TipoMovimiento = 1
+Desplazamiento = Vector3(0.0, 0.0, 0.2)
+
+[node name="Forma" type="CollisionShape3D" parent="CajonCubiertos"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.495, 0.0)
+shape = SubResource("BoxShape3D_23")
+
+[node name="Modelo" parent="CajonCubiertos" instance=ExtResource("e26")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="Estufa0" parent="." instance=ExtResource("e27") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 5.595, 0.06, 15.7)
+
+[node name="Estufa1" parent="." instance=ExtResource("e27") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 5.595, 0.06, 14.75)
+
+[node name="Campana" parent="." instance=ExtResource("e28") groups=["apoyar_pared"]]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5.8129997, 1.75, 15.22)
+
+[node name="AlacenaPared" parent="." instance=ExtResource("e29") groups=["apoyar_pared"]]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 3.9, 1.6, 17.0856)
+
+[node name="RepisaCocina" parent="." instance=ExtResource("e30") groups=["apoyar_pared"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 1.5, 12.897904)
+
+[node name="OllaEstufa" parent="." instance=ExtResource("e31") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.1736, 0, 0.9848, 0, 1, 0, -0.9848, 0, -0.1736, 5.615, 1.0280001, 15.7)
+
+[node name="OllaChica" parent="." instance=ExtResource("e32") groups=["apoyar_suelo"]]
+transform = Transform3D(0.342, 0, 0.9397, 0, 1, 0, -0.9397, 0, 0.342, 5.615, 1.0280001, 14.75)
+
+[node name="TablaPicar" parent="." instance=ExtResource("e33") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.9962, 0, 0.0872, 0, 1, 0, -0.0872, 0, -0.9962, 4.85, 0.9839999, 16.715)
+
+[node name="Escurridor" parent="." instance=ExtResource("e34") groups=["apoyar_suelo"]]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 3.75, 0.76399994, 16.81)
+
+[node name="BoteBasura0" parent="." instance=ExtResource("e35") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.4, 0.06, 13.2)
+
+[node name="BoteBasura1" parent="." instance=ExtResource("e35") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -5.6, 0.06, 13.2)
+
+[node name="Riel" type="MeshInstance3D" parent="." groups=["auditoria_pared"]]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 6.07, 1.85, 13.55)
+mesh = SubResource("BoxMesh_25")
+
+[node name="Colgado0" parent="." instance=ExtResource("e36") groups=["auditoria_colgado"]]
+transform = Transform3D(0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 6.025, 1.55, 14.0)
+
+[node name="Colgado1" parent="." instance=ExtResource("e37") groups=["auditoria_colgado"]]
+transform = Transform3D(0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 6.025, 1.55, 13.65)
+
+[node name="Colgado2" parent="." instance=ExtResource("e32") groups=["auditoria_colgado"]]
+transform = Transform3D(0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 5.9921, 1.55, 13.3)
+
+[node name="Colgado3" parent="." instance=ExtResource("e36") groups=["auditoria_colgado"]]
+transform = Transform3D(0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 6.025, 1.55, 13.05)
+
+[node name="Delantal" type="StaticBody3D" parent="." groups=["auditoria_colgado"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 3.4, 1.25, 12.86)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e25")
 Nombre = "Delantal de Porky"
 MensajeAlAbrir = "En el bolsillo del delantal hay un llavero con una placa de madera: «Cabaña 4 — Porky»."
 SonidoAbrir = 2
 ObjetoQueDa = "llavero_porky"
 
 [node name="Forma" type="CollisionShape3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
-shape = SubResource("BoxShape3D_30")
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.1, 0.0)
+shape = SubResource("BoxShape3D_26")
 
 [node name="Tela" type="MeshInstance3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.05, 0.0)
-mesh = SubResource("BoxMesh_33")
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.1, 0.0)
+mesh = SubResource("BoxMesh_29")
 
 [node name="Bolsillo" type="MeshInstance3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.15, 0.02)
-mesh = SubResource("BoxMesh_34")
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.2, 0.02)
+mesh = SubResource("BoxMesh_30")
 
 [node name="Cinta" type="MeshInstance3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.42, -0.01)
-mesh = SubResource("BoxMesh_35")
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.38, -0.005)
+mesh = SubResource("BoxMesh_31")
+
+[node name="Gancho" type="MeshInstance3D" parent="Delantal"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.45, -0.02)
+mesh = SubResource("CylinderMesh_33")
 
 [node name="Bordado" type="Node3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.14, 0.02)
-script = ExtResource("e24")
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.09, 0.017)
+script = ExtResource("e12")
 Texto = "PORKY"
 Ancho = 0.22
 ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
@@ -553,15 +563,32 @@ ConFondo = false
 AltoMaximo = 1.2
 TamPixel = 0.0015
 
-[node name="Horarios" type="Node3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.5, 1.7, 12.62)
-script = ExtResource("e24")
+[node name="Pizarra" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3, 1.55, 12.675)
+script = ExtResource("e12")
+Texto = "MENÚ DEL DÍA
+Sopa de fideo
+Tacos de papa
+Chocolate caliente
+— ¡Último verano! —"
+Ancho = 1.1
+ColorPapel = Color(0.12, 0.16, 0.13, 1.0)
+ColorTexto = Color(0.92, 0.92, 0.85, 1.0)
+TamFuente = 36
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Horarios" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 1.6, 12.69)
+script = ExtResource("e12")
 Texto = "HORARIOS
 Desayuno 8:00
 Comida 14:00
 Cena 20:00
 Chocolate en la fogata 22:00"
-Ancho = 1.0
+Ancho = 0.9
 ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
 ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
 TamFuente = 36
@@ -570,9 +597,9 @@ ConFondo = true
 AltoMaximo = 1.2
 TamPixel = 0.0025
 
-[node name="Placa" type="Node3D" parent="."]
-transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 2.4, 1.6, 17.38)
-script = ExtResource("e24")
+[node name="Placa" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.3, 1.6, 17.310001)
+script = ExtResource("e12")
 Texto = "CAMPAMENTO PINO LUNAR
 Gracias por tantos veranos.
 Cerramos este año."
@@ -585,18 +612,12 @@ ConFondo = true
 AltoMaximo = 1.2
 TamPixel = 0.0025
 
-[node name="Rotulo" type="Node3D" parent="."]
-transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 2.15, 12.3)
-script = ExtResource("e24")
-Texto = "COMEDOR"
-Ancho = 1.2
-ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
-ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
-TamFuente = 60
-TamMinimo = 14
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0025
+[node name="LuzCocina" type="OmniLight3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 4.5, 2.2, 15.0)
+light_color = Color(1.0, 0.72, 0.45, 1.0)
+light_energy = 0.8
+omni_range = 6.0
+omni_attenuation = 1.4
 
 [node name="Cocina" type="Area3D" parent="."]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.5, 15.0)
@@ -605,4 +626,4 @@ collision_mask = 4
 monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Cocina"]
-shape = SubResource("BoxShape3D_36")
+shape = SubResource("BoxShape3D_34")

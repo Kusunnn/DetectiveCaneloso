@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/quaternius/first_aid_kit.glb" id="e1"]
+
+[node name="BotiquinBolsa" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(0.2239, 0.0, 0.0, 0.0, 0.2239, 0.0, 0.0, 0.0, 0.2239, -0.0002, 0.1349, 0.0)

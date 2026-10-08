@@ -13,15 +13,15 @@ const TOMAS := {
 	"candado_caseta": ["Caseta/Candado", Vector3(1, 0.25, -0.35), 0.55],
 	"baul_disfraces": ["Almacen/PistaBaul", Vector3(0.5, 1, 0.2), 1.25],
 	"lena_intacta": ["ZonaFogata/Lena", Vector3(-1, 0.55, 0.8), 3.4],
-	"libro_guardia_quemado": ["ZonaFogata/Fuego/LibroQuemado", Vector3(0.25, 1, 0.45), 0.85],
-	"nota_porky": ["CabanaPorky/NotaPorky", Vector3(-0.35, 1, 0.1), 0.6],
-	"foto_grupo": ["CabanaPorky/ParedFotos/FotoGrupo", Vector3(0, -0.05, 1), 0.75],
-	"recorte_periodico": ["CabanaPorky/Recorte", Vector3(-1, 0, 0), 0.85],
+	"libro_guardia_quemado": ["ZonaFogata/Fuego/LibroQuemado", Vector3(0.12, 1, -0.1), 0.95],
+	"nota_porky": ["CabanaPorky/NotaPorky", Vector3(0.3, 1, 0.0), 0.65],
+	"foto_grupo": ["CabanaPorky/FotoGrupo", Vector3(-1, 0.0, 0), 0.95],
+	"recorte_periodico": ["CabanaPorky/Recorte", Vector3(0, 0, 1), 0.85],
 	"oferta_compra": ["CabanaPorky/Oferta", Vector3(0.2, 1, 0.35), 0.55],
 	"taza_delantal": ["Cocina/TazaDelantal", Vector3(-0.7, 0.75, -0.25), 0.45],
-	"registro_enfermeria": ["Enfermeria/Escritorio/Modelo/desk(Clone)/drawer/Registro", Vector3(0.35, 1, 0.1), 0.6],
+	"registro_enfermeria": ["Enfermeria/Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro", Vector3(0.35, 1, 0.1), 0.6],
 	"botas_tony": ["CabanaDirector/Trasera/Botas", Vector3(0.4, 0.9, 0.9), 1.25],
-	"registro_llamadas": ["Estacionamiento/Coche/RegistroLlamadas", Vector3(-1, 0.25, 0.1), 0.7],
+	"registro_llamadas": ["Estacionamiento/Coche/RegistroLlamadas", Vector3(-0.94, 0.5, 0.34), 0.7],
 }
 const ABRIR := ["Almacen/Baul", "CabanaPorky/Almohada", "CabanaPorky/Papelera", "Enfermeria/Escritorio"]
 
@@ -70,6 +70,9 @@ func _init() -> void:
 				centro = hijo.global_position
 		cam.global_position = centro + (toma[1] as Vector3).normalized() * float(toma[2])
 		cam.look_at(centro, Vector3.UP if absf((toma[1] as Vector3).normalized().y) < 0.95 else Vector3.FORWARD)
+		# El registro de llamadas va dentro del coche: para la foto se esconde la carrocería
+		var coche := esc.get_node("Estacionamiento/Coche/Modelo") as Node3D
+		coche.visible = id != "registro_llamadas"
 		for i in 20:
 			await process_frame
 		var imagen := root.get_texture().get_image()

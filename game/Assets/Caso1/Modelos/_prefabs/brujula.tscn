@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/quaternius/compass_closed.glb" id="e1"]
+
+[node name="Brujula" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(0.0869, 0.0, 0.0, 0.0, 0.0869, 0.0, 0.0, 0.0, 0.0869, -0.0015, 0.0266, -0.0126)

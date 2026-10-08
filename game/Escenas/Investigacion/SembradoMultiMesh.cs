@@ -61,6 +61,8 @@ public partial class SembradoMultiMesh : Node3D
 			if (Modelos[i] == null || posiciones[i].Count == 0) continue;
 			var (malla, local) = BuscarMalla(Modelos[i]);
 			if (malla == null) continue;
+			// La base del modelo queda en Y = 0 aunque el pivote del archivo no esté ahí (Nature Kit lo trae 5 cm arriba)
+			local = local.Translated(Vector3.Up * -(local * malla.GetAabb()).Position.Y);
 			var mm = new MultiMesh { TransformFormat = MultiMesh.TransformFormatEnum.Transform3D, Mesh = malla, InstanceCount = posiciones[i].Count };
 			for (int j = 0; j < posiciones[i].Count; j++) mm.SetInstanceTransform(j, posiciones[i][j] * local);
 			var instancia = new MultiMeshInstance3D

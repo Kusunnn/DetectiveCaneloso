@@ -1,4 +1,4 @@
-[gd_scene load_steps=168 format=3]
+[gd_scene load_steps=156 format=3]
 
 [ext_resource type="Shader" path="res://Escenas/Caso1/cielo_noche.gdshader" id="e1"]
 [ext_resource type="Shader" path="res://Escenas/Caso1/suelo_campamento.gdshader" id="e2"]
@@ -10,9 +10,9 @@
 [ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_pasto_normal.jpg" id="e8"]
 [ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/mascara_suelo.png" id="e9"]
 [ext_resource type="Shader" path="res://Escenas/Caso1/lago_algas.gdshader" id="e10"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/rock_largeA.glb" id="e11"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/rock_largeC.glb" id="e12"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/rock_largeB.glb" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_a.tscn" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_c.tscn" id="e12"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_b.tscn" id="e13"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/SembradoMultiMesh.cs" id="e14"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineTallA.glb" id="e15"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineTallB.glb" id="e16"]
@@ -30,36 +30,38 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/grass.glb" id="e28"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/grass_large.glb" id="e29"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/grass_leafs.glb" id="e30"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/rock_tallA.glb" id="e31"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/stump_oldTall.glb" id="e32"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/stump_round.glb" id="e33"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log_large.glb" id="e34"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/stump_old.glb" id="e35"]
-[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/pueblo/lantern.glb" id="e36"]
-[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/circle_05.png" id="e37"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/LuzParpadeante.cs" id="e38"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/zona_fogata.tscn" id="e39"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/almacen.tscn" id="e40"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/cocina_comedor.tscn" id="e41"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/cabana_porky.tscn" id="e42"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/cabana_director.tscn" id="e43"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/cabanas_campistas.tscn" id="e44"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/enfermeria.tscn" id="e45"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/caseta_generador.tscn" id="e46"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/estacionamiento.tscn" id="e47"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/salida_sendero.tscn" id="e48"]
-[ext_resource type="PackedScene" path="res://Escenas/Caso1/detalles_ambiente.tscn" id="e49"]
-[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/light_01.png" id="e50"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e51"]
-[ext_resource type="PackedScene" path="res://hud/hud.tscn" id="e52"]
-[ext_resource type="PackedScene" path="res://Escenas/Interrogatorio/jugador.tscn" id="e53"]
-[ext_resource type="PackedScene" path="res://Escenas/Menus/menu_pausa.tscn" id="e54"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/VentanaDialogo.cs" id="e55"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/TableroDeduccion.cs" id="e56"]
-[ext_resource type="AudioStream" path="res://Assets/Audio/Musica/investigacion.ogg" id="e57"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="e58"]
-[ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="e59"]
-[ext_resource type="Script" path="res://Escenas/Caso1/Caso1.cs" id="e60"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pino_talla.tscn" id="e31"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pino_tallc.tscn" id="e32"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pino_tallb.tscn" id="e33"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pino_defaulta.tscn" id="e34"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pino_roundb.tscn" id="e35"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pino_rounda.tscn" id="e36"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pino_talld.tscn" id="e37"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/pueblo/lantern.glb" id="e38"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/circle_05.png" id="e39"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/LuzParpadeante.cs" id="e40"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/zona_fogata.tscn" id="e41"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/almacen.tscn" id="e42"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/cocina_comedor.tscn" id="e43"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/cabana_porky.tscn" id="e44"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/cabana_director.tscn" id="e45"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/cabanas_campistas.tscn" id="e46"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/enfermeria.tscn" id="e47"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/caseta_generador.tscn" id="e48"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/estacionamiento.tscn" id="e49"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/salida_sendero.tscn" id="e50"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/detalles_ambiente.tscn" id="e51"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/light_01.png" id="e52"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e53"]
+[ext_resource type="PackedScene" path="res://hud/hud.tscn" id="e54"]
+[ext_resource type="PackedScene" path="res://Escenas/Interrogatorio/jugador.tscn" id="e55"]
+[ext_resource type="PackedScene" path="res://Escenas/Menus/menu_pausa.tscn" id="e56"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/VentanaDialogo.cs" id="e57"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/TableroDeduccion.cs" id="e58"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/Musica/investigacion.ogg" id="e59"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="e60"]
+[ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="e61"]
+[ext_resource type="Script" path="res://Escenas/Caso1/Caso1.cs" id="e62"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
 shader = ExtResource("e1")
@@ -96,7 +98,7 @@ volumetric_fog_enabled = true
 volumetric_fog_density = 0.012
 volumetric_fog_albedo = Color(0.55, 0.62, 0.78, 1.0)
 volumetric_fog_emission = Color(0.01, 0.015, 0.03, 1.0)
-volumetric_fog_length = 48.0
+volumetric_fog_length = 36.0
 volumetric_fog_detail_spread = 2.0
 volumetric_fog_ambient_inject = 0.25
 adjustment_enabled = true
@@ -233,94 +235,38 @@ height = 4.0
 radius = 0.4
 height = 4.0
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_33"]
-radius = 0.4
-height = 4.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_34"]
-radius = 0.4
-height = 4.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_35"]
-radius = 0.4
-height = 4.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_36"]
-radius = 0.4
-height = 4.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_37"]
-radius = 0.4
-height = 4.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_38"]
-radius = 0.4
-height = 4.0
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_39"]
-radius = 0.9
-height = 1.2
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_40"]
-radius = 0.9
-height = 1.2
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_41"]
-radius = 0.9
-height = 1.2
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_42"]
-radius = 0.9
-height = 1.2
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_43"]
-radius = 0.5
-height = 1.2
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_44"]
-radius = 0.5
-height = 1.2
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_45"]
-radius = 0.5
-height = 1.2
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_46"]
-radius = 0.5
-height = 1.2
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_47"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_33"]
 size = Vector3(80.0, 6.0, 1.0)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_48"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_34"]
 size = Vector3(80.0, 6.0, 1.0)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_49"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_35"]
 size = Vector3(1.0, 6.0, 72.0)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_50"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_36"]
 size = Vector3(1.0, 6.0, 72.0)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_51"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_37"]
 size = Vector3(4.2, 6.0, 0.6)
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_52"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_38"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_53"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_39"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_54"]
+[sub_resource type="SphereMesh" id="SphereMesh_40"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_53")
+material = SubResource("StandardMaterial3D_39")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_55"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_41"]
 emission_shape = 3
 emission_box_extents = Vector3(0.7, 0.6, 0.7)
 direction = Vector3(0.0, 1.0, 0.0)
@@ -336,7 +282,7 @@ turbulence_enabled = true
 turbulence_noise_strength = 0.4
 turbulence_noise_scale = 4.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_56"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_42"]
 transparency = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
@@ -345,46 +291,46 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e37")
+albedo_texture = ExtResource("e39")
 blend_mode = 1
 
-[sub_resource type="QuadMesh" id="QuadMesh_57"]
+[sub_resource type="QuadMesh" id="QuadMesh_43"]
 size = Vector2(0.03, 0.03)
-material = SubResource("StandardMaterial3D_56")
+material = SubResource("StandardMaterial3D_42")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_58"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_44"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_59"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_45"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_60"]
+[sub_resource type="SphereMesh" id="SphereMesh_46"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_59")
+material = SubResource("StandardMaterial3D_45")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_61"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_47"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_62"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_48"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_63"]
+[sub_resource type="SphereMesh" id="SphereMesh_49"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_62")
+material = SubResource("StandardMaterial3D_48")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_64"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_50"]
 emission_shape = 3
 emission_box_extents = Vector3(0.7, 0.6, 0.7)
 direction = Vector3(0.0, 1.0, 0.0)
@@ -400,7 +346,7 @@ turbulence_enabled = true
 turbulence_noise_strength = 0.4
 turbulence_noise_scale = 4.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_65"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_51"]
 transparency = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
@@ -409,62 +355,62 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e37")
+albedo_texture = ExtResource("e39")
 blend_mode = 1
 
-[sub_resource type="QuadMesh" id="QuadMesh_66"]
+[sub_resource type="QuadMesh" id="QuadMesh_52"]
 size = Vector2(0.03, 0.03)
-material = SubResource("StandardMaterial3D_65")
+material = SubResource("StandardMaterial3D_51")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_67"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_53"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_68"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_54"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_69"]
+[sub_resource type="SphereMesh" id="SphereMesh_55"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_68")
+material = SubResource("StandardMaterial3D_54")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_70"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_56"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_71"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_57"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_72"]
+[sub_resource type="SphereMesh" id="SphereMesh_58"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_71")
+material = SubResource("StandardMaterial3D_57")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_73"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_59"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_74"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_60"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_75"]
+[sub_resource type="SphereMesh" id="SphereMesh_61"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_74")
+material = SubResource("StandardMaterial3D_60")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_76"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_62"]
 emission_shape = 3
 emission_box_extents = Vector3(0.7, 0.6, 0.7)
 direction = Vector3(0.0, 1.0, 0.0)
@@ -480,7 +426,7 @@ turbulence_enabled = true
 turbulence_noise_strength = 0.4
 turbulence_noise_scale = 4.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_77"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_63"]
 transparency = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
@@ -489,62 +435,62 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e37")
+albedo_texture = ExtResource("e39")
 blend_mode = 1
 
-[sub_resource type="QuadMesh" id="QuadMesh_78"]
+[sub_resource type="QuadMesh" id="QuadMesh_64"]
 size = Vector2(0.03, 0.03)
-material = SubResource("StandardMaterial3D_77")
+material = SubResource("StandardMaterial3D_63")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_79"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_65"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_80"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_66"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_81"]
+[sub_resource type="SphereMesh" id="SphereMesh_67"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_80")
+material = SubResource("StandardMaterial3D_66")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_82"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_68"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_83"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_69"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_84"]
+[sub_resource type="SphereMesh" id="SphereMesh_70"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_83")
+material = SubResource("StandardMaterial3D_69")
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_85"]
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_71"]
 radius = 0.15
 height = 3.4
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_86"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_72"]
 albedo_color = Color(1.0, 0.85, 0.6, 1.0)
 roughness = 0.5
 emission_enabled = true
 emission = Color(1.0, 0.75, 0.45, 1.0)
 emission_energy_multiplier = 4.0
 
-[sub_resource type="SphereMesh" id="SphereMesh_87"]
+[sub_resource type="SphereMesh" id="SphereMesh_73"]
 radius = 0.09
 height = 0.16
-material = SubResource("StandardMaterial3D_86")
+material = SubResource("StandardMaterial3D_72")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_88"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_74"]
 emission_shape = 3
 emission_box_extents = Vector3(36.0, 3.0, 32.0)
 direction = Vector3(0.0, 1.0, 0.0)
@@ -560,7 +506,7 @@ turbulence_enabled = true
 turbulence_noise_strength = 0.5
 turbulence_noise_scale = 4.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_89"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_75"]
 transparency = 1
 shading_mode = 1
 vertex_color_use_as_albedo = true
@@ -570,18 +516,18 @@ billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
 
-[sub_resource type="QuadMesh" id="QuadMesh_90"]
+[sub_resource type="QuadMesh" id="QuadMesh_76"]
 size = Vector2(0.05, 0.05)
-material = SubResource("StandardMaterial3D_89")
+material = SubResource("StandardMaterial3D_75")
 
-[sub_resource type="Gradient" id="Gradient_91"]
+[sub_resource type="Gradient" id="Gradient_77"]
 offsets = PackedFloat32Array(0.0, 0.3, 0.7, 1.0)
 colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_92"]
-gradient = SubResource("Gradient_91")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_78"]
+gradient = SubResource("Gradient_77")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_93"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_79"]
 emission_shape = 3
 emission_box_extents = Vector3(3.0, 0.9, 6.0)
 direction = Vector3(0.0, 1.0, 0.0)
@@ -596,9 +542,9 @@ angle_max = 180.0
 turbulence_enabled = true
 turbulence_noise_strength = 0.8
 turbulence_noise_scale = 4.0
-color_ramp = SubResource("GradientTexture1D_92")
+color_ramp = SubResource("GradientTexture1D_78")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_94"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_80"]
 transparency = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
@@ -607,21 +553,21 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e50")
+albedo_texture = ExtResource("e52")
 blend_mode = 1
 
-[sub_resource type="QuadMesh" id="QuadMesh_95"]
+[sub_resource type="QuadMesh" id="QuadMesh_81"]
 size = Vector2(0.12, 0.12)
-material = SubResource("StandardMaterial3D_94")
+material = SubResource("StandardMaterial3D_80")
 
-[sub_resource type="Gradient" id="Gradient_96"]
+[sub_resource type="Gradient" id="Gradient_82"]
 offsets = PackedFloat32Array(0.0, 0.3, 0.7, 1.0)
 colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_97"]
-gradient = SubResource("Gradient_96")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_83"]
+gradient = SubResource("Gradient_82")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_98"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_84"]
 emission_shape = 3
 emission_box_extents = Vector3(3.0, 0.9, 6.0)
 direction = Vector3(0.0, 1.0, 0.0)
@@ -636,9 +582,9 @@ angle_max = 180.0
 turbulence_enabled = true
 turbulence_noise_strength = 0.8
 turbulence_noise_scale = 4.0
-color_ramp = SubResource("GradientTexture1D_97")
+color_ramp = SubResource("GradientTexture1D_83")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_99"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_85"]
 transparency = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
@@ -647,21 +593,21 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e50")
+albedo_texture = ExtResource("e52")
 blend_mode = 1
 
-[sub_resource type="QuadMesh" id="QuadMesh_100"]
+[sub_resource type="QuadMesh" id="QuadMesh_86"]
 size = Vector2(0.12, 0.12)
-material = SubResource("StandardMaterial3D_99")
+material = SubResource("StandardMaterial3D_85")
 
-[sub_resource type="Gradient" id="Gradient_101"]
+[sub_resource type="Gradient" id="Gradient_87"]
 offsets = PackedFloat32Array(0.0, 0.3, 0.7, 1.0)
 colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_102"]
-gradient = SubResource("Gradient_101")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_88"]
+gradient = SubResource("Gradient_87")
 
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_103"]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_89"]
 emission_shape = 3
 emission_box_extents = Vector3(3.0, 0.9, 6.0)
 direction = Vector3(0.0, 1.0, 0.0)
@@ -676,9 +622,9 @@ angle_max = 180.0
 turbulence_enabled = true
 turbulence_noise_strength = 0.8
 turbulence_noise_scale = 4.0
-color_ramp = SubResource("GradientTexture1D_102")
+color_ramp = SubResource("GradientTexture1D_88")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_104"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_90"]
 transparency = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
@@ -687,19 +633,19 @@ billboard_mode = 3
 billboard_keep_scale = true
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
-albedo_texture = ExtResource("e50")
+albedo_texture = ExtResource("e52")
 blend_mode = 1
 
-[sub_resource type="QuadMesh" id="QuadMesh_105"]
+[sub_resource type="QuadMesh" id="QuadMesh_91"]
 size = Vector2(0.12, 0.12)
-material = SubResource("StandardMaterial3D_104")
+material = SubResource("StandardMaterial3D_90")
 
-[sub_resource type="Gradient" id="Gradient_106"]
+[sub_resource type="Gradient" id="Gradient_92"]
 offsets = PackedFloat32Array(0, 0.6, 1)
 colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0.66)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_107"]
-gradient = SubResource("Gradient_106")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_93"]
+gradient = SubResource("Gradient_92")
 width = 256
 height = 256
 fill = 1
@@ -717,7 +663,7 @@ light_color = Color(0.55, 0.66, 1.0, 1.0)
 light_energy = 0.42
 shadow_enabled = true
 directional_shadow_mode = 1
-directional_shadow_max_distance = 55.0
+directional_shadow_max_distance = 32.0
 sky_mode = 0
 
 [node name="NieblaLago" type="FogVolume" parent="."]
@@ -742,7 +688,7 @@ collision_mask = 0
 [node name="Forma" type="CollisionShape3D" parent="ColSuelo"]
 shape = SubResource("BoxShape3D_8")
 
-[node name="Lago" type="MeshInstance3D" parent="."]
+[node name="Lago" type="MeshInstance3D" parent="." groups=["auditoria_fuera_ok"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.25, -78.0)
 mesh = SubResource("PlaneMesh_10")
 cast_shadow = 0
@@ -754,56 +700,55 @@ light_energy = 2.2
 omni_range = 24.0
 omni_attenuation = 1.4
 
-[node name="Orilla" type="Node3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+[node name="Orilla" type="Node3D" parent="." groups=["auditoria_fuera_ok"]]
 
 [node name="Roca0" parent="Orilla" instance=ExtResource("e11")]
-transform = Transform3D(-3.6478, 0.0, 0.487, 0.0, 3.6802, 0.0, -0.487, 0.0, -3.6478, -36.5279, -0.1, -48.0345)
+transform = Transform3D(-1.0046, 0.0, 0.1341, 0.0, 1.0135, 0.0, -0.1341, 0.0, -1.0046, -36.5279, -0.25, -48.0345)
 
 [node name="Roca1" parent="Orilla" instance=ExtResource("e12")]
-transform = Transform3D(1.568, 0.0, -4.7797, 0.0, 5.0303, 0.0, 4.7797, 0.0, 1.568, -32.1604, -0.1, -47.7985)
+transform = Transform3D(0.3475, 0.0, -1.0592, 0.0, 1.1148, 0.0, 1.0592, 0.0, 0.3475, -32.1604, -0.25, -47.7985)
 
 [node name="Roca2" parent="Orilla" instance=ExtResource("e12")]
-transform = Transform3D(0.9576, 0.0, -5.064, 0.0, 5.1537, 0.0, 5.064, 0.0, 0.9576, -26.9561, -0.1, -48.4677)
+transform = Transform3D(0.2089, 0.0, -1.1045, 0.0, 1.124, 0.0, 1.1045, 0.0, 0.2089, -26.9561, -0.25, -48.4677)
 
 [node name="Roca3" parent="Orilla" instance=ExtResource("e11")]
-transform = Transform3D(1.7776, 0.0, -4.7811, 0.0, 5.1009, 0.0, 4.7811, 0.0, 1.7776, -22.0766, -0.1, -47.9053)
+transform = Transform3D(0.3903, 0.0, -1.0499, 0.0, 1.1201, 0.0, 1.0499, 0.0, 0.3903, -22.0766, -0.25, -47.9053)
 
 [node name="Roca4" parent="Orilla" instance=ExtResource("e13")]
-transform = Transform3D(3.6445, 0.0, -4.0143, 0.0, 5.4218, 0.0, 4.0143, 0.0, 3.6445, -17.4131, -0.1, -48.5524)
+transform = Transform3D(0.7691, 0.0, -0.8471, 0.0, 1.1441, 0.0, 0.8471, 0.0, 0.7691, -17.4131, -0.25, -48.5524)
 
 [node name="Roca5" parent="Orilla" instance=ExtResource("e13")]
-transform = Transform3D(-3.8111, 0.0, -2.989, 0.0, 4.8434, 0.0, 2.989, 0.0, -3.8111, -11.3029, -0.1, -48.7959)
+transform = Transform3D(-0.8661, 0.0, -0.6793, 0.0, 1.1008, 0.0, 0.6793, 0.0, -0.8661, -11.3029, -0.25, -48.7959)
 
 [node name="Roca6" parent="Orilla" instance=ExtResource("e11")]
-transform = Transform3D(-1.0097, 0.0, 5.2937, 0.0, 5.3892, 0.0, -5.2937, 0.0, -1.0097, -7.1881, -0.1, -48.6032)
+transform = Transform3D(-0.2139, 0.0, 1.1215, 0.0, 1.1417, 0.0, -1.1215, 0.0, -0.2139, -7.1881, -0.25, -48.6032)
 
 [node name="Roca7" parent="Orilla" instance=ExtResource("e12")]
-transform = Transform3D(4.0797, 0.0, 0.185, 0.0, 4.0839, 0.0, -0.185, 0.0, 4.0797, -1.7642, -0.1, -47.8914)
+transform = Transform3D(1.0427, 0.0, 0.0473, 0.0, 1.0438, 0.0, -0.0473, 0.0, 1.0427, -1.7642, -0.25, -47.8914)
 
 [node name="Roca8" parent="Orilla" instance=ExtResource("e13")]
-transform = Transform3D(-4.3219, 0.0, -0.2276, 0.0, 4.3279, 0.0, 0.2276, 0.0, -4.3219, 2.8098, -0.1, -47.8823)
+transform = Transform3D(-1.0606, 0.0, -0.0558, 0.0, 1.0621, 0.0, 0.0558, 0.0, -1.0606, 2.8098, -0.25, -47.8823)
 
 [node name="Roca9" parent="Orilla" instance=ExtResource("e13")]
-transform = Transform3D(0.4228, 0.0, 3.997, 0.0, 4.0193, 0.0, -3.997, 0.0, 0.4228, 7.3978, -0.1, -48.3584)
+transform = Transform3D(0.1093, 0.0, 1.0332, 0.0, 1.0389, 0.0, -1.0332, 0.0, 0.1093, 7.3978, -0.25, -48.3584)
 
 [node name="Roca10" parent="Orilla" instance=ExtResource("e11")]
-transform = Transform3D(-2.847, 0.0, -2.8957, 0.0, 4.0609, 0.0, 2.8957, 0.0, -2.847, 12.5948, -0.1, -48.8444)
+transform = Transform3D(-0.7306, 0.0, -0.7431, 0.0, 1.0421, 0.0, 0.7431, 0.0, -0.7306, 12.5948, -0.25, -48.8444)
 
 [node name="Roca11" parent="Orilla" instance=ExtResource("e13")]
-transform = Transform3D(2.9696, 0.0, 3.8315, 0.0, 4.8476, 0.0, -3.8315, 0.0, 2.9696, 16.8692, -0.1, -48.0589)
+transform = Transform3D(0.6745, 0.0, 0.8703, 0.0, 1.1011, 0.0, -0.8703, 0.0, 0.6745, 16.8692, -0.25, -48.0589)
 
 [node name="Roca12" parent="Orilla" instance=ExtResource("e11")]
-transform = Transform3D(-3.606, 0.0, 1.3976, 0.0, 3.8674, 0.0, -1.3976, 0.0, -3.606, 20.7329, -0.1, -48.138)
+transform = Transform3D(-0.9581, 0.0, 0.3713, 0.0, 1.0276, 0.0, -0.3713, 0.0, -0.9581, 20.7329, -0.25, -48.138)
 
 [node name="Roca13" parent="Orilla" instance=ExtResource("e12")]
-transform = Transform3D(-4.9537, 0.0, -1.9085, 0.0, 5.3086, 0.0, 1.9085, 0.0, -4.9537, 26.2718, -0.1, -48.5152)
+transform = Transform3D(-1.0597, 0.0, -0.4083, 0.0, 1.1356, 0.0, 0.4083, 0.0, -1.0597, 26.2718, -0.25, -48.5152)
 
 [node name="Roca14" parent="Orilla" instance=ExtResource("e11")]
-transform = Transform3D(-0.8013, 0.0, 4.5951, 0.0, 4.6644, 0.0, -4.5951, 0.0, -0.8013, 30.402, -0.1, -48.0502)
+transform = Transform3D(-0.1868, 0.0, 1.0712, 0.0, 1.0873, 0.0, -1.0712, 0.0, -0.1868, 30.402, -0.25, -48.0502)
 
 [node name="Roca15" parent="Orilla" instance=ExtResource("e11")]
-transform = Transform3D(1.9427, 0.0, 3.968, 0.0, 4.418, 0.0, -3.968, 0.0, 1.9427, 36.7242, -0.1, -48.5027)
+transform = Transform3D(0.47, 0.0, 0.96, 0.0, 1.0689, 0.0, -0.96, 0.0, 0.47, 36.7242, -0.25, -48.5027)
 
 [node name="Bosque" type="Node3D" parent="."]
 script = ExtResource("e14")
@@ -814,6 +759,7 @@ Area = Rect2(-95, -48, 190, 140)
 Huecos = Array[Rect2]([Rect2(-37, -34, 74, 68), Rect2(-5, -48, 10, 15)])
 Escala = Vector2(6.5, 9.5)
 EstiramientoAlto = 1.25
+ProyectarSombras = false
 
 [node name="BosqueOrilla" type="Node3D" parent="."]
 script = ExtResource("e14")
@@ -823,6 +769,7 @@ Semilla = 12
 Area = Rect2(-95, -110, 190, 52)
 Huecos = Array[Rect2]([Rect2(-95, -108, 190, 59)])
 Escala = Vector2(7, 10)
+ProyectarSombras = false
 
 [node name="BosqueLejano" type="Node3D" parent="."]
 script = ExtResource("e14")
@@ -841,6 +788,7 @@ Semilla = 14
 Area = Rect2(-42, -38, 84, 76)
 Huecos = Array[Rect2]([Rect2(-36.5, -33.5, 73, 67), Rect2(-5, -40, 10, 8)])
 Escala = Vector2(4, 6.5)
+ProyectarSombras = false
 
 [node name="Pasto" type="Node3D" parent="."]
 script = ExtResource("e14")
@@ -855,8 +803,8 @@ ProyectarSombras = false
 [node name="ArbolesCampamento" type="Node3D" parent="."]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
 
-[node name="Pino0" parent="ArbolesCampamento" instance=ExtResource("e20")]
-transform = Transform3D(5.7368, 0.0, 3.2775, 0.0, 7.8815, 0.0, -3.2775, 0.0, 5.7368, -34.0, 0.0, -30.0)
+[node name="Pino0" parent="ArbolesCampamento" instance=ExtResource("e31") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.5426, 0.0, 0.6809, 0.0, 0.8707, 0.0, -0.6809, 0.0, -0.5426, -34.0, 0.0, -30.0)
 
 [node name="Tronco0" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -34.0, 0.0, -30.0)
@@ -867,8 +815,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_11")
 
-[node name="Pino1" parent="ArbolesCampamento" instance=ExtResource("e20")]
-transform = Transform3D(6.9861, 0.0, -1.7999, 0.0, 7.2405, 0.0, 1.7999, 0.0, 6.9861, -30.0, 0.0, -8.0)
+[node name="Pino1" parent="ArbolesCampamento" instance=ExtResource("e32") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.1034, 0.0, -1.0851, 0.0, 1.09, 0.0, 1.0851, 0.0, -0.1034, -30.0, 0.0, -8.0)
 
 [node name="Tronco1" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -30.0, 0.0, -8.0)
@@ -879,8 +827,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_12")
 
-[node name="Pino2" parent="ArbolesCampamento" instance=ExtResource("e16")]
-transform = Transform3D(1.1406, 0.0, -7.1319, 0.0, 7.8154, 0.0, 7.1319, 0.0, 1.1406, -33.0, 0.0, 5.0)
+[node name="Pino2" parent="ArbolesCampamento" instance=ExtResource("e31") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.411, 0.0, 0.8347, 0.0, 0.9304, 0.0, -0.8347, 0.0, -0.411, -33.0, 0.0, 5.0)
 
 [node name="Tronco2" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -33.0, 0.0, 5.0)
@@ -891,8 +839,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_13")
 
-[node name="Pino3" parent="ArbolesCampamento" instance=ExtResource("e19")]
-transform = Transform3D(-3.7695, 0.0, -8.0162, 0.0, 8.996, 0.0, 8.0162, 0.0, -3.7695, -35.0, 0.0, 20.0)
+[node name="Pino3" parent="ArbolesCampamento" instance=ExtResource("e33") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.1504, 0.0, -0.9407, 0.0, 0.9526, 0.0, 0.9407, 0.0, 0.1504, -35.0, 0.0, 20.0)
 
 [node name="Tronco3" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -35.0, 0.0, 20.0)
@@ -903,8 +851,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_14")
 
-[node name="Pino4" parent="ArbolesCampamento" instance=ExtResource("e18")]
-transform = Transform3D(-2.0981, 0.0, 7.7659, 0.0, 8.4466, 0.0, -7.7659, 0.0, -2.0981, -30.0, 0.0, 28.0)
+[node name="Pino4" parent="ArbolesCampamento" instance=ExtResource("e34") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.7664, 0.0, -0.7243, 0.0, 1.0545, 0.0, 0.7243, 0.0, -0.7664, -30.0, 0.0, 28.0)
 
 [node name="Tronco4" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -30.0, 0.0, 28.0)
@@ -915,8 +863,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_15")
 
-[node name="Pino5" parent="ArbolesCampamento" instance=ExtResource("e16")]
-transform = Transform3D(-3.91, 0.0, 6.976, 0.0, 8.0121, 0.0, -6.976, 0.0, -3.91, -20.0, 0.0, 30.0)
+[node name="Pino5" parent="ArbolesCampamento" instance=ExtResource("e32") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.793, 0.0, -0.7236, 0.0, 1.0735, 0.0, 0.7236, 0.0, -0.793, -20.0, 0.0, 30.0)
 
 [node name="Tronco5" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -20.0, 0.0, 30.0)
@@ -927,8 +875,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_16")
 
-[node name="Pino6" parent="ArbolesCampamento" instance=ExtResource("e16")]
-transform = Transform3D(-4.3785, 0.0, 4.9545, 0.0, 7.6757, 0.0, -4.9545, 0.0, -4.3785, -10.0, 0.0, 28.0)
+[node name="Pino6" parent="ArbolesCampamento" instance=ExtResource("e32") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.6188, 0.0, 0.7148, 0.0, 0.9454, 0.0, -0.7148, 0.0, 0.6188, -10.0, 0.0, 28.0)
 
 [node name="Tronco6" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -10.0, 0.0, 28.0)
@@ -939,8 +887,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_17")
 
-[node name="Pino7" parent="ArbolesCampamento" instance=ExtResource("e19")]
-transform = Transform3D(7.3705, 0.0, 5.1526, 0.0, 10.7587, 0.0, -5.1526, 0.0, 7.3705, -5.0, 0.0, 24.0)
+[node name="Pino7" parent="ArbolesCampamento" instance=ExtResource("e33") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.4167, 0.0, 0.7435, 0.0, 0.8523, 0.0, -0.7435, 0.0, -0.4167, -5.0, 0.0, 24.0)
 
 [node name="Tronco7" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -5.0, 0.0, 24.0)
@@ -951,8 +899,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_18")
 
-[node name="Pino8" parent="ArbolesCampamento" instance=ExtResource("e16")]
-transform = Transform3D(5.7139, 0.0, 4.95, 0.0, 7.6539, 0.0, -4.95, 0.0, 5.7139, 8.0, 0.0, 27.0)
+[node name="Pino8" parent="ArbolesCampamento" instance=ExtResource("e31") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.9036, 0.0, 0.2638, 0.0, 0.9413, 0.0, -0.2638, 0.0, -0.9036, 8.0, 0.0, 27.0)
 
 [node name="Tronco8" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 8.0, 0.0, 27.0)
@@ -963,8 +911,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_19")
 
-[node name="Pino9" parent="ArbolesCampamento" instance=ExtResource("e19")]
-transform = Transform3D(-3.702, 0.0, -7.4765, 0.0, 8.5925, 0.0, 7.4765, 0.0, -3.702, 35.0, 0.0, 17.0)
+[node name="Pino9" parent="ArbolesCampamento" instance=ExtResource("e34") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.6002, 0.0, 0.7007, 0.0, 0.9226, 0.0, -0.7007, 0.0, -0.6002, 35.0, 0.0, 17.0)
 
 [node name="Tronco9" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 35.0, 0.0, 17.0)
@@ -975,8 +923,8 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_20")
 
-[node name="Pino10" parent="ArbolesCampamento" instance=ExtResource("e18")]
-transform = Transform3D(-5.7315, 0.0, -3.2771, 0.0, 7.0267, 0.0, 3.2771, 0.0, -5.7315, 35.5, 0.0, 8.0)
+[node name="Pino10" parent="ArbolesCampamento" instance=ExtResource("e31") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.8371, 0.0, 0.3355, 0.0, 0.9018, 0.0, -0.3355, 0.0, -0.8371, 35.5, 0.0, 8.0)
 
 [node name="Tronco10" type="StaticBody3D" parent="ArbolesCampamento"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 35.5, 0.0, 8.0)
@@ -987,11 +935,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_21")
 
-[node name="Pino11" parent="ArbolesCampamento" instance=ExtResource("e21")]
-transform = Transform3D(-6.478, 0.0, -1.2038, 0.0, 7.6086, 0.0, 1.2038, 0.0, -6.478, 36.0, 0.0, -3.0)
+[node name="Pino11" parent="ArbolesCampamento" instance=ExtResource("e33") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.6542, 0.0, 0.5667, 0.0, 0.8656, 0.0, -0.5667, 0.0, 0.6542, -8.0, 0.0, -31.0)
 
 [node name="Tronco11" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 36.0, 0.0, -3.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -8.0, 0.0, -31.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -999,11 +947,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_22")
 
-[node name="Pino12" parent="ArbolesCampamento" instance=ExtResource("e16")]
-transform = Transform3D(-7.45, 0.0, 1.0478, 0.0, 7.8872, 0.0, -1.0478, 0.0, -7.45, 36.0, 0.0, -21.0)
+[node name="Pino12" parent="ArbolesCampamento" instance=ExtResource("e35") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.4985, 0.0, 0.889, 0.0, 1.0192, 0.0, -0.889, 0.0, 0.4985, -33.0, 0.0, -22.0)
 
 [node name="Tronco12" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 36.0, 0.0, -21.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -33.0, 0.0, -22.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -1011,11 +959,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_23")
 
-[node name="Pino13" parent="ArbolesCampamento" instance=ExtResource("e15")]
-transform = Transform3D(1.4539, 0.0, 7.3848, 0.0, 8.1942, 0.0, -7.3848, 0.0, 1.4539, 33.0, 0.0, -31.0)
+[node name="Pino13" parent="ArbolesCampamento" instance=ExtResource("e33") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.7737, 0.0, -0.6121, 0.0, 0.9866, 0.0, 0.6121, 0.0, -0.7737, 17.0, 0.0, -8.5)
 
 [node name="Tronco13" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 33.0, 0.0, -31.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 17.0, 0.0, -8.5)
 collision_layer = 1
 collision_mask = 0
 
@@ -1023,11 +971,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_24")
 
-[node name="Pino14" parent="ArbolesCampamento" instance=ExtResource("e18")]
-transform = Transform3D(3.9579, 0.0, -7.0885, 0.0, 8.9281, 0.0, 7.0885, 0.0, 3.9579, 15.0, 0.0, -30.0)
+[node name="Pino14" parent="ArbolesCampamento" instance=ExtResource("e36") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.0065, 0.0, 1.0994, 0.0, 1.0994, 0.0, -1.0994, 0.0, 0.0065, -15.0, 0.0, 21.0)
 
 [node name="Tronco14" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 15.0, 0.0, -30.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -15.0, 0.0, 21.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -1035,11 +983,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_25")
 
-[node name="Pino15" parent="ArbolesCampamento" instance=ExtResource("e17")]
-transform = Transform3D(-0.14, 0.0, 6.5776, 0.0, 7.2708, 0.0, -6.5776, 0.0, -0.14, -8.0, 0.0, -31.0)
+[node name="Pino15" parent="ArbolesCampamento" instance=ExtResource("e31") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.4692, 0.0, -0.7951, 0.0, 0.9232, 0.0, 0.7951, 0.0, 0.4692, -13.0, 0.0, 4.5)
 
 [node name="Tronco15" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -8.0, 0.0, -31.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -13.0, 0.0, 4.5)
 collision_layer = 1
 collision_mask = 0
 
@@ -1047,11 +995,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_26")
 
-[node name="Pino16" parent="ArbolesCampamento" instance=ExtResource("e18")]
-transform = Transform3D(5.76, 0.0, -6.1563, 0.0, 8.6697, 0.0, 6.1563, 0.0, 5.76, -20.0, 0.0, -30.0)
+[node name="Pino16" parent="ArbolesCampamento" instance=ExtResource("e37") groups=["auditoria_vegetacion"]]
+transform = Transform3D(-0.5216, 0.0, -0.7335, 0.0, 0.9001, 0.0, 0.7335, 0.0, -0.5216, -31.0, 0.0, -14.0)
 
 [node name="Tronco16" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -20.0, 0.0, -30.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -31.0, 0.0, -14.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -1059,11 +1007,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_27")
 
-[node name="Pino17" parent="ArbolesCampamento" instance=ExtResource("e17")]
-transform = Transform3D(-6.0773, 0.0, -2.6455, 0.0, 7.9413, 0.0, 2.6455, 0.0, -6.0773, -33.0, 0.0, -22.0)
+[node name="Pino17" parent="ArbolesCampamento" instance=ExtResource("e33") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.0487, 0.0, 0.9514, 0.0, 0.9527, 0.0, -0.9514, 0.0, 0.0487, 19.0, 0.0, 13.0)
 
 [node name="Tronco17" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -33.0, 0.0, -22.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 19.0, 0.0, 13.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -1071,11 +1019,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_28")
 
-[node name="Pino18" parent="ArbolesCampamento" instance=ExtResource("e20")]
-transform = Transform3D(-4.2597, 0.0, -6.1819, 0.0, 8.6949, 0.0, 6.1819, 0.0, -4.2597, -7.0, 0.0, -21.0)
+[node name="Pino18" parent="ArbolesCampamento" instance=ExtResource("e31") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.1856, 0.0, 0.9428, 0.0, 0.9609, 0.0, -0.9428, 0.0, 0.1856, -24.0, 0.0, 26.0)
 
 [node name="Tronco18" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -7.0, 0.0, -21.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -24.0, 0.0, 26.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -1083,11 +1031,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_29")
 
-[node name="Pino19" parent="ArbolesCampamento" instance=ExtResource("e18")]
-transform = Transform3D(-6.3574, 0.0, 5.4317, 0.0, 9.0811, 0.0, -5.4317, 0.0, -6.3574, 7.0, 0.0, -23.0)
+[node name="Pino19" parent="ArbolesCampamento" instance=ExtResource("e35") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.812, 0.0, -0.6778, 0.0, 1.0578, 0.0, 0.6778, 0.0, 0.812, 25.0, 0.0, 18.0)
 
 [node name="Tronco19" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 7.0, 0.0, -23.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 25.0, 0.0, 18.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -1095,11 +1043,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_30")
 
-[node name="Pino20" parent="ArbolesCampamento" instance=ExtResource("e19")]
-transform = Transform3D(7.1317, 0.0, -5.1978, 0.0, 10.4567, 0.0, 5.1978, 0.0, 7.1317, 17.0, 0.0, -8.5)
+[node name="Pino20" parent="ArbolesCampamento" instance=ExtResource("e37") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.3278, 0.0, 0.7942, 0.0, 0.8592, 0.0, -0.7942, 0.0, 0.3278, -35.0, 0.0, -14.0)
 
 [node name="Tronco20" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 17.0, 0.0, -8.5)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -35.0, 0.0, -14.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -1107,11 +1055,11 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_31")
 
-[node name="Pino21" parent="ArbolesCampamento" instance=ExtResource("e20")]
-transform = Transform3D(-7.2218, 0.0, 1.3199, 0.0, 8.664, 0.0, -1.3199, 0.0, -7.2218, -6.5, 0.0, 5.0)
+[node name="Pino21" parent="ArbolesCampamento" instance=ExtResource("e32") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.0431, 0.0, 0.901, 0.0, 0.902, 0.0, -0.901, 0.0, 0.0431, -27.0, 0.0, 0.0)
 
 [node name="Tronco21" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -6.5, 0.0, 5.0)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -27.0, 0.0, 0.0)
 collision_layer = 1
 collision_mask = 0
 
@@ -1119,176 +1067,7 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
 shape = SubResource("CylinderShape3D_32")
 
-[node name="Pino22" parent="ArbolesCampamento" instance=ExtResource("e18")]
-transform = Transform3D(-7.1749, 0.0, -1.2766, 0.0, 8.2419, 0.0, 1.2766, 0.0, -7.1749, 10.5, 0.0, 7.0)
-
-[node name="Tronco22" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 10.5, 0.0, 7.0)
-collision_layer = 1
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/Tronco22"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
-shape = SubResource("CylinderShape3D_33")
-
-[node name="Pino23" parent="ArbolesCampamento" instance=ExtResource("e17")]
-transform = Transform3D(-4.3375, 0.0, 6.9764, 0.0, 8.8592, 0.0, -6.9764, 0.0, -4.3375, -15.0, 0.0, 21.0)
-
-[node name="Tronco23" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -15.0, 0.0, 21.0)
-collision_layer = 1
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/Tronco23"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
-shape = SubResource("CylinderShape3D_34")
-
-[node name="Pino24" parent="ArbolesCampamento" instance=ExtResource("e21")]
-transform = Transform3D(7.6136, 0.0, -1.3985, 0.0, 9.23, 0.0, 1.3985, 0.0, 7.6136, -13.0, 0.0, 4.5)
-
-[node name="Tronco24" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -13.0, 0.0, 4.5)
-collision_layer = 1
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/Tronco24"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
-shape = SubResource("CylinderShape3D_35")
-
-[node name="Pino25" parent="ArbolesCampamento" instance=ExtResource("e15")]
-transform = Transform3D(-6.45, 0.0, 5.0161, 0.0, 9.1833, 0.0, -5.0161, 0.0, -6.45, -31.0, 0.0, -14.0)
-
-[node name="Tronco25" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -31.0, 0.0, -14.0)
-collision_layer = 1
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/Tronco25"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
-shape = SubResource("CylinderShape3D_36")
-
-[node name="Pino26" parent="ArbolesCampamento" instance=ExtResource("e17")]
-transform = Transform3D(-4.1845, 0.0, -7.3032, 0.0, 8.5189, 0.0, 7.3032, 0.0, -4.1845, 30.0, 0.0, 13.0)
-
-[node name="Tronco26" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 30.0, 0.0, 13.0)
-collision_layer = 1
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/Tronco26"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
-shape = SubResource("CylinderShape3D_37")
-
-[node name="Pino27" parent="ArbolesCampamento" instance=ExtResource("e20")]
-transform = Transform3D(-6.7475, 0.0, 1.5271, 0.0, 7.5715, 0.0, -1.5271, 0.0, -6.7475, 19.0, 0.0, 13.0)
-
-[node name="Tronco27" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 19.0, 0.0, 13.0)
-collision_layer = 1
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/Tronco27"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
-shape = SubResource("CylinderShape3D_38")
-
-[node name="Detalle0" parent="ArbolesCampamento" instance=ExtResource("e13")]
-transform = Transform3D(-2.4677, 0.0, 1.7061, 0.0, 3.0, 0.0, -1.7061, 0.0, -2.4677, -8.0, 0.0, -14.0)
-
-[node name="ColDetalle0" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -8.0, 0.0, -14.0)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/ColDetalle0"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
-shape = SubResource("CylinderShape3D_39")
-
-[node name="Detalle1" parent="ArbolesCampamento" instance=ExtResource("e11")]
-transform = Transform3D(-2.0079, 0.0, 1.6517, 0.0, 2.6, 0.0, -1.6517, 0.0, -2.0079, 14.0, 0.0, 8.0)
-
-[node name="ColDetalle1" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 14.0, 0.0, 8.0)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/ColDetalle1"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
-shape = SubResource("CylinderShape3D_40")
-
-[node name="Detalle2" parent="ArbolesCampamento" instance=ExtResource("e31")]
-transform = Transform3D(0.6537, 0.0, -2.1006, 0.0, 2.2, 0.0, 2.1006, 0.0, 0.6537, -30.0, 0.0, 18.0)
-
-[node name="ColDetalle2" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -30.0, 0.0, 18.0)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/ColDetalle2"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
-shape = SubResource("CylinderShape3D_41")
-
-[node name="Detalle3" parent="ArbolesCampamento" instance=ExtResource("e12")]
-transform = Transform3D(0.6759, 0.0, 2.7172, 0.0, 2.8, 0.0, -2.7172, 0.0, 0.6759, 30.0, 0.0, -24.0)
-
-[node name="ColDetalle3" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 30.0, 0.0, -24.0)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/ColDetalle3"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
-shape = SubResource("CylinderShape3D_42")
-
-[node name="Detalle4" parent="ArbolesCampamento" instance=ExtResource("e32")]
-transform = Transform3D(1.659, 0.0, 2.4996, 0.0, 3.0, 0.0, -2.4996, 0.0, 1.659, -12.0, 0.0, -30.0)
-
-[node name="ColDetalle4" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -12.0, 0.0, -30.0)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/ColDetalle4"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
-shape = SubResource("CylinderShape3D_43")
-
-[node name="Detalle5" parent="ArbolesCampamento" instance=ExtResource("e33")]
-transform = Transform3D(-2.3114, 0.0, -1.9124, 0.0, 3.0, 0.0, 1.9124, 0.0, -2.3114, 9.0, 0.0, -6.0)
-
-[node name="ColDetalle5" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 9.0, 0.0, -6.0)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/ColDetalle5"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
-shape = SubResource("CylinderShape3D_44")
-
-[node name="Detalle6" parent="ArbolesCampamento" instance=ExtResource("e34")]
-transform = Transform3D(-0.1199, 0.0, 2.5972, 0.0, 2.6, 0.0, -2.5972, 0.0, -0.1199, -20.0, 0.0, 23.0)
-
-[node name="ColDetalle6" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -20.0, 0.0, 23.0)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/ColDetalle6"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
-shape = SubResource("CylinderShape3D_45")
-
-[node name="Detalle7" parent="ArbolesCampamento" instance=ExtResource("e35")]
-transform = Transform3D(-2.3795, 0.0, 1.827, 0.0, 3.0, 0.0, -1.827, 0.0, -2.3795, 33.0, 0.0, 22.0)
-
-[node name="ColDetalle7" type="StaticBody3D" parent="ArbolesCampamento"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 33.0, 0.0, 22.0)
-collision_layer = 2
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="ArbolesCampamento/ColDetalle7"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
-shape = SubResource("CylinderShape3D_46")
-
-[node name="Limites" type="Node3D" parent="."]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+[node name="Limites" type="Node3D" parent="." groups=["auditoria_invisible_ok"]]
 
 [node name="Borde0" type="StaticBody3D" parent="Limites"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.0, -35.0)
@@ -1296,7 +1075,7 @@ collision_layer = 64
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Limites/Borde0"]
-shape = SubResource("BoxShape3D_47")
+shape = SubResource("BoxShape3D_33")
 
 [node name="Borde1" type="StaticBody3D" parent="Limites"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.0, 35.0)
@@ -1304,7 +1083,7 @@ collision_layer = 64
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Limites/Borde1"]
-shape = SubResource("BoxShape3D_48")
+shape = SubResource("BoxShape3D_34")
 
 [node name="Borde2" type="StaticBody3D" parent="Limites"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -38.5, 3.0, 0.0)
@@ -1312,7 +1091,7 @@ collision_layer = 64
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Limites/Borde2"]
-shape = SubResource("BoxShape3D_49")
+shape = SubResource("BoxShape3D_35")
 
 [node name="Borde3" type="StaticBody3D" parent="Limites"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 38.5, 3.0, 0.0)
@@ -1320,7 +1099,7 @@ collision_layer = 64
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Limites/Borde3"]
-shape = SubResource("BoxShape3D_50")
+shape = SubResource("BoxShape3D_36")
 
 [node name="TrasArco" type="StaticBody3D" parent="Limites"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.0, -32.3)
@@ -1328,7 +1107,7 @@ collision_layer = 64
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Limites/TrasArco"]
-shape = SubResource("BoxShape3D_51")
+shape = SubResource("BoxShape3D_37")
 
 [node name="Farolas" type="Node3D" parent="."]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
@@ -1336,7 +1115,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0
 [node name="Farola0" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 5.0, 0.0, 10.5)
 
-[node name="Lantern" parent="Farolas/Farola0" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola0" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola0"]
@@ -1346,11 +1125,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola0/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_52")
+shape = SubResource("CylinderShape3D_38")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola0"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola0" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_54")
+mesh = SubResource("SphereMesh_40")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola0"]
@@ -1365,15 +1144,15 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.7, 0
 amount = 14
 lifetime = 6.0
 preprocess = 6.0
-process_material = SubResource("ParticleProcessMaterial_55")
-draw_pass_1 = SubResource("QuadMesh_57")
+process_material = SubResource("ParticleProcessMaterial_41")
+draw_pass_1 = SubResource("QuadMesh_43")
 cast_shadow = 0
 visibility_aabb = AABB(-3.0, -3.0, -3.0, 6.0, 6.0, 6.0)
 
 [node name="Farola1" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 12.0, 0.0, 21.0)
 
-[node name="Lantern" parent="Farolas/Farola1" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola1" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola1"]
@@ -1383,11 +1162,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola1/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_58")
+shape = SubResource("CylinderShape3D_44")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola1"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola1" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_60")
+mesh = SubResource("SphereMesh_46")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola1"]
@@ -1400,7 +1179,7 @@ omni_attenuation = 1.4
 [node name="Farola2" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -18.0, 0.0, -11.5)
 
-[node name="Lantern" parent="Farolas/Farola2" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola2" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola2"]
@@ -1410,11 +1189,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola2/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_61")
+shape = SubResource("CylinderShape3D_47")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola2"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola2" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_63")
+mesh = SubResource("SphereMesh_49")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola2"]
@@ -1423,7 +1202,7 @@ light_color = Color(1.0, 0.72, 0.42, 1.0)
 light_energy = 1.5
 omni_range = 10.0
 omni_attenuation = 1.4
-script = ExtResource("e38")
+script = ExtResource("e40")
 EnergiaNormal = 1.5
 
 [node name="Polvo" type="GPUParticles3D" parent="Farolas/Farola2"]
@@ -1431,15 +1210,15 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.7, 0
 amount = 14
 lifetime = 6.0
 preprocess = 6.0
-process_material = SubResource("ParticleProcessMaterial_64")
-draw_pass_1 = SubResource("QuadMesh_66")
+process_material = SubResource("ParticleProcessMaterial_50")
+draw_pass_1 = SubResource("QuadMesh_52")
 cast_shadow = 0
 visibility_aabb = AABB(-3.0, -3.0, -3.0, 6.0, 6.0, 6.0)
 
 [node name="Farola3" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 16.0, 0.0, -3.5)
 
-[node name="Lantern" parent="Farolas/Farola3" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola3" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola3"]
@@ -1449,11 +1228,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola3/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_67")
+shape = SubResource("CylinderShape3D_53")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola3"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola3" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_69")
+mesh = SubResource("SphereMesh_55")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola3"]
@@ -1466,7 +1245,7 @@ omni_attenuation = 1.4
 [node name="Farola4" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 9.2, 0.0, -11.5)
 
-[node name="Lantern" parent="Farolas/Farola4" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola4" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola4"]
@@ -1476,11 +1255,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola4/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_70")
+shape = SubResource("CylinderShape3D_56")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola4"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola4" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_72")
+mesh = SubResource("SphereMesh_58")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola4"]
@@ -1493,7 +1272,7 @@ omni_attenuation = 1.4
 [node name="Farola5" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 20.0, 0.0, -20.5)
 
-[node name="Lantern" parent="Farolas/Farola5" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola5" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola5"]
@@ -1503,11 +1282,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola5/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_73")
+shape = SubResource("CylinderShape3D_59")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola5"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola5" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_75")
+mesh = SubResource("SphereMesh_61")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola5"]
@@ -1522,15 +1301,15 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.7, 0
 amount = 14
 lifetime = 6.0
 preprocess = 6.0
-process_material = SubResource("ParticleProcessMaterial_76")
-draw_pass_1 = SubResource("QuadMesh_78")
+process_material = SubResource("ParticleProcessMaterial_62")
+draw_pass_1 = SubResource("QuadMesh_64")
 cast_shadow = 0
 visibility_aabb = AABB(-3.0, -3.0, -3.0, 6.0, 6.0, 6.0)
 
 [node name="Farola6" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.2, 0.0, -22.0)
 
-[node name="Lantern" parent="Farolas/Farola6" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola6" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola6"]
@@ -1540,11 +1319,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola6/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_79")
+shape = SubResource("CylinderShape3D_65")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola6"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola6" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_81")
+mesh = SubResource("SphereMesh_67")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola6"]
@@ -1557,7 +1336,7 @@ omni_attenuation = 1.4
 [node name="Farola7" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -14.0, 0.0, 8.5)
 
-[node name="Lantern" parent="Farolas/Farola7" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola7" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola7"]
@@ -1567,11 +1346,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola7/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_82")
+shape = SubResource("CylinderShape3D_68")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola7"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola7" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_84")
+mesh = SubResource("SphereMesh_70")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola7"]
@@ -1584,7 +1363,7 @@ omni_attenuation = 1.4
 [node name="Farola8" type="Node3D" parent="Farolas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.2, 0.0, -12.0)
 
-[node name="Lantern" parent="Farolas/Farola8" instance=ExtResource("e36")]
+[node name="Lantern" parent="Farolas/Farola8" instance=ExtResource("e38")]
 transform = Transform3D(2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0, 2.2, 0.0, 0.0, 0.0)
 
 [node name="Poste" type="StaticBody3D" parent="Farolas/Farola8"]
@@ -1594,11 +1373,11 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Farolas/Farola8/Poste"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.7, 0.0)
-shape = SubResource("CylinderShape3D_85")
+shape = SubResource("CylinderShape3D_71")
 
-[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola8"]
+[node name="Foco" type="MeshInstance3D" parent="Farolas/Farola8" groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 3.12, 0.0)
-mesh = SubResource("SphereMesh_87")
+mesh = SubResource("SphereMesh_73")
 cast_shadow = 0
 
 [node name="Luz" type="OmniLight3D" parent="Farolas/Farola8"]
@@ -1608,35 +1387,35 @@ light_energy = 1.5
 omni_range = 10.0
 omni_attenuation = 1.4
 
-[node name="ZonaFogata" parent="." instance=ExtResource("e39")]
+[node name="ZonaFogata" parent="." instance=ExtResource("e41")]
 
-[node name="Almacen" parent="." instance=ExtResource("e40")]
+[node name="Almacen" parent="." instance=ExtResource("e42")]
 
-[node name="Cocina" parent="." instance=ExtResource("e41")]
+[node name="Cocina" parent="." instance=ExtResource("e43")]
 
-[node name="CabanaPorky" parent="." instance=ExtResource("e42")]
+[node name="CabanaPorky" parent="." instance=ExtResource("e44")]
 
-[node name="CabanaDirector" parent="." instance=ExtResource("e43")]
+[node name="CabanaDirector" parent="." instance=ExtResource("e45")]
 
-[node name="Campistas" parent="." instance=ExtResource("e44")]
+[node name="Campistas" parent="." instance=ExtResource("e46")]
 
-[node name="Enfermeria" parent="." instance=ExtResource("e45")]
+[node name="Enfermeria" parent="." instance=ExtResource("e47")]
 
-[node name="Caseta" parent="." instance=ExtResource("e46")]
+[node name="Caseta" parent="." instance=ExtResource("e48")]
 
-[node name="Estacionamiento" parent="." instance=ExtResource("e47")]
+[node name="Estacionamiento" parent="." instance=ExtResource("e49")]
 
-[node name="SalidaSendero" parent="." instance=ExtResource("e48")]
+[node name="SalidaSendero" parent="." instance=ExtResource("e50")]
 
-[node name="Detalles" parent="." instance=ExtResource("e49")]
+[node name="Detalles" parent="." instance=ExtResource("e51")]
 
 [node name="AgujasPino" type="GPUParticles3D" parent="."]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 9.0, -2.0)
 amount = 45
 lifetime = 14.0
 preprocess = 14.0
-process_material = SubResource("ParticleProcessMaterial_88")
-draw_pass_1 = SubResource("QuadMesh_90")
+process_material = SubResource("ParticleProcessMaterial_74")
+draw_pass_1 = SubResource("QuadMesh_76")
 cast_shadow = 0
 visibility_aabb = AABB(-45.0, -45.0, -45.0, 90.0, 90.0, 90.0)
 
@@ -1645,8 +1424,8 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -34.0, 1.3,
 amount = 18
 lifetime = 8.0
 preprocess = 8.0
-process_material = SubResource("ParticleProcessMaterial_93")
-draw_pass_1 = SubResource("QuadMesh_95")
+process_material = SubResource("ParticleProcessMaterial_79")
+draw_pass_1 = SubResource("QuadMesh_81")
 cast_shadow = 0
 visibility_aabb = AABB(-10.0, -10.0, -10.0, 20.0, 20.0, 20.0)
 
@@ -1655,8 +1434,8 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 34.0, 1.3, 
 amount = 18
 lifetime = 8.0
 preprocess = 8.0
-process_material = SubResource("ParticleProcessMaterial_98")
-draw_pass_1 = SubResource("QuadMesh_100")
+process_material = SubResource("ParticleProcessMaterial_84")
+draw_pass_1 = SubResource("QuadMesh_86")
 cast_shadow = 0
 visibility_aabb = AABB(-10.0, -10.0, -10.0, 20.0, 20.0, 20.0)
 
@@ -1665,8 +1444,8 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -28.0, 1.3,
 amount = 18
 lifetime = 8.0
 preprocess = 8.0
-process_material = SubResource("ParticleProcessMaterial_103")
-draw_pass_1 = SubResource("QuadMesh_105")
+process_material = SubResource("ParticleProcessMaterial_89")
+draw_pass_1 = SubResource("QuadMesh_91")
 cast_shadow = 0
 visibility_aabb = AABB(-10.0, -10.0, -10.0, 20.0, 20.0, 20.0)
 
@@ -1678,7 +1457,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -20.0, 0.5,
 volume_db = -3.0
 unit_size = 10.0
 max_distance = 40.0
-script = ExtResource("e51")
+script = ExtResource("e53")
 Tipo = 27
 
 [node name="Grillos1" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1686,7 +1465,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 22.0, 0.5, 
 volume_db = -3.0
 unit_size = 10.0
 max_distance = 40.0
-script = ExtResource("e51")
+script = ExtResource("e53")
 Tipo = 27
 
 [node name="Grillos2" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1694,7 +1473,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -22.0, 0.5,
 volume_db = -3.0
 unit_size = 10.0
 max_distance = 40.0
-script = ExtResource("e51")
+script = ExtResource("e53")
 Tipo = 27
 
 [node name="Grillos3" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1702,7 +1481,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 12.0, 0.5, 
 volume_db = -3.0
 unit_size = 10.0
 max_distance = 40.0
-script = ExtResource("e51")
+script = ExtResource("e53")
 Tipo = 27
 
 [node name="Viento0" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1710,7 +1489,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -36.0, 8.0,
 volume_db = -4.0
 unit_size = 14.0
 max_distance = 60.0
-script = ExtResource("e51")
+script = ExtResource("e53")
 Tipo = 28
 
 [node name="Viento1" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1718,7 +1497,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 36.0, 8.0, 
 volume_db = -4.0
 unit_size = 14.0
 max_distance = 60.0
-script = ExtResource("e51")
+script = ExtResource("e53")
 Tipo = 28
 
 [node name="Viento2" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1726,7 +1505,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 8.0, -
 volume_db = -4.0
 unit_size = 14.0
 max_distance = 60.0
-script = ExtResource("e51")
+script = ExtResource("e53")
 Tipo = 28
 
 [node name="Buho" type="AudioStreamPlayer3D" parent="Ambiente"]
@@ -1734,14 +1513,14 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -40.0, 10.0
 volume_db = -2.0
 unit_size = 12.0
 max_distance = 90.0
-script = ExtResource("e51")
+script = ExtResource("e53")
 Tipo = 30
 PausaMinima = 14
 PausaMaxima = 35
 
-[node name="HUD" parent="." instance=ExtResource("e52")]
+[node name="HUD" parent="." instance=ExtResource("e54")]
 
-[node name="Jugador" parent="." instance=ExtResource("e53")]
+[node name="Jugador" parent="." instance=ExtResource("e55")]
 transform = Transform3D(0.848, 0.0, 0.5299, 0.0, 1.0, 0.0, -0.5299, 0.0, 0.848, 22.0, 1.1, 30.2)
 
 [node name="Linterna" parent="Jugador/CamaraInterrogatorio"]
@@ -1749,20 +1528,20 @@ spot_range = 18.0
 spot_angle = 26.0
 light_energy = 5.0
 
-[node name="MenuPausa" parent="." instance=ExtResource("e54")]
+[node name="MenuPausa" parent="." instance=ExtResource("e56")]
 
 [node name="VentanaDialogo" type="CanvasLayer" parent="."]
-script = ExtResource("e55")
+script = ExtResource("e57")
 
 [node name="TableroDeduccion" type="CanvasLayer" parent="."]
-script = ExtResource("e56")
-
-[node name="MusicaFondo" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("e57")
 script = ExtResource("e58")
 
+[node name="MusicaFondo" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("e59")
+script = ExtResource("e60")
+
 [node name="MandoHud" type="Node" parent="."]
-script = ExtResource("e59")
+script = ExtResource("e61")
 
 [node name="Vineta" type="CanvasLayer" parent="."]
 layer = 1
@@ -1774,11 +1553,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = SubResource("GradientTexture2D_107")
+texture = SubResource("GradientTexture2D_93")
 expand_mode = 1
 
 [node name="Caso1" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "Tablero", "PuertaPorky", "Salida", "PistaLlamadas", "Musica", "Entorno", "ContenedoresConPista", "PistasDentro", "Zonas")]
-script = ExtResource("e60")
+script = ExtResource("e62")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
 Dialogo = NodePath("../VentanaDialogo")
@@ -1789,5 +1568,5 @@ PistaLlamadas = NodePath("../Estacionamiento/Coche/RegistroLlamadas")
 Musica = NodePath("../MusicaFondo")
 Entorno = NodePath("../Entorno")
 ContenedoresConPista = [NodePath("../Almacen/Baul"), NodePath("../CabanaPorky/Almohada"), NodePath("../CabanaPorky/Papelera"), NodePath("../Enfermeria/Escritorio")]
-PistasDentro = [NodePath("../Almacen/PistaBaul"), NodePath("../CabanaPorky/NotaPorky"), NodePath("../CabanaPorky/Oferta"), NodePath("../Enfermeria/Escritorio/Modelo/desk(Clone)/drawer/Registro")]
+PistasDentro = [NodePath("../Almacen/PistaBaul"), NodePath("../CabanaPorky/NotaPorky"), NodePath("../CabanaPorky/Oferta"), NodePath("../Enfermeria/Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro")]
 Zonas = [NodePath("../ZonaFogata/Fogata"), NodePath("../Almacen/Almacen"), NodePath("../Cocina/Cocina"), NodePath("../CabanaPorky/CabanaPorky"), NodePath("../CabanaDirector/Director"), NodePath("../Enfermeria/Enfermeria"), NodePath("../Caseta/Caseta"), NodePath("../Estacionamiento/Estacionamiento"), NodePath("../SalidaSendero/Sendero")]

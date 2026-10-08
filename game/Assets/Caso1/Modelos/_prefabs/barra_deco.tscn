@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/kaykit_restaurante/kitchencounter_straight_A_decorated.gltf" id="e1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(1.7715, 1.9275, 1.9991)
+
+[node name="BarraDeco" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(0.92, 0.0, 0.0, 0.0, 0.92, 0.0, 0.0, 0.0, 0.92, -0.0027, 0.0, -0.1212)
+
+[node name="Colision" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9638, 0.0)
+shape = SubResource("BoxShape3D_1")
