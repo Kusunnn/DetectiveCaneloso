@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="InformeCaso" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://hud/expediente/informe_caso.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+titulo = "\"EL ÚLTIMO TESTIGO\""
+lugar = "Hospital San Judas, planta de custodia (tercer piso) y sótano de servicios."
+fecha = "Noche del 2 al 3 de septiembre."
+etiqueta_victima = "VÍCTIMA"
+victima = "Tony, 36 años, detenido por el asesinato de Porky."
+pie_foto = "Habitación 304 · 5:40"
+sello = "CONFIDENCIAL"
+a_cargo = "Det. Caneloso"
+estado = "ABIERTO"
+examen = PackedStringArray("Paro cardíaco.", "Pinchazo reciente en el puerto lateral de la vía intravenosa que no figura en la hoja de medicación.", "Hora estimada de la muerte: entre las 3:15 y las 3:40.")
+hallazgo = "A las 5:40, en la ronda de madrugada, la enfermera Mimita encontró a Tony muerto en la habitación 304. El monitor cardíaco estaba en silencio."
+circunstancias = "Tres semanas después del caso del Lago Espejo, Tony fue ingresado tras sufrir una crisis cardíaca en el calabozo. A las 9:00 iba a ampliar su declaración ante el fiscal. Un agente vigilaba su puerta toda la noche."
+linea_tiempo = PackedStringArray("Tarde|Tony envía un mensaje al detective Caneloso: \"No fui el único que calló lo del lago. Mañana lo cuento todo.\"", "21:00|Juan Carlos visita a Tony acompañado de un abogado.", "23:00|Miawrio visita a Tony.", "3:15–3:40|Hora estimada de la muerte.|!", "5:40|Mimita encuentra el cuerpo en la habitación 304.|!")
+notas = PackedStringArray("La alarma del monitor cardíaco no sonó en toda la noche.")
+antecedente = "Tony confesó el asesinato de Porky y la muerte de Daniel, ocurrida hace 20 años en el Lago Espejo. Esperaba juicio bajo custodia policial."
+titulo_personas = "PERSONAS RELACIONADAS CON EL CASO"
+personas = PackedStringArray("Mimita|31|Enfermera de guardia en la planta de custodia|Encontró el cuerpo", "Eriz|33|Bióloga del laboratorio nocturno del hospital|Analizó la sangre de Tony", "Juan Carlos|35|Inversor|Visitó a Tony a las 21:00", "Miawrio|34|Monitor y cuentacuentos|Visitó a Tony a las 23:00", "Aya|32|Fotógrafa|Testigo del caso del Lago Espejo")
+etiqueta_pasado = "RELACIÓN CON EL CASO"
+objetivo = "Determinar si Tony murió por causas naturales y, si no, quién lo silenció."
