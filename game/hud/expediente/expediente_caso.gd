@@ -1,9 +1,8 @@
 class_name ExpedienteCaso
 extends Control
-## Expediente del caso (diseño "Detective Caneloso – Expediente") y su parte fija del HUD:
-## carpeta del caso, objetivo actual y guía de teclas.
-## Lo instancia hud.gd, que le pasa las teclas: TAB abre/cierra, ESC cierra,
-## ESPACIO baja por el informe (SHIFT + ESPACIO sube). También se abre con clic en la carpeta.
+## Expediente del caso (diseño "Detective Caneloso – Expediente").
+## Lo instancia hud.gd, que dibuja la carpeta del caso y le pasa las teclas: TAB abre/cierra,
+## ESC cierra, ESPACIO baja por el informe (SHIFT + ESPACIO sube) y clic en la carpeta abre.
 ## El contenido de cada caso está en res://hud/expediente/casos/caso_XX.tres (InformeCaso).
 
 signal expediente_abierto
@@ -37,10 +36,9 @@ const PESOS := {
 	"BigShouldersDisplay-Black.ttf": 900,
 }
 
-## Teclas que muestra la guía de la esquina inferior izquierda.
-const TECLAS := [["Q", "Libreta"], ["F", "Linterna"], ["R", "Tablero"], ["TAB", "Expediente"]]
-
 var abierto := false
+## true si el caso tiene un informe que el jugador todavía no ha abierto (punto rojo en la carpeta).
+var aviso_pendiente := false
 var informe: InformeCaso
 var _caso := ""
 
@@ -52,17 +50,12 @@ var desliz := 40.0
 var tween: Tween
 var tween_scroll: Tween
 
-var _lbl_caso: Label
-var _lbl_archivo: Label
-var _lbl_objetivo: Label
-var _punto_aviso: Panel
 var _fuentes := {}
 
 
 func _ready() -> void:
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_construir_hud()
 	_construir_expediente()
 	_aplicar(false, false)
 
@@ -74,8 +67,6 @@ func cargar_caso(caso: String) -> void:
 	_caso = caso
 	var ruta := RUTA_CASOS % caso
 	informe = load(ruta) as InformeCaso if ResourceLoader.exists(ruta) else null
-	if _lbl_caso:
-		_lbl_caso.text = "CASO " + caso
 	if overlay:
 		var estaba_abierto := abierto
 		overlay.queue_free()
@@ -83,17 +74,7 @@ func cargar_caso(caso: String) -> void:
 		_construir_expediente()
 		_aplicar(estaba_abierto, false)
 	# Expediente nuevo: punto rojo en la carpeta hasta que se abra
-	if _punto_aviso:
-		_punto_aviso.visible = informe != null and not abierto
-
-
-## Textos de la carpeta y del objetivo actual.
-func actualizar_hud(caso: String, archivo: String, objetivo_actual: String) -> void:
-	if not _lbl_caso:
-		return
-	_lbl_caso.text = "CASO " + caso
-	_lbl_archivo.text = "Archivo: " + archivo
-	_lbl_objetivo.text = objetivo_actual
+	aviso_pendiente = informe != null and not abierto
 
 
 func abrir() -> void: _aplicar(true)
@@ -125,7 +106,7 @@ func _aplicar(v: bool, animar := true) -> void:
 	abierto = v
 	if v:
 		overlay.visible = true
-		_punto_aviso.visible = false
+		aviso_pendiente = false
 	overlay.mouse_filter = Control.MOUSE_FILTER_STOP if v else Control.MOUSE_FILTER_IGNORE
 	if tween: tween.kill()
 	var a := 1.0 if v else 0.0
@@ -233,76 +214,6 @@ func _tecla(texto: String, color: Color, tam := 11) -> PanelContainer:
 	var t := _panel(_caja(Color.TRANSPARENT, Vector4(8, 4, 8, 4), 2, color))
 	t.add_child(_label(texto, _fuente("CourierPrime-Regular.ttf"), tam, color))
 	return t
-
-
-# ---------- HUD ----------
-
-func _construir_hud() -> void:
-	var mono := _fuente("CourierPrime-Regular.ttf")
-
-	var carpeta := _hbox(22)
-	carpeta.position = Vector2(48, 36)
-	carpeta.mouse_filter = Control.MOUSE_FILTER_STOP
-	carpeta.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	carpeta.gui_input.connect(func(e):
-		if e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT:
-			_aplicar(true))
-	add_child(carpeta)
-
-	var icono := Control.new()
-	icono.custom_minimum_size = Vector2(54, 44)
-	icono.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	icono.add_child(_rect(Color("#C99E05"), Vector2(22, 10)))
-	var cuerpo := _rect(AMBAR, Vector2(54, 38))
-	cuerpo.position.y = 6
-	icono.add_child(cuerpo)
-	_punto_aviso = Panel.new()
-	var sp := _caja(ROJO, Vector4.ZERO, 3, Color("#0c0e12"))
-	sp.set_corner_radius_all(9)
-	_punto_aviso.add_theme_stylebox_override("panel", sp)
-	_punto_aviso.size = Vector2(16, 16)
-	_punto_aviso.position = Vector2(45, -7)
-	_punto_aviso.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_punto_aviso.visible = false
-	icono.add_child(_punto_aviso)
-	carpeta.add_child(icono)
-
-	var datos := _vbox(10)
-	_lbl_caso = _label("CASO " + _caso, mono, 18, TEXTO)
-	datos.add_child(_lbl_caso)
-	datos.add_child(_rect(TEXTO, Vector2(200, 1.5)))
-	_lbl_archivo = _label("Archivo: ", mono, 15, TEXTO)
-	datos.add_child(_lbl_archivo)
-	datos.add_child(_label("[ TAB ] ABRIR EXPEDIENTE", _fuente("CourierPrime-Regular.ttf", 2), 12, GRIS2))
-	carpeta.add_child(datos)
-
-	var obj := _vbox(12)
-	obj.anchor_left = 1.0
-	obj.anchor_right = 1.0
-	obj.offset_left = -390
-	obj.offset_right = -48
-	obj.offset_top = 36
-	add_child(obj)
-	obj.add_child(_label("OBJETIVO ACTUAL", _fuente("CourierPrime-Bold.ttf", 1), 17, AMBAR))
-	obj.add_child(_rect(TEXTO, Vector2(0, 1.5)))
-	_lbl_objetivo = _label("", mono, 17, TEXTO, true)
-	obj.add_child(_lbl_objetivo)
-
-	var teclas := _vbox(14)
-	teclas.anchor_top = 1.0
-	teclas.anchor_bottom = 1.0
-	teclas.offset_left = 48
-	teclas.offset_top = -44 - TECLAS.size() * 46
-	teclas.offset_bottom = -44
-	teclas.alignment = BoxContainer.ALIGNMENT_END
-	add_child(teclas)
-	for par in TECLAS:
-		var fila := _hbox(22)
-		var t := _tecla(par[0], TEXTO, 14)
-		t.custom_minimum_size = Vector2(36, 32)
-		fila.add_child(t)
-		fila.add_child(_label(par[1], mono, 16, TEXTO))
-		teclas.add_child(fila)
 
 
 # ---------- Expediente ----------

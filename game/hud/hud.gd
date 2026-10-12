@@ -10,15 +10,8 @@ signal linterna_cambiada(encendida: bool)
 		caso = valor
 		if _expediente:
 			_expediente.cargar_caso(caso)
-			_actualizar_carpeta()
-@export var archivo: String = "24–B":
-	set(valor):
-		archivo = valor
-		_actualizar_carpeta()
-@export var objetivo: String = "Inspecciona el escritorio.":
-	set(valor):
-		objetivo = valor
-		_actualizar_carpeta()
+@export var archivo: String = "24–B"
+@export var objetivo: String = "Inspecciona el escritorio."
 @export_range(0.2, 30.0) var segundos_inactividad: float = 3.0
 @export var interaccion: String = ""
 @export var rueda_habilitada: bool = true
@@ -33,9 +26,14 @@ var _moviendo: bool = false
 var _ayuda_alpha: float = 1.0
 var _aviso: float = 0.0
 var diario_abierto: bool = false
-## Expediente del caso (TAB) y la parte fija del HUD: carpeta, objetivo y teclas.
+## Expediente del caso (TAB). La carpeta, el objetivo y la guía de teclas los dibuja este HUD.
 const EXPEDIENTE := preload("res://hud/expediente/expediente_caso.tscn")
 var _expediente: ExpedienteCaso
+## Zona de la carpeta del caso (en coordenadas de referencia 1600×900) para abrir con clic.
+const ZONA_CARPETA := Rect2(48, 36, 300, 96)
+## Guía de teclas de la esquina inferior izquierda; se desvanece mientras el detective camina.
+const TECLAS := [["Q", "Libreta"], ["F", "Linterna"], ["R", "Tablero"], ["TAB", "Expediente"]]
+const ROJO_AVISO := Color("e0463c")
 var linterna_encendida: bool = false
 ## Diario del caso (Q): pistas, deducciones, testimonios y personas.
 var notas: Array[String] = []
@@ -131,11 +129,6 @@ func _ready() -> void:
 	_expediente.expediente_abierto.connect(_al_abrir_expediente)
 	_expediente.expediente_cerrado.connect(func() -> void: panel_cambiado.emit(false, true))
 	_expediente.cargar_caso(caso)
-	_actualizar_carpeta()
-
-func _actualizar_carpeta() -> void:
-	if _expediente:
-		_expediente.actualizar_hud(caso, archivo, objetivo)
 
 func _al_abrir_expediente() -> void:
 	diario_abierto = false
@@ -223,6 +216,14 @@ func _input(event: InputEvent) -> void:
 					_expediente.bajar(event.shift_pressed)
 			get_viewport().set_input_as_handled()
 		return
+	# Clic en la carpeta del caso (solo con el cursor visible): abre el expediente
+	if (not diario_abierto and event is InputEventMouseButton and event.pressed
+			and event.button_index == MOUSE_BUTTON_LEFT and Input.mouse_mode == Input.MOUSE_MODE_VISIBLE):
+		var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+		if ZONA_CARPETA.has_point(event.position / escala):
+			_expediente.abrir()
+			get_viewport().set_input_as_handled()
+			return
 	if diario_abierto and event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
@@ -371,7 +372,24 @@ func _dibujar() -> void:
 	_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
 	var w := size.x / escala
 	var h := size.y / escala
-	# La carpeta del caso, el objetivo y la guía de teclas los dibuja ExpedienteCaso.
+	# Expediente compacto inspirado en la referencia, sin logotipo.
+	var carpeta := Color("c1a259")
+	_lienzo.draw_colored_polygon(PackedVector2Array([Vector2(57, 53), Vector2(62, 43), Vector2(79, 43), Vector2(85, 49), Vector2(106, 49), Vector2(106, 83), Vector2(57, 83)]), carpeta.darkened(0.22))
+	_lienzo.draw_colored_polygon(PackedVector2Array([Vector2(53, 57), Vector2(112, 57), Vector2(106, 91), Vector2(58, 91)]), carpeta)
+	# Punto rojo: el caso tiene un expediente que todavía no se ha abierto
+	if _expediente and _expediente.aviso_pendiente:
+		_lienzo.draw_circle(Vector2(108, 50), 8.5, Color("0c0e12"))
+		_lienzo.draw_circle(Vector2(108, 50), 6.0, ROJO_AVISO)
+	_texto("CASO " + caso, Vector2(133, 59), _bold, 26, BLANCO)
+	_linea(Vector2(133, 70), Vector2(335, 70), Color(BLANCO, 0.65))
+	_texto("Archivo: " + archivo, Vector2(133, 98), MONO, 16, GRIS)
+	_texto("[ TAB ]  ABRIR EXPEDIENTE", Vector2(133, 121), MONO, 12, Color(GRIS, 0.7))
+	# Objetivo en nota independiente.
+	_nota(Rect2(w - 420, 42, 378, 137))
+	_texto("OBJETIVO ACTUAL", Vector2(w - 398, 78), _bold, 26, TINTA)
+	_lienzo.draw_rect(Rect2(w - 398, 87, 110, 4), AMBAR)
+	_parrafo(objetivo, Vector2(w - 398, 104), 335, 15, TINTA, 3)
+	_dibujar_teclas(h)
 	# Notificación temporal, sin bloquear la vista.
 	if _aviso > 0:
 		var a := minf(_aviso / 0.3, 1.0)
@@ -389,6 +407,18 @@ func _dibujar() -> void:
 	_dibujar_pistas(w, h)
 	if diario_abierto:
 		_dibujar_libro(w, h)
+
+## Guía de teclas: visible mientras el detective está quieto, igual que el resto de la ayuda.
+func _dibujar_teclas(h: float) -> void:
+	if _ayuda_alpha <= 0.0:
+		return
+	var y := h - 44.0 - TECLAS.size() * 40.0
+	for par in TECLAS:
+		var ancho := maxf(30.0, MONO.get_string_size(par[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x + 16.0)
+		_lienzo.draw_rect(Rect2(53, y, ancho, 28), Color(BLANCO, 0.85 * _ayuda_alpha), false, 1.5)
+		_texto(par[0], Vector2(53 + 8, y + 19), MONO, 13, Color(BLANCO, _ayuda_alpha))
+		_texto(par[1], Vector2(53 + ancho + 14, y + 20), MONO, 15, Color(BLANCO, 0.9 * _ayuda_alpha))
+		y += 40.0
 
 func _boton_libro(texto: String, rect: Rect2, destino: int, activo: bool = true) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
