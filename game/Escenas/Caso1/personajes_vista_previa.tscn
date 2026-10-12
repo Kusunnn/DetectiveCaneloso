@@ -1,12 +1,13 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=28 format=3]
 
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/porky.glb" id="e1"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/AnimacionPersonaje.cs" id="e2"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/eriz.glb" id="e3"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/tony.glb" id="e4"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/lala.glb" id="e5"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/miami.glb" id="e6"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/aya.glb" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/lala.glb" id="e4"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/miami.glb" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Tony/Tony.tscn" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Aya/Ayas.tscn" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Miaurio/miaurio.tscn" id="e8"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.32
@@ -18,19 +19,71 @@ height = 1.6838
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3"]
 radius = 0.32
-height = 1.8
+height = 1.65
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4"]
 radius = 0.32
-height = 1.65
+height = 1.5
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5"]
 radius = 0.32
-height = 1.5
+height = 1.8
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6"]
 radius = 0.32
 height = 1.6
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7"]
+radius = 0.32
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8"]
+radius = 0.32
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_9"]
+radius = 0.32
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_10"]
+radius = 0.32
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_11"]
+radius = 0.32
+height = 1.8
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_12"]
+radius = 0.32
+height = 1.6
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_13"]
+radius = 0.32
+height = 1.6
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_14"]
+radius = 0.32
+height = 1.6
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_15"]
+radius = 0.32
+height = 1.6
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_16"]
+radius = 0.32
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_17"]
+radius = 0.32
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_18"]
+radius = 0.32
+height = 1.7
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_19"]
+radius = 0.32
+height = 1.7
 
 [node name="Personajes" type="Node3D"]
 
@@ -45,7 +98,7 @@ script = ExtResource("e2")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.38
 
-[node name="Colision" type="StaticBody3D" parent="Porky"]
+[node name="Colision" type="StaticBody3D" parent="Porky" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
 
@@ -64,7 +117,7 @@ script = ExtResource("e2")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.35
 
-[node name="Colision" type="StaticBody3D" parent="Eriz"]
+[node name="Colision" type="StaticBody3D" parent="Eriz" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
 
@@ -72,29 +125,10 @@ collision_mask = 0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8419, 0.0)
 shape = SubResource("CapsuleShape3D_2")
 
-[node name="Tony" type="Node3D" parent="." groups=["auditoria_personaje"]]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -25.6, 0.0, -13.4)
-
-[node name="Modelo" parent="Tony" instance=ExtResource("e4")]
-transform = Transform3D(5.3731, 0.0, 0.0, 0.0, 5.3731, 0.0, 0.0, 0.0, 5.3731, 0.0, 0.0, 0.2923)
-
-[node name="Animacion" type="Node" parent="Tony" node_paths=PackedStringArray("Modelo")]
-script = ExtResource("e2")
-Modelo = NodePath("../Modelo")
-AlturaOjos = 1.44
-
-[node name="Colision" type="StaticBody3D" parent="Tony"]
-collision_layer = 16
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="Tony/Colision"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 0.0)
-shape = SubResource("CapsuleShape3D_3")
-
 [node name="JuanCarlos" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(-0.813, 0.0, -0.5823, 0.0, 1.0, 0.0, 0.5823, 0.0, -0.813, 21.2, 0.0, 25.6)
 
-[node name="Modelo" parent="JuanCarlos" instance=ExtResource("e5")]
+[node name="Modelo" parent="JuanCarlos" instance=ExtResource("e4")]
 transform = Transform3D(6.3707, 0.0, 0.0, 0.0, 6.3707, 0.0, 0.0, 0.0, 6.3707, 0.0, 0.0, 0.5447)
 
 [node name="Animacion" type="Node" parent="JuanCarlos" node_paths=PackedStringArray("Modelo")]
@@ -102,18 +136,18 @@ script = ExtResource("e2")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.32
 
-[node name="Colision" type="StaticBody3D" parent="JuanCarlos"]
+[node name="Colision" type="StaticBody3D" parent="JuanCarlos" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="JuanCarlos/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.825, 0.0)
-shape = SubResource("CapsuleShape3D_4")
+shape = SubResource("CapsuleShape3D_3")
 
 [node name="Miami" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(-0.8548, 0.0, -0.519, 0.0, 1.0, 0.0, 0.519, 0.0, -0.8548, 3.4, 0.0, 1.6)
 
-[node name="Modelo" parent="Miami" instance=ExtResource("e6")]
+[node name="Modelo" parent="Miami" instance=ExtResource("e5")]
 transform = Transform3D(9.7403, 0.0, 0.0, 0.0, 9.7403, 0.0, 0.0, 0.0, 9.7403, 0.0, 0.0, -0.0029)
 
 [node name="Animacion" type="Node" parent="Miami" node_paths=PackedStringArray("Modelo")]
@@ -121,29 +155,432 @@ script = ExtResource("e2")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.2
 
-[node name="Colision" type="StaticBody3D" parent="Miami"]
+[node name="Colision" type="StaticBody3D" parent="Miami" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Miami/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.75, 0.0)
+shape = SubResource("CapsuleShape3D_4")
+
+[node name="Tony" type="Node3D" parent="." groups=["auditoria_personaje"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -25.6, 0.0, -13.4)
+
+[node name="Modelo" parent="Tony" instance=ExtResource("e6")]
+transform = Transform3D(0.6503, 0.0, 0.0, 0.0, 0.6503, 0.0, 0.0, 0.0, 0.6503, -0.0052, 0.001, 0.0228)
+
+[node name="Animacion" type="Node" parent="Tony" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.44
+Animacion = "global/InacTony"
+
+[node name="Colision" type="StaticBody3D" parent="Tony" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Tony/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 0.0)
 shape = SubResource("CapsuleShape3D_5")
 
 [node name="Aya" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(0.5493, 0.0, -0.8356, 0.0, 1.0, 0.0, 0.8356, 0.0, 0.5493, 21.6, 0.0, -18.2)
 
 [node name="Modelo" parent="Aya" instance=ExtResource("e7")]
-transform = Transform3D(0.0363, 0.0, 0.0, 0.0, 0.0363, 0.0, 0.0, 0.0, 0.0363, 0.0, 0.0, -0.122)
+transform = Transform3D(0.0359, 0.0, 0.0, 0.0, 0.0359, 0.0, 0.0, 0.0, 0.0359, -0.0045, 0.0051, -0.9514)
 
 [node name="Animacion" type="Node" parent="Aya" node_paths=PackedStringArray("Modelo")]
 script = ExtResource("e2")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.28
+Animacion = "Inaya"
 
-[node name="Colision" type="StaticBody3D" parent="Aya"]
+[node name="Colision" type="StaticBody3D" parent="Aya" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Aya/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8, 0.0)
 shape = SubResource("CapsuleShape3D_6")
+
+[node name="Miaurio" type="Node3D" parent="." groups=["auditoria_personaje"]]
+transform = Transform3D(-0.9967, 0.0, -0.0808, 0.0, 1.0, 0.0, 0.0808, 0.0, -0.9967, 0.6, 0.0, 3.4)
+
+[node name="Modelo" parent="Miaurio" instance=ExtResource("e8")]
+transform = Transform3D(0.0046, 0.0, 0.0, 0.0, 0.0046, 0.0, 0.0, 0.0, 0.0046, -1.5082, 0.0025, -0.4715)
+
+[node name="Animacion" type="Node" parent="Miaurio" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.36
+Animacion = "global/Inactivo"
+
+[node name="Colision" type="StaticBody3D" parent="Miaurio" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Miaurio/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.85, 0.0)
+shape = SubResource("CapsuleShape3D_7")
+
+[node name="Pasarela" type="Node3D" parent="."]
+
+[node name="TonyInactivo" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.8766, 0.0, -0.4813, 0.0, 1.0, 0.0, 0.4813, 0.0, 0.8766, 27.6, 0.0, 20.0)
+
+[node name="Modelo" parent="Pasarela/TonyInactivo" instance=ExtResource("e6")]
+transform = Transform3D(0.6503, 0.0, 0.0, 0.0, 0.6503, 0.0, 0.0, 0.0, 0.6503, -0.0052, 0.001, 0.0228)
+
+[node name="Animacion" type="Node" parent="Pasarela/TonyInactivo" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.44
+Animacion = "global/InacTony"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/TonyInactivo" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/TonyInactivo/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 0.0)
+shape = SubResource("CapsuleShape3D_8")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/TonyInactivo"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+text = "Tony
+Inactivo"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="TonyTenso" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.8094, 0.0, -0.5872, 0.0, 1.0, 0.0, 0.5872, 0.0, 0.8094, 29.4, 0.0, 20.0)
+
+[node name="Modelo" parent="Pasarela/TonyTenso" instance=ExtResource("e6")]
+transform = Transform3D(0.6503, 0.0, 0.0, 0.0, 0.6503, 0.0, 0.0, 0.0, 0.6503, -0.0052, 0.001, 0.0228)
+
+[node name="Animacion" type="Node" parent="Pasarela/TonyTenso" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.44
+Animacion = "global/TensoTony"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/TonyTenso" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/TonyTenso/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 0.0)
+shape = SubResource("CapsuleShape3D_9")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/TonyTenso"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+text = "Tony
+Tenso"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="TonyAlterado" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.7426, 0.0, -0.6698, 0.0, 1.0, 0.0, 0.6698, 0.0, 0.7426, 31.2, 0.0, 20.0)
+
+[node name="Modelo" parent="Pasarela/TonyAlterado" instance=ExtResource("e6")]
+transform = Transform3D(0.6503, 0.0, 0.0, 0.0, 0.6503, 0.0, 0.0, 0.0, 0.6503, -0.0052, 0.001, 0.0228)
+
+[node name="Animacion" type="Node" parent="Pasarela/TonyAlterado" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.44
+Animacion = "global/AltTony"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/TonyAlterado" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/TonyAlterado/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 0.0)
+shape = SubResource("CapsuleShape3D_10")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/TonyAlterado"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+text = "Tony
+Alterado"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="TonyCaminar" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.6799, 0.0, -0.7333, 0.0, 1.0, 0.0, 0.7333, 0.0, 0.6799, 33.0, 0.0, 20.0)
+
+[node name="Modelo" parent="Pasarela/TonyCaminar" instance=ExtResource("e6")]
+transform = Transform3D(0.6503, 0.0, 0.0, 0.0, 0.6503, 0.0, 0.0, 0.0, 0.6503, -0.0052, 0.001, 0.0228)
+
+[node name="Animacion" type="Node" parent="Pasarela/TonyCaminar" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.44
+Animacion = "global/CaminaTony"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/TonyCaminar" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/TonyCaminar/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 0.0)
+shape = SubResource("CapsuleShape3D_11")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/TonyCaminar"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.1, 0.0)
+text = "Tony
+Caminar"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="AyaInactivo" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.7719, 0.0, -0.6357, 0.0, 1.0, 0.0, 0.6357, 0.0, 0.7719, 27.6, 0.0, 23.4)
+
+[node name="Modelo" parent="Pasarela/AyaInactivo" instance=ExtResource("e7")]
+transform = Transform3D(0.0359, 0.0, 0.0, 0.0, 0.0359, 0.0, 0.0, 0.0, 0.0359, -0.0045, 0.0051, -0.9514)
+
+[node name="Animacion" type="Node" parent="Pasarela/AyaInactivo" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.28
+Animacion = "Inaya"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/AyaInactivo" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/AyaInactivo/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8, 0.0)
+shape = SubResource("CapsuleShape3D_12")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/AyaInactivo"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.9, 0.0)
+text = "Aya
+Inactivo"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="AyaTenso" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.6766, 0.0, -0.7363, 0.0, 1.0, 0.0, 0.7363, 0.0, 0.6766, 29.4, 0.0, 23.4)
+
+[node name="Modelo" parent="Pasarela/AyaTenso" instance=ExtResource("e7")]
+transform = Transform3D(0.0359, 0.0, 0.0, 0.0, 0.0359, 0.0, 0.0, 0.0, 0.0359, -0.0045, 0.0051, -0.9514)
+
+[node name="Animacion" type="Node" parent="Pasarela/AyaTenso" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.28
+Animacion = "Tensaya"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/AyaTenso" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/AyaTenso/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8, 0.0)
+shape = SubResource("CapsuleShape3D_13")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/AyaTenso"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.9, 0.0)
+text = "Aya
+Tenso"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="AyaAlterado" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.5944, 0.0, -0.8042, 0.0, 1.0, 0.0, 0.8042, 0.0, 0.5944, 31.2, 0.0, 23.4)
+
+[node name="Modelo" parent="Pasarela/AyaAlterado" instance=ExtResource("e7")]
+transform = Transform3D(0.0359, 0.0, 0.0, 0.0, 0.0359, 0.0, 0.0, 0.0, 0.0359, -0.0045, 0.0051, -0.9514)
+
+[node name="Animacion" type="Node" parent="Pasarela/AyaAlterado" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.28
+Animacion = "Alteraya"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/AyaAlterado" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/AyaAlterado/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8, 0.0)
+shape = SubResource("CapsuleShape3D_14")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/AyaAlterado"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.9, 0.0)
+text = "Aya
+Alterado"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="AyaCaminar" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.5258, 0.0, -0.8506, 0.0, 1.0, 0.0, 0.8506, 0.0, 0.5258, 33.0, 0.0, 23.4)
+
+[node name="Modelo" parent="Pasarela/AyaCaminar" instance=ExtResource("e7")]
+transform = Transform3D(0.0359, 0.0, 0.0, 0.0, 0.0359, 0.0, 0.0, 0.0, 0.0359, -0.0045, 0.0051, -0.9514)
+
+[node name="Animacion" type="Node" parent="Pasarela/AyaCaminar" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.28
+Animacion = "Caminaya"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/AyaCaminar" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/AyaCaminar/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8, 0.0)
+shape = SubResource("CapsuleShape3D_15")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/AyaCaminar"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.9, 0.0)
+text = "Aya
+Caminar"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="MiaurioInactivo" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.519, 0.0, -0.8548, 0.0, 1.0, 0.0, 0.8548, 0.0, 0.519, 27.6, 0.0, 26.8)
+
+[node name="Modelo" parent="Pasarela/MiaurioInactivo" instance=ExtResource("e8")]
+transform = Transform3D(0.0046, 0.0, 0.0, 0.0, 0.0046, 0.0, 0.0, 0.0, 0.0046, -1.5082, 0.0025, -0.4715)
+
+[node name="Animacion" type="Node" parent="Pasarela/MiaurioInactivo" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.36
+Animacion = "global/Inactivo"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/MiaurioInactivo" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/MiaurioInactivo/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.85, 0.0)
+shape = SubResource("CapsuleShape3D_16")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/MiaurioInactivo"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
+text = "Miaurio
+Inactivo"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="MiaurioTenso" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.4175, 0.0, -0.9087, 0.0, 1.0, 0.0, 0.9087, 0.0, 0.4175, 29.4, 0.0, 26.8)
+
+[node name="Modelo" parent="Pasarela/MiaurioTenso" instance=ExtResource("e8")]
+transform = Transform3D(0.0046, 0.0, 0.0, 0.0, 0.0046, 0.0, 0.0, 0.0, 0.0046, -1.5082, 0.0025, -0.4715)
+
+[node name="Animacion" type="Node" parent="Pasarela/MiaurioTenso" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.36
+Animacion = "global/Tenso"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/MiaurioTenso" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/MiaurioTenso/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.85, 0.0)
+shape = SubResource("CapsuleShape3D_17")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/MiaurioTenso"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
+text = "Miaurio
+Tenso"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="MiaurioAlterado" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.3467, 0.0, -0.938, 0.0, 1.0, 0.0, 0.938, 0.0, 0.3467, 31.2, 0.0, 26.8)
+
+[node name="Modelo" parent="Pasarela/MiaurioAlterado" instance=ExtResource("e8")]
+transform = Transform3D(0.0046, 0.0, 0.0, 0.0, 0.0046, 0.0, 0.0, 0.0, 0.0046, -1.5082, 0.0025, -0.4715)
+
+[node name="Animacion" type="Node" parent="Pasarela/MiaurioAlterado" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.36
+Animacion = "global/Alterado"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/MiaurioAlterado" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/MiaurioAlterado/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.85, 0.0)
+shape = SubResource("CapsuleShape3D_18")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/MiaurioAlterado"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
+text = "Miaurio
+Alterado"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)
+
+[node name="MiaurioCaminar" type="Node3D" parent="Pasarela" groups=["auditoria_personaje"]]
+transform = Transform3D(0.2953, 0.0, -0.9554, 0.0, 1.0, 0.0, 0.9554, 0.0, 0.2953, 33.0, 0.0, 26.8)
+
+[node name="Modelo" parent="Pasarela/MiaurioCaminar" instance=ExtResource("e8")]
+transform = Transform3D(0.0046, 0.0, 0.0, 0.0, 0.0046, 0.0, 0.0, 0.0, 0.0046, -1.5082, 0.0025, -0.4715)
+
+[node name="Animacion" type="Node" parent="Pasarela/MiaurioCaminar" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("e2")
+Modelo = NodePath("../Modelo")
+AlturaOjos = 1.36
+Animacion = "global/Caminar"
+
+[node name="Colision" type="StaticBody3D" parent="Pasarela/MiaurioCaminar" groups=["auditoria_invisible_ok"]]
+collision_layer = 16
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Pasarela/MiaurioCaminar/Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.85, 0.0)
+shape = SubResource("CapsuleShape3D_19")
+
+[node name="Letrero" type="Label3D" parent="Pasarela/MiaurioCaminar"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
+text = "Miaurio
+Caminar"
+pixel_size = 0.0035
+billboard = 1
+font_size = 48
+outline_size = 12
+modulate = Color(1, 0.93, 0.75, 1)

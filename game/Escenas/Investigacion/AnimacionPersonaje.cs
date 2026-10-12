@@ -4,6 +4,8 @@ using System.Collections.Generic;
 // Animación de reposo hecha por código para los personajes que vienen en pose T y sin animaciones.
 // Con esqueleto: baja los brazos, respira con la espalda, mueve orejas y cola, y voltea la cabeza hacia el detective.
 // Sin esqueleto: el modelo entero se mece y respira.
+// Si el modelo ya trae animaciones hechas (Mixamo), basta con poner su nombre en Animacion: se repite en bucle
+// y no se hace nada por código.
 // Va como hijo del personaje (el nodo que mira hacia +Z), junto a su Modelo. No toca la escala del modelo
 // cuando el padre es un Npc, porque el Npc ya lo hace respirar.
 public partial class AnimacionPersonaje : Node
@@ -25,6 +27,8 @@ public partial class AnimacionPersonaje : Node
 	[Export] public float GiroMaximo = 45f;
 	// Un objeto que lleva en la mano (se busca la mano más cercana al empezar)
 	[Export] public Node3D ObjetoEnMano;
+	// Animación del modelo que se repite (p. ej. "global/Inactivo"); vacío = animación por código
+	[Export] public string Animacion = "";
 
 	private Node3D _personaje;
 	private Skeleton3D _esqueleto;
@@ -53,10 +57,27 @@ public partial class AnimacionPersonaje : Node
 		Modelo ??= _personaje.GetNodeOrNull<Node3D>("Modelo");
 		if (Modelo == null) { SetProcess(false); return; }
 		_fase = (float)GD.RandRange(0.0, Mathf.Tau);
+		if (Animacion != "" && Reproducir(Animacion)) { SetProcess(false); return; }
 		_respiraModelo = _personaje is not Npc;
 		_baseModelo = Modelo.Transform;
 		_esqueleto = BuscarEsqueleto(Modelo);
 		if (_esqueleto != null) PrepararEsqueleto();
+	}
+
+	// Repite una animación del modelo desde un punto al azar, para que dos copias no se muevan igual
+	public bool Reproducir(string nombre)
+	{
+		foreach (Node n in Modelo.FindChildren("*", "AnimationPlayer", true, false))
+		{
+			if (n is not AnimationPlayer reproductor || !reproductor.HasAnimation(nombre)) continue;
+			Animation animacion = reproductor.GetAnimation(nombre);
+			animacion.LoopMode = Animation.LoopModeEnum.Linear;
+			reproductor.Play(nombre);
+			reproductor.Seek(GD.RandRange(0.0, animacion.Length), true);
+			return true;
+		}
+		GD.PushWarning($"AnimacionPersonaje: {_personaje.Name} no tiene la animación «{nombre}».");
+		return false;
 	}
 
 	// Algunos modelos traen un esqueleto vacío además del bueno: se queda el de más huesos

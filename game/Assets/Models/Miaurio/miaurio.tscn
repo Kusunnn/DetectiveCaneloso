@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://bg8g8sgmnec3d"]
+
+[ext_resource type="PackedScene" uid="uid://cgsjurox1l1jp" path="res://Assets/Models/Miaurio/Maiurio.fbx" id="1_67pny"]
+[ext_resource type="Animation" uid="uid://cnrgm311260h5" path="res://Assets/Models/Miaurio/Alterado.res" id="2_63bo2"]
+[ext_resource type="Animation" uid="uid://cnd20fqd2748l" path="res://Assets/Models/Miaurio/Caminar.res" id="3_42kwx"]
+[ext_resource type="Animation" uid="uid://b4wfeckigbjox" path="res://Assets/Models/Miaurio/Inactivo.res" id="4_5o68h"]
+[ext_resource type="Animation" uid="uid://101qlq273a1m" path="res://Assets/Models/Miaurio/Tenso.res" id="5_j8hsx"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_xc75w"]
+_data = {
+&"Alterado": ExtResource("2_63bo2"),
+&"Caminar": ExtResource("3_42kwx"),
+&"Inactivo": ExtResource("4_5o68h"),
+&"Tenso": ExtResource("5_j8hsx")
+}
+
+[node name="Miaurio" type="Node3D" unique_id=1387018369]
+
+[node name="Maiurio" parent="." unique_id=1953839709 instance=ExtResource("1_67pny")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 324.00604, 0, 101.65875)
+
+[node name="Camera" parent="Maiurio" index="0" unique_id=1212757975]
+visible = false
+
+[node name="Light" parent="Maiurio" index="1" unique_id=546826892]
+visible = false
+
+[node name="Skeleton3D" parent="Maiurio" index="2" unique_id=1700362100]
+bones/0/position = Vector3(0.52083224, 68.263725, -0.20709848)
+bones/0/rotation = Quaternion(-0.03716081, -0.36649325, -0.011508468, 0.9296071)
+bones/1/rotation = Quaternion(0.036558393, 0.03977228, -0.009913379, 0.9984906)
+bones/2/rotation = Quaternion(0.1005966, 0.08159225, -0.016304698, 0.99144197)
+bones/3/rotation = Quaternion(0.10059657, 0.08159213, -0.016304696, 0.99144197)
+bones/4/rotation = Quaternion(-0.023634624, -0.011062832, 0.002062115, 0.9996574)
+bones/5/rotation = Quaternion(-0.054420564, 0.17696546, -0.012939533, 0.9826262)
+bones/7/rotation = Quaternion(-0.6050982, -0.38045803, 0.5974441, -0.3635498)
+bones/8/rotation = Quaternion(0.38093367, -0.10280821, 0.056883056, 0.91710657)
+bones/9/rotation = Quaternion(-0.0038244803, 0.05770544, 0.40516198, 0.9124141)
+bones/10/rotation = Quaternion(-0.036847107, 0.9861133, -0.15926424, -0.02928879)
+bones/11/rotation = Quaternion(0.0514118, 0.9975929, -0.04647015, 0.0024115918)
+bones/12/rotation = Quaternion(0.15450047, -0.004426756, -0.019383132, 0.9877927)
+bones/13/rotation = Quaternion(0.08042095, -0.0028064654, 0.018883048, 0.9965783)
+bones/15/rotation = Quaternion(0.6579681, -0.33916453, 0.55550575, 0.37875947)
+bones/16/rotation = Quaternion(0.3436475, 0.1194652, 0.1770206, 0.9144934)
+bones/17/rotation = Quaternion(0.049721118, 0.029293219, -0.3588783, 0.93159866)
+bones/18/rotation = Quaternion(0.10792151, -0.0671235, -0.09987425, 0.98684984)
+bones/19/rotation = Quaternion(0.039480373, 0.010075226, 0.010590345, 0.9991135)
+bones/20/rotation = Quaternion(0.10233616, -0.00724315, 0.058162346, 0.99302167)
+bones/21/rotation = Quaternion(-0.04445374, -0.00070135196, 0.054592464, 0.99751854)
+bones/23/rotation = Quaternion(0.07615331, 0.24974199, 0.9542693, -0.14560162)
+bones/24/rotation = Quaternion(-0.37023634, 0.12575907, -0.08285548, 0.9166486)
+bones/25/rotation = Quaternion(0.46778932, -0.15041861, -0.046784837, 0.8696888)
+bones/26/rotation = Quaternion(0.38533783, 0.036974188, -0.034601286, 0.9213851)
+bones/28/rotation = Quaternion(-0.123351924, -0.07793445, 0.974115, 0.17265716)
+bones/29/rotation = Quaternion(-0.33306512, 0.05182809, 0.022725588, 0.9412041)
+bones/30/rotation = Quaternion(0.636953, 0.19044876, 0.179841, 0.7250362)
+bones/31/rotation = Quaternion(0.37147936, -0.010954773, 0.0070097377, 0.92835015)
+
+[node name="AnimationMiaurio" type="AnimationPlayer" parent="Maiurio" unique_id=1799881939]
+libraries/global = SubResource("AnimationLibrary_xc75w")
+
+[editable path="Maiurio"]
