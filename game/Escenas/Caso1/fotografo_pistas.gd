@@ -3,6 +3,7 @@ extends SceneTree
 # con el mismo estilo que las del Caso 0 (el objeto en su sitio, 256 × 256).
 # Uso (con ventana, porque hay que renderizar):
 #   Godot_v4.7.2-stable_mono_win64_console.exe --path game --script res://Escenas/Caso1/fotografo_pistas.gd
+# Para rehacer solo algunas: ... fotografo_pistas.gd -- foto_grupo botas_tony
 
 const ESCENA := "res://Escenas/Caso1/escenario_campamento.tscn"
 const CARPETA := "res://Assets/Pistas/caso1/"
@@ -61,7 +62,10 @@ func _init() -> void:
 	foco.shadow_enabled = true
 	foco.position = Vector3(0.25, 0.2, 0)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(CARPETA))
+	var solo := OS.get_cmdline_user_args()
 	for id in TOMAS:
+		if not solo.is_empty() and not solo.has(id):
+			continue
 		var toma: Array = TOMAS[id]
 		var nodo := esc.get_node(toma[0]) as Node3D
 		var centro := nodo.global_position

@@ -28,3 +28,7 @@ Los colores de los packs de Kenney se apagaron un poco (saturación 70 %, brillo
 | Texturas/mascara_suelo.png (caminos y pasto del suelo) | Hecha para el proyecto | Equipo Detective Caneloso | Del proyecto | — |
 | ../Pistas/caso1/*.png (fotos de las pistas) | Capturas del escenario con `Escenas/Caso1/fotografo_pistas.gd` | Equipo Detective Caneloso | Del proyecto | — |
 | Sonidos/*.ogg | Ver `Assets/Audio/CREDITOS_AUDIO.md` | — | CC0 1.0 | — |
+
+## Vista de examen (HU-07)
+
+Los modelos de la vista de examen son las mismas mallas de cada pista en el escenario: la vista las copia, así que no se descargó ningún modelo nuevo. Los detalles ocultos (la etiqueta bajo la grabadora, el reverso del libro de guardia, la dedicatoria y las iniciales de la foto, el tachón del registro y la suela de las botas) se hicieron en las escenas con mallas simples y `Label3D`.

@@ -434,6 +434,8 @@ Descripcion = "Una taza de chocolate a medio tomar, todavía tibia, y el delanta
 EsEvidencia = true
 ComentarioAlMirar = "Todavía está tibia..."
 Imagen = ExtResource("e20")
+DescripcionAmpliada = "Una taza de chocolate a medio tomar, todavía tibia, y el delantal de Porky colgado de cualquier manera en el gancho. Salió de la cocina con prisa."
+Lugar = "Cocina"
 
 [node name="Forma" type="CollisionShape3D" parent="TazaDelantal"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.15, 0.0)

@@ -25,6 +25,8 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/botiquin.tscn" id="e23"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/botella_agua.tscn" id="e24"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/lampara_techo.tscn" id="e25"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
+[ext_resource type="Resource" path="res://Datos/Detalles/registro_enfermeria_tachon.tres" id="hu07_det_tachon"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(0.3, 2.6, 0.78)
@@ -158,6 +160,10 @@ material = SubResource("StandardMaterial3D_34")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_36"]
 size = Vector3(5.2, 3.0, 7.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tachon_hu07"]
+size = Vector3(0.23, 0.002, 0.034)
+material = SubResource("StandardMaterial3D_22")
 
 [node name="Enfermeria" type="Node3D"]
 
@@ -378,10 +384,13 @@ collision_mask = 0
 script = ExtResource("e16")
 Id = "registro_enfermeria"
 Titulo = "Registro de la enfermería"
-Descripcion = "Registro de guardia de la enfermería. «23:20 — ruido en el lago». Alguien lo tachó después."
+Descripcion = "Bitácora de la enfermería del 14 de agosto. Una línea de las 23:20 está tachada con pluma hasta no leerse."
 EsEvidencia = true
 ComentarioAlMirar = "El registro de la enfermería. Una línea está tachada."
 Imagen = ExtResource("e15")
+DescripcionAmpliada = "La bitácora de guardia de la enfermería del 14 de agosto: «22:10 raspón en rodilla» y «00:40 todo en calma». La línea de las 23:20 está tachada con tanta fuerza que la pluma marcó el papel. Con buena luz, a lo mejor se leen los surcos."
+Lugar = "Enfermería · cajón del escritorio"
+Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_tachon")])
 
 [node name="Forma" type="CollisionShape3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.24, 0.0)
@@ -390,10 +399,10 @@ shape = SubResource("BoxShape3D_21")
 [node name="Libreta" type="Node3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.012, 0.0)
 script = ExtResource("e12")
-Texto = "REGISTRO — 14 de agosto
-22:10 raspón en rodilla
-23:20 ruido en el lago
-00:40 todo en calma"
+Texto = "REGISTRO 14/VIII
+22:10 raspón
+23:20 ________
+00:40 en calma"
 Ancho = 0.3
 ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
 ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
@@ -404,8 +413,8 @@ AltoMaximo = 1.2
 TamPixel = 0.0011
 
 [node name="Tachon" type="MeshInstance3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.016, 0.005)
-mesh = SubResource("BoxMesh_23")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.021, 0.0187)
+mesh = SubResource("BoxMesh_tachon_hu07")
 
 [node name="Silla" parent="." instance=ExtResource("e17") groups=["apoyar_suelo"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 24.9, 0.06, -24.8031)
@@ -512,3 +521,16 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Enfermeria"]
 shape = SubResource("BoxShape3D_36")
+
+[node name="Surcos" type="Label3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro" groups=["examen_linterna"]]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.0235, 0.0187)
+visible = false
+pixel_size = 0.0004
+shaded = true
+modulate = Color(0.95, 0.9, 0.78, 0.85)
+outline_size = 0
+text = "23:20 ruido en el lago"
+font_size = 40
+
+[node name="Detalle_tachon" type="Marker3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.024, 0.0187)

@@ -21,6 +21,8 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="23_cartel"]
 [ext_resource type="Script" path="res://Escenas/UI/GuiaTutorial.cs" id="24_guia"]
 [ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="25_mando"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
+[ext_resource type="Resource" path="res://Datos/Detalles/grabadora_etiqueta.tres" id="hu07_det_grabadora"]
 
 [sub_resource type="StandardMaterial3D" id="Material_techo"]
 albedo_color = Color(0.1, 0.1, 0.1, 1)
@@ -369,6 +371,14 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1.05, 0.5)
 
+[sub_resource type="StandardMaterial3D" id="Material_etiqueta_hu07"]
+albedo_color = Color(0.9, 0.86, 0.72, 1)
+roughness = 0.95
+
+[sub_resource type="QuadMesh" id="QuadMesh_etiqueta_hu07"]
+material = SubResource("Material_etiqueta_hu07")
+size = Vector2(0.13, 0.07)
+
 [node name="SalaInterrogatorio" type="Node3D" unique_id=319035182]
 
 [node name="HUD" parent="." unique_id=993473331 instance=ExtResource("1_ar7rw")]
@@ -504,6 +514,9 @@ Id = "grabadora"
 Titulo = "Grabadora en REC"
 Descripcion = "Tapa abierta, sin cinta y con la luz de REC encendida: alguien la dejó grabando. El contador se quedó en 03:12."
 ComentarioAlMirar = "Una grabadora grabando la nada. Qué poético... y qué raro."
+DescripcionAmpliada = "Una grabadora de carrete de la comisaría. La tapa está abierta y el hueco de la cinta, vacío. La luz de REC sigue encendida y el contador se quedó en 03:12: algo dejó de grabarse en ese momento, pero nadie la apagó."
+Lugar = "Sala 1 · mesa de interrogatorio"
+Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_grabadora")])
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="GrabadoraPista" unique_id=290225050]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
@@ -779,6 +792,8 @@ Titulo = "Reloj parado a las 3:12"
 Descripcion = "El reloj de la Sala 1 marca las 3:12 y no avanza. El cristal está rajado: se cayó o lo golpearon."
 ComentarioAlMirar = "Las 3:12. O el reloj se cansó... o alguien lo cansó."
 Visuales = [NodePath("../Detalles/Reloj"), NodePath("../Detalles/RelojAro"), NodePath("../Detalles/AgujaHora"), NodePath("../Detalles/AgujaMinuto")]
+DescripcionAmpliada = "El reloj de pared de la Sala 1. Las manecillas se quedaron en las 3:12 y el cristal tiene una estrella de grietas, como si se hubiera caído al piso y alguien lo hubiera vuelto a colgar."
+Lugar = "Sala 1 · pared"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RelojPista"]
 shape = SubResource("Forma_reloj")
 
@@ -800,6 +815,8 @@ Titulo = "Pluma negra"
 Descripcion = "Una pluma de ave, negra y larga, atorada en la rejilla de ventilación del techo de la Sala 1. Aquí no hay pájaros... ¿o sí?"
 RequiereLinterna = true
 SeRecoge = true
+DescripcionAmpliada = "Una pluma larga y negra, atorada en la rejilla de ventilación del techo. No es de ninguna almohada ni de ningún pájaro de la ciudad."
+Lugar = "Sala 1 · rejilla del techo"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PlumaSecreta"]
 shape = SubResource("Forma_rejilla")
@@ -950,3 +967,23 @@ script = ExtResource("24_guia")
 
 [node name="MandoHud" type="Node" parent="."]
 script = ExtResource("25_mando")
+
+[node name="EtiquetaInferior" type="MeshInstance3D" parent="GrabadoraPista"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.04, -0.0006, 0.01)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_etiqueta_hu07")
+
+[node name="TextoEtiqueta" type="Label3D" parent="GrabadoraPista"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.04, -0.001, 0.01)
+pixel_size = 0.00025
+shaded = true
+modulate = Color(0.12, 0.16, 0.38, 1)
+outline_size = 0
+text = "SALA 1
+NO DETENER hasta
+el cambio de turno.
+— B."
+font_size = 36
+
+[node name="Detalle_etiqueta" type="Marker3D" parent="GrabadoraPista"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.04, -0.001, 0.01)

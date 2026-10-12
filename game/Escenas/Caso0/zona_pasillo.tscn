@@ -860,6 +860,8 @@ Id = "huellas"
 Titulo = "Huellas de bota"
 Descripcion = "Huellas de barro con suela de bota reglamentaria, de las que usan los agentes. Van de la sala de interrogatorio hacia los vestidores."
 RequiereLinterna = true
+DescripcionAmpliada = "Huellas de barro con el dibujo de una bota reglamentaria de la comisaría. Salen de la Sala 1 y van hacia los vestidores. Con la linterna se ve que el que las dejó caminaba deprisa."
+Lugar = "Pasillo"
 
 [node name="Colision" type="CollisionShape3D" parent="Huellas"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
@@ -922,6 +924,8 @@ Titulo = "Envoltura de sándwich"
 Descripcion = "Envoltura de sándwich de jamón con migas frescas, junto a la reja de la C-2, la celda de Tito Garras. Alguien le trajo la cena de madrugada."
 RequiereLinterna = true
 SeRecoge = true
+DescripcionAmpliada = "Envoltura de papel encerado de un sándwich de jamón. Las migas siguen suaves: alguien cenó aquí hace pocas horas, justo al lado de la celda de Tito Garras."
+Lugar = "Pasillo · junto a la celda C-2"
 
 [node name="Colision" type="CollisionShape3D" parent="Envoltorio"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)

@@ -735,6 +735,8 @@ Id = "libro_turnos"
 Titulo = "Libro de turnos"
 Descripcion = "Eriz (conserje): salida a la 1:00. Guardia de 2:00 a 4:00: agente Porky, en recepción. Nadie más firmó. Al margen, con la letra del comisario: «Grabadora Sala 1: NO TOCAR»."
 SeRecoge = true
+DescripcionAmpliada = "El libro de firmas de la guardia. Eriz firmó su salida a la 1:00. En el turno de 2:00 a 4:00 solo aparece la firma de Porky. En el margen, con otra letra: «Grabadora Sala 1: NO TOCAR»."
+Lugar = "Recepción · mostrador"
 
 [node name="Colision" type="CollisionShape3D" parent="LibroTurnos"]
 shape = SubResource("Shape_0p42_0p14_0p34")
@@ -1103,6 +1105,8 @@ Id = "nota_comisario"
 Titulo = "Nota del comisario"
 Descripcion = "«Dejar la grabadora de la Sala 1 en REC esta noche. Veremos quién duerme en la guardia. — B.»"
 SeRecoge = true
+DescripcionAmpliada = "Una hoja doblada en el cajón del escritorio del comisario: «Dejar la grabadora de la Sala 1 en REC esta noche. Veremos quién duerme en la guardia. — B.»"
+Lugar = "Recepción · cajón del escritorio"
 
 [node name="Colision" type="CollisionShape3D" parent="CajonEscritorio1/Movil/NotaComisario"]
 shape = SubResource("Shape_0p22_0p04_0p16")

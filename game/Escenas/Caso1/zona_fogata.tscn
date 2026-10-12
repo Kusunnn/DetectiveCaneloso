@@ -25,6 +25,8 @@
 [ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/madera_piso_color.jpg" id="e23"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log.glb" id="e24"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/silla.tscn" id="e25"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
+[ext_resource type="Resource" path="res://Datos/Detalles/libro_guardia_antonio.tres" id="hu07_det_libro"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
 albedo_color = Color(0.12, 0.11, 0.1, 1.0)
@@ -256,6 +258,14 @@ size = Vector3(1.2, 0.05, 2.4)
 [sub_resource type="BoxShape3D" id="BoxShape3D_44"]
 size = Vector3(24.0, 4.0, 20.0)
 
+[sub_resource type="StandardMaterial3D" id="Material_reverso_hu07"]
+albedo_color = Color(0.55, 0.47, 0.34, 1)
+roughness = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_reverso_hu07"]
+material = SubResource("Material_reverso_hu07")
+size = Vector2(0.1, 0.07)
+
 [node name="ZonaFogata" type="Node3D"]
 
 [node name="Fuego" type="Node3D" parent="." groups=["apoyar_suelo"]]
@@ -326,12 +336,15 @@ collision_mask = 0
 script = ExtResource("e5")
 Id = "libro_guardia_quemado"
 Titulo = "Libro de guardia quemado"
-Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... monitor auxiliar Antonio R.... olor a alcohol...»."
+Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... olor a alcohol...». Lo demás está hecho ceniza."
 EsEvidencia = true
 ComentarioAlMirar = "Entre las cenizas hay hojas que no terminaron de quemarse."
 RequiereLinterna = true
 SoloAgachado = true
 Imagen = ExtResource("e4")
+DescripcionAmpliada = "Tres hojas del libro de guardia del campamento, chamuscadas por las orillas. Al frente se alcanza a leer «Guardia nocturna, 14 de agosto...» y «...olor a alcohol...». Lo demás se deshace con solo tocarlo."
+Lugar = "Fogata · entre las cenizas"
+Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_libro")])
 
 [node name="Forma" type="CollisionShape3D" parent="Fuego/LibroQuemado"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.18, 0.0)
@@ -353,7 +366,7 @@ mesh = SubResource("BoxMesh_16")
 transform = Transform3D(0.9848, -0.1736, 0.0, 0.0, 0.0, 1.0, -0.1736, -0.9848, 0.0, 0.0, 0.07, 0.0)
 script = ExtResource("e6")
 Texto = "Guardia nocturna, 14 de ag...
-monitor auxiliar Antonio R...
+...
 ...olor a alcohol..."
 Ancho = 0.24
 ColorPapel = Color(0.36, 0.3, 0.22, 1.0)
@@ -498,6 +511,8 @@ Descripcion = "Un montón de leña seca junto a la fogata, apilado y sin tocar. 
 EsEvidencia = true
 ComentarioAlMirar = "Leña de sobra... y la fogata se apagó sola."
 Imagen = ExtResource("e17")
+DescripcionAmpliada = "La pila de leña sigue igual de ordenada, con el hacha a un lado. Nadie tomó ni una rama anoche."
+Lugar = "Fogata · junto a la leñera"
 
 [node name="Forma" type="CollisionShape3D" parent="Lena"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
@@ -737,3 +752,22 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Fogata"]
 shape = SubResource("BoxShape3D_44")
+
+[node name="ReversoHoja" type="MeshInstance3D" parent="Fuego/LibroQuemado"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.06, 0.0585, 0.17)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_reverso_hu07")
+
+[node name="TextoReverso" type="Label3D" parent="Fuego/LibroQuemado"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.06, 0.058, 0.17)
+pixel_size = 0.00022
+shaded = true
+modulate = Color(0.1, 0.07, 0.05, 1)
+outline_size = 0
+text = "...de guardia:
+monitor auxiliar
+Antonio R. ..."
+font_size = 40
+
+[node name="Detalle_antonio" type="Marker3D" parent="Fuego/LibroQuemado"]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.06, 0.058, 0.17)

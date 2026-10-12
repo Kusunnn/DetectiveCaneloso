@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DetalleOculto" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="1_detalle"]
+
+[resource]
+script = ExtResource("1_detalle")
+Id = "dedicatoria"
+Titulo = "Dedicatoria detrás de la foto"
+Descripcion = "En el cartón de atrás del marco, a mano: «Cabaña 4, 14 de agosto. Para Daniel, que nunca le tuvo miedo al lago. — A. R.»"
+Pensamiento = "«Para Daniel... A. R.» El mismo día que se ahogó. Quien firmó conocía bien al niño."
+Normal = Vector3(0, 0, -1)
+Tolerancia = 40.0
+ZoomMinimo = 1.0
+RequiereLinterna = false

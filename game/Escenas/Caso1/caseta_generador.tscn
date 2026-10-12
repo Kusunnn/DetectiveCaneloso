@@ -295,6 +295,8 @@ Descripcion = "El candado de la caseta cuelga abierto de la argolla. No tiene un
 EsEvidencia = true
 ComentarioAlMirar = "Abierto... y sin un rasguño."
 Imagen = ExtResource("e6")
+DescripcionAmpliada = "Un candado de latón abierto, colgado de la argolla. No tiene un solo rayón ni marcas de palanca: quien lo abrió tenía la llave."
+Lugar = "Caseta del generador · puerta"
 
 [node name="Forma" type="CollisionShape3D" parent="Candado"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.08, 0.0)
@@ -389,6 +391,8 @@ Descripcion = "El interruptor principal de la caseta está bajado a mano. El gen
 EsEvidencia = true
 ComentarioAlMirar = "Un tablero en buen estado... con la palanca abajo."
 Imagen = ExtResource("e15")
+DescripcionAmpliada = "El interruptor principal del tablero está abajo. El generador funciona y no hay fusibles quemados: alguien bajó la palanca con la mano para dejar el campamento a oscuras."
+Lugar = "Caseta del generador"
 
 [node name="Forma" type="CollisionShape3D" parent="Interruptor"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)

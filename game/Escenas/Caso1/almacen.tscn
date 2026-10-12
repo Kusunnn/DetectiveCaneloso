@@ -408,6 +408,8 @@ Descripcion = "En el baúl de los cuentos falta la cornamenta del disfraz de cie
 EsEvidencia = true
 ComentarioAlMirar = "El baúl de los cuentos. Hay un hueco vacío entre los disfraces."
 Imagen = ExtResource("e13")
+DescripcionAmpliada = "El baúl de disfraces del fogón de los cuentos. Están la capa y la corona, pero falta la cornamenta del ciervo. En el inventario, la cornamenta tiene una cruz y nadie firmó quién la sacó."
+Lugar = "Almacén de los cuentos · baúl"
 
 [node name="Forma" type="CollisionShape3D" parent="PistaBaul"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.612, 0.0)

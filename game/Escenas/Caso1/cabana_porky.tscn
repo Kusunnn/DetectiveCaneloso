@@ -39,6 +39,10 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/papelera.tscn" id="e37"]
 [ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/oferta_compra.png" id="e38"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/caja_carton.tscn" id="e39"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
+[ext_resource type="Resource" path="res://Datos/Detalles/foto_grupo_dedicatoria.tres" id="hu07_det_dedicatoria"]
+[ext_resource type="Resource" path="res://Datos/Detalles/foto_grupo_silbato.tres" id="hu07_det_silbato"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/foto_grupo_hd.svg" id="hu07_foto_hd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(0.3, 2.6, 0.78)
@@ -237,6 +241,23 @@ size = Vector3(0.36, 0.2, 0.36)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_52"]
 size = Vector3(7.8, 3.0, 5.2)
+
+[sub_resource type="StandardMaterial3D" id="Material_foto_hd_hu07"]
+albedo_texture = ExtResource("hu07_foto_hd")
+roughness = 0.7
+texture_filter = 5
+
+[sub_resource type="QuadMesh" id="QuadMesh_foto_hd_hu07"]
+material = SubResource("Material_foto_hd_hu07")
+size = Vector2(0.6, 0.5156)
+
+[sub_resource type="StandardMaterial3D" id="Material_reverso_foto_hu07"]
+albedo_color = Color(0.72, 0.64, 0.5, 1)
+roughness = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_reverso_foto_hu07"]
+material = SubResource("Material_reverso_foto_hu07")
+size = Vector2(0.64, 0.555)
 
 [node name="CabanaPorky" type="Node3D"]
 
@@ -489,6 +510,8 @@ Descripcion = "Una hoja doblada con la letra de Porky: «Esta noche se lo digo. 
 EsEvidencia = true
 ComentarioAlMirar = "Una hoja doblada, escondida a propósito."
 Imagen = ExtResource("e17")
+DescripcionAmpliada = "Una nota con la letra redonda de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Daniel.» La escribió con prisa: la tinta se corrió."
+Lugar = "Cabaña de Porky · bajo la almohada"
 
 [node name="Forma" type="CollisionShape3D" parent="NotaPorky"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.2, 0.0)
@@ -635,10 +658,13 @@ collision_mask = 0
 script = ExtResource("e18")
 Id = "foto_grupo"
 Titulo = "Foto del grupo de hace 20 años"
-Descripcion = "Los campistas de la cabaña 4 hace veinte años. Al lado, el monitor auxiliar con el silbato al cuello: Tony."
+Descripcion = "Los campistas de la cabaña 4 hace veinte años, frente a su cabaña, con su monitor a un lado."
 EsEvidencia = true
-ComentarioAlMirar = "Todos tan chiquitos... y el monitor con su silbato."
+ComentarioAlMirar = "Todos tan chiquitos... Una foto de hace veinte años."
 Imagen = ExtResource("e32")
+DescripcionAmpliada = "Una foto vieja en un marco de madera: cinco campistas de la cabaña 4 frente a su cabaña y, a la izquierda, un monitor alto con gorra. El más pequeño lleva una gorra de marinero. El marco tiene polvo, menos en las orillas: alguien lo descolgó hace poco."
+Lugar = "Cabaña de Porky · pared de fotos"
+Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_dedicatoria"), ExtResource("hu07_det_silbato")])
 
 [node name="Forma" type="CollisionShape3D" parent="FotoGrupo"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
@@ -650,7 +676,7 @@ mesh = SubResource("BoxMesh_39")
 
 [node name="ImagenFotoGrupo" type="MeshInstance3D" parent="FotoGrupo"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.011)
-mesh = SubResource("QuadMesh_40")
+mesh = SubResource("QuadMesh_foto_hd_hu07")
 
 [node name="FotoLago" type="Node3D" parent="." groups=["apoyar_pared"]]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 32.030003, 1.75, 1.95)
@@ -701,6 +727,8 @@ Descripcion = "EL ECO DEL LAGO. «Muere campista de 11 años en el Lago Espejo. 
 EsEvidencia = true
 ComentarioAlMirar = "Daniel... el de la canoa."
 Imagen = ExtResource("e36")
+DescripcionAmpliada = "Un recorte amarillento: «Muere campista de 11 años en el Lago Espejo. Daniel M. salió de su cabaña de noche; la guardia no notó su ausencia.» Alguien subrayó «la guardia» con pluma roja."
+Lugar = "Cabaña de Porky · corcho"
 
 [node name="Forma" type="CollisionShape3D" parent="Recorte"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
@@ -754,6 +782,8 @@ EsEvidencia = true
 ComentarioAlMirar = "Papeles rotos con un sello notarial."
 SoloAgachado = true
 Imagen = ExtResource("e38")
+DescripcionAmpliada = "Una oferta formal para comprar el Campamento Pino Lunar, firmada por Juan Carlos. Está rota en cuatro pedazos y tirada a la basura: Porky no pensaba vender."
+Lugar = "Cabaña de Porky · papelera"
 
 [node name="Forma" type="CollisionShape3D" parent="Oferta"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.1, 0.0)
@@ -815,3 +845,37 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="CabanaPorky"]
 shape = SubResource("BoxShape3D_52")
+
+[node name="ReversoMarco" type="MeshInstance3D" parent="FotoGrupo"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, -0.0105)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_reverso_foto_hu07")
+
+[node name="Dedicatoria" type="Label3D" parent="FotoGrupo"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, -0.0112)
+pixel_size = 0.0011
+shaded = true
+modulate = Color(0.16, 0.12, 0.3, 1)
+outline_size = 0
+text = "Cabaña 4 · 14 de agosto
+
+Para Daniel, que nunca
+le tuvo miedo al lago.
+
+— A. R."
+font_size = 32
+
+[node name="Detalle_dedicatoria" type="Marker3D" parent="FotoGrupo"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, -0.012)
+
+[node name="InicialesSilbato" type="Label3D" parent="FotoGrupo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.186, -0.0062, 0.0114)
+pixel_size = 0.00012
+shaded = true
+modulate = Color(0.12, 0.09, 0.06, 1)
+outline_size = 0
+text = "A.R."
+font_size = 32
+
+[node name="Detalle_silbato" type="Marker3D" parent="FotoGrupo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.19, -0.006, 0.012)

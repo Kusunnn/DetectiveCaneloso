@@ -49,3 +49,7 @@ Están en `Assets/Caso1/Sonidos/`. Las grabaciones largas se recortaron a 40 s e
 | Caso1/Sonidos/buho.ogg (#1764) | BigSoundBank · Tawny Owl #2 | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/tawny-owl-2-s1764.html |
 | Caso1/Sonidos/agua_lago.ogg (#1444) | BigSoundBank · Pontoon, marina | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/pontoon-marina-s1444.html |
 | Caso1/Sonidos/generador.ogg (`loop_generator_1.mp3`) | OpenGameArt · Generator (loop) | YCbCr | CC0 1.0 | https://opengameart.org/content/generator-loop |
+
+## Vista de examen (HU-07)
+
+Por ahora usa sonidos que ya estaban en el juego, con otro volumen y tono (`Sonidos.cs`): abrir (`Interfaz/pagina.wav`), cerrar (`Interfaz/libreta_cerrar.wav`), girar (`Efectos/cremallera_1..3.wav`), acercar (`Interfaz/hover_1..3.wav`), el "tic" de un detalle a la vista (`Interfaz/texto_2.wav`) y descubrir (`Interfaz/objeto.wav`). Sus créditos están arriba.

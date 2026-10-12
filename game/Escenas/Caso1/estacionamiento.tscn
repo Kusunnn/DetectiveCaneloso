@@ -119,6 +119,8 @@ Descripcion = "Una hoja impresa con las llamadas del celular de Juan Carlos. Var
 EsEvidencia = true
 ComentarioAlMirar = "Una hoja impresa en el asiento del copiloto."
 Imagen = ExtResource("e3")
+DescripcionAmpliada = "Una hoja impresa con el registro de llamadas del celular de Juan Carlos: tres llamadas al mismo número a las 23:58, 00:12 y 00:31."
+Lugar = "Estacionamiento · coche de Juan Carlos"
 
 [node name="Forma" type="CollisionShape3D" parent="Coche/RegistroLlamadas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)

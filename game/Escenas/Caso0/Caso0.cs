@@ -23,6 +23,8 @@ public partial class Caso0 : Node
 	private const string Cinta = "cinta";
 	private const string Pluma = "pluma";          // Secreta y opcional
 	private const int PistasTotales = 8;
+	// HU-07: detalle oculto que solo aparece examinando la grabadora (entrada nueva del expediente)
+	private const string GrabadoraEtiqueta = "grabadora.etiqueta";
 
 	// Testimonios que se pueden usar en el tablero
 	private const string TEriz = "t_eriz";
@@ -109,6 +111,8 @@ public partial class Caso0 : Node
 		Hud.Set("archivo", "La cinta");
 		Jugador.EvidenciaRegistrada += AlRegistrarEvidencia;
 		Jugador.ObjetoObtenido += _ => { Progreso(); ActualizarObjetivo(); Cambio(); };
+		Jugador.EvidenciaExaminada += _ => Cambio();
+		Jugador.DetalleDescubierto += AlDescubrirDetalle;
 		Hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
 
 		Eriz.Usado += () => Conversar(() => Interrogar(_eriz, OpcionesEriz, EvidenciaEriz));
@@ -170,7 +174,7 @@ public partial class Caso0 : Node
 		switch (id)
 		{
 			case Grabadora:
-				Pensar("Sin cinta y en REC. Alguien la dejó grabando.");
+				Pensar("Sin cinta y en REC. Alguien la dejó grabando. La examino de cerca [E].");
 				break;
 			case Reloj:
 				Pensar("Las 3:12 en punto. Y el vidrio está estrellado.");
@@ -194,6 +198,19 @@ public partial class Caso0 : Node
 		if (_pistas.Contains(Grabadora) && _pistas.Contains(Reloj))
 			Indicar("tablero", "La grabadora y el reloj. Los uno en mi tablero [R].");
 		ActualizarObjetivo();
+	}
+
+	// HU-07: lo que se descubre examinando una evidencia
+	private void AlDescubrirDetalle(string origen, string id)
+	{
+		Cambio();
+		Autoguardar("Detalle: " + id);
+		if (id == GrabadoraEtiqueta)
+		{
+			Nota("Bajo la grabadora, una etiqueta: «Sala 1. NO DETENER hasta el cambio de turno. — B.»");
+			if (_pistas.Contains(NotaComisario))
+				Indicar("tablero_etiqueta", "La «B.» de la etiqueta y la de la nota... Las uno en mi tablero [R].");
+		}
 	}
 
 	private void ActualizarObjetivo()
@@ -246,7 +263,7 @@ public partial class Caso0 : Node
 		if (Par(Grabadora, Reloj)) return Deducir(D1, "A las 3:12 pasó algo en la Sala 1 mientras la grabadora grababa.");
 		if (Par(Huellas, Turnos)) return Deducir(D2, "Las huellas son de Porky: era el único agente de guardia.");
 		if (Par(Envoltorio, TEriz)) return Deducir(D3, "Eriz estaba con Tito en las celdas, no en la Sala 1. No fue él.");
-		if (Par(NotaComisario, Grabadora) || Par(TComisario, Grabadora))
+		if (Par(NotaComisario, Grabadora) || Par(TComisario, Grabadora) || Par(GrabadoraEtiqueta, NotaComisario))
 			return Deducir(D4, "El comisario dejó la grabadora en REC: una trampa para quien se durmiera en la guardia.");
 		return null;
 	}
@@ -472,6 +489,9 @@ public partial class Caso0 : Node
 			case NotaComisario:
 				await Habla(p, "¡¿Era una trampa?! ...Y caí redondito.");
 				return true;
+			case GrabadoraEtiqueta:
+				await Habla(p, "Esa letra no es mía. Yo a esa grabadora ni me le acerco.");
+				return true;
 		}
 		return false;
 	}
@@ -532,6 +552,11 @@ public partial class Caso0 : Node
 				return true;
 			case Turnos:
 				await Habla(p, "La nota del margen es mía: «NO TOCAR». ¿Algún problema?");
+				return true;
+			case GrabadoraEtiqueta:
+				if (p.Confeso) { await Habla(p, "La etiqueta también la puse yo. Para que nadie la apagara."); return true; }
+				await Habla(p, "¿Una B.? Hay muchas B en esta comisaría, Caneloso.");
+				await Piensa("(Una etiqueta no basta. Necesito algo firmado por él.)");
 				return true;
 			case Cinta:
 				await Habla(p, "¡La cinta! Explícame quién y por qué. En la Sala 1.");

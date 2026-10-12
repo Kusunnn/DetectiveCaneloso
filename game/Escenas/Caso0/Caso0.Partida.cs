@@ -48,7 +48,7 @@ public partial class Caso0 : IEstadoPartida
 	// ---------- IEstadoPartida ----------
 
 	public bool PuedeGuardar =>
-		_cerrandoCaso || (!_restaurando && !_enDialogo && !Tablero.Abierto && !Dialogo.Abierto && !Todos<Contenedor>().Any(c => c.Animando));
+		_cerrandoCaso || (!_restaurando && !_enDialogo && !Jugador.Examinando && !Tablero.Abierto && !Dialogo.Abierto && !Todos<Contenedor>().Any(c => c.Animando));
 
 	private string ZonaActual()
 	{
@@ -80,6 +80,9 @@ public partial class Caso0 : IEstadoPartida
 				{ "id", recurso.Get("id").AsStringName().ToString() },
 				{ "titulo", recurso.Get("titulo").AsString() },
 				{ "descripcion", recurso.Get("descripcion").AsString() },
+				// HU-07: estado del examen y, en los detalles descubiertos, la evidencia de la que salieron
+				{ "examinada", recurso.Get("examinada").AsBool() },
+				{ "origen_id", recurso.Get("origen_id").AsStringName().ToString() },
 			});
 		}
 		var personas = new Arreglo();
@@ -154,10 +157,18 @@ public partial class Caso0 : IEstadoPartida
 		{
 			var pista = v.AsGodotDictionary();
 			string id = pista["id"].AsString();
+			string origen = pista.TryGetValue("origen_id", out Variant o) ? o.AsString() : "";
+			bool examinada = pista.TryGetValue("examinada", out Variant e) && e.AsBool();
+			if (!string.IsNullOrEmpty(origen))
+			{
+				Jugador.RestaurarDetalle(id, pista["titulo"].AsString(), pista["descripcion"].AsString(), origen);
+				continue;
+			}
 			_pistas.Add(id);
 			objetos.TryGetValue(id, out var objeto);
 			objeto?.MarcarEncontrada();
-			Jugador.RestaurarEvidencia(id, pista["titulo"].AsString(), pista["descripcion"].AsString(), objeto?.Imagen);
+			if (objeto != null) Jugador.RestaurarEvidencia(objeto, pista["titulo"].AsString(), pista["descripcion"].AsString(), examinada);
+			else Jugador.RestaurarEvidencia(id, pista["titulo"].AsString(), pista["descripcion"].AsString());
 		}
 		foreach (string nota in Textos(estado["notas"])) Hud.Call("agregar_nota", nota);
 		foreach (Variant v in estado["personas"].AsGodotArray())
