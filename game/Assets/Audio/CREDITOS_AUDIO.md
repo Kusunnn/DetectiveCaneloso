@@ -52,4 +52,13 @@ Están en `Assets/Caso1/Sonidos/`. Las grabaciones largas se recortaron a 40 s e
 
 ## Vista de examen (HU-07)
 
-Por ahora usa sonidos que ya estaban en el juego, con otro volumen y tono (`Sonidos.cs`): abrir (`Interfaz/pagina.wav`), cerrar (`Interfaz/libreta_cerrar.wav`), girar (`Efectos/cremallera_1..3.wav`), acercar (`Interfaz/hover_1..3.wav`), el "tic" de un detalle a la vista (`Interfaz/texto_2.wav`) y descubrir (`Interfaz/objeto.wav`). Sus créditos están arriba.
+Están en `Assets/Audio/Examen/`. Son los OGG originales de Kenney copiados tal cual; su ganancia se iguala en `Sonidos.cs`.
+
+| Archivo | Fuente | Autor | Licencia | Enlace |
+|---|---|---|---|---|
+| Examen/abrir.ogg (`handleSmallLeather`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
+| Examen/cerrar.ogg (`dropLeather`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
+| Examen/girar_1..3.ogg (`beltHandle1`, `beltHandle2`, `handleSmallLeather2`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
+| Examen/acercar_1..3.ogg (`scroll_001`..`scroll_003`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
+| Examen/tic.ogg (`glass_001`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
+| Examen/descubrir.ogg (`jingles_PIZZI04`) | Kenney · Music Jingles | Kenney | CC0 1.0 | https://kenney.nl/assets/music-jingles |

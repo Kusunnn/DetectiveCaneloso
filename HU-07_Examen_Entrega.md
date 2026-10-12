@@ -32,7 +32,7 @@ Rama `HU-07`, creada desde `HU-20.5` (`1020752`). El análisis previo está en `
 - `game/hud/hud.gd`: estados en el expediente, la libreta y el post-it, contador, botón [EXAMINAR], aviso «[E] Examinar» y detalles colocados bajo su evidencia. `detalle_solicitado` ya no se emite al abrir con TAB: se emite con [E] o [EXAMINAR].
 - `game/Escenas/Interrogatorio/ObjetoPista.cs`: exports `ModeloExamen`, `DescripcionAmpliada`, `Lugar`, `GiroExamen` y `Detalles`.
 - `game/Escenas/Interrogatorio/Jugador.cs`: abre la vista, registra los detalles, señales `EvidenciaExaminada` y `DetalleDescubierto`, y restauración al cargar.
-- `game/Escenas/Investigacion/Sonidos.cs`: 6 sonidos del examen.
+- `game/Escenas/Investigacion/Sonidos.cs`: 6 sonidos del examen (archivos nuevos en `game/Assets/Audio/Examen/`).
 - Caso 0:
   - `Caso0.cs`: detalle de la grabadora, deducción y respuestas de Porky y el comisario.
   - `Caso0.Partida.cs`: guarda el estado de examen.
@@ -91,6 +91,6 @@ Con la vista abierta, el juego de fondo se fotografía una vez y deja de renderi
 
 En esta computadora el juego corre a 30 FPS con y sin la vista, sin vsync. El límite viene del equipo, no de la vista: hay que comprobar los 60 FPS en una computadora que ya llegue a 60 jugando.
 
-## Pendiente
+## Sonidos
 
-- Sonidos propios de girar, acercar, el «tic» y descubrir. Por ahora se usan sonidos que ya estaban en el juego, con otro volumen y tono. Se cambian en `Sonidos.cs` cuando se descarguen de Kenney.
+Abrir, cerrar, girar, acercar, el «tic» de un detalle a la vista y descubrir son de Kenney (RPG Audio, Interface Sounds y Music Jingles, CC0), en `Assets/Audio/Examen/` y con sus créditos en `CREDITOS_AUDIO.md`.
