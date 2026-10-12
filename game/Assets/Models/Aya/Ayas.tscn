@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://cynr5ey3k4g0p"]
+
+[ext_resource type="PackedScene" uid="uid://gaksym50ufv0" path="res://Assets/Models/Aya/Breathing Idle (1).fbx" id="1_vhqe0"]
+[ext_resource type="Animation" uid="uid://cw6qcx1pfnmfy" path="res://Assets/Models/Aya/Alteraya.res" id="2_0fokn"]
+[ext_resource type="Animation" uid="uid://8pwptx1ssn8k" path="res://Assets/Models/Aya/Caminaya.res" id="3_giri1"]
+[ext_resource type="Animation" uid="uid://dvci1usmxuebm" path="res://Assets/Models/Aya/Inaya.res" id="4_120jm"]
+[ext_resource type="Animation" uid="uid://dcurjri5rq2af" path="res://Assets/Models/Aya/Tensaya.res" id="5_vcq46"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_41ma1"]
+_data = {
+&"Alteraya": ExtResource("2_0fokn"),
+&"Caminaya": ExtResource("3_giri1"),
+&"Inaya": ExtResource("4_120jm"),
+&"Tensaya": ExtResource("5_vcq46")
+}
+
+[node name="Ayas" type="Node3D" unique_id=407813908]
+
+[node name="Breathing Idle (1)" parent="." unique_id=364554142 instance=ExtResource("1_vhqe0")]
+
+[node name="Camera" parent="Breathing Idle (1)" index="0" unique_id=102504360]
+visible = false
+
+[node name="Light" parent="Breathing Idle (1)" index="1" unique_id=1456685968]
+visible = false
+
+[node name="Skeleton3D" parent="Breathing Idle (1)" index="2" unique_id=516519161]
+bones/0/position = Vector3(0.124436915, 10.922398, 26.496946)
+bones/0/rotation = Quaternion(0.008699188, 0.022222312, -0.0076630786, 0.9996858)
+bones/1/rotation = Quaternion(0.023216352, 0.004322062, -0.0033352424, 0.99971557)
+bones/2/rotation = Quaternion(0.0033855878, 0.0062096626, 0.0040932796, 0.9999666)
+bones/3/rotation = Quaternion(0.0033855925, 0.0062096845, 0.0040932763, 0.9999666)
+bones/4/rotation = Quaternion(-0.021513106, -0.004205428, -0.01045418, 0.9997051)
+bones/5/rotation = Quaternion(0.023500923, -0.026805338, 0.016007343, 0.99923617)
+bones/7/rotation = Quaternion(0.6855488, 0.31234023, -0.5134182, 0.4109359)
+bones/8/rotation = Quaternion(0.2143217, -0.069686964, -0.022332879, 0.97401804)
+bones/9/rotation = Quaternion(0.06720187, 0.10190517, 0.30343366, 0.94500124)
+bones/10/rotation = Quaternion(-0.11662427, 0.13651967, 0.11573963, 0.9769164)
+bones/11/rotation = Quaternion(0.3629862, -0.014473575, 0.062191155, 0.9296041)
+bones/12/rotation = Quaternion(0.62970006, 0.09337316, -0.034355123, 0.7704408)
+bones/13/rotation = Quaternion(0.122137524, 0.033847775, 0.24012592, 0.9624325)
+bones/15/rotation = Quaternion(0.65719813, -0.33688238, 0.5589746, 0.37702557)
+bones/16/rotation = Quaternion(0.25058192, 0.06510022, 0.14056267, 0.9556218)
+bones/17/rotation = Quaternion(0.098721415, -0.074660294, -0.23490052, 0.96410674)
+bones/18/rotation = Quaternion(-0.06327125, -0.1843799, -0.07455167, 0.977979)
+bones/19/rotation = Quaternion(0.3385748, 0.021878725, -0.019161843, 0.9404899)
+bones/20/rotation = Quaternion(0.6811239, 0.079249926, -0.1724288, 0.7071478)
+bones/21/rotation = Quaternion(-0.32905236, -0.122859105, -0.094132185, 0.9315414)
+bones/23/rotation = Quaternion(0.07189976, 0.129963, 0.9878747, -0.045207087)
+bones/24/rotation = Quaternion(-0.6082753, 0.012947628, -0.026053172, 0.79319274)
+bones/25/rotation = Quaternion(0.8276544, -0.14690803, 0.086429425, 0.53473)
+bones/26/rotation = Quaternion(0.021620845, -0.0025318596, -0.009846603, 0.99971455)
+bones/28/rotation = Quaternion(-0.07402116, 0.08365116, 0.99366206, -0.012612278)
+bones/29/rotation = Quaternion(-0.15801726, -0.07026543, 0.039264105, 0.9841503)
+bones/30/rotation = Quaternion(0.76320696, 0.1117783, -0.13681975, 0.6215314)
+bones/31/rotation = Quaternion(0.029372377, 0.019814812, 0.0035795034, 0.9993658)
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Breathing Idle (1)" unique_id=1757755603]
+libraries/ = SubResource("AnimationLibrary_41ma1")
+
+[editable path="Breathing Idle (1)"]
