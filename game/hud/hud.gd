@@ -383,7 +383,6 @@ func _dibujar() -> void:
 	_texto("CASO " + caso, Vector2(133, 59), _bold, 26, BLANCO)
 	_linea(Vector2(133, 70), Vector2(335, 70), Color(BLANCO, 0.65))
 	_texto("Archivo: " + archivo, Vector2(133, 98), MONO, 16, GRIS)
-	_texto("[ TAB ]  ABRIR EXPEDIENTE", Vector2(133, 121), MONO, 12, Color(GRIS, 0.7))
 	# Objetivo en nota independiente.
 	_nota(Rect2(w - 420, 42, 378, 137))
 	_texto("OBJETIVO ACTUAL", Vector2(w - 398, 78), _bold, 26, TINTA)
