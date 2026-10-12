@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 // Autoload: preferencias del jugador, guardadas en user://configuracion.cfg.
 public partial class Configuracion : Node
@@ -8,16 +9,34 @@ public partial class Configuracion : Node
 
 	public static Configuracion Instancia { get; private set; }
 
-	private float _volumenGeneral = 1.0f;
+	// Volumen de cada bus (0–1), encima del nivel de mezcla de default_bus_layout.tres.
+	// El general arranca al 70 % para que el juego nunca sorprenda al abrirlo.
+	public static readonly string[] Buses = { "Master", "Musica", "Ambiente", "Efectos", "Interfaz" };
+	private readonly Dictionary<string, float> _volumenes = new()
+	{
+		["Master"] = 0.7f, ["Musica"] = 1f, ["Ambiente"] = 1f, ["Efectos"] = 1f, ["Interfaz"] = 1f,
+	};
+	private readonly Dictionary<string, float> _mezclaBase = new();
+
+	public float Volumen(string bus) => _volumenes.TryGetValue(bus, out float v) ? v : 1f;
+
+	public void FijarVolumen(string bus, float valor)
+	{
+		_volumenes[bus] = Mathf.Clamp(valor, 0f, 1f);
+		int indice = AudioServer.GetBusIndex(bus);
+		if (indice < 0) return;
+		if (!_mezclaBase.ContainsKey(bus)) _mezclaBase[bus] = AudioServer.GetBusVolumeDb(indice);
+		AudioServer.SetBusMute(indice, _volumenes[bus] <= 0.001f);
+		AudioServer.SetBusVolumeDb(indice, _mezclaBase[bus] + Mathf.LinearToDb(Mathf.Max(_volumenes[bus], 0.001f)));
+	}
+
 	public float VolumenGeneral
 	{
-		get => _volumenGeneral;
-		set
-		{
-			_volumenGeneral = Mathf.Clamp(value, 0.0f, 1.0f);
-			AudioServer.SetBusVolumeDb(0, Mathf.LinearToDb(_volumenGeneral));
-		}
+		get => Volumen("Master");
+		set => FijarVolumen("Master", value);
 	}
+
+	private static string ClaveVolumen(string bus) => bus == "Master" ? "volumen_general" : "volumen_" + bus.ToLower();
 
 	private bool _pantallaCompleta = false;
 	public bool PantallaCompleta
@@ -53,9 +72,11 @@ public partial class Configuracion : Node
 		CrearContadorFps();
 
 		var archivo = new ConfigFile();
-		if (archivo.Load(RutaConfiguracion) != Error.Ok) return; // Primera vez: valores por defecto
+		bool hayArchivo = archivo.Load(RutaConfiguracion) == Error.Ok;
+		foreach (string bus in Buses)
+			FijarVolumen(bus, hayArchivo ? archivo.GetValue("audio", ClaveVolumen(bus), Volumen(bus)).AsSingle() : Volumen(bus));
+		if (!hayArchivo) return; // Primera vez: valores por defecto
 
-		VolumenGeneral = archivo.GetValue("audio", "volumen_general", VolumenGeneral).AsSingle();
 		PantallaCompleta = archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool();
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
@@ -91,7 +112,8 @@ public partial class Configuracion : Node
 	public void Guardar()
 	{
 		var archivo = new ConfigFile();
-		archivo.SetValue("audio", "volumen_general", VolumenGeneral);
+		foreach (string bus in Buses)
+			archivo.SetValue("audio", ClaveVolumen(bus), Volumen(bus));
 		archivo.SetValue("video", "pantalla_completa", PantallaCompleta);
 		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
 		archivo.SetValue("controles", "sensibilidad_raton", SensibilidadRaton);

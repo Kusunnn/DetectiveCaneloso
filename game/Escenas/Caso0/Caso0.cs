@@ -54,6 +54,7 @@ public partial class Caso0 : Node
 	[Export] public Node3D PuntoPorkyFinal;
 	[Export] public Contenedor CasilleroPorky;
 	[Export] public Area3D ZonaAndamio;
+	[Export] public MusicaFondo Musica;
 
 	// ---------- Estado ----------
 
@@ -98,6 +99,11 @@ public partial class Caso0 : Node
 		_eriz = CrearPersonaje("Eriz", Eriz, -1);
 		_porky = CrearPersonaje("Porky", Porky, 0);
 		_comisario = CrearPersonaje("Comisario", Comisario, 0);
+		// Tono de los blips de texto según la personalidad: Eriz agudo y nervioso, Porky grave, el comisario seco
+		_caneloso.TonoVoz = 1f;
+		_eriz.Hablante.TonoVoz = 1.3f;
+		_porky.Hablante.TonoVoz = 0.75f;
+		_comisario.Hablante.TonoVoz = 0.88f;
 
 		Hud.Set("caso", "00");
 		Hud.Set("archivo", "La cinta");
@@ -246,7 +252,9 @@ public partial class Caso0 : Node
 			_conclusiones.Add(conclusion);
 			Hud.Call("avisar", "DEDUCCIÓN", "+1 CONCLUSIÓN");
 			Hud.Call("agregar_nota", "Deducción: " + conclusion);
-			Sonidos.Reproducir(Jugador, Sonidos.Tipo.Pista, Jugador.GlobalPosition);
+			Sonidos.ReproducirUI(this, Sonidos.Tipo.Deduccion);
+			// La música gana cuerpo con cada deducción
+			if (Musica != null) Musica.Intensidad = _deducciones.Count / 4f;
 			Progreso();
 			ActualizarObjetivo();
 		}
@@ -303,6 +311,7 @@ public partial class Caso0 : Node
 				if (!await evidencia(p, id))
 				{
 					CambiarAnimo(p, -1);
+					Sonidos.ReproducirUI(this, Sonidos.Tipo.Error);
 					await Habla(p, "¿Y eso qué tiene que ver conmigo?");
 					await Piensa("(No. Necesito una prueba que contradiga lo que me dijo.)");
 				}
@@ -529,6 +538,7 @@ public partial class Caso0 : Node
 		Eriz.GlobalTransform = PuntoErizFinal.GlobalTransform;
 		Porky.GlobalTransform = PuntoPorkyFinal.GlobalTransform;
 		SillaAcusacion.Habilitar(true, CapaInteractuable);
+		if (Musica != null) Musica.Intensidad = 1f;
 		ActualizarObjetivo();
 	}
 
@@ -546,6 +556,7 @@ public partial class Caso0 : Node
 
 		if (quien != 1 || porque != 1 || rec != 2)
 		{
+			Sonidos.ReproducirUI(this, Sonidos.Tipo.ErrorAcusacion);
 			await Piensa("Algo no encaja. Repaso el tablero [R] y la libreta [Q].");
 			Progreso();
 			return;
@@ -686,6 +697,7 @@ public partial class Caso0 : Node
 	private void Nota(string texto)
 	{
 		Hud.Call("agregar_nota", texto);
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.Nota);
 		Indicar("libreta", "Lo apunto en mi libreta [Q].");
 	}
 

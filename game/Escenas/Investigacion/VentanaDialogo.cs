@@ -11,6 +11,7 @@ public class Hablante
 	public string Animo = "";
 	public Color ColorAnimo = new Color(0.4f, 0.4f, 0.4f);
 	public bool Tiembla = false; // Nervioso: el retrato tiembla un poco
+	public float TonoVoz = 1f;   // Tono de los "blips" de máquina de escribir (personalidad de quien habla)
 
 	public Hablante(string nombre, Texture2D retrato = null)
 	{
@@ -63,6 +64,8 @@ public partial class VentanaDialogo : CanvasLayer
 	private ulong _abiertoEn;
 	private Tween _escritura;
 	private Tween _temblor;
+	private float _tonoVoz = 1f;
+	private int _letrasSonadas;
 	private Input.MouseModeEnum _ratonAnterior;
 	private readonly Dictionary<string, Texture2D> _retratos = new Dictionary<string, Texture2D>();
 
@@ -297,6 +300,8 @@ public partial class VentanaDialogo : CanvasLayer
 		boton.AddThemeColorOverride("font_focus_color", Tinta);
 		boton.AddThemeColorOverride("font_pressed_color", Tinta);
 		boton.MouseEntered += () => boton.GrabFocus();
+		boton.FocusEntered += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Hover);
+		boton.Pressed += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Clic);
 		return boton;
 	}
 
@@ -307,6 +312,7 @@ public partial class VentanaDialogo : CanvasLayer
 		_animo.AddThemeColorOverride("font_color", h.ColorAnimo);
 		_retrato.Texture = h.Retrato;
 		_marcoRetrato.Visible = h.Retrato != null;
+		_tonoVoz = h.TonoVoz;
 		_temblor?.Kill();
 		_marcoRetrato.Rotation = 0;
 		if (h.Tiembla)
@@ -329,11 +335,24 @@ public partial class VentanaDialogo : CanvasLayer
 			return;
 		}
 		_texto.VisibleRatio = 0f;
+		_letrasSonadas = 0;
 		_escritura = CreateTween();
 		_escritura.TweenProperty(_texto, "visible_ratio", 1f, Mathf.Max(0.2f, texto.Length / LetrasPorSegundo));
 	}
 
 	private bool Escribiendo => _escritura != null && _escritura.IsRunning();
+
+	// Blips suaves de máquina de escribir: uno cada 3 letras, con el tono de quien habla
+	public override void _Process(double delta)
+	{
+		if (!Escribiendo) return;
+		int visibles = (int)(_texto.VisibleRatio * _texto.Text.Length);
+		if (visibles - _letrasSonadas < 3) return;
+		_letrasSonadas = visibles;
+		char letra = _texto.Text[Math.Clamp(visibles - 1, 0, _texto.Text.Length - 1)];
+		if (char.IsWhiteSpace(letra)) return;
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.Texto, 0f, _tonoVoz);
+	}
 
 	// Una conversación completa (varias preguntas seguidas) mantiene la caja abierta sin parpadeos:
 	// Retener() al empezar y Soltar() al terminar.

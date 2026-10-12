@@ -41,6 +41,11 @@ public partial class Jugador : CharacterBody3D
 	private float _mezclaAgachado = 0f;      // 0 = de pie, 1 = agachado (transición suave)
 	private readonly System.Collections.Generic.HashSet<ulong> _comentados = new System.Collections.Generic.HashSet<ulong>();
 	private Material _materialResaltado;
+	private bool _linternaLista = false;     // Sin clic de linterna al cargar la escena
+	private float _distanciaPaso = 0f;       // Metros recorridos desde la última pisada
+	// El rayo de interacción solo choca con: Mundo, Muebles, Interactuables, NPC y Bloqueos de zona.
+	// La decoración sin colisión nunca tapa una pista.
+	private const uint MascaraInteraccion = 1u | 2u | 8u | 16u | 32u;
 	// Llaves, combinaciones... que abren contenedores en otras zonas
 	private readonly System.Collections.Generic.HashSet<string> _objetos = new System.Collections.Generic.HashSet<string>();
 
@@ -74,7 +79,10 @@ public partial class Jugador : CharacterBody3D
 		_hud = sala.GetNode("HUD");
 		_hud.Connect("panel_cambiado", Callable.From<bool, bool>(AlCambiarPanel));
 		_hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
+		if (_hud.HasSignal("pista_seleccionada"))
+			_hud.Connect("pista_seleccionada", Callable.From<Resource>(_ => Sonidos.ReproducirUI(this, Sonidos.Tipo.Pagina)));
 		AlCambiarLinterna(false);
+		_linternaLista = true;
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 	}
@@ -145,6 +153,8 @@ public partial class Jugador : CharacterBody3D
 
 	private void AlCambiarPanel(bool abierto, bool expediente)
 	{
+		// Papel: abrir la libreta, hojear el expediente, cerrar
+		Sonidos.ReproducirUI(this, !abierto ? Sonidos.Tipo.LibretaCerrar : expediente ? Sonidos.Tipo.Expediente : Sonidos.Tipo.LibretaAbrir);
 		_panelAbierto = abierto;
 		Input.MouseMode = abierto ? Input.MouseModeEnum.Visible : Input.MouseModeEnum.Captured;
 		if (abierto) Detenerse();
@@ -153,6 +163,7 @@ public partial class Jugador : CharacterBody3D
 	private void AlCambiarLinterna(bool encendida)
 	{
 		LinternaEncendida = encendida;
+		if (_linternaLista) Sonidos.ReproducirUI(this, Sonidos.Tipo.Clic, encendida ? 0f : -3f, encendida ? 1f : 0.85f);
 		if (_linterna != null) _linterna.Visible = encendida;
 		// Lo que solo se ve con luz directa (huellas...) aparece con la linterna
 		foreach (Node nodo in GetTree().GetNodesInGroup("solo_con_linterna"))
@@ -178,7 +189,7 @@ public partial class Jugador : CharacterBody3D
 	public void DarObjeto(string id, string pensamiento)
 	{
 		if (!_objetos.Add(id)) return;
-		Sonidos.Reproducir(this, Sonidos.Tipo.Pista, GlobalPosition, -6f);
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.Objeto);
 		MostrarPensamiento(pensamiento, 5.0);
 		EmitSignal(SignalName.ObjetoObtenido, id);
 	}
@@ -203,6 +214,7 @@ public partial class Jugador : CharacterBody3D
 
 		var query = PhysicsRayQueryParameters3D.Create(origen, destino);
 		query.Exclude = new Godot.Collections.Array<Rid> { GetRid() };
+		query.CollisionMask = MascaraInteraccion;
 		var resultado = espacioFisico.IntersectRay(query);
 		if (resultado.Count == 0) return null;
 		// La pieza golpeada puede ser parte de algo mayor (la puerta de un casillero): se sube hasta encontrarlo
@@ -230,7 +242,9 @@ public partial class Jugador : CharacterBody3D
 		bool nueva = _hud.Call("agregar_pista", pista).AsBool();
 		if (!nueva) return;
 		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
-		Sonidos.Reproducir(this, Sonidos.Tipo.Pista, GlobalPosition);
+		// Siempre el mismo sonido de "pista encontrada" y, detrás, el sello del expediente actualizado
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.Pista);
+		GetTree().CreateTimer(0.55).Timeout += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Sello);
 		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
 		EmitSignal(SignalName.EvidenciaRegistrada, id);
 	}
@@ -283,7 +297,7 @@ public partial class Jugador : CharacterBody3D
 			Resaltar(_apuntado, false);
 			_apuntado = apuntado;
 			Resaltar(_apuntado, true);
-			if (apuntado != null) Sonidos.Reproducir(this, Sonidos.Tipo.Paso, GlobalPosition, -14f);
+			if (apuntado != null) Sonidos.ReproducirUI(this, Sonidos.Tipo.Hover);
 			if (apuntado is ObjetoPista objeto && !string.IsNullOrEmpty(objeto.ComentarioAlMirar) && _comentados.Add(objeto.GetInstanceId()))
 				MostrarPensamiento(objeto.ComentarioAlMirar, 4.0);
 		}
@@ -295,10 +309,28 @@ public partial class Jugador : CharacterBody3D
 	private void Resaltar(IInteractuable objetivo, bool activo)
 	{
 		if (objetivo is not Node nodo || !IsInstanceValid(nodo)) return;
-		foreach (Node hijo in nodo.FindChildren("*", "GeometryInstance3D", true, false))
+		var geometrias = new System.Collections.Generic.List<Node>(nodo.FindChildren("*", "GeometryInstance3D", true, false));
+		// Pistas cuya malla vive en otro nodo (el reloj de la pared, el espejo, un cartel...)
+		if (nodo is ObjetoPista pista)
+			foreach (Node3D visual in pista.Visuales)
+				if (visual != null)
+				{
+					if (visual is GeometryInstance3D) geometrias.Add(visual);
+					geometrias.AddRange(visual.FindChildren("*", "GeometryInstance3D", true, false));
+				}
+		foreach (Node hijo in geometrias)
 		{
-			if (hijo is GeometryInstance3D geometria && hijo is not Label3D)
-				geometria.MaterialOverlay = activo ? _materialResaltado : null;
+			if (hijo is not GeometryInstance3D geometria || hijo is Label3D || hijo is GpuParticles3D) continue;
+			if (activo)
+			{
+				// Guarda el material de superposición del arte para devolverlo al dejar de apuntar
+				if (geometria.MaterialOverlay != _materialResaltado) geometria.SetMeta("overlay_original", geometria.MaterialOverlay);
+				geometria.MaterialOverlay = _materialResaltado;
+			}
+			else
+			{
+				geometria.MaterialOverlay = geometria.HasMeta("overlay_original") ? geometria.GetMeta("overlay_original").As<Material>() : null;
+			}
 		}
 	}
 
@@ -321,6 +353,21 @@ public partial class Jugador : CharacterBody3D
 		_camara.Position = new Vector3(_camara.Position.X, Mathf.Lerp(OjosDePie, OjosAgachado, t), _camara.Position.Z);
 		_brazoCamara.Position = new Vector3(_brazoCamara.Position.X, Mathf.Lerp(BrazoDePie, BrazoAgachado, t), _brazoCamara.Position.Z);
 		_cuerpo?.FijarAgachado(Agachado);
+	}
+
+	// Una pisada cada ~0.75 m (más suave y espaciada agachado); el sonido sale de los pies
+	private void Pisadas(bool moviendose, float delta)
+	{
+		if (!moviendose || !IsOnFloor())
+		{
+			_distanciaPaso = 0.5f; // La primera pisada llega pronto al empezar a caminar
+			return;
+		}
+		_distanciaPaso += new Vector2(Velocity.X, Velocity.Z).Length() * delta;
+		float zancada = Agachado ? 0.6f : 0.75f;
+		if (_distanciaPaso < zancada) return;
+		_distanciaPaso = 0f;
+		Sonidos.Reproducir(this, Sonidos.Tipo.Paso, GlobalPosition + Vector3.Down * 0.9f, Agachado ? -6f : 0f);
 	}
 
 	private bool HayEspacioParaLevantarse()
@@ -370,6 +417,7 @@ public partial class Jugador : CharacterBody3D
 		Velocity = velocidadActual;
 		MoveAndSlide();
 		bool moviendose = new Vector2(Velocity.X, Velocity.Z).LengthSquared() > 0.001f;
+		Pisadas(moviendose, (float)delta);
 		_hud.Call("actualizar_movimiento", moviendose);
 		_cuerpo?.ActualizarMovimiento(moviendose);
 	}

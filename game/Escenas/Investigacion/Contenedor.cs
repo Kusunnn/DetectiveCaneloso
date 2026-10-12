@@ -92,7 +92,9 @@ public partial class Contenedor : StaticBody3D, IInteractuable
 		EstaAbierto = abrir;
 		Animando = true;
 		// Mismo sonido al cerrar, algo más grave
-		Sonidos.Reproducir(this, SonidoAbrir, GlobalPosition, 0f, abrir ? 1f : 0.8f);
+		// Los casilleros cierran con un golpe metálico distinto; el resto usa el mismo sonido más grave
+		var sonido = !abrir && SonidoAbrir == Sonidos.Tipo.AbrirMetal ? Sonidos.Tipo.CerrarMetal : SonidoAbrir;
+		Sonidos.Reproducir(this, sonido, GlobalPosition, abrir ? 0f : -2f, abrir || sonido == Sonidos.Tipo.CerrarMetal ? 1f : 0.85f);
 
 		var animacion = CreateTween().SetTrans(abrir ? Tween.TransitionType.Back : Tween.TransitionType.Sine)
 			.SetEase(abrir ? Tween.EaseType.Out : Tween.EaseType.InOut);

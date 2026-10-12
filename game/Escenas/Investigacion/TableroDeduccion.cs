@@ -162,6 +162,7 @@ public partial class TableroDeduccion : CanvasLayer
 		ActualizarConclusiones();
 		_mensaje.Text = _rejilla.GetChildCount() < 2 ? "Necesito más pistas antes de sacar conclusiones." : "";
 		_raiz.Show();
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.Expediente);
 		Input.MouseMode = Input.MouseModeEnum.Visible;
 		JugadorActual()?.Bloquear(true);
 	}
@@ -169,6 +170,7 @@ public partial class TableroDeduccion : CanvasLayer
 	public void Cerrar()
 	{
 		_raiz.Hide();
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.LibretaCerrar);
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		JugadorActual()?.Bloquear(false);
 	}
@@ -183,6 +185,7 @@ public partial class TableroDeduccion : CanvasLayer
 
 	private void AlMarcar(Button boton, bool activo)
 	{
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.Clic, activo ? 0f : -3f, activo ? 1f : 0.9f);
 		if (!activo) { _seleccion.Remove(boton); return; }
 		_seleccion.Add(boton);
 		if (_seleccion.Count < 2) return;
@@ -195,6 +198,7 @@ public partial class TableroDeduccion : CanvasLayer
 		if (conclusion == null)
 		{
 			_mensaje.Text = "No veo cómo se relacionan... todavía.";
+			Sonidos.ReproducirUI(this, Sonidos.Tipo.Error);
 			_mensaje.AddThemeColorOverride("font_color", new Color(0.55f, 0.15f, 0.1f));
 		}
 		else

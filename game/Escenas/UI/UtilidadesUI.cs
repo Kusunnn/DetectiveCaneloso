@@ -18,6 +18,9 @@ public static class UtilidadesUI
 
 			var control = (Control)nodo;
 			control.SetMeta("foco_raton", true);
+			// Clics suaves de papel: al recibir el foco (ratón o teclado) y al pulsar
+			control.FocusEntered += () => Sonidos.ReproducirUI(control, Sonidos.Tipo.Hover);
+			if (control is BaseButton boton) boton.Pressed += () => Sonidos.ReproducirUI(control, Sonidos.Tipo.Clic);
 			control.GuiInput += evento =>
 			{
 				if (evento is InputEventMouseMotion && !control.HasFocus()

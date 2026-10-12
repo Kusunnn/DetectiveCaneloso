@@ -2,133 +2,171 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-// Sonidos sintetizados en código mientras el proyecto no tenga archivos de audio.
-// Cuando el equipo tenga sonidos reales, basta con cambiar Crear() por GD.Load<AudioStream>(ruta).
+// Sonidos del juego: archivos CC0 de Assets/Audio (créditos en CREDITOS_AUDIO.md), ya recortados y
+// normalizados al mismo nivel percibido. Cada tipo sabe su bus, su volumen relativo y si varía.
+//   Sonidos.Reproducir(...)   → efecto en el mundo (3D, bus Efectos): se oye más fuerte cerca.
+//   Sonidos.ReproducirUI(...) → interfaz y avisos (sin posición, bus Interfaz).
 public static class Sonidos
 {
+	// Los valores se guardan como enteros en las escenas: los nuevos van SIEMPRE al final.
 	public enum Tipo
 	{
 		AbrirMetal,   // Puerta de casillero
 		Cajon,        // Cajón que se desliza
 		Cremallera,   // Mochila
 		Bloqueado,    // Candado o puerta cerrada
-		Pista,        // Evidencia nueva
-		Paso,         // Clic suave de interfaz
+		Pista,        // Evidencia nueva (siempre el mismo sonido)
+		Paso,         // Pisada del detective
 		// Bucles de ambiente
 		ZumbidoFluorescente,
 		LluviaCalle,
 		GoteoVestuario,
 		TonoSala,
+		// Agregados con los archivos de audio
+		Deduccion,
+		Error,
+		ErrorAcusacion,
+		Objeto,
+		Nota,
+		LibretaAbrir,
+		LibretaCerrar,
+		Expediente,
+		Pagina,
+		Sello,
+		Texto,
+		Hover,
+		Clic,
+		CerrarMetal,
+		PuertaAbrir,
+		PuertaTrabada,
+		RelojPared,
 	}
 
-	private const int Frecuencia = 22050;
-	private static readonly Dictionary<Tipo, AudioStreamWav> _cache = new Dictionary<Tipo, AudioStreamWav>();
+	public const string BusMusica = "Musica";
+	public const string BusAmbiente = "Ambiente";
+	public const string BusEfectos = "Efectos";
+	public const string BusInterfaz = "Interfaz";
 
-	public static AudioStreamWav Obtener(Tipo tipo)
+	private const string Carpeta = "res://Assets/Audio/";
+
+	// Archivos (varias versiones = alternas al azar), volumen relativo en dB y si lleva ±5 % de tono y volumen
+	private record Definicion(string[] Archivos, float VolumenDb, bool Variar = true, bool Bucle = false);
+
+	private static readonly Dictionary<Tipo, Definicion> Definiciones = new()
 	{
-		if (!_cache.TryGetValue(tipo, out var sonido))
+		[Tipo.AbrirMetal] = new(new[] { "Efectos/metal_abrir_1.wav", "Efectos/metal_abrir_2.wav", "Efectos/metal_abrir_3.wav" }, -3f),
+		[Tipo.CerrarMetal] = new(new[] { "Efectos/metal_cerrar_1.wav", "Efectos/metal_cerrar_2.wav", "Efectos/metal_cerrar_3.wav" }, -5f),
+		[Tipo.Cajon] = new(new[] { "Efectos/cajon_1.wav", "Efectos/cajon_2.wav", "Efectos/cajon_3.wav" }, -4f),
+		[Tipo.Cremallera] = new(new[] { "Efectos/cremallera_1.wav", "Efectos/cremallera_2.wav", "Efectos/cremallera_3.wav" }, -3f),
+		[Tipo.Bloqueado] = new(new[] { "Efectos/bloqueado_1.wav", "Efectos/bloqueado_2.wav", "Efectos/bloqueado_3.wav" }, -5f),
+		[Tipo.PuertaAbrir] = new(new[] { "Efectos/puerta_abrir_1.wav", "Efectos/puerta_abrir_2.wav" }, -3f),
+		[Tipo.PuertaTrabada] = new(new[] { "Efectos/puerta_trabada.wav" }, -4f),
+		[Tipo.Paso] = new(new[] { "Efectos/paso_1.wav", "Efectos/paso_2.wav", "Efectos/paso_3.wav", "Efectos/paso_4.wav" }, -14f),
+
+		[Tipo.Pista] = new(new[] { "Interfaz/pista.wav" }, 0f, Variar: false),
+		[Tipo.Deduccion] = new(new[] { "Interfaz/deduccion.wav" }, 1f, Variar: false),
+		[Tipo.Error] = new(new[] { "Interfaz/error_suave.wav" }, -8f),
+		[Tipo.ErrorAcusacion] = new(new[] { "Interfaz/error_acusacion.wav" }, -6f, Variar: false),
+		[Tipo.Objeto] = new(new[] { "Interfaz/objeto.wav" }, -4f, Variar: false),
+		[Tipo.Nota] = new(new[] { "Interfaz/nota.wav" }, -9f),
+		[Tipo.LibretaAbrir] = new(new[] { "Interfaz/libreta_abrir.wav" }, -6f),
+		[Tipo.LibretaCerrar] = new(new[] { "Interfaz/libreta_cerrar.wav" }, -8f),
+		[Tipo.Expediente] = new(new[] { "Interfaz/expediente.wav" }, -6f),
+		[Tipo.Pagina] = new(new[] { "Interfaz/pagina.wav" }, -9f),
+		[Tipo.Sello] = new(new[] { "Interfaz/sello.wav" }, -10f),
+		[Tipo.Texto] = new(new[] { "Interfaz/texto_1.wav", "Interfaz/texto_2.wav", "Interfaz/texto_3.wav" }, -19f),
+		[Tipo.Hover] = new(new[] { "Interfaz/hover_1.wav", "Interfaz/hover_2.wav", "Interfaz/hover_3.wav" }, -17f),
+		[Tipo.Clic] = new(new[] { "Interfaz/clic_1.wav", "Interfaz/clic_2.wav", "Interfaz/clic_3.wav" }, -9f),
+
+		// Ambientes: el volumen es la ganancia que los iguala a los efectos (se suma al de la escena)
+		[Tipo.ZumbidoFluorescente] = new(new[] { "Ambiente/zumbido_fluorescente.ogg" }, 9.4f, false, true),
+		[Tipo.LluviaCalle] = new(new[] { "Ambiente/lluvia_ventana.wav" }, 0f, false, true),
+		[Tipo.GoteoVestuario] = new(new[] { "Ambiente/agua_vestidores.ogg" }, 19.1f, false, true),
+		[Tipo.TonoSala] = new(new[] { "Ambiente/zumbido_sala.ogg" }, 7.3f, false, true),
+		[Tipo.RelojPared] = new(new[] { "Ambiente/reloj_pared.wav" }, 0f, false, true),
+	};
+
+	public static float VolumenDe(Tipo tipo) => Definiciones[tipo].VolumenDb;
+	public static bool EsBucle(Tipo tipo) => Definiciones[tipo].Bucle;
+
+	// Sin caché propia: GD.Load ya reutiliza los archivos y así no quedan recursos vivos al salir.
+	public static AudioStream Obtener(Tipo tipo)
+	{
+		AudioStream sonido;
+		var def = Definiciones[tipo];
+		if (def.Bucle)
 		{
-			sonido = Crear(tipo);
-			_cache[tipo] = sonido;
+			sonido = ComoBucle(GD.Load<AudioStream>(Carpeta + def.Archivos[0]));
+		}
+		else if (!def.Variar && def.Archivos.Length == 1)
+		{
+			sonido = GD.Load<AudioStream>(Carpeta + def.Archivos[0]);
+		}
+		else
+		{
+			// Versiones alternas, ±5 % de tono y ±0.4 dB (≈5 %) de volumen para que no canse al repetirse
+			var azar = new AudioStreamRandomizer
+			{
+				RandomPitch = def.Variar ? 1.05f : 1f,
+				RandomVolumeOffsetDb = def.Variar ? 0.4f : 0f,
+				PlaybackMode = AudioStreamRandomizer.PlaybackModeEnum.RandomNoRepeats,
+			};
+			for (int i = 0; i < def.Archivos.Length; i++)
+				azar.AddStream(i, GD.Load<AudioStream>(Carpeta + def.Archivos[i]));
+			sonido = azar;
 		}
 		return sonido;
 	}
 
-	// Reproduce un efecto corto en una posición del mundo y se borra solo.
+	// Efecto en una posición del mundo; se borra solo al terminar.
 	public static void Reproducir(Node padre, Tipo tipo, Vector3 posicion, float volumenDb = 0f, float tono = 1f)
 	{
-		var reproductor = new AudioStreamPlayer3D { Stream = Obtener(tipo), VolumeDb = volumenDb, UnitSize = 4f, PitchScale = tono };
+		var reproductor = new AudioStreamPlayer3D
+		{
+			Stream = Obtener(tipo),
+			VolumeDb = VolumenDe(tipo) + volumenDb,
+			PitchScale = tono,
+			UnitSize = 3f,
+			MaxDistance = 18f,
+			Bus = BusEfectos,
+		};
 		padre.GetTree().CurrentScene.AddChild(reproductor);
 		reproductor.GlobalPosition = posicion;
 		reproductor.Finished += reproductor.QueueFree;
 		reproductor.Play();
 	}
 
-	private static AudioStreamWav Crear(Tipo tipo)
+	// Sonido de interfaz o aviso: sin posición, suena igual con cámara en primera o tercera persona
+	// y también con el juego en pausa.
+	public static void ReproducirUI(Node padre, Tipo tipo, float volumenDb = 0f, float tono = 1f)
 	{
-		var azar = new RandomNumberGenerator { Seed = (ulong)tipo + 7 };
-		switch (tipo)
+		var arbol = padre.GetTree();
+		if (arbol == null) return;
+		var reproductor = new AudioStreamPlayer
 		{
-			case Tipo.AbrirMetal:
-				// Golpe metálico: tonos inarmónicos que decaen + chasquido inicial
-				return Generar(0.45f, false, t =>
-					Mathf.Exp(-t * 9f) * (0.45f * Mathf.Sin(t * 2 * Mathf.Pi * 310f) + 0.3f * Mathf.Sin(t * 2 * Mathf.Pi * 587f)
-					+ 0.2f * Mathf.Sin(t * 2 * Mathf.Pi * 1130f)) + (t < 0.02f ? azar.Randfn() * 0.5f : 0f));
-			case Tipo.Cajon:
-				// Roce de madera: ruido filtrado que sube y baja
-				float previo = 0f;
-				return Generar(0.35f, false, t =>
-				{
-					previo = previo * 0.92f + azar.Randfn() * 0.08f;
-					return previo * 3f * Mathf.Sin(Mathf.Pi * t / 0.35f);
-				});
-			case Tipo.Cremallera:
-				return Generar(0.4f, false, t =>
-					(Mathf.Sin(t * 2 * Mathf.Pi * 90f) > 0.6f ? azar.Randfn() * 0.5f : 0f) * Mathf.Sin(Mathf.Pi * t / 0.4f));
-			case Tipo.Bloqueado:
-				return Generar(0.25f, false, t => Mathf.Exp(-t * 18f) * 0.7f * Mathf.Sin(t * 2 * Mathf.Pi * 140f)
-					+ (t < 0.01f ? azar.Randfn() * 0.4f : 0f));
-			case Tipo.Pista:
-				// Dos notas ascendentes, estilo "¡aha!"
-				return Generar(0.7f, false, t =>
-				{
-					float nota = t < 0.18f ? 659f : 988f;
-					float local = t < 0.18f ? t : t - 0.18f;
-					return 0.35f * Mathf.Exp(-local * 5f) * (Mathf.Sin(t * 2 * Mathf.Pi * nota) + 0.3f * Mathf.Sin(t * 4 * Mathf.Pi * nota));
-				});
-			case Tipo.Paso:
-				return Generar(0.06f, false, t => Mathf.Exp(-t * 60f) * 0.3f * Mathf.Sin(t * 2 * Mathf.Pi * 1800f));
-			case Tipo.ZumbidoFluorescente:
-				return Generar(2f, true, t => 0.12f * Mathf.Sin(t * 2 * Mathf.Pi * 120f) + 0.05f * Mathf.Sin(t * 2 * Mathf.Pi * 240f)
-					+ azar.Randfn() * 0.01f);
-			case Tipo.LluviaCalle:
-				float lluvia = 0f;
-				return Generar(3f, true, t =>
-				{
-					lluvia = lluvia * 0.7f + azar.Randfn() * 0.3f;
-					return lluvia * 0.35f + (azar.Randf() < 0.0008f ? 0.6f : 0f);
-				});
-			case Tipo.GoteoVestuario:
-				// Gota cada ~1.3 s sobre un zumbido muy bajo
-				return Generar(2.6f, true, t =>
-				{
-					float gota = t % 1.3f;
-					return 0.4f * Mathf.Exp(-gota * 40f) * Mathf.Sin(gota * 2 * Mathf.Pi * (900f - gota * 3000f))
-						+ 0.03f * Mathf.Sin(t * 2 * Mathf.Pi * 100f);
-				});
-			default: // TonoSala: reloj y aire acondicionado lejano
-				float aire = 0f;
-				return Generar(2f, true, t =>
-				{
-					aire = aire * 0.97f + azar.Randfn() * 0.03f;
-					float tic = t % 1f;
-					return aire * 0.5f + 0.25f * Mathf.Exp(-tic * 200f) * Mathf.Sin(tic * 2 * Mathf.Pi * 2500f);
-				});
-		}
+			Stream = Obtener(tipo),
+			VolumeDb = VolumenDe(tipo) + volumenDb,
+			PitchScale = tono,
+			Bus = BusInterfaz,
+			ProcessMode = Node.ProcessModeEnum.Always,
+		};
+		arbol.Root.AddChild(reproductor);
+		reproductor.Finished += reproductor.QueueFree;
+		reproductor.Play();
 	}
 
-	private static AudioStreamWav Generar(float segundos, bool bucle, Func<float, float> onda)
+	private static AudioStream ComoBucle(AudioStream sonido)
 	{
-		int muestras = (int)(segundos * Frecuencia);
-		var datos = new byte[muestras * 2];
-		for (int i = 0; i < muestras; i++)
+		switch (sonido)
 		{
-			float valor = Mathf.Clamp(onda((float)i / Frecuencia), -1f, 1f);
-			short muestra = (short)(valor * short.MaxValue * 0.8f);
-			datos[i * 2] = (byte)(muestra & 0xFF);
-			datos[i * 2 + 1] = (byte)((muestra >> 8) & 0xFF);
-		}
-		var sonido = new AudioStreamWav
-		{
-			Format = AudioStreamWav.FormatEnum.Format16Bits,
-			MixRate = Frecuencia,
-			Stereo = false,
-			Data = datos,
-		};
-		if (bucle)
-		{
-			sonido.LoopMode = AudioStreamWav.LoopModeEnum.Forward;
-			sonido.LoopEnd = muestras;
+			case AudioStreamOggVorbis ogg:
+				ogg.Loop = true;
+				break;
+			case AudioStreamWav wav:
+				wav.LoopMode = AudioStreamWav.LoopModeEnum.Forward;
+				wav.LoopBegin = 0;
+				wav.LoopEnd = (int)(wav.GetLength() * wav.MixRate);
+				break;
 		}
 		return sonido;
 	}

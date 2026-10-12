@@ -11,6 +11,8 @@ public partial class Puerta : StaticBody3D, IInteractuable
 	// Nodo que gira al abrir (la hoja cuelga de él).
 	[Export] public Node3D Bisagra;
 	[Export] public float AnguloApertura = 95.0f;
+	// Lo que anuncia que está cerrada (cinta, piloto rojo...): se oculta al desbloquearla.
+	[Export] public Node3D[] SenalesBloqueo = Array.Empty<Node3D>();
 
 	public bool EstaAbierta { get; private set; } = false;
 
@@ -21,7 +23,7 @@ public partial class Puerta : StaticBody3D, IInteractuable
 		if (EstaAbierta) return;
 		if (Bloqueada)
 		{
-			Sonidos.Reproducir(this, Sonidos.Tipo.Bloqueado, GlobalPosition);
+			Sonidos.Reproducir(this, Sonidos.Tipo.PuertaTrabada, GlobalPosition);
 			jugador.MostrarPensamiento(MensajeBloqueada, 4.0);
 			return;
 		}
@@ -31,13 +33,15 @@ public partial class Puerta : StaticBody3D, IInteractuable
 	public void Desbloquear()
 	{
 		Bloqueada = false;
+		foreach (Node3D senal in SenalesBloqueo)
+			if (senal != null) senal.Visible = false;
 	}
 
 	public void Abrir()
 	{
 		EstaAbierta = true;
 		CollisionLayer = 0; // Deja pasar al jugador y al rayo de interacción
-		Sonidos.Reproducir(this, Sonidos.Tipo.AbrirMetal, GlobalPosition);
+		Sonidos.Reproducir(this, Sonidos.Tipo.PuertaAbrir, GlobalPosition);
 		if (Bisagra != null)
 		{
 			float destino = Bisagra.Rotation.Y + Mathf.DegToRad(AnguloApertura);
