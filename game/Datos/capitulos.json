@@ -36,11 +36,7 @@
 			"dialogos_clave": 0,
 			"secretos": 0,
 			"requisitos": ["caso0"],
-			"anteriormente": [
-				"Caneloso recuperó la cinta con la confesión de Tito Garras.",
-				"Porky la escondió por miedo y el comisario había dejado la grabadora en REC como trampa.",
-				"Pero a las 3:12 se oye una voz desconocida: «La Garra no olvida, Caneloso»."
-			],
+			"anteriormente": [],
 			"resumen": ""
 		},
 		{
