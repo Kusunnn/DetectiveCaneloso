@@ -102,11 +102,17 @@ func _probar(caso: String) -> void:
 			vista.MirarDetalle(detalle.Id)
 			await _esperar(0.15)
 			_ok(vista.DetalleALaVista == detalle.Id, "  detalle «%s» a la vista (lupa)" % detalle.Id)
-			var tecla := InputEventKey.new()
-			tecla.keycode = KEY_E
-			tecla.physical_keycode = KEY_E
-			tecla.pressed = true
-			Input.parse_input_event(tecla)
+			# Se revisa con un clic sobre el detalle, como el jugador
+			# (en coordenadas de la ventana: sin pantalla, la ventana es chica y el contenido se escala)
+			var donde: Vector2 = vista.PosicionDetalleALaVista * Vector2(root.size) / root.get_visible_rect().size
+			for presionado in [true, false]:
+				var clic := InputEventMouseButton.new()
+				clic.button_index = MOUSE_BUTTON_LEFT
+				clic.position = donde
+				clic.global_position = donde
+				clic.pressed = presionado
+				Input.parse_input_event(clic)
+				await process_frame
 			await _esperar(2.0)
 			var id := "%s.%s" % [pista.id, detalle.Id]
 			var entrada = hud.buscar_pista(StringName(id))

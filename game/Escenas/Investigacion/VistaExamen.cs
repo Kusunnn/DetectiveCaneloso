@@ -41,8 +41,13 @@ public partial class VistaExamen : CanvasLayer
 	private Node3D _escala;
 	private Node3D _modelo;
 
-	private Label _titulo, _estado, _descripcion, _lugar, _aviso, _ayuda;
-	private Control _caja, _lupa;
+	private Label _titulo, _estado, _descripcion, _lugar, _ayuda;
+	private Control _caja;
+	// Aviso pequeño pegado al detalle que está a la vista: «Revisar detalle» (se revisa con clic o con A)
+	private Control _revisar;
+	private float _alfaRevisar;
+	private Vector2 _clicInicio;
+	private bool _barraConMover;
 	private HBoxContainer _barra;
 	private bool _barraMando;
 	private ColorRect _destello;
@@ -149,8 +154,8 @@ public partial class VistaExamen : CanvasLayer
 		string lugar = pista.Get("lugar").AsString();
 		_lugar.Text = string.IsNullOrEmpty(lugar) ? "" : "ENCONTRADA EN: " + lugar.ToUpper();
 		ActualizarEstado();
-		_aviso.Visible = false;
-		_lupa.Visible = false;
+		_alfaRevisar = 0f;
+		_revisar.Visible = false;
 		_ayuda.Visible = !_yaGiroAlgunaVez;
 		ActualizarBarra(Input.GetConnectedJoypads().Count > 0 && _barraMando);
 
@@ -222,7 +227,13 @@ public partial class VistaExamen : CanvasLayer
 		switch (evento)
 		{
 			case InputEventMouseButton boton:
-				if (boton.ButtonIndex == MouseButton.Left) _arrastrando = boton.Pressed;
+				if (boton.ButtonIndex == MouseButton.Left)
+				{
+					_arrastrando = boton.Pressed;
+					// Un clic sin arrastrar sobre el detalle a la vista lo revisa
+					if (boton.Pressed) _clicInicio = boton.Position;
+					else if (boton.Position.DistanceTo(_clicInicio) < 8f) ClicEn(boton.Position);
+				}
 				else if (boton.ButtonIndex == MouseButton.Right) _moviendo = boton.Pressed;
 				else if (boton.Pressed && boton.ButtonIndex is MouseButton.WheelUp or MouseButton.WheelDown)
 					Acercar(boton.ButtonIndex == MouseButton.WheelUp ? 0.2f : -0.2f, boton.Position);
@@ -382,6 +393,9 @@ public partial class VistaExamen : CanvasLayer
 		_pivote.Scale = Vector3.One * Mathf.Lerp(0.8f, 1f, suave);
 
 		BuscarDetalle();
+		MoverAvisoRevisar(dt);
+		// «Mover» solo tiene sentido con zoom: la barra lo muestra u oculta
+		if ((_zoomObjetivo > 1.01f) != _barraConMover) ActualizarBarra(_barraMando);
 	}
 
 	// ---------- Detalles ocultos ----------
@@ -434,17 +448,38 @@ public partial class VistaExamen : CanvasLayer
 			if (SeVe(d)) { visible = d; break; }
 		if (visible == _detalleVisible) return;
 		_detalleVisible = visible;
-		// Pista sutil: lupa en la esquina y un "tic". Nunca se marca el lugar exacto.
-		_lupa.Visible = visible != null;
-		_aviso.Visible = visible != null;
+		// Pista sutil: un aviso pequeño junto al detalle y un "tic". Sin flechas ni brillos sobre el objeto.
 		if (visible != null)
 		{
-			_aviso.Text = (_barraMando ? "[A]" : "[E]") + "  Algo llama mi atención";
 			Sonidos.ReproducirUI(this, Sonidos.Tipo.ExamenTic);
 			Input.StartJoyVibration(0, 0.15f, 0.05f, 0.12f);
 		}
 	}
 	private bool _entradaAnimando => !_cerrando && _tiempoAnimacion < DuracionEntrada;
+
+	// Dónde se ve un detalle en la pantalla (coordenadas de la interfaz)
+	private Vector2 EnPantalla(DetalleOculto d) => _camara.UnprojectPosition(PuntoEnMundo(d)) * (_visor.Size / (Vector2)_mundo.Size);
+
+	private void ClicEn(Vector2 posicion)
+	{
+		if (_detalleVisible == null) return;
+		bool cerca = posicion.DistanceTo(EnPantalla(_detalleVisible)) < 120f || _revisar.GetGlobalRect().HasPoint(posicion);
+		if (cerca) Descubrir(_detalleVisible);
+	}
+
+	// El aviso sigue al detalle, aparece suave y se apaga al alejarse
+	private void MoverAvisoRevisar(float dt)
+	{
+		bool mostrar = _detalleVisible != null && _descubriendo == null;
+		_alfaRevisar = Mathf.MoveToward(_alfaRevisar, mostrar ? 1f : 0f, dt / 0.2f);
+		_revisar.Visible = _alfaRevisar > 0.01f;
+		if (!_revisar.Visible) return;
+		if (_detalleVisible != null) _revisar.Position = EnPantalla(_detalleVisible) + new Vector2(18f, -_revisar.Size.Y - 10f);
+		_revisar.Modulate = new Color(1, 1, 1, _alfaRevisar);
+	}
+
+	// Público para las pruebas: dónde habría que hacer clic para revisar el detalle a la vista
+	public Vector2 PosicionDetalleALaVista => _detalleVisible != null ? EnPantalla(_detalleVisible) : new Vector2(-1, -1);
 
 	private void Confirmar()
 	{
@@ -457,7 +492,6 @@ public partial class VistaExamen : CanvasLayer
 		_descubriendo = d;
 		_pendientes.Remove(d);
 		_detalleVisible = null;
-		_aviso.Visible = false;
 		_arrastrando = _moviendo = false;
 		_velocidadGiro = Vector2.Zero;
 		ApuntarA(d);
@@ -473,7 +507,6 @@ public partial class VistaExamen : CanvasLayer
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.ExamenDescubrir);
 		Input.StartJoyVibration(0, 0.4f, 0.3f, 0.25f);
 		_tieneDescubiertos = true;
-		_lupa.Visible = false;
 		ActualizarEstado();
 		_descripcion.Text = d.Descripcion + (string.IsNullOrEmpty(d.Pensamiento) ? "" : "\n\n“" + d.Pensamiento + "”");
 		DetalleConfirmado?.Invoke(d, foto);
@@ -701,17 +734,24 @@ public partial class VistaExamen : CanvasLayer
 		_lugar = Etiqueta(Mono, 12, new Color("75654e"));
 		columna.AddChild(_lugar);
 
-		_aviso = Etiqueta(Display, 30, Ambar);
-		_aviso.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.CenterBottom);
-		_aviso.HorizontalAlignment = HorizontalAlignment.Center;
-		_aviso.GrowHorizontal = Control.GrowDirection.Both;
-		_aviso.Position = new Vector2(_aviso.Position.X, -260);
-		_aviso.AddThemeStyleboxOverride("normal", new StyleBoxFlat
+		var revisar = new PanelContainer { MouseFilter = Control.MouseFilterEnum.Ignore, Visible = false };
+		revisar.AddThemeStyleboxOverride("panel", new StyleBoxFlat
 		{
-			BgColor = new Color(0.04f, 0.04f, 0.05f, 0.82f), ContentMarginLeft = 22, ContentMarginRight = 22,
-			ContentMarginTop = 4, ContentMarginBottom = 6, BorderWidthBottom = 3, BorderColor = Ambar,
+			BgColor = new Color(0.04f, 0.04f, 0.05f, 0.85f), ContentMarginLeft = 8, ContentMarginRight = 12,
+			ContentMarginTop = 3, ContentMarginBottom = 4, BorderWidthLeft = 3, BorderColor = Ambar,
+			CornerRadiusTopRight = 3, CornerRadiusBottomRight = 3,
 		});
-		interfaz.AddChild(_aviso);
+		var filaRevisar = new HBoxContainer();
+		filaRevisar.AddThemeConstantOverride("separation", 6);
+		var lupaChica = new LupaExamen { CustomMinimumSize = new Vector2(26, 26), Escala = 0.42f };
+		filaRevisar.AddChild(lupaChica);
+		var textoRevisar = Etiqueta(Mono, 14, Blanco);
+		textoRevisar.Text = "Revisar detalle";
+		textoRevisar.VerticalAlignment = VerticalAlignment.Center;
+		filaRevisar.AddChild(textoRevisar);
+		revisar.AddChild(filaRevisar);
+		interfaz.AddChild(revisar);
+		_revisar = revisar;
 
 		_ayuda = Etiqueta(Mono, 16, Blanco);
 		_ayuda.Text = "↻  Arrastra para girar el objeto y revisarlo por todos lados";
@@ -723,12 +763,6 @@ public partial class VistaExamen : CanvasLayer
 		_ayuda.AddThemeConstantOverride("outline_size", 5);
 		interfaz.AddChild(_ayuda);
 
-		_lupa = new LupaExamen();
-		_lupa.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.TopRight);
-		_lupa.Position = new Vector2(-120, 40);
-		_lupa.CustomMinimumSize = new Vector2(72, 72);
-		_lupa.Size = new Vector2(72, 72);
-		interfaz.AddChild(_lupa);
 
 		_barra = new HBoxContainer { Alignment = BoxContainer.AlignmentMode.Center };
 		_barra.AddThemeConstantOverride("separation", 18);
@@ -750,14 +784,22 @@ public partial class VistaExamen : CanvasLayer
 		return etiqueta;
 	}
 
-	// Barra de controles con teclas o botones según lo último que se usó
+	// Barra de controles con teclas o botones según lo último que se usó. Solo lo que sirve en esta pantalla:
+	// revisar un detalle no tiene botón fijo (es un clic sobre él) y «Mover» aparece solo con zoom.
 	private void ActualizarBarra(bool mando)
 	{
 		_barraMando = mando;
+		_barraConMover = _zoomObjetivo > 1.01f;
 		foreach (Node hijo in _barra.GetChildren()) hijo.QueueFree();
-		var controles = mando
-			? new[] { ("L", "Girar"), ("LT RT", "Acercar"), ("R", "Mover"), ("X", "Reiniciar"), ("Y", "Linterna"), ("A", "Examinar"), ("B", "Volver") }
-			: new[] { ("Arrastrar", "Girar"), ("Rueda", "Acercar"), ("Clic der.", "Mover"), ("R", "Reiniciar"), ("F", "Linterna"), ("E", "Examinar"), ("Esc", "Volver") };
+		var controles = new List<(string Tecla, string Accion)>
+		{
+			mando ? ("L", "Girar") : ("Arrastrar", "Girar"),
+			mando ? ("LT RT", "Acercar") : ("Rueda", "Acercar"),
+		};
+		if (_barraConMover) controles.Add(mando ? ("R", "Mover") : ("Clic der.", "Mover"));
+		controles.Add(mando ? ("Y", "Linterna") : ("F", "Linterna"));
+		controles.Add(mando ? ("X", "Restablecer") : ("R", "Restablecer"));
+		controles.Add(mando ? ("B", "Volver") : ("Esc", "Volver"));
 		foreach (var (tecla, accion) in controles)
 		{
 			var grupo = new HBoxContainer();
@@ -782,17 +824,18 @@ public partial class VistaExamen : CanvasLayer
 	}
 }
 
-// Lupa pequeña de la esquina: aparece cuando un detalle queda a la vista (con un leve latido)
+// Lupa del aviso «Revisar detalle», con un leve latido
 public partial class LupaExamen : Control
 {
+	public float Escala = 1f;
 	private float _t;
 	public override void _Process(double delta) { _t += (float)delta; QueueRedraw(); }
 	public override void _Draw()
 	{
-		float latido = 1f + 0.06f * Mathf.Sin(_t * 6f);
-		var centro = new Vector2(30, 30);
-		DrawCircle(centro, 22 * latido, new Color(0, 0, 0, 0.45f));
-		DrawArc(centro, 17 * latido, 0, Mathf.Tau, 32, new Color("efca08"), 4, true);
-		DrawLine(centro + new Vector2(12, 12) * latido, centro + new Vector2(30, 30) * latido, new Color("efca08"), 7, true);
+		float latido = (1f + 0.06f * Mathf.Sin(_t * 6f)) * Escala;
+		var centro = new Vector2(30, 30) * Escala;
+		var ambar = new Color("efca08");
+		DrawArc(centro, 17 * latido, 0, Mathf.Tau, 32, ambar, Mathf.Max(2f, 4 * Escala), true);
+		DrawLine(centro + new Vector2(12, 12) * latido, centro + new Vector2(30, 30) * latido, ambar, Mathf.Max(3f, 7 * Escala), true);
 	}
 }
