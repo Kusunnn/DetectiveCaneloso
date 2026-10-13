@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ga8ksgu14xyr"
-path.s3tc="res://.godot/imported/Tony_2.png-fbdba2c7b653bccafc2ae24230f68dba.s3tc.ctex"
+path.s3tc="res://.godot/imported/Tony_2.png-abe1a467be910e885aee3c41cacb1370.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://Tony/Tony_2.png"
-dest_files=["res://.godot/imported/Tony_2.png-fbdba2c7b653bccafc2ae24230f68dba.s3tc.ctex"]
+source_file="res://Assets/Models/Tony/Tony_2.png"
+dest_files=["res://.godot/imported/Tony_2.png-abe1a467be910e885aee3c41cacb1370.s3tc.ctex"]
 
 [params]
 

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/kaykit_muebles/pictureframe_medium.gltf" id="e1"]
+
+[node name="Cuadro" type="Node3D" groups=["auditoria_pared"]]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(0.5556, 0.0, 0.0, 0.0, 0.5556, 0.0, 0.0, 0.0, 0.5556, 0.0, 0.25, -0.0556)

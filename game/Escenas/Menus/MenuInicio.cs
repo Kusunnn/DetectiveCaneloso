@@ -15,11 +15,13 @@ public partial class MenuInicio : Control
 	private Control _listaOpciones;
 	private Button _botonNuevaPartida;
 	private Button _botonContinuar;
+	private Button _botonCapitulos;
 	private Button _botonOpciones;
 	private Button _botonCreditos;
 	private Button _botonSalir;
 	private PanelMenu _menuOpciones;
 	private PanelMenu _pantallaCreditos;
+	private TableroCapitulos _tableroCapitulos;
 	private DialogoConfirmacion _dialogoConfirmacion;
 
 	// Botón que abrió el panel actual, para devolverle el foco al cerrarlo.
@@ -33,6 +35,7 @@ public partial class MenuInicio : Control
 		_listaOpciones = GetNode<Control>("%ListaOpciones");
 		_botonNuevaPartida = GetNode<Button>("%BotonNuevaPartida");
 		_botonContinuar = GetNode<Button>("%BotonContinuar");
+		_botonCapitulos = GetNode<Button>("%BotonCapitulos");
 		_botonOpciones = GetNode<Button>("%BotonOpciones");
 		_botonCreditos = GetNode<Button>("%BotonCreditos");
 		_botonSalir = GetNode<Button>("%BotonSalir");
@@ -41,7 +44,7 @@ public partial class MenuInicio : Control
 		_dialogoConfirmacion = GetNode<DialogoConfirmacion>("%DialogoConfirmacion");
 
 		AplicarFuentes();
-		var botones = new[] { _botonNuevaPartida, _botonContinuar, _botonOpciones, _botonCreditos, _botonSalir };
+		var botones = new[] { _botonNuevaPartida, _botonContinuar, _botonCapitulos, _botonOpciones, _botonCreditos, _botonSalir };
 		foreach (var boton in botones)
 		{
 			var fila = FilaDe(boton);
@@ -50,7 +53,8 @@ public partial class MenuInicio : Control
 		}
 
 		_botonNuevaPartida.Pressed += AlPresionarNuevaPartida;
-		_botonContinuar.Pressed += GestorPartida.Instancia.ContinuarPartida;
+		_botonContinuar.Pressed += () => _ = AlPresionarContinuar();
+		_botonCapitulos.Pressed += () => AbrirTablero();
 		_botonOpciones.Pressed += () => AbrirPanel(_menuOpciones, _botonOpciones);
 		_botonCreditos.Pressed += () => AbrirPanel(_pantallaCreditos, _botonCreditos);
 		_botonSalir.Pressed += AlPresionarSalir;
@@ -64,9 +68,38 @@ public partial class MenuInicio : Control
 		var filaContinuar = FilaDe(_botonContinuar);
 		filaContinuar.Modulate = new Color(filaContinuar.Modulate, puedeContinuar ? 1.0f : TransparenciaDesactivado);
 
+		// Tablero de capítulos: debajo del diálogo de confirmación
+		_tableroCapitulos = new TableroCapitulos();
+		AddChild(_tableroCapitulos);
+		MoveChild(_tableroCapitulos, _dialogoConfirmacion.GetIndex());
+		_tableroCapitulos.Cerrado += AlCerrarPanel;
+
+
 		UtilidadesUI.ConectarFocoConRaton(this);
 		UtilidadesUI.EncadenarFoco(botones);
 		(puedeContinuar ? _botonContinuar : _botonNuevaPartida).GrabFocus();
+
+		// Se eligió un capítulo que todavía no tiene escena: su tarjeta y luego el tablero
+		string enPreparacion = GestorPartida.Instancia.CapituloEnPreparacion;
+		if (!string.IsNullOrEmpty(enPreparacion))
+		{
+			GestorPartida.Instancia.CapituloEnPreparacion = null;
+			_ = MostrarEnPreparacion(Capitulos.Obtener(enPreparacion));
+		}
+	}
+
+	private void AbrirTablero(string mensaje = null)
+	{
+		_focoAlVolver = _botonCapitulos;
+		_pantallaPrincipal.Hide();
+		_tableroCapitulos.Abrir(mensaje);
+	}
+
+	private async System.Threading.Tasks.Task MostrarEnPreparacion(InfoCapitulo capitulo)
+	{
+		if (capitulo == null) return;
+		await GestorPartida.Instancia.PresentarCapituloEnPreparacion(capitulo);
+		AbrirTablero($"{capitulo.Etiqueta} todavía está en preparación. Aquí aparecerá cuando esté listo.");
 	}
 
 	// Carga las fuentes del diseño; si faltan en Assets/Fuentes/, usa la de Godot.
@@ -138,6 +171,25 @@ public partial class MenuInicio : Control
 		if (await _dialogoConfirmacion.Preguntar("¿Seguro que quieres salir del juego?", "Salir"))
 		{
 			GetTree().Quit();
+		}
+	}
+
+	// Carga la partida más reciente. Si el archivo está dañado no se cierra el juego: se ofrece el respaldo.
+	private async System.Threading.Tasks.Task AlPresionarContinuar()
+	{
+		var reciente = GestorPartida.Instancia.MasReciente();
+		if (reciente == null) return;
+		if (!reciente.Danada && GestorPartida.Instancia.CargarRanura(reciente.Numero)) return;
+
+		if (reciente.HayRespaldo && await _dialogoConfirmacion.Preguntar(
+			"La partida guardada está dañada.\n¿Cargar la copia de respaldo?", "Cargar respaldo"))
+		{
+			if (GestorPartida.Instancia.CargarRanura(reciente.Numero, desdeRespaldo: true)) return;
+			await _dialogoConfirmacion.Preguntar("El respaldo también está dañado. No se pudo cargar la partida.", "Aceptar", "Cerrar");
+		}
+		else if (!reciente.HayRespaldo)
+		{
+			await _dialogoConfirmacion.Preguntar("La partida guardada está dañada y no hay copia de respaldo.", "Aceptar", "Cerrar");
 		}
 	}
 }

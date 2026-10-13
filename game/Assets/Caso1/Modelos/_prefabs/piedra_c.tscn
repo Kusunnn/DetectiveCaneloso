@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/rock_smallC.glb" id="e1"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1"]
+radius = 0.36
+height = 0.272
+
+[node name="PiedraC" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(2.2173, 0.0, 0.0, 0.0, 2.2173, 0.0, 0.0, 0.0, 2.2173, 0.0, 0.1109, 0.0)
+
+[node name="Colision" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Colision"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.136, 0.0)
+shape = SubResource("CylinderShape3D_1")

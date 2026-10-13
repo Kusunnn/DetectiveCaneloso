@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 // Detective Caneloso: movimiento, cámaras, linterna e interacción con lo que apunta la retícula.
 // No conoce el guion del caso: avisa con EvidenciaRegistrada y el caso decide qué pasa.
@@ -104,17 +105,7 @@ public partial class Jugador : CharacterBody3D
 		if (@event is InputEventMouseMotion eventoRaton && Input.MouseMode == Input.MouseModeEnum.Captured)
 		{
 			float sensibilidad = SensibilidadRaton * (Configuracion.Instancia?.SensibilidadRaton ?? 1f);
-			RotateY(-eventoRaton.Relative.X * sensibilidad);
-
-			float giroVertical = -eventoRaton.Relative.Y * sensibilidad;
-			Vector3 rotacionCamara = _camara.Rotation;
-			rotacionCamara.X = Mathf.Clamp(rotacionCamara.X + giroVertical, -Mathf.Pi / 2.5f, Mathf.Pi / 2.5f);
-			_camara.Rotation = rotacionCamara;
-
-			// En tercera persona se inclina el brazo de la cámara, con un rango más corto para no atravesar el suelo
-			Vector3 rotacionBrazo = _brazoCamara.Rotation;
-			rotacionBrazo.X = Mathf.Clamp(rotacionBrazo.X + giroVertical, -1.1f, 0.5f);
-			_brazoCamara.Rotation = rotacionBrazo;
+			GirarVista(-eventoRaton.Relative.X * sensibilidad, -eventoRaton.Relative.Y * sensibilidad);
 		}
 
 		// Teclas del protagonista: V cambia de cámara; C o Ctrl agacharse; B bailar y K caerse.
@@ -140,6 +131,26 @@ public partial class Jugador : CharacterBody3D
 			}
 		}
 	}
+
+	// Gira la vista (radianes): horizontal el cuerpo, vertical la cámara. Lo usan el mouse y el stick derecho.
+	private void GirarVista(float horizontal, float vertical)
+	{
+		RotateY(horizontal);
+		Vector3 rotacionCamara = _camara.Rotation;
+		rotacionCamara.X = Mathf.Clamp(rotacionCamara.X + vertical, -Mathf.Pi / 2.5f, Mathf.Pi / 2.5f);
+		_camara.Rotation = rotacionCamara;
+
+		// En tercera persona se inclina el brazo de la cámara, con un rango más corto para no atravesar el suelo
+		Vector3 rotacionBrazo = _brazoCamara.Rotation;
+		rotacionBrazo.X = Mathf.Clamp(rotacionBrazo.X + vertical, -1.1f, 0.5f);
+		_brazoCamara.Rotation = rotacionBrazo;
+		GiroAcumulado += Mathf.Abs(horizontal) + Mathf.Abs(vertical);
+	}
+
+	// Cuánto ha girado la vista desde el inicio (el tutorial lo usa para saber si ya miró alrededor)
+	public float GiroAcumulado { get; private set; } = 0f;
+	public float DistanciaRecorrida { get; private set; } = 0f;
+	[Export] public float VelocidadStick = 2.6f; // rad/s con el stick a fondo
 
 	// Activa la cámara de primera o tercera persona y muestra u oculta el cuerpo de Caneloso
 	private void AplicarPerspectiva()
@@ -221,7 +232,7 @@ public partial class Jugador : CharacterBody3D
 		Node nodo = resultado["collider"].As<Node>();
 		for (int nivel = 0; nivel < 4 && nodo != null; nivel++, nodo = nodo.GetParent())
 		{
-			if (nodo is Contenedor { SoloAgachado: true } && !Agachado) return null; // Hay que agacharse para alcanzarlo
+			if ((nodo is Contenedor { SoloAgachado: true } || nodo is ObjetoPista { SoloAgachado: true }) && !Agachado) return null; // Hay que agacharse para alcanzarlo
 			if (nodo is IInteractuable interactuable) return interactuable;
 		}
 		return null;
@@ -231,6 +242,18 @@ public partial class Jugador : CharacterBody3D
 	// Usa el sistema de pistas del HUD del equipo (aviso "Expediente actualizado", tarjeta y expediente)
 	public void RegistrarEvidencia(string id, string titulo, string descripcion, Texture2D imagen = null, bool animar = true)
 	{
+		bool nueva = AgregarPistaAlHud(id, titulo, descripcion, imagen);
+		if (!nueva) return;
+		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
+		// Siempre el mismo sonido de "pista encontrada" y, detrás, el sello del expediente actualizado
+		Sonidos.ReproducirUI(this, Sonidos.Tipo.Pista);
+		GetTree().CreateTimer(0.55).Timeout += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Sello);
+		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
+		EmitSignal(SignalName.EvidenciaRegistrada, id);
+	}
+
+	private bool AgregarPistaAlHud(string id, string titulo, string descripcion, Texture2D imagen)
+	{
 		// Si el objeto no trae foto, se usa la de Assets/Pistas/<id>.png
 		string rutaFoto = "res://Assets/Pistas/" + id + ".png";
 		if (imagen == null && ResourceLoader.Exists(rutaFoto)) imagen = GD.Load<Texture2D>(rutaFoto);
@@ -239,14 +262,58 @@ public partial class Jugador : CharacterBody3D
 		pista.Set("titulo", titulo);
 		pista.Set("descripcion", descripcion);
 		pista.Set("imagen", imagen);
-		bool nueva = _hud.Call("agregar_pista", pista).AsBool();
-		if (!nueva) return;
-		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
-		// Siempre el mismo sonido de "pista encontrada" y, detrás, el sello del expediente actualizado
-		Sonidos.ReproducirUI(this, Sonidos.Tipo.Pista);
-		GetTree().CreateTimer(0.55).Timeout += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Sello);
-		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
-		EmitSignal(SignalName.EvidenciaRegistrada, id);
+		return _hud.Call("agregar_pista", pista).AsBool();
+	}
+
+	// ---------- Partida guardada ----------
+
+	// Al cargar: la pista vuelve al expediente sin sonido, animación ni aviso al caso
+	public void RestaurarEvidencia(string id, string titulo, string descripcion, Texture2D imagen = null)
+	{
+		AgregarPistaAlHud(id, titulo, descripcion, imagen);
+		_hud.Set("_aviso", 0.0);
+	}
+
+	public Godot.Collections.Dictionary CapturarEstado() => new()
+	{
+		{ "posicion", new Godot.Collections.Array { GlobalPosition.X, GlobalPosition.Y, GlobalPosition.Z } },
+		{ "giro", Rotation.Y },
+		{ "inclinacion", _camara.Rotation.X },
+		{ "inclinacion_brazo", _brazoCamara.Rotation.X },
+		{ "tercera_persona", _terceraPersona },
+		{ "agachado", Agachado },
+		{ "linterna", LinternaEncendida },
+		{ "objetos", new Godot.Collections.Array(_objetos.Select(o => Variant.From(o))) },
+		{ "distancia", DistanciaRecorrida },
+		{ "giro_acumulado", GiroAcumulado },
+	};
+
+	public void RestaurarEstado(Godot.Collections.Dictionary estado)
+	{
+		var p = estado["posicion"].AsGodotArray();
+		GlobalPosition = new Vector3(p[0].AsSingle(), p[1].AsSingle(), p[2].AsSingle());
+		Rotation = new Vector3(0, estado["giro"].AsSingle(), 0);
+		_camara.Rotation = new Vector3(estado["inclinacion"].AsSingle(), _camara.Rotation.Y, _camara.Rotation.Z);
+		_brazoCamara.Rotation = new Vector3(estado["inclinacion_brazo"].AsSingle(), _brazoCamara.Rotation.Y, _brazoCamara.Rotation.Z);
+		_terceraPersona = estado["tercera_persona"].AsBool();
+		AplicarPerspectiva();
+		// Si se guardó agachado (bajo el andamio) se carga agachado; se levanta solo cuando haya espacio
+		if (estado["agachado"].AsBool())
+		{
+			Agachado = true;
+			_quiereAgacharse = true;
+			_mezclaAgachado = 1f;
+		}
+		foreach (Variant objeto in estado["objetos"].AsGodotArray()) _objetos.Add(objeto.AsString());
+		DistanciaRecorrida = estado["distancia"].AsSingle();
+		GiroAcumulado = estado["giro_acumulado"].AsSingle();
+		if (estado["linterna"].AsBool() && !LinternaEncendida)
+		{
+			_linternaLista = false;
+			_hud.Set("linterna_encendida", true);
+			_hud.EmitSignal("linterna_cambiada", true);
+			_linternaLista = true;
+		}
 	}
 
 	// Pensamiento del detective que guía el tutorial: se queda hasta el siguiente
@@ -364,6 +431,7 @@ public partial class Jugador : CharacterBody3D
 			return;
 		}
 		_distanciaPaso += new Vector2(Velocity.X, Velocity.Z).Length() * delta;
+		DistanciaRecorrida += new Vector2(Velocity.X, Velocity.Z).Length() * delta;
 		float zancada = Agachado ? 0.6f : 0.75f;
 		if (_distanciaPaso < zancada) return;
 		_distanciaPaso = 0f;
@@ -393,6 +461,13 @@ public partial class Jugador : CharacterBody3D
 		}
 
 		ActualizarAgachado((float)delta);
+		// Stick derecho del control: mirar
+		Vector2 stick = Input.GetVector("mirar_izquierda", "mirar_derecha", "mirar_arriba", "mirar_abajo");
+		if (stick != Vector2.Zero)
+		{
+			float giro = VelocidadStick * (Configuracion.Instancia?.SensibilidadRaton ?? 1f) * (float)delta;
+			GirarVista(-stick.X * giro, -stick.Y * giro * 0.7f);
+		}
 		Vector3 velocidadActual = Velocity;
 		float velocidad = Velocidad * Mathf.Lerp(1f, FactorVelocidadAgachado, _mezclaAgachado);
 		if (Input.IsActionPressed("correr") && !Agachado) velocidad *= FactorVelocidadCorrer;

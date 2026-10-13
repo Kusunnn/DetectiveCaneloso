@@ -1,0 +1,297 @@
+[gd_scene load_steps=24 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/mesa_larga.tscn" id="e1"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/banca_larga.tscn" id="e2"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/plato.tscn" id="e3"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/taza.tscn" id="e4"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/lata_abierta.tscn" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/bote_basura.tscn" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/letrero_poste.tscn" id="e7"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e8"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/casa_campana.tscn" id="e9"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tronco_grande.tscn" id="e10"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tocon.tscn" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/hongos.tscn" id="e12"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_a.tscn" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_alta.tscn" id="e14"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_c.tscn" id="e15"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/arbusto_grande.tscn" id="e16"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/piedra_c.tscn" id="e17"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/arbusto.tscn" id="e18"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/arbusto_chico.tscn" id="e19"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/piedra_a.tscn" id="e20"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/piedra_b.tscn" id="e21"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/cubeta.tscn" id="e22"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tablas.tscn" id="e23"]
+
+[node name="Detalles" type="Node3D"]
+
+[node name="Picnic0" type="Node3D" parent="."]
+transform = Transform3D(0.9659, 0.0, 0.2588, 0.0, 1.0, 0.0, -0.2588, 0.0, 0.9659, 11.5, 0.0, 4.0)
+
+[node name="Mesa" parent="Picnic0" instance=ExtResource("e1") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+
+[node name="BancaS" parent="Picnic0" instance=ExtResource("e2") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.21, 0.0, 0.0)
+
+[node name="BancaN" parent="Picnic0" instance=ExtResource("e2") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.21, 0.0, 0.0)
+
+[node name="Plato" parent="Picnic0" instance=ExtResource("e3") groups=["apoyar_suelo"]]
+transform = Transform3D(0.866, 0.0, 0.5, 0.0, 1.0, 0.0, -0.5, 0.0, 0.866, 0.2, 0.76, -0.4)
+
+[node name="Taza" parent="Picnic0" instance=ExtResource("e4") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.25, 0.76, 0.3)
+
+[node name="Lata" parent="Picnic0" instance=ExtResource("e5") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.1, 0.76, 0.6)
+
+[node name="Picnic1" type="Node3D" parent="."]
+transform = Transform3D(0.9848, 0.0, -0.1736, 0.0, 1.0, 0.0, 0.1736, 0.0, 0.9848, -8.5, 0.0, 4.5)
+
+[node name="Mesa" parent="Picnic1" instance=ExtResource("e1") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+
+[node name="BancaS" parent="Picnic1" instance=ExtResource("e2") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.21, 0.0, 0.0)
+
+[node name="BancaN" parent="Picnic1" instance=ExtResource("e2") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.21, 0.0, 0.0)
+
+[node name="Bote0" parent="." instance=ExtResource("e6") groups=["apoyar_suelo"]]
+transform = Transform3D(0.5093, 0.0, 0.8606, 0.0, 1.0, 0.0, -0.8606, 0.0, 0.5093, 5.5, 0.0, 9.8)
+
+[node name="Bote1" parent="." instance=ExtResource("e6") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.3695, 0.0, -0.9292, 0.0, 1.0, 0.0, 0.9292, 0.0, -0.3695, -3.4, 0.0, -15.0)
+
+[node name="Bote2" parent="." instance=ExtResource("e6") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.6613, 0.0, -0.7501, 0.0, 1.0, 0.0, 0.7501, 0.0, -0.6613, 18.2, 0.0, 21.6)
+
+[node name="Bote3" parent="." instance=ExtResource("e6") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.9914, 0.0, 0.1309, 0.0, 1.0, 0.0, -0.1309, 0.0, -0.9914, -8.6, 0.0, 2.4)
+
+[node name="Letrero0" parent="." instance=ExtResource("e7") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 3.0, 0.0, 7.0)
+
+[node name="LetreroTexto0" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 3.0, 0.95, 7.12)
+script = ExtResource("e8")
+Texto = "↑ FOGATA
+↓ COMEDOR"
+Ancho = 0.6
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 30
+TamMinimo = 12
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Letrero1" parent="." instance=ExtResource("e7") groups=["apoyar_suelo"]]
+transform = Transform3D(0.866, 0.0, -0.5, 0.0, 1.0, 0.0, 0.5, 0.0, 0.866, 10.5, 0.0, -8.2)
+
+[node name="LetreroTexto1" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(0.866, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866, 10.309408, 0.95, -7.8699155)
+script = ExtResource("e8")
+Texto = "ENFERMERÍA ↗
+CABAÑAS →"
+Ancho = 0.6
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 30
+TamMinimo = 12
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Letrero2" parent="." instance=ExtResource("e7") groups=["apoyar_suelo"]]
+transform = Transform3D(0.866, 0.0, 0.5, 0.0, 1.0, 0.0, -0.5, 0.0, 0.866, -6.5, 0.0, -13.0)
+
+[node name="LetreroTexto2" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, -6.309408, 0.95, -12.669915)
+script = ExtResource("e8")
+Texto = "← DIRECCIÓN"
+Ancho = 0.6
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 30
+TamMinimo = 12
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Letrero3" parent="." instance=ExtResource("e7") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -12.0, 0.0, 11.5)
+
+[node name="LetreroTexto3" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -12.0, 0.95, 11.62)
+script = ExtResource("e8")
+Texto = "← CASETA"
+Ancho = 0.6
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 30
+TamMinimo = 12
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="CasaCampana0" parent="." instance=ExtResource("e9") groups=["apoyar_suelo"]]
+transform = Transform3D(0.342, 0.0, 0.9397, 0.0, 1.0, 0.0, -0.9397, 0.0, 0.342, -31.0, 0.0, -3.0)
+
+[node name="TroncoGrande2" parent="." instance=ExtResource("e10") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, 0.9397, -30.5, 0.0, 8.5)
+
+[node name="TroncoGrande3" parent="." instance=ExtResource("e10") groups=["apoyar_suelo"]]
+transform = Transform3D(0.2588, 0.0, 0.9659, 0.0, 1.0, 0.0, -0.9659, 0.0, 0.2588, 33.5, 0.0, -21.0)
+
+[node name="TroncoGrande4" parent="." instance=ExtResource("e10") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9962, 0.0, 0.0872, 0.0, 1.0, 0.0, -0.0872, 0.0, 0.9962, -21.0, 0.0, -31.5)
+
+[node name="Tocon5" parent="." instance=ExtResource("e11") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -12.0, 0.0, -30.5)
+
+[node name="Hongos5" parent="." instance=ExtResource("e12") groups=["apoyar_suelo"]]
+transform = Transform3D(0.2119, 0.0, 0.9773, 0.0, 1.0, 0.0, -0.9773, 0.0, 0.2119, -11.55, 0.0, -30.3)
+
+[node name="RocaA9" parent="." instance=ExtResource("e13") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9848, 0.0, 0.1736, 0.0, 1.0, 0.0, -0.1736, 0.0, 0.9848, 14.5, 0.0, 8.5)
+
+[node name="RocaAlta10" parent="." instance=ExtResource("e14") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -30.5, 0.0, 18.0)
+
+[node name="RocaC11" parent="." instance=ExtResource("e15") groups=["apoyar_suelo"]]
+transform = Transform3D(0.5, 0.0, 0.866, 0.0, 1.0, 0.0, -0.866, 0.0, 0.5, 30.0, 0.0, -24.5)
+
+[node name="Suelto0" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.9514, 0.0, -0.0304, 0.0, 0.9519, 0.0, 0.0304, 0.0, -0.9514, 20.4843, 0.0, 19.7027)
+
+[node name="Suelto1" parent="." instance=ExtResource("e17") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9745, 0.0, 0.4531, 0.0, 1.0746, 0.0, -0.4531, 0.0, 0.9745, -34.7774, 0.0, -8.253)
+
+[node name="Suelto2" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(-1.0321, 0.0, 0.4324, 0.0, 1.119, 0.0, -0.4324, 0.0, -1.0321, -18.7423, 0.0, -17.1075)
+
+[node name="Suelto3" parent="." instance=ExtResource("e12") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.3599, 0.0, -0.9787, 0.0, 1.0427, 0.0, 0.9787, 0.0, -0.3599, -4.0712, 0.0, 29.233)
+
+[node name="Suelto4" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.7814, 0.0, 0.7801, 0.0, 1.1041, 0.0, -0.7801, 0.0, 0.7814, 30.6537, 0.0, -30.5137)
+
+[node name="Suelto5" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(0.2866, 0.0, 1.0756, 0.0, 1.1131, 0.0, -1.0756, 0.0, 0.2866, 25.612, 0.0, -16.9686)
+
+[node name="Suelto6" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.7217, 0.0, 0.6991, 0.0, 1.0048, 0.0, -0.6991, 0.0, 0.7217, 27.5776, 0.0, 16.3067)
+
+[node name="Suelto7" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.4715, 0.0, -0.8074, 0.0, 0.935, 0.0, 0.8074, 0.0, 0.4715, 34.639, 0.0, -7.258)
+
+[node name="Suelto8" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.8738, 0.0, -0.4214, 0.0, 0.9701, 0.0, 0.4214, 0.0, -0.8738, -34.8018, 0.0, -27.5125)
+
+[node name="Suelto9" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.7588, 0.0, -0.7733, 0.0, 1.0834, 0.0, 0.7733, 0.0, -0.7588, 33.5997, 0.0, -24.7866)
+
+[node name="Suelto10" parent="." instance=ExtResource("e20") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0249, 0.0, 0.9368, 0.0, 0.9371, 0.0, -0.9368, 0.0, 0.0249, -11.7335, 0.0, 16.7585)
+
+[node name="Suelto11" parent="." instance=ExtResource("e17") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.7421, 0.0, 0.7433, 0.0, 1.0503, 0.0, -0.7433, 0.0, -0.7421, 29.6191, 0.0, -20.8628)
+
+[node name="Suelto12" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9998, 0.0, -0.2472, 0.0, 1.0299, 0.0, 0.2472, 0.0, 0.9998, 32.0796, 0.0, -5.9511)
+
+[node name="Suelto13" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.7151, 0.0, -0.7579, 0.0, 1.042, 0.0, 0.7579, 0.0, 0.7151, -5.6314, 0.0, -21.0797)
+
+[node name="Suelto14" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9819, 0.0, -0.2595, 0.0, 1.0156, 0.0, 0.2595, 0.0, 0.9819, 15.993, 0.0, -28.8383)
+
+[node name="Suelto15" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(0.7589, 0.0, -0.6998, 0.0, 1.0323, 0.0, 0.6998, 0.0, 0.7589, -20.1536, 0.0, 21.6489)
+
+[node name="Suelto16" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(0.8676, 0.0, -0.2581, 0.0, 0.9052, 0.0, 0.2581, 0.0, 0.8676, 18.7779, 0.0, -31.3451)
+
+[node name="Suelto17" parent="." instance=ExtResource("e17") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.0447, 0.0, 0.9882, 0.0, 0.9892, 0.0, -0.9882, 0.0, -0.0447, 6.5581, 0.0, 9.207)
+
+[node name="Suelto18" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.4034, 0.0, 0.9599, 0.0, 1.0412, 0.0, -0.9599, 0.0, 0.4034, -25.6524, 0.0, -25.9303)
+
+[node name="Suelto19" parent="." instance=ExtResource("e17") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.9476, 0.0, 0.0365, 0.0, 0.9483, 0.0, -0.0365, 0.0, -0.9476, -13.7182, 0.0, 28.2938)
+
+[node name="Suelto20" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.8032, 0.0, -0.6141, 0.0, 1.0111, 0.0, 0.6141, 0.0, -0.8032, -8.5532, 0.0, 13.4384)
+
+[node name="Suelto21" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.8211, 0.0, 0.613, 0.0, 1.0247, 0.0, -0.613, 0.0, -0.8211, 30.0433, 0.0, -7.1905)
+
+[node name="Suelto22" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.031, 0.0, 0.9338, 0.0, 0.9344, 0.0, -0.9338, 0.0, 0.031, 32.4801, 0.0, 6.732)
+
+[node name="Suelto23" parent="." instance=ExtResource("e21") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9678, 0.0, -0.1418, 0.0, 0.9781, 0.0, 0.1418, 0.0, 0.9678, -21.7313, 0.0, 7.4534)
+
+[node name="Suelto24" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.7045, 0.0, -0.7696, 0.0, 1.0434, 0.0, 0.7696, 0.0, 0.7045, -12.7331, 0.0, 31.5659)
+
+[node name="Suelto25" parent="." instance=ExtResource("e12") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.996, 0.0, 0.1843, 0.0, 1.0129, 0.0, -0.1843, 0.0, -0.996, 31.2936, 0.0, 11.5132)
+
+[node name="Suelto26" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0195, 0.0, 1.0547, 0.0, 1.0549, 0.0, -1.0547, 0.0, 0.0195, -33.2536, 0.0, 10.336)
+
+[node name="Suelto27" parent="." instance=ExtResource("e12") groups=["apoyar_suelo"]]
+transform = Transform3D(0.2911, 0.0, -0.9439, 0.0, 0.9878, 0.0, 0.9439, 0.0, 0.2911, 22.2107, 0.0, 14.3206)
+
+[node name="Suelto28" parent="." instance=ExtResource("e18") groups=["apoyar_suelo"]]
+transform = Transform3D(-1.0, 0.0, 0.1282, 0.0, 1.0082, 0.0, -0.1282, 0.0, -1.0, 29.0268, 0.0, 9.8774)
+
+[node name="Suelto29" parent="." instance=ExtResource("e20") groups=["apoyar_suelo"]]
+transform = Transform3D(0.0325, 0.0, 1.1012, 0.0, 1.1017, 0.0, -1.1012, 0.0, 0.0325, 19.5661, 0.0, 8.1157)
+
+[node name="Suelto30" parent="." instance=ExtResource("e21") groups=["apoyar_suelo"]]
+transform = Transform3D(0.3243, 0.0, 1.0434, 0.0, 1.0926, 0.0, -1.0434, 0.0, 0.3243, 34.2446, 0.0, -31.5913)
+
+[node name="Suelto31" parent="." instance=ExtResource("e16") groups=["apoyar_suelo"]]
+transform = Transform3D(0.8484, 0.0, 0.4631, 0.0, 0.9666, 0.0, -0.4631, 0.0, 0.8484, 15.1492, 0.0, -26.1953)
+
+[node name="Suelto32" parent="." instance=ExtResource("e12") groups=["apoyar_suelo"]]
+transform = Transform3D(1.1116, 0.0, -0.1191, 0.0, 1.118, 0.0, 0.1191, 0.0, 1.1116, 31.0467, 0.0, 15.5108)
+
+[node name="Suelto33" parent="." instance=ExtResource("e21") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.7129, 0.0, 0.7406, 0.0, 1.028, 0.0, -0.7406, 0.0, -0.7129, -23.3491, 0.0, -4.2705)
+
+[node name="ArbustoCasa0" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(0.3751, 0.0, 0.927, 0.0, 1.0, 0.0, -0.927, 0.0, 0.3751, -4.5, 0.0, 18.4)
+
+[node name="ArbustoCasa1" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(0.8702, 0.0, 0.4927, 0.0, 1.0, 0.0, -0.4927, 0.0, 0.8702, 3.5, 0.0, 18.4)
+
+[node name="ArbustoCasa2" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9839, 0.0, 0.1787, 0.0, 1.0, 0.0, -0.1787, 0.0, 0.9839, 33.0, 0.0, 0.8)
+
+[node name="ArbustoCasa3" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.9958, 0.0, -0.0921, 0.0, 1.0, 0.0, 0.0921, 0.0, -0.9958, 33.0, 0.0, 4.4)
+
+[node name="ArbustoCasa4" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9408, 0.0, -0.339, 0.0, 1.0, 0.0, 0.339, 0.0, 0.9408, -28.5, 0.0, -15.0)
+
+[node name="ArbustoCasa5" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9788, 0.0, -0.2047, 0.0, 1.0, 0.0, 0.2047, 0.0, 0.9788, -13.5, 0.0, -27.4)
+
+[node name="ArbustoCasa6" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(0.808, 0.0, -0.5892, 0.0, 1.0, 0.0, 0.5892, 0.0, 0.808, 17.0, 0.0, -12.5)
+
+[node name="ArbustoCasa7" parent="." instance=ExtResource("e19") groups=["apoyar_suelo"]]
+transform = Transform3D(-0.999, 0.0, -0.0443, 0.0, 1.0, 0.0, 0.0443, 0.0, -0.999, 21.0, 0.0, -24.5)
+
+[node name="CubetaCaseta" parent="." instance=ExtResource("e22") groups=["apoyar_suelo"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -21.6, 0.0, 9.3)
+
+[node name="Tablas" parent="." instance=ExtResource("e23") groups=["apoyar_suelo"]]
+transform = Transform3D(0.9848, 0.0, 0.1736, 0.0, 1.0, 0.0, -0.1736, 0.0, 0.9848, -20.8, 0.0, -0.8)

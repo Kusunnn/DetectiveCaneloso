@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7haix85ykene"
-path.s3tc="res://.godot/imported/Breathing Idle (1)_1.png-3079d4d2b517b8828831938a9326e587.s3tc.ctex"
+path.s3tc="res://.godot/imported/Breathing Idle (1)_1.png-e5a3f193447f2fc2e6d5e4bd56aec11f.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://Aya/Breathing Idle (1)_1.png"
-dest_files=["res://.godot/imported/Breathing Idle (1)_1.png-3079d4d2b517b8828831938a9326e587.s3tc.ctex"]
+source_file="res://Assets/Models/Aya/Breathing Idle (1)_1.png"
+dest_files=["res://.godot/imported/Breathing Idle (1)_1.png-e5a3f193447f2fc2e6d5e4bd56aec11f.s3tc.ctex"]
 
 [params]
 

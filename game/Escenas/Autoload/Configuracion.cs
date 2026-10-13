@@ -38,7 +38,8 @@ public partial class Configuracion : Node
 
 	private static string ClaveVolumen(string bus) => bus == "Master" ? "volumen_general" : "volumen_" + bus.ToLower();
 
-	private bool _pantallaCompleta = false;
+	// El juego arranca en pantalla completa; [F11] o [Alt]+[Enter] la alternan en cualquier momento.
+	private bool _pantallaCompleta = true;
 	public bool PantallaCompleta
 	{
 		get => _pantallaCompleta;
@@ -58,6 +59,13 @@ public partial class Configuracion : Node
 	private float _sensibilidad = 1f;
 	public float SensibilidadRaton { get => _sensibilidad; set => _sensibilidad = Mathf.Clamp(value, 0.3f, 2f); }
 
+	// Ayudas visuales del tutorial (íconos de tecla, foco, flecha al objetivo). Se pueden apagar en Opciones.
+	public bool AyudasVisuales { get; set; } = true;
+
+	// true si lo último que tocó el jugador fue un control; las ayudas muestran sus botones
+	public bool UsandoMando { get; private set; } = false;
+	[Signal] public delegate void DispositivoCambiadoEventHandler(bool mando);
+
 	// Contador de FPS en la esquina, se muestra y oculta con F3
 	private Label _contadorFps;
 
@@ -75,11 +83,18 @@ public partial class Configuracion : Node
 		bool hayArchivo = archivo.Load(RutaConfiguracion) == Error.Ok;
 		foreach (string bus in Buses)
 			FijarVolumen(bus, hayArchivo ? archivo.GetValue("audio", ClaveVolumen(bus), Volumen(bus)).AsSingle() : Volumen(bus));
-		if (!hayArchivo) return; // Primera vez: valores por defecto
+		if (!hayArchivo)
+		{
+			PantallaCompleta = PantallaCompleta; // Primera vez: valores por defecto
+			return;
+		}
 
-		PantallaCompleta = archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool();
+		// Los archivos de antes de la versión 2 guardaban «ventana» porque era lo predeterminado, no porque se eligiera
+		bool eleccionGuardada = archivo.GetValue("video", "version", 1).AsInt32() >= 2;
+		PantallaCompleta = eleccionGuardada ? archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool() : PantallaCompleta;
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
+		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
 	}
 
 	private void CrearContadorFps()
@@ -97,10 +112,34 @@ public partial class Configuracion : Node
 
 	public override void _Input(InputEvent evento)
 	{
+		// Teclado/mouse o control: lo último que se usó decide qué íconos muestran las ayudas
+		bool? mando = evento switch
+		{
+			InputEventJoypadButton => true,
+			InputEventJoypadMotion movimiento when Mathf.Abs(movimiento.AxisValue) > 0.4f => true,
+			InputEventKey virtual_ when virtual_.Device == MandoHud.DispositivoVirtual => null,
+			InputEventKey or InputEventMouseButton => false,
+			InputEventMouseMotion raton when raton.Relative.Length() > 3f => false,
+			_ => null,
+		};
+		if (mando.HasValue && mando.Value != UsandoMando)
+		{
+			UsandoMando = mando.Value;
+			EmitSignal(SignalName.DispositivoCambiado, UsandoMando);
+		}
+
 		if (evento is InputEventKey tecla && tecla.Pressed && !tecla.Echo && tecla.Keycode == Key.F3)
 		{
 			_contadorFps.Visible = !_contadorFps.Visible;
 			SetProcess(_contadorFps.Visible);
+		}
+
+		if (evento is InputEventKey teclaVentana && teclaVentana.Pressed && !teclaVentana.Echo
+			&& (teclaVentana.Keycode == Key.F11 || (teclaVentana.Keycode == Key.Enter && teclaVentana.AltPressed)))
+		{
+			PantallaCompleta = !PantallaCompleta;
+			Guardar();
+			GetViewport().SetInputAsHandled();
 		}
 	}
 
@@ -115,8 +154,10 @@ public partial class Configuracion : Node
 		foreach (string bus in Buses)
 			archivo.SetValue("audio", ClaveVolumen(bus), Volumen(bus));
 		archivo.SetValue("video", "pantalla_completa", PantallaCompleta);
+		archivo.SetValue("video", "version", 2);
 		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
 		archivo.SetValue("controles", "sensibilidad_raton", SensibilidadRaton);
+		archivo.SetValue("controles", "ayudas_visuales", AyudasVisuales);
 
 		Error error = archivo.Save(RutaConfiguracion);
 		if (error != Error.Ok)

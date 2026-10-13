@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://nsnhqtotwkw8"
-path.s3tc="res://.godot/imported/Maiurio_11.png-4578a2bc4dce8bda83624b1ea387d7f1.s3tc.ctex"
+path.s3tc="res://.godot/imported/Maiurio_11.png-4906a6d52960b5859a98105a22aa5220.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://Miaurio/Maiurio_11.png"
-dest_files=["res://.godot/imported/Maiurio_11.png-4578a2bc4dce8bda83624b1ea387d7f1.s3tc.ctex"]
+source_file="res://Assets/Models/Miaurio/Maiurio_11.png"
+dest_files=["res://.godot/imported/Maiurio_11.png-4906a6d52960b5859a98105a22aa5220.s3tc.ctex"]
 
 [params]
 

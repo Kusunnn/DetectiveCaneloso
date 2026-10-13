@@ -1,0 +1,69 @@
+{
+	"_ayuda": "Capítulos en orden. Para agregar uno: copia un bloque, cambia id/numero/titulo y pon la escena cuando exista. 'requisitos' son ids de capítulos que hay que resolver antes. Escena vacía = capítulo en preparación.",
+	"fases": [
+		{ "id": "introduccion", "nombre": "Introducción", "objetivo": "Escucha de qué trata el caso." },
+		{ "id": "investigacion", "nombre": "Investigación", "objetivo": "Revisa la escena y reúne pistas." },
+		{ "id": "interrogatorios", "nombre": "Interrogatorios", "objetivo": "Habla con los sospechosos y confróntalos con pruebas." },
+		{ "id": "deduccion", "nombre": "Deducción", "objetivo": "Une las pistas en el tablero [R]." },
+		{ "id": "resolucion", "nombre": "Resolución", "objetivo": "Explica qué pasó." },
+		{ "id": "epilogo", "nombre": "Epílogo", "objetivo": "Caso cerrado." }
+	],
+	"capitulos": [
+		{
+			"id": "caso0",
+			"numero": 0,
+			"titulo": "La cinta",
+			"ilustracion": "res://Assets/Capitulos/caso0.png",
+			"escena": "res://Escenas/Interrogatorio/sala_interrogatorio.tscn",
+			"pistas_totales": 8,
+			"dialogos_clave": 4,
+			"secretos": 1,
+			"requisitos": [],
+			"anteriormente": [
+				"6:02 a. m. La confesión de Tito Garras desapareció de la grabadora de la Sala 1.",
+				"La grabadora seguía en REC y el reloj de la pared se paró a las 3:12.",
+				"Esa noche en la comisaría estaban Eriz el conserje, Porky de guardia y el comisario."
+			],
+			"resumen": "Porky se durmió en la guardia, vio la grabadora en REC y escondió la cinta. La trampa era del comisario. Pero en la cinta, a las 3:12, se oye otra voz: «La Garra no olvida, Caneloso»."
+		},
+		{
+			"id": "capitulo1",
+			"numero": 1,
+			"titulo": "La noche del Ciervo de Luz",
+			"ilustracion": "res://Assets/Capitulos/capitulo1.png",
+			"escena": "res://Escenas/Caso1/escenario_campamento.tscn",
+			"pistas_totales": 12,
+			"dialogos_clave": 0,
+			"secretos": 0,
+			"requisitos": ["caso0"],
+			"anteriormente": [],
+			"resumen": ""
+		},
+		{
+			"id": "capitulo2",
+			"numero": 2,
+			"titulo": "Capítulo 2 (en preparación)",
+			"ilustracion": "",
+			"escena": "",
+			"pistas_totales": 0,
+			"dialogos_clave": 0,
+			"secretos": 0,
+			"requisitos": ["capitulo1"],
+			"anteriormente": [],
+			"resumen": ""
+		},
+		{
+			"id": "capitulo3",
+			"numero": 3,
+			"titulo": "Capítulo 3 (en preparación)",
+			"ilustracion": "",
+			"escena": "",
+			"pistas_totales": 0,
+			"dialogos_clave": 0,
+			"secretos": 0,
+			"requisitos": ["capitulo2"],
+			"anteriormente": [],
+			"resumen": ""
+		}
+	]
+}

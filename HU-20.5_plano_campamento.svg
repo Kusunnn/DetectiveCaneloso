@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 760" font-family="Segoe UI, Arial, sans-serif">
+  <!-- Escala: 1 m = 8 px. Mapa jugable 80 x 70 m, origen arriba a la izquierda (x=60, y=90). Norte arriba (lago). -->
+  <rect width="1000" height="760" fill="#11161c"/>
+  <text x="24" y="34" fill="#e8dcc4" font-size="22" font-weight="700">HU-20.5 · Escenario 1: Campamento Pino Lunar (vista superior, propuesta)</text>
+  <text x="24" y="58" fill="#9aa7b4" font-size="13">1 cuadro = 10 m · Norte arriba · Área jugable 80 × 70 m rodeada de bosque denso (colisión) y cerca</text>
+
+  <!-- Lago al norte, fuera del área jugable -->
+  <rect x="60" y="66" width="640" height="22" fill="#163a5c"/>
+  <rect x="60" y="66" width="640" height="22" fill="#3fa9ff" opacity="0.25"/>
+  <text x="380" y="82" fill="#8fd0ff" font-size="12" text-anchor="middle">LAGO ESPEJO (brillo azul de algas, solo visible, Escenario 2)</text>
+
+  <!-- Bosque perimetral -->
+  <rect x="60" y="90" width="640" height="560" fill="#1d2b22"/>
+  <rect x="100" y="130" width="560" height="480" fill="#33402f" rx="18"/>
+  <!-- Rejilla 10 m -->
+  <g stroke="#ffffff" stroke-opacity="0.05">
+    <path d="M140 90V650M220 90V650M300 90V650M380 90V650M460 90V650M540 90V650M620 90V650"/>
+    <path d="M60 170H700M60 250H700M60 330H700M60 410H700M60 490H700M60 570H700"/>
+  </g>
+  <text x="72" y="110" fill="#6f8a6a" font-size="11">bosque denso: pinos MultiMesh + colisión de borde</text>
+
+  <!-- Caminos de tierra -->
+  <g fill="none" stroke="#7a6347" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+    <path d="M540 650 L540 600 L460 560 L380 440 L380 340"/>
+    <path d="M380 340 L380 140 L380 96"/>
+    <path d="M380 340 L250 330 L200 230 L170 200"/>
+    <path d="M380 340 L520 380 L580 390"/>
+    <path d="M380 340 L500 270 L560 200 L570 160"/>
+    <path d="M380 440 L200 470"/>
+    <path d="M380 340 L270 200"/>
+  </g>
+
+  <!-- Plaza de la fogata -->
+  <circle cx="380" cy="340" r="64" fill="#5b4a37"/>
+  <circle cx="380" cy="340" r="64" fill="none" stroke="#f2b45a" stroke-dasharray="4 8" stroke-width="2"/>
+  <circle cx="380" cy="340" r="12" fill="#2a1f19" stroke="#d14a1f" stroke-width="3"/>
+  <g fill="#8a6a45"><rect x="340" y="296" width="30" height="7" rx="3"/><rect x="398" y="378" width="30" height="7" rx="3"/><rect x="328" y="352" width="7" height="28" rx="3"/><rect x="425" y="304" width="7" height="28" rx="3"/></g>
+  <rect x="412" y="304" width="14" height="10" fill="#a0784c"/>
+  <text x="380" y="428" fill="#f2d7a6" font-size="13" text-anchor="middle" font-weight="700">1 · PLAZA DE LA FOGATA</text>
+
+  <!-- Escenario de madera + Almacén -->
+  <rect x="262" y="314" width="40" height="64" fill="#6e5236" stroke="#c49a63"/>
+  <text x="282" y="396" fill="#f2d7a6" font-size="11" text-anchor="middle">escenario</text>
+  <rect x="222" y="318" width="38" height="44" fill="#4b3a2a" stroke="#c49a63"/>
+  <text x="200" y="312" fill="#f2d7a6" font-size="12" font-weight="700">2 · ALMACÉN</text>
+
+  <!-- Cocina comedor -->
+  <rect x="320" y="456" width="120" height="64" fill="#5a4636" stroke="#e0b070"/>
+  <g fill="#3b2d22"><rect x="336" y="470" width="88" height="8"/><rect x="336" y="490" width="88" height="8"/></g>
+  <rect x="424" y="506" width="12" height="10" fill="#222"/>
+  <text x="380" y="540" fill="#f2d7a6" font-size="13" text-anchor="middle" font-weight="700">3 · COCINA COMEDOR</text>
+
+  <!-- Cabaña de Porky (bloqueada) -->
+  <rect x="580" y="366" width="56" height="48" fill="#5a4636" stroke="#ff6b5a" stroke-width="3"/>
+  <rect x="576" y="384" width="6" height="14" fill="#ff6b5a"/>
+  <text x="608" y="432" fill="#ffb3a8" font-size="12" text-anchor="middle" font-weight="700">4 · CABAÑA DE PORKY</text>
+  <text x="608" y="447" fill="#ffb3a8" font-size="11" text-anchor="middle">🔒 hasta tener el llavero</text>
+
+  <!-- Cabaña del director (Tony) -->
+  <rect x="150" y="196" width="60" height="50" fill="#5a4636" stroke="#e0b070"/>
+  <text x="180" y="266" fill="#f2d7a6" font-size="12" text-anchor="middle" font-weight="700">5 · CABAÑA DEL DIRECTOR</text>
+  <text x="180" y="186" fill="#9aa7b4" font-size="10" text-anchor="middle">parte trasera (al bosque)</text>
+
+  <!-- Cabañas de campistas -->
+  <g fill="#4a3b2e" stroke="#a8875a">
+    <rect x="250" y="160" width="40" height="34"/>
+    <rect x="470" y="236" width="40" height="34" stroke="#e0b070" stroke-width="2"/>
+    <rect x="610" y="270" width="40" height="34"/>
+  </g>
+  <text x="270" y="152" fill="#c9b48e" font-size="11" text-anchor="middle">6 · cabaña A</text>
+  <text x="490" y="228" fill="#c9b48e" font-size="11" text-anchor="middle">6 · cabaña B (interior)</text>
+  <text x="630" y="262" fill="#c9b48e" font-size="11" text-anchor="middle">6 · cabaña C</text>
+
+  <!-- Enfermería -->
+  <rect x="540" y="140" width="64" height="44" fill="#d9d4c7" stroke="#ffffff"/>
+  <text x="572" y="167" fill="#b0302a" font-size="18" text-anchor="middle" font-weight="900">+</text>
+  <text x="572" y="200" fill="#f2d7a6" font-size="12" text-anchor="middle" font-weight="700">7 · ENFERMERÍA</text>
+  <text x="572" y="134" fill="#9aa7b4" font-size="10" text-anchor="middle">puerta y ventana al lago</text>
+
+  <!-- Caseta del generador -->
+  <rect x="164" y="450" width="40" height="36" fill="#4a4f52" stroke="#c7cdd1"/>
+  <text x="184" y="504" fill="#f2d7a6" font-size="12" text-anchor="middle" font-weight="700">8 · CASETA GENERADOR</text>
+  <path d="M204 466 Q300 420 370 336" fill="none" stroke="#e8c45a" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="250" y="424" fill="#e8c45a" font-size="10">cable a guirnaldas</text>
+
+  <!-- Estacionamiento -->
+  <rect x="490" y="560" width="140" height="70" fill="#3e3a36" stroke="#8b857c"/>
+  <rect x="560" y="582" width="40" height="22" rx="5" fill="#7b1e22"/>
+  <text x="560" y="648" fill="#f2d7a6" font-size="12" text-anchor="middle" font-weight="700">9 · ESTACIONAMIENTO</text>
+  <text x="560" y="575" fill="#c9b48e" font-size="10" text-anchor="middle">coche de Juan Carlos</text>
+  <path d="M520 646 l8 -14 l8 14 z" fill="#7cf29a"/>
+  <text x="470" y="620" fill="#7cf29a" font-size="11">INICIO</text>
+
+  <!-- Salida al sendero -->
+  <path d="M362 112 L362 92 Q380 80 398 92 L398 112" fill="none" stroke="#e0b070" stroke-width="5"/>
+  <text x="414" y="108" fill="#8fd0ff" font-size="12" font-weight="700">10 · SALIDA: SENDERO DEL LAGO</text>
+  <text x="414" y="122" fill="#8fd0ff" font-size="10">cartel «Próximamente» → Escenario 2</text>
+
+  <!-- Detalles de ambiente (no pistas) -->
+  <g fill="#c9b48e" font-size="10">
+    <rect x="440" y="120" width="34" height="9" rx="4" fill="#8b5a2b"/><text x="440" y="142">canoa «Daniel»</text>
+    <circle cx="300" cy="260" r="5" fill="#ffd27a"/><text x="308" y="264">farola parpadeante</text>
+  </g>
+
+  <!-- Pistas -->
+  <g font-size="11" font-weight="700" text-anchor="middle">
+    <g><circle cx="196" cy="458" r="10" fill="#4da3ff"/><text x="196" y="462" fill="#fff">1</text></g>
+    <g><circle cx="162" cy="470" r="10" fill="#ff5a5a"/><text x="162" y="474" fill="#fff">2</text></g>
+    <g><circle cx="236" cy="340" r="10" fill="#4da3ff"/><text x="236" y="344" fill="#fff">3</text></g>
+    <g><circle cx="430" cy="300" r="10" fill="#4da3ff"/><text x="430" y="304" fill="#fff">4</text></g>
+    <g><circle cx="380" cy="340" r="10" fill="#ff5a5a"/><text x="380" y="344" fill="#fff">5</text></g>
+    <g><circle cx="598" cy="380" r="10" fill="#ff5a5a"/><text x="598" y="384" fill="#fff">6</text></g>
+    <g><circle cx="630" cy="380" r="10" fill="#ff5a5a"/><text x="630" y="384" fill="#fff">7</text></g>
+    <g><circle cx="630" cy="404" r="10" fill="#4da3ff"/><text x="630" y="408" fill="#fff">8</text></g>
+    <g><circle cx="598" cy="404" r="10" fill="#4da3ff"/><text x="598" y="408" fill="#fff">9</text></g>
+    <g><circle cx="432" cy="480" r="10" fill="#4da3ff"/><text x="432" y="484" fill="#fff">10</text></g>
+    <g><circle cx="590" cy="164" r="10" fill="#4da3ff"/><text x="590" y="168" fill="#fff">11</text></g>
+    <g><circle cx="180" cy="186" r="10" fill="#ff5a5a" stroke="#fff" stroke-dasharray="3 2"/><text x="180" y="190" fill="#fff">12</text></g>
+    <g><circle cx="580" cy="593" r="10" fill="#9aa7b4"/><text x="580" y="597" fill="#fff">13</text></g>
+  </g>
+
+  <!-- Leyenda -->
+  <g font-size="12" fill="#e8dcc4">
+    <text x="724" y="104" font-size="15" font-weight="700">Pistas</text>
+    <text x="724" y="128">1  interruptor_generador</text>
+    <text x="724" y="148" fill="#ff9a9a">2  candado_caseta ★</text>
+    <text x="724" y="168">3  baul_disfraces (contenedor)</text>
+    <text x="724" y="188">4  lena_intacta</text>
+    <text x="724" y="208" fill="#ff9a9a">5  libro_guardia_quemado ★ (linterna + agachado)</text>
+    <text x="724" y="228" fill="#ff9a9a">6  nota_porky ★ (bajo la almohada)</text>
+    <text x="724" y="248" fill="#ff9a9a">7  foto_grupo ★</text>
+    <text x="724" y="268">8  recorte_periodico</text>
+    <text x="724" y="288">9  oferta_compra (papelera)</text>
+    <text x="724" y="308">10 taza_delantal → llavero de Porky</text>
+    <text x="724" y="328">11 registro_enfermeria (cajón)</text>
+    <text x="724" y="348" fill="#ff9a9a">12 botas_tony ★ (linterna o agachado)</text>
+    <text x="724" y="368" fill="#c0c8d0">13 registro_llamadas (pendiente)</text>
+    <text x="724" y="400" font-size="15" font-weight="700">Símbolos</text>
+    <circle cx="730" cy="420" r="6" fill="#ff5a5a"/><text x="744" y="424">señala a Tony</text>
+    <circle cx="730" cy="442" r="6" fill="#4da3ff"/><text x="744" y="446">pista normal</text>
+    <rect x="724" y="458" width="12" height="12" fill="none" stroke="#ff6b5a" stroke-width="3"/><text x="744" y="469">zona bloqueada por fase</text>
+    <path d="M724 486 h14" stroke="#7a6347" stroke-width="6"/><text x="744" y="490">camino de tierra</text>
+    <text x="724" y="524" font-size="15" font-weight="700">Recorrido esperado</text>
+    <text x="724" y="546">Estacionamiento → Plaza → Almacén</text>
+    <text x="724" y="564">→ Cocina (llavero) → Cabaña Porky</text>
+    <text x="724" y="582">→ Enfermería → Caseta → trasera</text>
+    <text x="724" y="600">de Tony → Salida al sendero</text>
+    <text x="724" y="632" fill="#9aa7b4" font-size="11">Todo menos la cabaña de Porky está</text>
+    <text x="724" y="648" fill="#9aa7b4" font-size="11">abierto desde el inicio.</text>
+  </g>
+</svg>

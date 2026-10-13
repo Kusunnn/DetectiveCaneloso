@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineTallB.glb" id="e1"]
+
+[node name="PinoTallb" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(5.6859, 0.0, 0.0, 0.0, 5.6859, 0.0, 0.0, 0.0, 5.6859, -0.0794, 0.2843, -0.0117)

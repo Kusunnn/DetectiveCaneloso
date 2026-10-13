@@ -108,7 +108,7 @@ public partial class Caso0 : Node
 		Hud.Set("caso", "00");
 		Hud.Set("archivo", "La cinta");
 		Jugador.EvidenciaRegistrada += AlRegistrarEvidencia;
-		Jugador.ObjetoObtenido += _ => { Progreso(); ActualizarObjetivo(); };
+		Jugador.ObjetoObtenido += _ => { Progreso(); ActualizarObjetivo(); Cambio(); };
 		Hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
 
 		Eriz.Usado += () => Conversar(() => Interrogar(_eriz, OpcionesEriz, EvidenciaEriz));
@@ -131,7 +131,11 @@ public partial class Caso0 : Node
 		ZonaAndamio.BodyEntered += c => { if (c == Jugador) Indicar("andamio", "Un andamio en medio del pasillo. Paso agachado [C]."); };
 
 		Objetivo("Revisa la grabadora y el reloj de la Sala 1.");
-		CallDeferred(MethodName.Presentacion);
+		PrepararGuia();
+		PrepararPartida();
+		PrepararCapitulo();
+		// Partida cargada: se restaura; nueva: tarjeta de título y presentación
+		CallDeferred(MethodName.Empezar);
 	}
 
 	private Personaje CrearPersonaje(string nombre, Npc npc, int animo)
@@ -153,7 +157,7 @@ public partial class Caso0 : Node
 			"Sigue grabando, pero sin cinta. Y el reloj se paró a las 3:12.",
 			"¿Qué pasó aquí a las 3:12?");
 		_enDialogo = false;
-		Indicar("inicio", "[W A S D] para caminar. Me acerco a la grabadora y presiono [E].");
+		Indicar("inicio", "Me acerco a la grabadora y presiono [E].");
 	}
 
 	// ---------- Pistas y progreso ----------
@@ -162,6 +166,7 @@ public partial class Caso0 : Node
 	{
 		_pistas.Add(id);
 		Progreso();
+		Autoguardar("Pista: " + id);
 		switch (id)
 		{
 			case Grabadora:
@@ -218,6 +223,7 @@ public partial class Caso0 : Node
 	{
 		_sinProgreso = 0;
 		_nivelAyuda = 0;
+		if (Guia != null) Guia.Insistencia = 0;
 	}
 
 	// ---------- Tablero de deducción ----------
@@ -250,6 +256,7 @@ public partial class Caso0 : Node
 		if (_deducciones.Add(id))
 		{
 			_conclusiones.Add(conclusion);
+			Cambio();
 			Hud.Call("avisar", "DEDUCCIÓN", "+1 CONCLUSIÓN");
 			Hud.Call("agregar_nota", "Deducción: " + conclusion);
 			Sonidos.ReproducirUI(this, Sonidos.Tipo.Deduccion);
@@ -275,6 +282,7 @@ public partial class Caso0 : Node
 		_enDialogo = true;
 		Dialogo.Retener();
 		await conversacion();
+		if (!IsInsideTree()) return; // El caso se cerró y ya se cambió de escena
 		Dialogo.Soltar();
 		_enDialogo = false;
 		ActualizarObjetivo();
@@ -291,6 +299,7 @@ public partial class Caso0 : Node
 			_ => "Responsable de la comisaría y de la investigación sobre la cinta. Puede aclarar el uso de la grabadora y autorizar el acceso a los vestidores.",
 		};
 		Hud.Call("registrar_persona", p.Nombre, resumen, Dialogo.Retrato(p.Nombre));
+		if (_hablados.Add(p.Nombre)) Cambio();
 		while (true)
 		{
 			// Una pregunta ya hecha desaparece (su respuesta queda en la libreta [Q]); vuelve a salir
@@ -299,15 +308,18 @@ public partial class Caso0 : Node
 			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Mostrarle una prueba del expediente" });
 			lista.Add(new Opcion { Id = "adios", Texto = "Seguir investigando" });
 			var vistas = lista.Select(o => new OpcionVista(o.Texto, o.Tipo)).ToList();
+			SugerirEnDialogo(p, evidencia: false);
 			int elegida = await Dialogo.Elegir(p.Hablante, "¿Qué le digo?", vistas, salir: vistas.Count - 1);
 			var opcion = lista[elegida];
 			if (opcion.Id == "adios") break;
-			if (opcion.Id != "evidencia") p.Leidas.Add(Lectura(p, opcion));
+			if (opcion.Id != "evidencia" && p.Leidas.Add(Lectura(p, opcion))) Cambio();
 			if (opcion.Id == "evidencia")
 			{
 				var pistas = Cartas().Where(c => c.Tipo == "PISTA").Select(c => (c.Id, c.Titulo, c.Imagen)).ToList();
+				SugerirEnDialogo(p, evidencia: true);
 				string id = await Dialogo.ElegirEvidencia(p.Hablante, pistas);
 				if (id == null) continue;
+				Cambio();
 				if (!await evidencia(p, id))
 				{
 					CambiarAnimo(p, -1);
@@ -494,6 +506,8 @@ public partial class Caso0 : Node
 			PuertaVestuario.Desbloquear();
 			Jugador.MostrarAviso("Nueva zona disponible: Vestidores", 4.0);
 			Progreso();
+			Cambio();
+			Autoguardar("Zona desbloqueada");
 		} },
 		new Opcion { Id = "c_presionar", Tipo = "PRESIONAR", Texto = "¿Seguro que no tocó la grabadora anoche?", Visible = () => !p.Confeso, Accion = async () =>
 		{
@@ -553,6 +567,7 @@ public partial class Caso0 : Node
 		int rec = await Dialogo.Elegir(_caneloso, "¿Por qué estaba la grabadora grabando de madrugada?",
 			new List<OpcionVista> { new("Porky la dejó encendida"), new("Eriz la puso en marcha al limpiar"), new("El comisario la dejó en REC como trampa") });
 		_intentosAcusacion++;
+		Cambio();
 
 		if (quien != 1 || porque != 1 || rec != 2)
 		{
@@ -575,34 +590,14 @@ public partial class Caso0 : Node
 			: "Alguien más estuvo aquí a las 3:12. ¿Por dónde entró?");
 		Nota("En la cinta, a las 3:12, una voz desconocida: «La Garra no olvida, Caneloso».");
 		Objetivo("Caso cerrado... por ahora. ¿Quién es «La Garra»?");
-		await MostrarCalificacion();
-		if (GestorPartida.Instancia != null)
-		{
-			GestorPartida.Instancia.SaltarTutorial = true;
-			GestorPartida.Instancia.GuardarPartida();
-		}
-	}
-
-	// Calificación final para motivar a rejugar
-	private Task MostrarCalificacion()
-	{
-		int pistas = _pistas.Count;
-		int deducciones = _deducciones.Count;
-		int confrontaciones = _confrontaciones.Count;
-		bool primera = _intentosAcusacion == 1;
-		int puntos = pistas * 10 + deducciones * 10 + confrontaciones * 5 + (primera ? 20 : 0);
-		string nota = puntos >= 145 ? "S" : puntos >= 120 ? "A" : puntos >= 90 ? "B" : "C";
-		var tiempo = TimeSpan.FromSeconds(_tiempoCaso);
-		return Dialogo.Decir(Dialogo.HablantePorNombre("Informe del caso"),
-			$"Pistas: {pistas}/{PistasTotales}{(_pistas.Contains(Pluma) ? " (¡con la secreta!)" : "")} · Deducciones: {deducciones}/4 · Confrontaciones: {confrontaciones}/4",
-			$"Al primer intento: {(primera ? "sí" : "no (" + _intentosAcusacion + " intentos)")} · Tiempo: {(int)tiempo.TotalMinutes} min {tiempo.Seconds:00} s",
-			$"CALIFICACIÓN: {nota}. " + (nota == "S" ? "Impecable, detective." : "Todavía quedan secretos en la estación."));
+		await CerrarCaso();
 	}
 
 	// ---------- Zonas y tutorial ----------
 
 	private void AlEntrarPasillo()
 	{
+		_entroPasillo = true;
 		if (!Jugador.LinternaEncendida && !_pistas.Contains(Huellas))
 			Indicar("linterna", "No veo nada. Prendo la linterna [F].");
 	}
@@ -633,15 +628,22 @@ public partial class Caso0 : Node
 
 	public override void _Process(double delta)
 	{
+		ActualizarGuia(delta);
 		if (_resuelto) return;
 		_tiempoCaso += delta;
 		if (_enDialogo || Tablero.Abierto) return;
 		_sinProgreso += delta;
+		if (_tutorial)
+		{
+			AyudaGradual();
+			return;
+		}
+		// Sin tutorial: solo pensamientos, más espaciados
 		if ((_nivelAyuda == 0 && _sinProgreso > 100) || (_nivelAyuda == 1 && _sinProgreso > 200))
 		{
 			_nivelAyuda++;
 			string ayuda = Ayuda(_nivelAyuda);
-			if (ayuda != null) Jugador.MostrarPensamiento(ayuda, 6.0);
+			if (ayuda != null) Jugador.MostrarPensamiento(ConTeclas(ayuda), 6.0);
 		}
 	}
 
@@ -650,7 +652,13 @@ public partial class Caso0 : Node
 		if (evento.IsActionPressed("deducir") && !_enDialogo && !Tablero.Abierto)
 		{
 			GetViewport().SetInputAsHandled();
+			SugerirEnTablero();
 			Tablero.Abrir();
+		}
+		else if (evento.IsActionPressed("ayuda") && !_enDialogo && !Tablero.Abierto && !_resuelto)
+		{
+			GetViewport().SetInputAsHandled();
+			RepetirAyuda();
 		}
 	}
 
@@ -690,23 +698,26 @@ public partial class Caso0 : Node
 
 	private Task Habla(Personaje p, params string[] lineas) => Dialogo.Decir(p.Hablante, lineas);
 
-	private Task Piensa(params string[] lineas) => Dialogo.Decir(_caneloso, lineas);
+	private Task Piensa(params string[] lineas) => Dialogo.Decir(_caneloso, lineas.Select(ConTeclas).ToArray());
 
-	private void Pensar(string texto) => Jugador.MostrarPensamiento(texto, 5.0);
+	private void Pensar(string texto) => Jugador.MostrarPensamiento(ConTeclas(texto), 5.0);
 
 	private void Nota(string texto)
 	{
 		Hud.Call("agregar_nota", texto);
+		Cambio();
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Nota);
 		Indicar("libreta", "Lo apunto en mi libreta [Q].");
 	}
 
-	private void Objetivo(string texto) => Hud.Set("objetivo", texto);
+	private void Objetivo(string texto) => Hud.Set("objetivo", ConTeclas(texto));
 
 	// Indicación del tutorial, una sola vez (nada si se omitió el tutorial)
 	private void Indicar(string clave, string texto)
 	{
 		if (!_tutorial || !_indicacionesDadas.Add(clave)) return;
+		texto = ConTeclas(texto);
+		_ultimaIndicacion = texto;
 		Jugador.MostrarIndicacion(texto);
 	}
 }

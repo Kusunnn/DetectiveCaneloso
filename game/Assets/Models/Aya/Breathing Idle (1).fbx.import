@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://gaksym50ufv0"
-path="res://.godot/imported/Breathing Idle (1).fbx-d421c57951a4d83ad98096e5673585ee.scn"
+path="res://.godot/imported/Breathing Idle (1).fbx-d5735a0dc03dab2c1372d878cbacb5c2.scn"
 
 [deps]
 
-source_file="res://Aya/Breathing Idle (1).fbx"
-dest_files=["res://.godot/imported/Breathing Idle (1).fbx-d421c57951a4d83ad98096e5673585ee.scn"]
+source_file="res://Assets/Models/Aya/Breathing Idle (1).fbx"
+dest_files=["res://.godot/imported/Breathing Idle (1).fbx-d5735a0dc03dab2c1372d878cbacb5c2.scn"]
 
 [params]
 
@@ -43,7 +43,7 @@ _subresources={
 "animations": {
 "mixamo_com": {
 "save_to_file/enabled": true,
-"save_to_file/fallback_path": "res://Aya/Inaya.res",
+"save_to_file/fallback_path": "res://Assets/Models/Aya/Inaya.res",
 "save_to_file/keep_custom_tracks": "",
 "save_to_file/path": "uid://dvci1usmxuebm",
 "settings/loop_mode": 0,

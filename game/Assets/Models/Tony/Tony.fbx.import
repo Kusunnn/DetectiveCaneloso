@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://c45ycjvivsoef"
-path="res://.godot/imported/Tony.fbx-a33bf0c1b3918a31a071f49f9d81c0b8.scn"
+path="res://.godot/imported/Tony.fbx-25fbd1aa6a5329c778af3b910cfe6f0e.scn"
 
 [deps]
 
-source_file="res://Tony/Tony.fbx"
-dest_files=["res://.godot/imported/Tony.fbx-a33bf0c1b3918a31a071f49f9d81c0b8.scn"]
+source_file="res://Assets/Models/Tony/Tony.fbx"
+dest_files=["res://.godot/imported/Tony.fbx-25fbd1aa6a5329c778af3b910cfe6f0e.scn"]
 
 [params]
 
@@ -43,7 +43,7 @@ _subresources={
 "animations": {
 "mixamo_com": {
 "save_to_file/enabled": true,
-"save_to_file/fallback_path": "res://Tony/CaminaTony.res",
+"save_to_file/fallback_path": "res://Assets/Models/Tony/CaminaTony.res",
 "save_to_file/keep_custom_tracks": "",
 "save_to_file/path": "uid://b4ea8jg3wi1n2",
 "settings/loop_mode": 0,

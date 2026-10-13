@@ -57,6 +57,11 @@ custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 text = "Reanudar"
 
+[node name="BotonGuardar" type="Button" parent="Raiz/PantallaPrincipal/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Guardar partida"
+
 [node name="BotonCodice" type="Button" parent="Raiz/PantallaPrincipal/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -71,6 +76,11 @@ text = "Opciones"
 unique_name_in_owner = true
 layout_mode = 2
 text = "Volver al menú de inicio"
+
+[node name="BotonSalirJuego" type="Button" parent="Raiz/PantallaPrincipal/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Salir del juego"
 
 [node name="CodiceReglas" parent="Raiz" instance=ExtResource("2")]
 unique_name_in_owner = true

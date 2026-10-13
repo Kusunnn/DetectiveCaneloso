@@ -87,6 +87,19 @@ public partial class Contenedor : StaticBody3D, IInteractuable
 		EmitSignal(SignalName.Abierto);
 	}
 
+	// Al cargar una partida: deja el contenedor como estaba, sin animación, sonido ni mensajes
+	public void RestaurarEstado(bool abierto, bool revisado)
+	{
+		Revisado = revisado;
+		if (MarcaRevisado != null) MarcaRevisado.Visible = revisado;
+		EstaAbierto = abierto;
+		if (Parte == null) return;
+		if (TipoMovimiento == Movimiento.Girar)
+			Parte.Rotation = abierto ? _rotacionCerrada + EjeGiro * Mathf.DegToRad(AnguloApertura) : _rotacionCerrada;
+		else
+			Parte.Position = abierto ? _posicionCerrada + Desplazamiento : _posicionCerrada;
+	}
+
 	private void Mover(bool abrir)
 	{
 		EstaAbierto = abrir;

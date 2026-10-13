@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/supervivencia/bottle.glb" id="e1"]
+
+[node name="Botella" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("e1")]
+transform = Transform3D(1.8197, 0.0, 0.0, 0.0, 1.8197, 0.0, 0.0, 0.0, 1.8197, 0.0, 0.0, 0.0)

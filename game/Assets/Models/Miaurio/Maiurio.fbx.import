@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cgsjurox1l1jp"
-path="res://.godot/imported/Maiurio.fbx-5dbadaebbb53ce25f6aa0038f577fc30.scn"
+path="res://.godot/imported/Maiurio.fbx-577a556e3a1e58b966917de8114b38a8.scn"
 
 [deps]
 
-source_file="res://Miaurio/Maiurio.fbx"
-dest_files=["res://.godot/imported/Maiurio.fbx-5dbadaebbb53ce25f6aa0038f577fc30.scn"]
+source_file="res://Assets/Models/Miaurio/Maiurio.fbx"
+dest_files=["res://.godot/imported/Maiurio.fbx-577a556e3a1e58b966917de8114b38a8.scn"]
 
 [params]
 

@@ -11,6 +11,8 @@ signal linterna_cambiada(encendida: bool)
 @export_range(0.2, 30.0) var segundos_inactividad: float = 3.0
 @export var interaccion: String = ""
 @export var rueda_habilitada: bool = true
+# Dónde se investiga, para el texto de la galería vacía («Explora la comisaría…»)
+@export var lugar: String = "la comisaría"
 var pistas: Array[Pista] = []
 var indice_pista: int = 0
 const DURACION_CAMBIO_PISTA := 0.24
@@ -448,7 +450,7 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 
 func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
 	if pistas.is_empty():
-		_parrafo("Todavía no has reunido pistas. Explora la comisaría para empezar tu colección.", p + Vector2(38, 188), 504, 17, TINTA)
+		_parrafo("Todavía no has reunido pistas. Explora %s para empezar tu colección." % lugar, p + Vector2(38, 188), 504, 17, TINTA)
 		return
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
 	var raton := _lienzo.get_local_mouse_position() / escala

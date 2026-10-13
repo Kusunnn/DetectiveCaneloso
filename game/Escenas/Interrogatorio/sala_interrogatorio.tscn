@@ -19,6 +19,8 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="21_musica"]
 [ext_resource type="AudioStream" path="res://Assets/Audio/Musica/investigacion.ogg" id="22_musica_ogg"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="23_cartel"]
+[ext_resource type="Script" path="res://Escenas/UI/GuiaTutorial.cs" id="24_guia"]
+[ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="25_mando"]
 
 [sub_resource type="StandardMaterial3D" id="Material_techo"]
 albedo_color = Color(0.1, 0.1, 0.1, 1)
@@ -739,7 +741,7 @@ transform = Transform3D(0.939, 0, -0.343, 0, 1, 0, 0.343, 0, 0.939, 1.1, 0.5, -3
 [node name="VentanaDialogo" type="CanvasLayer" parent="."]
 script = ExtResource("12_dialogo")
 
-[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio", "Tablero", "Musica")]
+[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio", "Tablero", "Musica", "Guia")]
 script = ExtResource("13_caso")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
@@ -758,6 +760,7 @@ CasilleroPorky = NodePath("../ZonaVestuario/CasilleroPorky")
 ZonaAndamio = NodePath("../ZonaPasillo/AreaAndamio")
 Tablero = NodePath("../TableroDeduccion")
 Musica = NodePath("../MusicaFondo")
+Guia = NodePath("../GuiaTutorial")
 [node name="PuertaSalaColision" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.97, 1.55, 2.5)
 collision_layer = 2
@@ -941,3 +944,9 @@ grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("Tex_vineta")
 expand_mode = 1
+
+[node name="GuiaTutorial" type="Node" parent="."]
+script = ExtResource("24_guia")
+
+[node name="MandoHud" type="Node" parent="."]
+script = ExtResource("25_mando")
