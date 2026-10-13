@@ -28,6 +28,124 @@ var _moviendo: bool = false
 var _ayuda_alpha: float = 1.0
 var _aviso: float = 0.0
 var diario_abierto: bool = false
+var tablero_abierto: bool = false
+# Posiciones en el espacio de referencia del pizarrón; se conservan al cerrar R.
+var _tarjetas_tablero: Dictionary = {}
+var _arrastre_pista: int = -1
+var _arrastre_desde_tablero: bool = false
+var _arrastre_inicio := Vector2.ZERO
+var _arrastre_actual := Vector2.ZERO
+var _nota_tablero: String = ""
+var _pistas_sugeridas: Array[String] = []
+var _arrastre_offset := Vector2.ZERO
+var _arrastrando: bool = false
+const TAM_TARJETA := Vector2(190, 154)
+const ORIGEN_DIARIO_TABLERO := Vector2(-80, 270)
+const ESCALA_DIARIO_TABLERO := 0.56
+
+func sugerir_tablero(nota: String, ids: Array[String]) -> void:
+	_nota_tablero = nota
+	_pistas_sugeridas = ids
+
+func abrir_tablero() -> void:
+	if _expediente and _expediente.abierto:
+		_expediente.cerrar()
+	tablero_abierto = true
+	diario_abierto = true
+	_giro = 0.0
+	_zonas_libro.clear()
+	panel_cambiado.emit(true, false)
+
+func cerrar_tablero() -> void:
+	tablero_abierto = false
+	_nota_tablero = ""
+	_pistas_sugeridas.clear()
+	diario_abierto = false
+	_arrastre_pista = -1
+	_arrastrando = false
+	panel_cambiado.emit(false, false)
+
+func _raton_referencia() -> Vector2:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	return _lienzo.get_local_mouse_position() / escala
+
+func _raton_libro() -> Vector2:
+	var raton := _raton_referencia()
+	return (raton - ORIGEN_DIARIO_TABLERO) / ESCALA_DIARIO_TABLERO if tablero_abierto else raton
+
+func _zona_pizarron() -> Rect2:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	return Rect2(740, 156, _lienzo.size.x / escala - 780, _lienzo.size.y / escala - 236)
+
+func _input_tablero(event: InputEvent) -> void:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_R, KEY_ESCAPE:
+				cerrar_tablero()
+			KEY_Q:
+				diario_abierto = not diario_abierto
+				_arrastre_pista = -1
+				_arrastrando = false
+			KEY_LEFT, KEY_UP:
+				if diario_abierto: _pasar_hoja(_hoja - 1)
+			KEY_RIGHT, KEY_DOWN:
+				if diario_abierto: _pasar_hoja(_hoja + 1)
+	elif event is InputEventMouseMotion and _arrastre_pista >= 0:
+		_arrastre_actual = event.position / escala
+		if _arrastre_actual.distance_to(_arrastre_inicio) > 6.0:
+			_arrastrando = true
+	elif event is InputEventMouseButton:
+		var raton: Vector2 = event.position / escala
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				var ids := _tarjetas_tablero.keys()
+				ids.reverse()
+				for id in ids:
+					if Rect2(_tarjetas_tablero[id], TAM_TARJETA).has_point(raton):
+						for i in range(pistas.size()):
+							if pistas[i].id == id:
+								_arrastre_pista = i
+								_arrastre_desde_tablero = true
+								_arrastre_inicio = raton
+								_arrastre_actual = raton
+								_arrastre_offset = raton - _tarjetas_tablero[id]
+						return
+				if diario_abierto:
+					var local := (raton - ORIGEN_DIARIO_TABLERO) / ESCALA_DIARIO_TABLERO
+					for zona in _zonas_libro:
+						if not zona.rect.has_point(local): continue
+						if zona.has("pista"):
+							_pista_diario = zona.pista
+							_arrastre_pista = zona.pista
+							_arrastre_desde_tablero = false
+							_arrastre_inicio = raton
+							_arrastre_actual = raton
+							_arrastre_offset = TAM_TARJETA / 2
+						elif zona.has("seccion"): _cambiar_seccion(zona.seccion)
+						elif zona.destino == -1: diario_abierto = false
+						else: _pasar_hoja(zona.destino)
+						break
+			else:
+				if _arrastre_pista >= 0 and _arrastrando and _zona_pizarron().has_point(raton):
+					var zona := _zona_pizarron()
+					var posicion := raton - _arrastre_offset
+					posicion = posicion.clamp(zona.position, zona.end - TAM_TARJETA)
+					var id := pistas[_arrastre_pista].id
+					_tarjetas_tablero.erase(id)
+					_tarjetas_tablero[id] = posicion
+				_arrastre_pista = -1
+				_arrastrando = false
+		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+			var ids := _tarjetas_tablero.keys()
+			ids.reverse()
+			for id in ids:
+				if Rect2(_tarjetas_tablero[id], TAM_TARJETA).has_point(raton):
+					_tarjetas_tablero.erase(id)
+					break
+		elif diario_abierto and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+			_pasar_hoja(_hoja + (-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1))
+
 ## Expediente del caso (TAB). La carpeta, el objetivo y la guía de teclas los dibuja este HUD.
 const EXPEDIENTE := preload("res://hud/expediente/expediente_caso.tscn")
 var _expediente: ExpedienteCaso
@@ -72,7 +190,7 @@ func _paginas_libro() -> Array[Dictionary]:
 	for conclusion in conclusiones:
 		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Una conexión confirmada", "texto": conclusion.trim_prefix("Deducción: ")})
 	if conclusiones.is_empty():
-		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Todo está por conectar", "texto": "Une las pistas en el tablero [R]. Las deducciones confirmadas quedarán anotadas aquí."})
+		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Todo está por conectar", "texto": "Organiza las pistas en el pizarrón [R] para explorar tus ideas."})
 	for nota in notas:
 		if not nota.begins_with("Deducción: "):
 			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
@@ -208,6 +326,10 @@ func _process(delta: float) -> void:
 	_lienzo.queue_redraw()
 
 func _input(event: InputEvent) -> void:
+	if tablero_abierto:
+		_input_tablero(event)
+		get_viewport().set_input_as_handled()
+		return
 	# Con el expediente abierto solo cuentan sus teclas; la rueda llega al informe para desplazarlo.
 	if _expediente and _expediente.abierto:
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -406,7 +528,9 @@ func _dibujar() -> void:
 		_lienzo.draw_arc(Vector2(w / 2, h / 2), 13, 0, TAU, 32, Color(AMBAR, 0.9), 2.0, true)
 		_texto("[ E ]  " + interaccion, Vector2(w / 2 - 75, h / 2 + 42), _bold, 26, BLANCO)
 	_dibujar_pistas(w, h)
-	if diario_abierto:
+	if tablero_abierto:
+		_dibujar_tablero(w, h, escala)
+	elif diario_abierto:
 		_dibujar_libro(w, h)
 
 ## Guía de teclas: visible mientras el detective está quieto, igual que el resto de la ayuda.
@@ -423,7 +547,7 @@ func _dibujar_teclas(h: float) -> void:
 
 func _boton_libro(texto: String, rect: Rect2, destino: int, activo: bool = true) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-	var hover := activo and rect.has_point(_lienzo.get_local_mouse_position() / escala)
+	var hover := activo and rect.has_point(_raton_libro())
 	_lienzo.draw_rect(rect, Color("b99a55") if hover else Color("483b30"))
 	_texto(texto, rect.position + Vector2(16, 28), MONO, 15, BLANCO if activo else Color("8c8275"))
 	if activo:
@@ -434,7 +558,8 @@ func _dibujar_libro(w: float, h: float) -> void:
 	var paginas := _paginas_libro()
 	_hoja = clampi(_hoja, 0, (paginas.size() - 1) / 2)
 	var origen := Vector2(w / 2 - 580, h / 2 - 330)
-	_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.03, 0.04, 0.88))
+	if not tablero_abierto:
+		_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.03, 0.04, 0.88))
 	# Cubierta de cuero, cantos de papel y dos páginas unidas por el lomo.
 	_lienzo.draw_rect(Rect2(origen + Vector2(-18, 0), Vector2(1204, 688)), Color(0, 0, 0, 0.35))
 	_lienzo.draw_rect(Rect2(origen + Vector2(-16, -16), Vector2(1192, 688)), Color("483329"))
@@ -470,7 +595,7 @@ func _dibujar_libro(w: float, h: float) -> void:
 		var rect := Rect2(origen + Vector2(i * 210, -68 if activa else -56), Vector2(198, 52 if activa else 40))
 		var color: Color = COLORES_SECCION[seccion]
 		var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-		if rect.has_point(_lienzo.get_local_mouse_position() / escala):
+		if rect.has_point(_raton_libro()):
 			color = color.lightened(0.1)
 		_lienzo.draw_rect(rect, color)
 		_texto(seccion, rect.position + Vector2(16, 27), MONO, 15, TINTA if seccion == "PISTAS" else Color("fff5e8"))
@@ -506,11 +631,12 @@ func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
 		_parrafo("Todavía no has reunido pistas. Explora %s para empezar tu colección." % lugar, p + Vector2(38, 188), 504, 17, TINTA)
 		return
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-	var raton := _lienzo.get_local_mouse_position() / escala
+	var raton := _raton_libro()
 	for i in range(inicio, mini(inicio + PISTAS_POR_HOJA, pistas.size())):
 		var k := i - inicio
 		var rect := Rect2(p + Vector2(38 + (k % 3) * 172, 179 + (k / 3) * 124), Vector2(160, 112))
 		var seleccionada := i == _pista_diario
+		var sugerida := tablero_abierto and str(pistas[i].id) in _pistas_sugeridas
 		var hover := rect.has_point(raton)
 		_lienzo.draw_rect(Rect2(rect.position + Vector2(3, 4), rect.size), Color(0, 0, 0, 0.15))
 		_lienzo.draw_rect(rect, Color("e0c48d") if seleccionada or hover else Color("f5efdf"))
@@ -522,8 +648,8 @@ func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
 		else:
 			_parrafo(pistas[i].titulo, rect.position + Vector2(10, 15), 140, 13, TINTA, 4)
 		_texto("%02d" % (i + 1), rect.position + Vector2(9, 105), MONO, 11, TINTA)
-		if seleccionada:
-			_lienzo.draw_rect(rect, Color("a77e3e"), false, 2.0)
+		if seleccionada or sugerida:
+			_lienzo.draw_rect(rect, AMBAR if sugerida else Color("a77e3e"), false, 2.0)
 		_zonas_libro.append({"rect": rect, "pista": i})
 	_texto("%02d PISTAS  ·  CLIC PARA INSPECCIONAR" % pistas.size(), p + Vector2(38, 574), MONO, 12, Color("75654e"))
 
@@ -564,3 +690,47 @@ func _dibujar_postit_pista(p: Vector2, indice: int, alfa: float = 1.0) -> void:
 			var medida := pista.imagen.get_size() * factor
 			_lienzo.draw_texture_rect(pista.imagen, Rect2(zona.position + (zona.size - medida) / 2, medida), false, Color(1, 1, 1, alfa))
 	_linea(p + Vector2(22, 141), p + Vector2(333, 141), Color(TINTA, 0.2 * alfa))
+
+func _dibujar_tablero(w: float, h: float, escala: float) -> void:
+	_lienzo.draw_rect(Rect2(0, 0, w, h), Color("131b1b"))
+	_texto("PIZARRÓN DE INVESTIGACIÓN", Vector2(44, 66), _bold, 42, Color("f3eddf"))
+	_texto("Arrastra las fotos del diario al pizarrón y acomoda tus pistas.", Vector2(44, 104), MONO, 17, Color("c6c1b1"))
+	if not _nota_tablero.is_empty():
+		_parrafo(_nota_tablero, Vector2(44, 156), 640, 16, AMBAR, 3)
+	var zona := _zona_pizarron()
+	_lienzo.draw_rect(zona.grow(12), Color("73553b"))
+	_lienzo.draw_rect(zona.grow(5), Color("302b24"))
+	_lienzo.draw_rect(zona, Color("24483e"))
+	for i in range(16):
+		var y := zona.position.y + 20 + i * (zona.size.y - 40) / 16
+		_linea(Vector2(zona.position.x + 12, y), Vector2(zona.end.x - 12, y + 3), Color(0.8, 0.9, 0.8, 0.025))
+	if _tarjetas_tablero.is_empty():
+		_parrafo("Toda investigación empieza con una pista.\n\nArrastra una fotografía hasta aquí.", zona.position + Vector2(44, 80), zona.size.x - 88, 20, Color("c1d0bf"), 6)
+	if diario_abierto:
+		_lienzo.draw_set_transform(ORIGEN_DIARIO_TABLERO * escala, 0, Vector2.ONE * escala * ESCALA_DIARIO_TABLERO)
+		_dibujar_libro(1600, 900)
+		_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
+	else:
+		_texto("[Q] ABRIR DIARIO", Vector2(80, 360), _bold, 32, Color("c6c1b1"))
+	for id in _tarjetas_tablero:
+		for i in range(pistas.size()):
+			if pistas[i].id == id:
+				if _arrastrando and _arrastre_desde_tablero and _arrastre_pista == i: continue
+				_dibujar_tarjeta_tablero(i, _tarjetas_tablero[id])
+	if _arrastrando and _arrastre_pista >= 0:
+		_dibujar_tarjeta_tablero(_arrastre_pista, _arrastre_actual - _arrastre_offset)
+	_texto("[Q] Diario   ·   [R / Esc] Cerrar   ·   Clic derecho: retirar pista", Vector2(44, h - 30), MONO, 16, Color("c6c1b1"))
+
+func _dibujar_tarjeta_tablero(indice: int, posicion: Vector2) -> void:
+	var pista := pistas[indice]
+	var rect := Rect2(posicion, TAM_TARJETA)
+	_lienzo.draw_rect(Rect2(posicion + Vector2(4, 6), TAM_TARJETA), Color(0, 0, 0, 0.3))
+	_lienzo.draw_rect(rect, Color("f5efdf"))
+	if pista.imagen:
+		var medida := pista.imagen.get_size()
+		medida *= minf(170.0 / medida.x, 96.0 / medida.y)
+		_lienzo.draw_texture_rect(pista.imagen, Rect2(posicion + Vector2(95, 58) - medida / 2, medida), false)
+		_parrafo(pista.titulo, posicion + Vector2(10, 112), 170, 13, TINTA, 2)
+	else:
+		_parrafo(pista.titulo, posicion + Vector2(12, 28), 166, 17, TINTA, 4)
+	_lienzo.draw_rect(Rect2(posicion + Vector2(68, -5), Vector2(54, 16)), Color(0.76, 0.67, 0.43, 0.8))
