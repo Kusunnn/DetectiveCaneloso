@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/recorte_frente.jpg" id="1_uaocw"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_4jefu"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_jubr6"]
+
+[resource]
+resource_name = "recorte_frente"
+albedo_texture = ExtResource("1_uaocw")
+roughness_texture = ExtResource("3_jubr6")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_4jefu")
+texture_filter = 5

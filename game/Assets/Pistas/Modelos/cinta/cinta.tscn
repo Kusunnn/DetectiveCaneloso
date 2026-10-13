@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/portable_cassette_player/portable_cassette_player_1k.gltf" id="1_modelo"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/etiqueta_cinta.tres" id="2_etiqueta"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_etiqueta"]
+material = ExtResource("2_etiqueta")
+size = Vector2(0.062, 0.0232)
+
+[node name="Cinta" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("1_modelo")]
+transform = Transform3D(0, -1, 0, 0, 0, 1, -1, 0, 0, 0.018, -0.008, 0.077)
+
+[node name="portable_cassette_player" parent="Modelo"]
+visible = false
+
+[node name="portable_cassette_player_lid" parent="Modelo"]
+visible = false
+
+[node name="Etiqueta" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.01225, -0.009)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_etiqueta")
+
+[editable path="Modelo"]

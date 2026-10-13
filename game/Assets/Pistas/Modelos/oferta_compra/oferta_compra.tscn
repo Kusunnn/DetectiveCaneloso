@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/oferta_compra/pedazo_0.res" id="1_jrcj6"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/oferta_compra/pedazo_1.res" id="2_38vgb"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/oferta_compra/pedazo_2.res" id="3_xiew7"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/oferta_compra/pedazo_3.res" id="4_dsqln"]
+
+[node name="Oferta" type="Node3D" unique_id=639130366]
+
+[node name="Pedazo0" type="MeshInstance3D" parent="." unique_id=1828872875]
+transform = Transform3D(0.9689124, 0, 0.24740396, 0, 1, 0, -0.24740396, 0, 0.9689124, 0.010632617, 0, 0.0027764626)
+mesh = ExtResource("1_jrcj6")
+
+[node name="Pedazo1" type="MeshInstance3D" parent="." unique_id=834729192]
+transform = Transform3D(0.921061, 0, -0.38941833, 0, 1, 0, 0.38941833, 0, 0.921061, 0.011403266, 0.0012, 0.018313218)
+mesh = ExtResource("2_38vgb")
+
+[node name="Pedazo2" type="MeshInstance3D" parent="." unique_id=1726903298]
+transform = Transform3D(0.62161, 0, 0.7833269, 0, 1, 0, -0.7833269, 0, 0.62161, -0.028604504, 0.0024, 0.048742667)
+mesh = ExtResource("3_xiew7")
+
+[node name="Pedazo3" type="MeshInstance3D" parent="." unique_id=1483759232]
+transform = Transform3D(0.9887711, 0, -0.14943814, 0, 1, 0, 0.14943814, 0, 0.9887711, -0.016137194, 0.0036, 0.012392428)
+mesh = ExtResource("4_dsqln")

@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/recorte_reverso.jpg" id="1_b2rjn"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_xcxlt"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_88lj5"]
+
+[resource]
+resource_name = "recorte_reverso"
+albedo_texture = ExtResource("1_b2rjn")
+roughness_texture = ExtResource("3_88lj5")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_xcxlt")
+texture_filter = 5

@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/envoltorio/envoltorio.res" id="1_qi8m2"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/miga.tres" id="2_4sw56"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_jhjk5"]
+material = ExtResource("2_4sw56")
+radius = 0.004
+height = 0.005
+radial_segments = 8
+rings = 4
+
+[node name="Envoltorio" type="Node3D" unique_id=1858314944]
+
+[node name="Papel" type="MeshInstance3D" parent="." unique_id=1548408225]
+mesh = ExtResource("1_qi8m2")
+
+[node name="Miga0" type="MeshInstance3D" parent="." unique_id=136226639]
+transform = Transform3D(0.9665328, 0, 0, 0, 0.9665328, 0, 0, 0, 0.9665328, 0.06966568, 0.016, 0.031148437)
+mesh = SubResource("SphereMesh_jhjk5")
+
+[node name="Miga1" type="MeshInstance3D" parent="." unique_id=1689700110]
+transform = Transform3D(0.66384876, 0, 0, 0, 0.66384876, 0, 0, 0, 0.66384876, 0.0042313635, 0.016, -0.009914633)
+mesh = SubResource("SphereMesh_jhjk5")
+
+[node name="Miga2" type="MeshInstance3D" parent="." unique_id=1497981182]
+transform = Transform3D(0.67712677, 0, 0, 0, 0.67712677, 0, 0, 0, 0.67712677, -0.06661323, 0.016, 0.049349006)
+mesh = SubResource("SphereMesh_jhjk5")
+
+[node name="Miga3" type="MeshInstance3D" parent="." unique_id=2033076493]
+transform = Transform3D(0.8937436, 0, 0, 0, 0.8937436, 0, 0, 0, 0.8937436, -0.008884866, 0.016, 0.007615119)
+mesh = SubResource("SphereMesh_jhjk5")
+
+[node name="Miga4" type="MeshInstance3D" parent="." unique_id=734568259]
+transform = Transform3D(1.187911, 0, 0, 0, 1.187911, 0, 0, 0, 1.187911, 0.010733299, 0.016, -0.04847364)
+mesh = SubResource("SphereMesh_jhjk5")
+
+[node name="Miga5" type="MeshInstance3D" parent="." unique_id=1526429652]
+transform = Transform3D(0.78138447, 0, 0, 0, 0.78138447, 0, 0, 0, 0.78138447, -0.022912893, 0.016, -0.036940344)
+mesh = SubResource("SphereMesh_jhjk5")
+
+[node name="Miga6" type="MeshInstance3D" parent="." unique_id=505447685]
+transform = Transform3D(0.6135954, 0, 0, 0, 0.6135954, 0, 0, 0, 0.6135954, -0.01603286, 0.016, -0.04235207)
+mesh = SubResource("SphereMesh_jhjk5")

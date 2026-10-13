@@ -9,6 +9,9 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e7"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/AnimacionPersonaje.cs" id="anim"]
 [ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/libro_turnos/libro_turnos.tscn" id="hu07_m_libro"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/nota_comisario/nota_comisario.tscn" id="hu07_m_nota"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/nota_comisario/nota_comisario.tscn" id="hu07_x_nota"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_suelo"]
 albedo_color = Color(0.3, 0.19, 0.1, 1)
@@ -128,8 +131,7 @@ material = SubResource("Mat_encimera")
 size = Vector3(3.3, 0.04, 0.72)
 
 [sub_resource type="BoxShape3D" id="Shape_0p42_0p14_0p34"]
-size = Vector3(0.42, 0.14, 0.34)
-
+size = Vector3(0.44, 0.04, 0.31)
 [sub_resource type="BoxMesh" id="Box_0p32_0p05_0p24_Mat_libro"]
 material = SubResource("Mat_libro")
 size = Vector3(0.32, 0.05, 0.24)
@@ -740,11 +742,8 @@ Lugar = "Recepción · mostrador"
 
 [node name="Colision" type="CollisionShape3D" parent="LibroTurnos"]
 shape = SubResource("Shape_0p42_0p14_0p34")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
 
-[node name="Malla" type="MeshInstance3D" parent="LibroTurnos"]
-mesh = SubResource("Box_0p32_0p05_0p24_Mat_libro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
 [node name="FocoMostrador" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 16.6, 3.2, 0.8)
 light_color = Color(1, 0.85, 0.6, 1)
@@ -1107,14 +1106,11 @@ Descripcion = "«Dejar la grabadora de la Sala 1 en REC esta noche. Veremos qui�
 SeRecoge = true
 DescripcionAmpliada = "Una hoja doblada en el cajón del escritorio del comisario: «Dejar la grabadora de la Sala 1 en REC esta noche. Veremos quién duerme en la guardia. — B.»"
 Lugar = "Recepción · cajón del escritorio"
+ModeloExamen = ExtResource("hu07_x_nota")
 
 [node name="Colision" type="CollisionShape3D" parent="CajonEscritorio1/Movil/NotaComisario"]
 shape = SubResource("Shape_0p22_0p04_0p16")
 
-[node name="Papel" type="MeshInstance3D" parent="CajonEscritorio1/Movil/NotaComisario"]
-mesh = SubResource("Box_0p18_0p006_0p13_Mat_papel")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
 [node name="CajonEscritorio2" parent="." instance=ExtResource("e5")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 18.52, 0.58, 5.4)
 Nombre = "Cajón del escritorio"
@@ -1538,3 +1534,9 @@ TamPixel = 0.0025
 ColorPapel = Color(0.82, 0.8, 0.72, 1)
 ColorTexto = Color(0.12, 0.1, 0.08, 1)
 AltoMaximo = 0.6
+
+[node name="Modelo" parent="LibroTurnos" instance=ExtResource("hu07_m_libro")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Modelo" parent="CajonEscritorio1/Movil/NotaComisario" instance=ExtResource("hu07_m_nota")]
+transform = Transform3D(0, 0, 0.85, 0, 0.85, 0, -0.85, 0, 0, 0, -0.003, 0)

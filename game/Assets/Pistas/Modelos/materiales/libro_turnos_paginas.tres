@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/libro_turnos_paginas.jpg" id="1_ldcgg"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_5bvdx"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_vy5v7"]
+
+[resource]
+resource_name = "libro_turnos_paginas"
+albedo_texture = ExtResource("1_ldcgg")
+roughness_texture = ExtResource("3_vy5v7")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_5bvdx")
+texture_filter = 5

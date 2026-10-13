@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/taza_delantal/taza.tscn" id="1_taza"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/delantal/delantal.tscn" id="2_delantal"]
+
+[node name="TazaDelantal" type="Node3D"]
+
+[node name="Delantal" parent="." instance=ExtResource("2_delantal")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0.55, -0.06)
+
+[node name="Taza" parent="." instance=ExtResource("1_taza")]
+transform = Transform3D(1.31064, 0, 0.91772, 0, 1.6, 0, -0.91772, 0, 1.31064, 0.02, 0, 0.08)
+

@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/rubber_boots/rubber_boots_1k.gltf" id="1_modelo"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/junco.tres" id="2_junco"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/barro.tres" id="3_barro"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_junco"]
+material = ExtResource("2_junco")
+size = Vector3(0.006, 0.002, 0.16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lodo"]
+material = ExtResource("3_barro")
+size = Vector3(0.06, 0.002, 0.09)
+
+[node name="Botas" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("1_modelo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 0, 0)
+
+[node name="rubber_boots_l" parent="Modelo"]
+visible = false
+
+[node name="rubber_boots_r" parent="Modelo"]
+visible = false
+
+[node name="rubber_boots_dirty_l" parent="Modelo"]
+transform = Transform3D(0.99027, 0, -0.13917, 0, 1, 0, 0.13917, 0, 0.99027, 0.39, 0, 0.02)
+
+[node name="rubber_boots_dirt_r" parent="Modelo"]
+transform = Transform3D(0.97815, 0, 0.20791, 0, 1, 0, -0.20791, 0, 0.97815, 0.22, 0, -0.03)
+
+[node name="Lodo" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.99027, 0, -0.13917, 0, 1, 0, 0.13917, 0, 0.99027, 0.09, -0.0012, 0.04)
+mesh = SubResource("BoxMesh_lodo")
+
+[node name="Junco0" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.97815, 0, 0.20791, 0, 1, 0, -0.20791, 0, 0.97815, 0.08, -0.0018, 0.03)
+mesh = SubResource("BoxMesh_junco")
+
+[node name="Junco1" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.90631, 0, -0.42262, 0, 1, 0, 0.42262, 0, 0.90631, 0.1, -0.0021, 0.01)
+mesh = SubResource("BoxMesh_junco")
+
+[node name="Junco2" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.99863, 0, -0.05234, 0, 1, 0, 0.05234, 0, 0.99863, 0.092, -0.0024, 0.06)
+mesh = SubResource("BoxMesh_junco")
+
+[node name="Detalle_juncos" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0.09, -0.003, 0.03)
+
+[editable path="Modelo"]

@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/registro_llamadas_frente.jpg" id="1_aninc"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_4sg76"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_p4qh1"]
+
+[resource]
+resource_name = "registro_llamadas_frente"
+albedo_texture = ExtResource("1_aninc")
+roughness_texture = ExtResource("3_p4qh1")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_4sg76")
+texture_filter = 5

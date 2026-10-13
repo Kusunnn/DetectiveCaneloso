@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/power_box_01/power_box_01_1k.gltf" id="1_modelo"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/interruptor_generador/palanca.tscn" id="2_palanca"]
+
+[node name="Interruptor" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("1_modelo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.047)
+
+[node name="Palanca" parent="." instance=ExtResource("2_palanca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.193, 0.07, 0.03)
+

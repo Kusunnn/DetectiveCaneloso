@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/huellas/piso.res" id="1_7tojc"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/huellas/huella.tscn" id="2_nmb30"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/huella_albedo.png" id="3_rhvle"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/huella_normal.png" id="4_ih8xl"]
+
+[node name="MoldeHuellas" type="Node3D" unique_id=1294783889]
+
+[node name="Piso" type="MeshInstance3D" parent="." unique_id=222682422]
+mesh = ExtResource("1_7tojc")
+
+[node name="Huella" type="Decal" parent="." unique_id=1476475128 instance=ExtResource("2_nmb30")]
+transform = Transform3D(0.99875027, 0, 0.04997917, 0, 1, 0, -0.04997917, 0, 0.99875027, -0.08, 0.04, 0.1)
+size = Vector3(0.11, 0.06, 0.29)
+texture_albedo = ExtResource("3_rhvle")
+texture_normal = ExtResource("4_ih8xl")
+normal_fade = 0.3
+
+[node name="@Decal@4" type="Decal" parent="." unique_id=739432091 instance=ExtResource("2_nmb30")]
+transform = Transform3D(0.9992001, 0, -0.039989334, 0, 1, 0, 0.039989334, 0, 0.9992001, 0.08, 0.04, -0.12)
+size = Vector3(0.11, 0.06, 0.29)
+texture_albedo = ExtResource("3_rhvle")
+texture_normal = ExtResource("4_ih8xl")
+normal_fade = 0.3

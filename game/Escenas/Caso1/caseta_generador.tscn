@@ -15,6 +15,8 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pala.tscn" id="e13"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pico.tscn" id="e14"]
 [ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/interruptor_generador.png" id="e15"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/interruptor_generador/interruptor_generador.tscn" id="hu07_m_interruptor"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/candado_caseta/candado_caseta.tscn" id="hu07_m_candado"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(2.376, 2.2, 0.396)
@@ -65,8 +67,7 @@ outer_radius = 0.035
 material = SubResource("StandardMaterial3D_13")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_15"]
-size = Vector3(0.3, 0.35, 0.3)
-
+size = Vector3(0.06, 0.09, 0.05)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_16"]
 albedo_color = Color(0.72, 0.56, 0.22, 1.0)
 roughness = 0.35
@@ -121,8 +122,7 @@ material = SubResource("StandardMaterial3D_24")
 size = Vector3(1.45, 1.0, 0.85)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_27"]
-size = Vector3(0.15, 0.7, 0.6)
-
+size = Vector3(0.38, 0.52, 0.12)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_28"]
 albedo_color = Color(0.5, 0.52, 0.54, 1.0)
 roughness = 0.5
@@ -299,16 +299,8 @@ DescripcionAmpliada = "Un candado de latón abierto, colgado de la argolla. No t
 Lugar = "Caseta del generador · puerta"
 
 [node name="Forma" type="CollisionShape3D" parent="Candado"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.08, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.09, 0)
 shape = SubResource("BoxShape3D_15")
-
-[node name="Arco" type="MeshInstance3D" parent="Candado"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, -0.035, 0.0)
-mesh = SubResource("TorusMesh_17")
-
-[node name="Cuerpo" type="MeshInstance3D" parent="Candado"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.11, 0.0)
-mesh = SubResource("BoxMesh_18")
 
 [node name="Generador" type="Node3D" parent="." groups=["apoyar_suelo"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.9, 0.039999977, 11.1)
@@ -395,31 +387,8 @@ DescripcionAmpliada = "El interruptor principal del tablero está abajo. El gene
 Lugar = "Caseta del generador"
 
 [node name="Forma" type="CollisionShape3D" parent="Interruptor"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, 0, 0.02)
 shape = SubResource("BoxShape3D_27")
-
-[node name="Tablero" type="MeshInstance3D" parent="Interruptor"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
-mesh = SubResource("BoxMesh_29")
-
-[node name="Palanca" type="MeshInstance3D" parent="Interruptor"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.8192, -0.5736, 0.0, 0.5736, 0.8192, 0.05, -0.08, 0.06)
-mesh = SubResource("BoxMesh_31")
-
-[node name="Etiqueta" type="Node3D" parent="Interruptor"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.1, 0.17, 0.041)
-script = ExtResource("e8")
-Texto = "PRINCIPAL
-▲ ENCENDIDO
-▼ APAGADO"
-Ancho = 0.22
-ColorPapel = Color(0.9, 0.9, 0.85, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 22
-TamMinimo = 8
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0012
 
 [node name="Cable" type="MeshInstance3D" parent="." groups=["auditoria_colgado"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, -26.37, 1.95, 11.8)
@@ -451,3 +420,9 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Caseta"]
 shape = SubResource("BoxShape3D_35")
+
+[node name="Modelo" parent="Interruptor" instance=ExtResource("hu07_m_interruptor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.04)
+
+[node name="Modelo" parent="Candado" instance=ExtResource("hu07_m_candado")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.13, 0)

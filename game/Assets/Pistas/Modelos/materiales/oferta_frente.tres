@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/oferta_frente.jpg" id="1_x4o2t"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_s25uq"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_vul7a"]
+
+[resource]
+resource_name = "oferta_frente"
+albedo_texture = ExtResource("1_x4o2t")
+roughness_texture = ExtResource("3_vul7a")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_s25uq")
+texture_filter = 5

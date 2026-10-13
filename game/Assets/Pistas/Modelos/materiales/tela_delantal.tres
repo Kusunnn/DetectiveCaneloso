@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_Color.jpg" id="1_06fl1"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_NormalGL.jpg" id="2_7c4rj"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_Roughness.jpg" id="3_scn5l"]
+
+[resource]
+resource_name = "tela_delantal"
+cull_mode = 2
+albedo_color = Color(0.78, 0.36, 0.3, 1)
+albedo_texture = ExtResource("1_06fl1")
+roughness_texture = ExtResource("3_scn5l")
+normal_enabled = true
+normal_texture = ExtResource("2_7c4rj")
+uv1_scale = Vector3(6, 6, 6)
+uv1_triplanar = true

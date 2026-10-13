@@ -1,0 +1,49 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/cassette_player/cassette_player_1k.gltf" id="1_modelo"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/etiqueta_grabadora.tres" id="2_etiqueta"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/luz_rec.tres" id="3_luz"]
+[ext_resource type="FontFile" path="res://hud/fonts/IBMPlexMono-Regular.ttf" id="4_fuente"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_etiqueta"]
+material = ExtResource("2_etiqueta")
+size = Vector2(0.105, 0.0574)
+
+[sub_resource type="SphereMesh" id="SphereMesh_luz"]
+material = ExtResource("3_luz")
+radius = 0.0028
+height = 0.0034
+radial_segments = 12
+rings = 6
+
+[node name="Grabadora" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("1_modelo")]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0, 0)
+
+[node name="cassette_player_tape" parent="Modelo"]
+visible = false
+
+[node name="LuzRec" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.047, 0.0495, 0.088)
+cast_shadow = 0
+mesh = SubResource("SphereMesh_luz")
+
+[node name="Contador" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, -0.03, 0.0494, 0.064)
+pixel_size = 0.00028
+modulate = Color(1, 0.15, 0.08, 1)
+outline_size = 0
+font = ExtResource("4_fuente")
+font_size = 44
+text = "03:12"
+
+[node name="EtiquetaInferior" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, -0.0006, -0.01)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_etiqueta")
+
+[node name="Detalle_etiqueta" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 0, -0.001, -0.01)
+
+[editable path="Modelo"]

@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/taza_manchas.png" id="1_mycuk"]
+
+[resource]
+resource_name = "ceramica_taza"
+albedo_texture = ExtResource("1_mycuk")
+roughness = 0.15
+clearcoat_enabled = true
+clearcoat = 0.6

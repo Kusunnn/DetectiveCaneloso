@@ -10,6 +10,9 @@
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/eriz.glb" id="e8"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/AnimacionPersonaje.cs" id="anim"]
 [ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/huellas/huella.tscn" id="hu07_m_huella"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/huellas/huellas_molde.tscn" id="hu07_x_huellas"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/envoltorio/envoltorio.tscn" id="hu07_m_envoltorio"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_suelo"]
 albedo_color = Color(0.13, 0.14, 0.16, 1)
@@ -862,6 +865,7 @@ Descripcion = "Huellas de barro con suela de bota reglamentaria, de las que usan
 RequiereLinterna = true
 DescripcionAmpliada = "Huellas de barro con el dibujo de una bota reglamentaria de la comisaría. Salen de la Sala 1 y van hacia los vestidores. Con la linterna se ve que el que las dejó caminaba deprisa."
 Lugar = "Pasillo"
+ModeloExamen = ExtResource("hu07_x_huellas")
 
 [node name="Colision" type="CollisionShape3D" parent="Huellas"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
@@ -869,51 +873,6 @@ shape = SubResource("Shape_7p8_0p06_0p9")
 
 [node name="Marcas" type="Node3D" parent="Huellas" groups=["solo_con_linterna"]]
 
-[node name="Huella0" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6, 0.004, 0.12)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Huella1" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 0.004, -0.12)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Huella2" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.004, 0.12)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Huella3" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9, 0.004, -0.12)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Huella4" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.004, 0.12)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Huella5" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.004, -0.12)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Huella6" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.004, 0.12)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Huella7" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, -3.2, 0, -0.35)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Huella8" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, -3.95, 0, -0.72)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
 [node name="Envoltorio" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.5, 5.05)
 collision_layer = 8
@@ -933,21 +892,6 @@ shape = SubResource("Shape_0p4_0p08_0p35")
 
 [node name="Marcas" type="Node3D" parent="Envoltorio" groups=["solo_con_linterna"]]
 
-[node name="Papel" type="MeshInstance3D" parent="Envoltorio/Marcas"]
-transform = Transform3D(0.9063, 0, 0.4226, 0, 1, 0, -0.4226, 0, 0.9063, 0, 0.01, 0)
-mesh = SubResource("Box_0p22_0p015_0p16_Mat_envoltorio")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Miga1" type="MeshInstance3D" parent="Envoltorio/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.008, 0.08)
-mesh = SubResource("Box_0p02_0p012_0p02_Mat_carton")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Miga2" type="MeshInstance3D" parent="Envoltorio/Marcas"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.008, -0.06)
-mesh = SubResource("Box_0p015_0p01_0p015_Mat_carton")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
 [node name="ComentarioBotas" type="StaticBody3D" parent="." node_paths=PackedStringArray("Visuales")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2, 5.36)
 collision_layer = 8
@@ -1271,21 +1215,6 @@ collision_mask = 4
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3, 2, 4.3)
 shape = SubResource("Shape_23_3_2p2")
 
-[node name="Huella9" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(0.17365, 0, 0.98481, 0, 1, 0, -0.98481, 0, 0.17365, -4.2, 0, -1.05)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="HuellaSala1" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(0.5, 0, -0.86603, 0, 1, 0, 0.86603, 0, 0.5, 4.85, 0, -0.85)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="HuellaSala2" type="MeshInstance3D" parent="Huellas/Marcas"]
-transform = Transform3D(0.86603, 0, -0.5, 0, 1, 0, 0.5, 0, 0.86603, 4.3, 0, -0.4)
-mesh = SubResource("Box_0p28_0p006_0p11_Mat_barro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
 [node name="ColisionPuerta" type="CollisionShape3D" parent="Huellas"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.95, 0.03, -0.75)
 shape = SubResource("Shape_huellas_puerta")
@@ -1459,3 +1388,42 @@ TamPixel = 0.0025
 ColorPapel = Color(0.86, 0.84, 0.8, 1)
 ColorTexto = Color(0.6, 0.08, 0.06, 1)
 AltoMaximo = 0.6
+
+[node name="Huella0" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 3.6, 0.014, 0.12)
+
+[node name="Huella1" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 2.7, 0.014, -0.12)
+
+[node name="Huella2" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.8, 0.014, 0.12)
+
+[node name="Huella3" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0.9, 0.014, -0.12)
+
+[node name="Huella4" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0.014, 0.12)
+
+[node name="Huella5" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -0.9, 0.014, -0.12)
+
+[node name="Huella6" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -1.8, 0.014, 0.12)
+
+[node name="Huella7" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(-0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, -0.5, -3.2, 0.01, -0.35)
+
+[node name="Huella8" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(-0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, -0.86603, -3.95, 0.01, -0.72)
+
+[node name="Huella9" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(-0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, -0.98481, -4.2, 0.01, -1.05)
+
+[node name="HuellaSala1" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0.86603, 0, 0.5, 0, 1, 0, -0.5, 0, 0.86603, 4.85, 0.01, -0.85)
+
+[node name="HuellaSala2" parent="Huellas/Marcas" instance=ExtResource("hu07_m_huella")]
+transform = Transform3D(0.5, 0, 0.86603, 0, 1, 0, -0.86603, 0, 0.5, 4.3, 0.01, -0.4)
+
+[node name="Modelo" parent="Envoltorio/Marcas" instance=ExtResource("hu07_m_envoltorio")]
+transform = Transform3D(0.90631, 0, 0.42262, 0, 1, 0, -0.42262, 0, 0.90631, 0, 0.002, 0)

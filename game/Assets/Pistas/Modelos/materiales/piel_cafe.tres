@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Leather037/Leather037_Color.jpg" id="1_xd8qv"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Leather037/Leather037_NormalGL.jpg" id="2_tycf5"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Leather037/Leather037_Roughness.jpg" id="3_r0w3u"]
+
+[resource]
+resource_name = "piel_cafe"
+albedo_color = Color(0.55, 0.35, 0.22, 1)
+albedo_texture = ExtResource("1_xd8qv")
+roughness_texture = ExtResource("3_r0w3u")
+normal_enabled = true
+normal_texture = ExtResource("2_tycf5")
+uv1_scale = Vector3(4, 4, 4)
+uv1_triplanar = true

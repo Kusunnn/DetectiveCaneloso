@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/lampara_techo.tscn" id="e25"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
 [ext_resource type="Resource" path="res://Datos/Detalles/registro_enfermeria_tachon.tres" id="hu07_det_tachon"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/registro_enfermeria/registro_enfermeria.tscn" id="hu07_m_registro"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(0.3, 2.6, 0.78)
@@ -99,8 +100,7 @@ edge_fade = 0.2
 size = Vector3(1.6558, 0.8457, 0.9031)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_21"]
-size = Vector3(0.6, 0.5, 0.5)
-
+size = Vector3(0.5, 0.05, 0.36)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_22"]
 albedo_color = Color(0.05, 0.05, 0.12, 1.0)
 roughness = 0.6
@@ -393,28 +393,8 @@ Lugar = "Enfermería · cajón del escritorio"
 Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_tachon")])
 
 [node name="Forma" type="CollisionShape3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.24, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 shape = SubResource("BoxShape3D_21")
-
-[node name="Libreta" type="Node3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.012, 0.0)
-script = ExtResource("e12")
-Texto = "REGISTRO 14/VIII
-22:10 raspón
-23:20 ________
-00:40 en calma"
-Ancho = 0.3
-ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 24
-TamMinimo = 8
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0011
-
-[node name="Tachon" type="MeshInstance3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 0.021, 0.0187)
-mesh = SubResource("BoxMesh_tachon_hu07")
 
 [node name="Silla" parent="." instance=ExtResource("e17") groups=["apoyar_suelo"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 24.9, 0.06, -24.8031)
@@ -522,15 +502,5 @@ monitorable = false
 [node name="Forma" type="CollisionShape3D" parent="Enfermeria"]
 shape = SubResource("BoxShape3D_36")
 
-[node name="Surcos" type="Label3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro" groups=["examen_linterna"]]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.0235, 0.0187)
-visible = false
-pixel_size = 0.0004
-shaded = true
-modulate = Color(0.95, 0.9, 0.78, 0.85)
-outline_size = 0
-text = "23:20 ruido en el lago"
-font_size = 40
-
-[node name="Detalle_tachon" type="Marker3D" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"]
-transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, 0.024, 0.0187)
+[node name="Modelo" parent="Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro" instance=ExtResource("hu07_m_registro")]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 0, 0.004, 0)
