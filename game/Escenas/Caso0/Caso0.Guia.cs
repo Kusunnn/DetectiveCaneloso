@@ -76,7 +76,7 @@ public partial class Caso0
 				Ayuda = () => En(Eriz, "interactuar", "Hablar con Eriz", false, 2.0f), Destino = () => Eriz, NombreDestino = "Eriz" },
 			new() { Id = "evidencia", Mecanica = "Presentar evidencia (2 pasos)", Hecho = () => _eriz.Confeso,
 				Ayuda = () => En(Eriz, "interactuar", "Muéstrale la envoltura a Eriz", false, 2.0f), Destino = () => Eriz, NombreDestino = "Eriz" },
-			new() { Id = "libreta", Mecanica = "Libreta [Q]", Hecho = () => _vioLibreta,
+			new() { Id = "libreta", Mecanica = "Notas en el diario [Q]", Hecho = () => _vioLibreta,
 				Disponible = () => Hud.Get("notas").AsGodotArray().Count > 0,
 				Ayuda = () => new PasoGuia { Accion = "libreta", Texto = "Repasa tus notas" } },
 			new() { Id = "libro", Mecanica = "Recoger una pista", Hecho = () => _pistas.Contains(Turnos),

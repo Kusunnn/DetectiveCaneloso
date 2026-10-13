@@ -55,3 +55,19 @@ Están en `Assets/Pistas/Modelos/`. Los de Poly Haven se usan en glTF con textur
 | firmas | Fuentes/HomemadeApple-Regular.ttf | Google Fonts · Homemade Apple | Font Diner | Apache 2.0 | https://fonts.google.com/specimen/Homemade+Apple |
 | recorte_periodico, oferta_compra (membrete) | Fuentes/OldStandard-Regular.ttf, OldStandard-Bold.ttf | Google Fonts · Old Standard TT | Alexey Kryukov | SIL OFL 1.1 | https://fonts.google.com/specimen/Old+Standard+TT |
 | el resto de las pistas (papeles, candado, taza, delantal, leña, pluma, envoltorio, huellas, corona, palanca) | Modelos/<pista>/ y Modelos/generadas/ | Hechos para el proyecto con Herramientas/Pistas/generar_modelos.gd y generar_texturas.gd | Equipo Detective Caneloso | Del proyecto | — |
+
+## Cinemática de inicio de capítulo y expediente
+
+El escritorio está en `Escenas/Cinematicas/escritorio_noir.tscn` y los modelos en `Assets/Cinematicas/Modelos/polyhaven/` (glTF con texturas de 1K). La carpeta, las hojas, el lápiz y el sello se arman en la escena; el contenido de las hojas se dibuja con los datos del `InformeCaso`.
+
+| Objeto | Archivo | Fuente | Autor | Licencia | Enlace |
+|---|---|---|---|---|---|
+| escritorio | Cinematicas/Modelos/polyhaven/WoodenTable_01/ | Poly Haven · Wooden Table 01 | Ethan Place | CC0 1.0 | https://polyhaven.com/a/WoodenTable_01 |
+| lámpara | Cinematicas/Modelos/polyhaven/desk_lamp_arm_01/ | Poly Haven · Desk Lamp Arm 01 | Yann Kervran, Kuutti Siitonen | CC0 1.0 | https://polyhaven.com/a/desk_lamp_arm_01 |
+| reloj despertador | Cinematicas/Modelos/polyhaven/alarm_clock_01/ | Poly Haven · Alarm Clock 01 | Yann Kervran, James Ray Cock | CC0 1.0 | https://polyhaven.com/a/alarm_clock_01 |
+| libreta y notas adhesivas | Cinematicas/Modelos/polyhaven/office_notepads/ | Poly Haven · Office Notepads | Ulan Cabanilla | CC0 1.0 | https://polyhaven.com/a/office_notepads |
+| lupa | Cinematicas/Modelos/polyhaven/magnifying_glass_01/ | Poly Haven · Magnifying Glass 01 | Nazar Borodavka | CC0 1.0 | https://polyhaven.com/a/magnifying_glass_01 |
+| taza | Pistas/Modelos/taza_delantal/taza.tscn | Hecha para el proyecto | Equipo Detective Caneloso | Del proyecto | — |
+| papel de la carpeta y las hojas | Pistas/Modelos/texturas/Paper005 | ambientCG · Paper 005 | ambientCG (Lennart Demes) | CC0 1.0 | https://ambientcg.com/view?id=Paper005 |
+| foto del expediente del Caso 1 | hud/expediente/fotos/caso_01_embarcadero.png | Captura del campamento con `Herramientas/foto_expediente.gd` | Equipo Detective Caneloso | Del proyecto | — |
+| embarcadero del lago | Escenas/Caso1/embarcadero.tscn | Hecho para el proyecto | Equipo Detective Caneloso | Del proyecto | — |

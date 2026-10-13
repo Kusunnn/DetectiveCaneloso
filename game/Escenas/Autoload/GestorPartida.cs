@@ -140,6 +140,14 @@ public partial class GestorPartida : Node
 		var lineas = capitulo.Anteriormente.ToList();
 		if (modo == Presentacion.Inicio)
 		{
+			// Si el caso tiene expediente, la primera vez se presenta con la cinemática (ya trae la tarjeta del título)
+			string caso = capitulo.Numero.ToString("00");
+			if (IntroCaso.Disponible(caso) && !IntroCaso.Vista(caso))
+			{
+				var intro = IntroCaso.Reproducir(this, caso, aviso: true);
+				await ToSignal(intro, IntroCaso.SignalName.Terminada);
+				return;
+			}
 			await _tarjeta.MostrarTitulo(capitulo);
 			// El primer caso no tiene "anteriormente"; los demás lo muestran al empezar
 			if (capitulo.Numero > 0 && lineas.Count > 0) await _tarjeta.MostrarAnteriormente(lineas);

@@ -1,0 +1,323 @@
+[gd_scene load_steps=40 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Cinematicas/Modelos/polyhaven/WoodenTable_01/WoodenTable_01_1k.gltf" id="1_mesa"]
+[ext_resource type="PackedScene" path="res://Assets/Cinematicas/Modelos/polyhaven/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf" id="2_lampara"]
+[ext_resource type="PackedScene" path="res://Assets/Cinematicas/Modelos/polyhaven/alarm_clock_01/alarm_clock_01_1k.gltf" id="3_reloj"]
+[ext_resource type="PackedScene" path="res://Assets/Cinematicas/Modelos/polyhaven/office_notepads/office_notepads_1k.gltf" id="4_libretas"]
+[ext_resource type="PackedScene" path="res://Assets/Cinematicas/Modelos/polyhaven/magnifying_glass_01/magnifying_glass_01_1k.gltf" id="5_lupa"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/taza_delantal/taza.tscn" id="6_taza"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Color.jpg" id="7_papel"]
+[ext_resource type="FontFile" path="res://Assets/Fuentes/BigShouldersDisplay-Variable.ttf" id="8_titulos"]
+[ext_resource type="FontFile" path="res://Assets/Fuentes/SpecialElite-Regular.ttf" id="9_maquina"]
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 1
+background_color = Color(0.008, 0.01, 0.014, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.32, 0.38, 0.5, 1)
+ambient_light_energy = 0.12
+tonemap_mode = 3
+tonemap_exposure = 0.9
+ssao_enabled = true
+ssao_radius = 0.25
+ssao_intensity = 1.6
+glow_enabled = true
+glow_intensity = 0.35
+glow_bloom = 0.04
+glow_hdr_threshold = 1.2
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.035
+volumetric_fog_albedo = Color(0.8, 0.8, 0.85, 1)
+volumetric_fog_length = 6.0
+volumetric_fog_detail_spread = 1.5
+adjustment_enabled = true
+adjustment_contrast = 1.08
+adjustment_saturation = 0.78
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributes_1"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 1.4
+dof_blur_far_transition = 0.6
+dof_blur_near_enabled = true
+dof_blur_near_distance = 0.5
+dof_blur_near_transition = 0.25
+dof_blur_amount = 0.05
+
+[sub_resource type="StandardMaterial3D" id="Mat_piso"]
+albedo_color = Color(0.09, 0.07, 0.06, 1)
+roughness = 0.85
+
+[sub_resource type="PlaneMesh" id="Mesh_piso"]
+material = SubResource("Mat_piso")
+size = Vector2(8, 8)
+
+[sub_resource type="StandardMaterial3D" id="Mat_pared"]
+albedo_color = Color(0.16, 0.15, 0.14, 1)
+roughness = 0.95
+
+[sub_resource type="PlaneMesh" id="Mesh_pared"]
+material = SubResource("Mat_pared")
+size = Vector2(6, 3)
+orientation = 2
+
+[sub_resource type="StandardMaterial3D" id="Mat_manila"]
+albedo_color = Color(0.78, 0.64, 0.42, 1)
+albedo_texture = ExtResource("7_papel")
+roughness = 0.92
+uv1_scale = Vector3(0.6, 0.6, 0.6)
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="Mat_manila_interior"]
+albedo_color = Color(0.86, 0.74, 0.52, 1)
+albedo_texture = ExtResource("7_papel")
+roughness = 0.95
+uv1_scale = Vector3(0.6, 0.6, 0.6)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="Mesh_base"]
+material = SubResource("Mat_manila_interior")
+size = Vector3(0.235, 0.002, 0.305)
+
+[sub_resource type="BoxMesh" id="Mesh_tapa"]
+material = SubResource("Mat_manila")
+size = Vector3(0.235, 0.002, 0.305)
+
+[sub_resource type="BoxMesh" id="Mesh_pestana"]
+material = SubResource("Mat_manila")
+size = Vector3(0.012, 0.002, 0.07)
+
+[sub_resource type="StandardMaterial3D" id="Mat_hoja_izq"]
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Mat_hoja_der"]
+roughness = 0.9
+
+[sub_resource type="PlaneMesh" id="Mesh_hoja_izq"]
+material = SubResource("Mat_hoja_izq")
+size = Vector2(0.216, 0.279)
+
+[sub_resource type="PlaneMesh" id="Mesh_hoja_der"]
+material = SubResource("Mat_hoja_der")
+size = Vector2(0.216, 0.279)
+
+[sub_resource type="StandardMaterial3D" id="Mat_hoja_suelta"]
+albedo_color = Color(0.9, 0.87, 0.78, 1)
+albedo_texture = ExtResource("7_papel")
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="Mesh_hoja_suelta"]
+material = SubResource("Mat_hoja_suelta")
+size = Vector3(0.21, 0.001, 0.275)
+
+[sub_resource type="StandardMaterial3D" id="Mat_lapiz"]
+albedo_color = Color(0.85, 0.62, 0.12, 1)
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="Mesh_lapiz"]
+material = SubResource("Mat_lapiz")
+top_radius = 0.0036
+bottom_radius = 0.0036
+height = 0.165
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_punta"]
+albedo_color = Color(0.82, 0.68, 0.5, 1)
+roughness = 0.8
+
+[sub_resource type="CylinderMesh" id="Mesh_punta"]
+material = SubResource("Mat_punta")
+top_radius = 0.0
+bottom_radius = 0.0036
+height = 0.018
+radial_segments = 6
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_foco"]
+albedo_color = Color(1, 0.9, 0.7, 1)
+emission_enabled = true
+emission = Color(1, 0.78, 0.48, 1)
+emission_energy_multiplier = 0.0
+
+[sub_resource type="SphereMesh" id="Mesh_foco"]
+material = SubResource("Mat_foco")
+radius = 0.018
+height = 0.036
+radial_segments = 12
+rings = 6
+
+[sub_resource type="StandardMaterial3D" id="Mat_polvo"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1, 0.88, 0.7, 0.55)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="Mesh_polvo"]
+material = SubResource("Mat_polvo")
+size = Vector2(0.0022, 0.0022)
+
+[sub_resource type="Curve" id="Curve_polvo"]
+_data = [Vector2(0, 0), 0.0, 4.0, 0, 0, Vector2(0.3, 1), 0.0, 0.0, 0, 0, Vector2(0.7, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -4.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTex_polvo"]
+curve = SubResource("Curve_polvo")
+
+[sub_resource type="ParticleProcessMaterial" id="Particulas_polvo"]
+emission_shape = 3
+emission_box_extents = Vector3(0.45, 0.32, 0.35)
+direction = Vector3(0.3, 1, 0.1)
+spread = 180.0
+initial_velocity_min = 0.004
+initial_velocity_max = 0.018
+gravity = Vector3(0, -0.002, 0)
+turbulence_enabled = true
+turbulence_noise_strength = 0.4
+turbulence_noise_scale = 2.0
+scale_min = 0.6
+scale_max = 1.6
+alpha_curve = SubResource("CurveTex_polvo")
+
+[node name="EscritorioNoir" type="Node3D"]
+
+[node name="Entorno" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="Piso" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh_piso")
+
+[node name="Pared" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -1.1)
+mesh = SubResource("Mesh_pared")
+
+[node name="Mesa" parent="." instance=ExtResource("1_mesa")]
+
+[node name="Lampara" parent="." instance=ExtResource("2_lampara")]
+transform = Transform3D(-0.9063, 0, -0.4226, 0, 1, 0, 0.4226, 0, -0.9063, -0.35, 0.549, -0.335)
+
+[node name="Foco" type="MeshInstance3D" parent="Lampara"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.635, -0.175)
+mesh = SubResource("Mesh_foco")
+
+[node name="Reloj" parent="." instance=ExtResource("3_reloj")]
+transform = Transform3D(-0.2588, 0, -0.9659, 0, 1, 0, 0.9659, 0, -0.2588, 0.56, 0.6148, -0.2)
+
+[node name="Libretas" parent="." instance=ExtResource("4_libretas")]
+transform = Transform3D(0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, 0.9397, -0.43, 0.549, 0.13)
+
+[node name="Lupa" parent="." instance=ExtResource("5_lupa")]
+transform = Transform3D(0.7071, -0.7071, 0, 0, 0, 1, -0.7071, -0.7071, 0, 0.43, 0.5625, 0.2)
+
+[node name="Taza" parent="." instance=ExtResource("6_taza")]
+transform = Transform3D(0.9659, 0, 0.2588, 0, 1, 0, -0.2588, 0, 0.9659, 0.46, 0.549, -0.02)
+
+[node name="HojaSuelta" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.9848, 0, -0.1736, 0, 1, 0, 0.1736, 0, 0.9848, 0.08, 0.5497, -0.12)
+mesh = SubResource("Mesh_hoja_suelta")
+
+[node name="Lapiz" type="Node3D" parent="."]
+transform = Transform3D(0.5, 0.866, 0, 0, 0, -1, -0.866, 0.5, 0, 0.27, 0.5526, -0.06)
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Lapiz"]
+mesh = SubResource("Mesh_lapiz")
+
+[node name="Punta" type="MeshInstance3D" parent="Lapiz"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0915, 0)
+mesh = SubResource("Mesh_punta")
+
+[node name="Carpeta" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5495, 0.02)
+
+[node name="Base" type="MeshInstance3D" parent="Carpeta"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1175, 0.001, 0)
+mesh = SubResource("Mesh_base")
+
+[node name="HojaDerecha" type="MeshInstance3D" parent="Carpeta"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1175, 0.0022, 0)
+mesh = SubResource("Mesh_hoja_der")
+
+[node name="Tapa" type="Node3D" parent="Carpeta"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0035, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Carpeta/Tapa"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1175, 0.001, 0)
+mesh = SubResource("Mesh_tapa")
+
+[node name="Pestana" type="MeshInstance3D" parent="Carpeta/Tapa"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2405, 0.001, -0.07)
+mesh = SubResource("Mesh_pestana")
+
+[node name="HojaIzquierda" type="MeshInstance3D" parent="Carpeta/Tapa"]
+transform = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, 1, 0.1175, -0.0001, 0)
+mesh = SubResource("Mesh_hoja_izq")
+
+[node name="Archivo" type="Label3D" parent="Carpeta/Tapa"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.1175, 0.00215, -0.105)
+pixel_size = 0.00012
+modulate = Color(0.18, 0.14, 0.1, 0.9)
+text = "ARCHIVO 001"
+font = ExtResource("9_maquina")
+font_size = 120
+outline_size = 0
+
+[node name="Sello" type="Label3D" parent="Carpeta/Tapa"]
+transform = Transform3D(0.9744, -0.225, 0, 0, 0, 1, -0.225, -0.9744, 0, 0.1175, 0.0023, 0.02)
+pixel_size = 0.00016
+modulate = Color(0.72, 0.13, 0.11, 0.85)
+text = "CONFIDENCIAL"
+font = ExtResource("8_titulos")
+font_size = 220
+outline_size = 0
+
+[node name="LuzLampara" type="SpotLight3D" parent="."]
+transform = Transform3D(-0.4895, 0.7597, -0.4281, 0.0000, 0.4909, 0.8712, 0.8720, 0.4265, -0.2403, -0.255, 1.13, -0.13)
+light_color = Color(1, 0.8, 0.55, 1)
+light_energy = 0.0
+light_volumetric_fog_energy = 1.4
+shadow_enabled = true
+shadow_blur = 1.5
+spot_range = 2.0
+spot_attenuation = 0.6
+spot_angle = 34.0
+spot_angle_attenuation = 1.4
+
+[node name="LuzPersiana" type="SpotLight3D" parent="."]
+transform = Transform3D(-0.5547, -0.4811, 0.6788, 0.0000, 0.8159, 0.5783, -0.8321, 0.3208, -0.4526, 1.4, 1.7, -0.9)
+light_color = Color(0.55, 0.66, 0.92, 1)
+light_energy = 6.0
+light_volumetric_fog_energy = 2.0
+shadow_enabled = true
+spot_range = 4.5
+spot_attenuation = 0.4
+spot_angle = 26.0
+spot_angle_attenuation = 0.6
+
+[node name="Relleno" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 1.0, 1.0)
+light_color = Color(0.45, 0.55, 0.8, 1)
+light_energy = 0.12
+omni_range = 3.0
+
+[node name="Polvo" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+amount = 90
+lifetime = 9.0
+preprocess = 9.0
+visibility_aabb = AABB(-1, -1, -1, 2, 2, 2)
+process_material = SubResource("Particulas_polvo")
+draw_pass_1 = SubResource("Mesh_polvo")
+
+[node name="Rig" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0.95)
+
+[node name="Camara" type="Camera3D" parent="Rig"]
+attributes = SubResource("CameraAttributes_1")
+current = true
+fov = 45.0
+near = 0.01
+far = 20.0

@@ -36,7 +36,7 @@ var _expediente: ExpedienteCaso
 ## Zona de la carpeta del caso (en coordenadas de referencia 1600×900) para abrir con clic.
 const ZONA_CARPETA := Rect2(48, 36, 300, 96)
 ## Guía de teclas de la esquina inferior izquierda; se desvanece mientras el detective camina.
-const TECLAS := [["Q", "Libreta"], ["F", "Linterna"], ["R", "Tablero"], ["TAB", "Expediente"]]
+const TECLAS := [["Q", "Diario"], ["F", "Linterna"], ["R", "Tablero"], ["TAB", "Expediente"]]
 const ROJO_AVISO := Color("e0463c")
 var linterna_encendida: bool = false
 ## Diario del caso (Q): pistas, deducciones, testimonios y personas.
@@ -224,7 +224,7 @@ func agregar_nota(texto: String) -> bool:
 	if texto.is_empty() or notas.has(texto):
 		return false
 	notas.append(texto)
-	avisar("LIBRETA ACTUALIZADA", "+1 NOTA")
+	avisar("DIARIO ACTUALIZADO", "+1 NOTA")
 	return true
 
 ## Aviso superior central (mismo estilo para pistas, notas y deducciones).

@@ -319,7 +319,7 @@ public partial class Caso0 : Node
 		if (_hablados.Add(p.Nombre)) Cambio();
 		while (true)
 		{
-			// Una pregunta ya hecha desaparece (su respuesta queda en la libreta [Q]); vuelve a salir
+			// Una pregunta ya hecha desaparece (su respuesta queda en el diario [Q]); vuelve a salir
 			// solo si ahora tiene algo nuevo que contar, porque el personaje confesó.
 			var lista = opciones(p).Where(o => o.Visible() && !(o.SeOcultaAlLeer && p.Leidas.Contains(Lectura(p, o)))).ToList();
 			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Mostrarle una prueba del diario" });
@@ -597,7 +597,7 @@ public partial class Caso0 : Node
 		if (quien != 1 || porque != 1 || rec != 2)
 		{
 			Sonidos.ReproducirUI(this, Sonidos.Tipo.ErrorAcusacion);
-			await Piensa("Algo no encaja. Repaso el tablero [R] y la libreta [Q].");
+			await Piensa("Algo no encaja. Repaso el tablero [R] y el diario [Q].");
 			Progreso();
 			return;
 		}
@@ -732,7 +732,7 @@ public partial class Caso0 : Node
 		Hud.Call("agregar_nota", texto);
 		Cambio();
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Nota);
-		Indicar("libreta", "Lo apunto en mi libreta [Q].");
+		Indicar("libreta", "Lo apunto en mi diario [Q].");
 	}
 
 	private void Objetivo(string texto) => Hud.Set("objetivo", ConTeclas(texto));
