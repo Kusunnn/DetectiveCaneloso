@@ -30,7 +30,7 @@ public partial class Caso1 : Node
 
 	private const string Llavero = "llavero_porky";
 
-	// HU-07: detalles que solo aparecen examinando la evidencia (entradas nuevas del expediente)
+	// HU-07: detalles que solo aparecen examinando la evidencia (entradas nuevas del diario)
 	private const string LibroAntonio = "libro_guardia_quemado.antonio";
 	private const string FotoDedicatoria = "foto_grupo.dedicatoria";
 	private const string FotoSilbato = "foto_grupo.silbato";

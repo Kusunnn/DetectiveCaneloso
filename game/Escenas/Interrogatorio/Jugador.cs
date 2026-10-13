@@ -35,7 +35,7 @@ public partial class Jugador : CharacterBody3D
 	private Label _textoTutorial;
 	private Node _hud;
 
-	private bool _panelAbierto = false;   // Diario o expediente del HUD
+	private bool _panelAbierto = false;   // Diario [Q] o expediente del caso [TAB]
 	private bool _bloqueado = false;      // Diálogo en curso
 	private int _idAviso = 0;             // Evita que un temporizador viejo oculte un texto nuevo
 	private IInteractuable _apuntado;
@@ -94,7 +94,7 @@ public partial class Jugador : CharacterBody3D
 		_hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
 		if (_hud.HasSignal("pista_seleccionada"))
 			_hud.Connect("pista_seleccionada", Callable.From<Resource>(_ => Sonidos.ReproducirUI(this, Sonidos.Tipo.Pagina)));
-		// [E] / [Examinar] en el expediente o la libreta abre la vista de examen
+		// [E] / [Examinar] en el diario (sección Pistas) abre la vista de examen
 		_hud.Connect("detalle_solicitado", Callable.From<Resource>(Examinar));
 		AlCambiarLinterna(false);
 		_linternaLista = true;
@@ -378,7 +378,7 @@ public partial class Jugador : CharacterBody3D
 		EmitSignal(SignalName.EvidenciaExaminada, pista.Get("id").AsStringName().ToString());
 	}
 
-	// Un detalle descubierto es una entrada NUEVA del expediente ("foto_grupo.silbato"), con la foto del acercamiento
+	// Un detalle descubierto es una entrada NUEVA del diario ("foto_grupo.silbato"), con la foto del acercamiento
 	private void AlDescubrirDetalle(DetalleOculto detalle, Texture2D foto)
 	{
 		if (_pistaExaminada == null) return;
@@ -404,7 +404,7 @@ public partial class Jugador : CharacterBody3D
 
 	// ---------- Partida guardada ----------
 
-	// Al cargar: la pista vuelve al expediente sin sonido, animación ni aviso al caso
+	// Al cargar: la pista vuelve al diario sin sonido, animación ni aviso al caso
 	public void RestaurarEvidencia(string id, string titulo, string descripcion, Texture2D imagen = null)
 	{
 		_hud.Call("agregar_pista", CrearPista(id, titulo, descripcion, imagen));

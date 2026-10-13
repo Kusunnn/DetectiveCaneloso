@@ -59,8 +59,9 @@ public partial class Caso0
 				Ayuda = () => En(grabadora, "interactuar", "Inspeccionar la grabadora", true), Destino = () => grabadora, NombreDestino = "Grabadora" },
 			new() { Id = "reloj", Mecanica = "Inspeccionar [E] (repaso)", Hecho = () => _pistas.Contains(Reloj),
 				Ayuda = () => En(reloj, "interactuar", "Inspeccionar el reloj", true, 0.45f), Destino = () => reloj, NombreDestino = "Reloj" },
-			new() { Id = "expediente", Mecanica = "Pistas del HUD y expediente [TAB]", Hecho = () => _vioExpediente,
-				Ayuda = () => new PasoGuia { Accion = "expediente", Texto = "Tus pistas se guardan aquí", ZonaHud = GuiaTutorial.ZonaPistas } },
+			// Las pistas viven en el diario [Q] (sección Pistas); el expediente [TAB] es la historia del caso
+			new() { Id = "diario", Mecanica = "Pistas en el diario [Q]", Hecho = () => _vioLibreta,
+				Ayuda = () => new PasoGuia { Accion = "libreta", Texto = "Tus pistas se guardan en el diario", ZonaHud = GuiaTutorial.ZonaPistas } },
 			new() { Id = "tablero", Mecanica = "Tablero de deducción [R]", Hecho = () => _deducciones.Contains(D1),
 				Ayuda = () => new PasoGuia { Accion = "deducir", Texto = "Une la grabadora y el reloj" } },
 			new() { Id = "pasillo", Mecanica = "Seguir el objetivo", Hecho = () => _entroPasillo,

@@ -251,7 +251,7 @@ public partial class VistaExamen : CanvasLayer
 			case InputEventKey tecla when tecla.Pressed && !tecla.Echo:
 				switch (tecla.Keycode)
 				{
-					case Key.Escape: case Key.Tab: case Key.Backspace: Cerrar(); break;
+					case Key.Escape: case Key.Q: case Key.Backspace: Cerrar(); break;
 					case Key.R: Reiniciar(); Sonidos.ReproducirUI(this, Sonidos.Tipo.Clic, -4f); break;
 					case Key.F: AlternarLinterna(); break;
 					case Key.E: case Key.Enter: case Key.Space: Confirmar(); break;
@@ -564,7 +564,7 @@ public partial class VistaExamen : CanvasLayer
 		}
 	}
 
-	// Foto del acercamiento para la entrada nueva del expediente (sobre papel oscuro, 4:3)
+	// Foto del acercamiento para la entrada nueva del diario (sobre papel oscuro, 4:3)
 	private Texture2D Fotografiar()
 	{
 		var captura = _mundo.GetTexture().GetImage();

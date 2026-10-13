@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 //       la dejó en REC a propósito. Cabo suelto: una voz desconocida en la cinta a las 3:12.
 public partial class Caso0 : Node
 {
-	// Pistas (expediente)
+	// Pistas (diario [Q])
 	private const string Grabadora = "grabadora";
 	private const string Reloj = "reloj";
 	private const string Huellas = "huellas";
@@ -23,7 +23,7 @@ public partial class Caso0 : Node
 	private const string Cinta = "cinta";
 	private const string Pluma = "pluma";          // Secreta y opcional
 	private const int PistasTotales = 8;
-	// HU-07: detalle oculto que solo aparece examinando la grabadora (entrada nueva del expediente)
+	// HU-07: detalle oculto que solo aparece examinando la grabadora (entrada nueva del diario)
 	private const string GrabadoraEtiqueta = "grabadora.etiqueta";
 
 	// Testimonios que se pueden usar en el tablero
@@ -322,7 +322,7 @@ public partial class Caso0 : Node
 			// Una pregunta ya hecha desaparece (su respuesta queda en la libreta [Q]); vuelve a salir
 			// solo si ahora tiene algo nuevo que contar, porque el personaje confesó.
 			var lista = opciones(p).Where(o => o.Visible() && !(o.SeOcultaAlLeer && p.Leidas.Contains(Lectura(p, o)))).ToList();
-			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Mostrarle una prueba del expediente" });
+			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Mostrarle una prueba del diario" });
 			lista.Add(new Opcion { Id = "adios", Texto = "Seguir investigando" });
 			var vistas = lista.Select(o => new OpcionVista(o.Texto, o.Tipo)).ToList();
 			SugerirEnDialogo(p, evidencia: false);
