@@ -29,6 +29,7 @@ var _ayuda_alpha: float = 1.0
 var _aviso: float = 0.0
 var diario_abierto: bool = false
 var tablero_abierto: bool = false
+var pizarron_espacial: Node3D
 # Posiciones en el espacio de referencia del pizarrón; se conservan al cerrar R.
 var _tarjetas_tablero: Dictionary = {}
 var _arrastre_pista: int = -1
@@ -40,7 +41,12 @@ var _pistas_sugeridas: Array[String] = []
 var _arrastre_offset := Vector2.ZERO
 var _arrastrando: bool = false
 const TAM_TARJETA := Vector2(190, 154)
-const ORIGEN_DIARIO_TABLERO := Vector2(-80, 270)
+func _origen_diario_tablero() -> Vector2:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	var medida := _lienzo.size / escala
+	var mirar_abajo: float = -pizarron_espacial.desplazamiento.y if is_instance_valid(pizarron_espacial) else 0.0
+	return Vector2(medida.x / 2 - 800 * ESCALA_DIARIO_TABLERO, medida.y - 220 - mirar_abajo * 450)
+
 const ESCALA_DIARIO_TABLERO := 0.56
 
 func sugerir_tablero(nota: String, ids: Array[String]) -> void:
@@ -51,12 +57,14 @@ func abrir_tablero() -> void:
 	if _expediente and _expediente.abierto:
 		_expediente.cerrar()
 	tablero_abierto = true
-	diario_abierto = true
+	diario_abierto = false
+	if is_instance_valid(pizarron_espacial): pizarron_espacial.abrir()
 	_giro = 0.0
 	_zonas_libro.clear()
 	panel_cambiado.emit(true, false)
 
 func cerrar_tablero() -> void:
+	if is_instance_valid(pizarron_espacial): pizarron_espacial.cerrar()
 	tablero_abierto = false
 	_nota_tablero = ""
 	_pistas_sugeridas.clear()
@@ -71,14 +79,19 @@ func _raton_referencia() -> Vector2:
 
 func _raton_libro() -> Vector2:
 	var raton := _raton_referencia()
-	return (raton - ORIGEN_DIARIO_TABLERO) / ESCALA_DIARIO_TABLERO if tablero_abierto else raton
+	return (raton - _origen_diario_tablero()) / ESCALA_DIARIO_TABLERO if tablero_abierto else raton
 
 func _zona_pizarron() -> Rect2:
-	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-	return Rect2(740, 156, _lienzo.size.x / escala - 780, _lienzo.size.y / escala - 236)
+	return Rect2(0, 0, 1600, 900)
+
+func _punto_pizarron(pantalla: Vector2) -> Vector2:
+	if is_instance_valid(pizarron_espacial):
+		return pizarron_espacial.pantalla_a_pizarron(pantalla)
+	return pantalla / minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
 
 func _input_tablero(event: InputEvent) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	if is_instance_valid(pizarron_espacial): pizarron_espacial.recibir_raton(event)
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_R, KEY_ESCAPE:
@@ -97,22 +110,12 @@ func _input_tablero(event: InputEvent) -> void:
 			_arrastrando = true
 	elif event is InputEventMouseButton:
 		var raton: Vector2 = event.position / escala
+		var punto_tablero := _punto_pizarron(event.position)
+		var local := (raton - _origen_diario_tablero()) / ESCALA_DIARIO_TABLERO
+		var sobre_libro := diario_abierto and Rect2(202, 104, 1192, 748).has_point(local)
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
-				var ids := _tarjetas_tablero.keys()
-				ids.reverse()
-				for id in ids:
-					if Rect2(_tarjetas_tablero[id], TAM_TARJETA).has_point(raton):
-						for i in range(pistas.size()):
-							if pistas[i].id == id:
-								_arrastre_pista = i
-								_arrastre_desde_tablero = true
-								_arrastre_inicio = raton
-								_arrastre_actual = raton
-								_arrastre_offset = raton - _tarjetas_tablero[id]
-						return
 				if diario_abierto:
-					var local := (raton - ORIGEN_DIARIO_TABLERO) / ESCALA_DIARIO_TABLERO
 					for zona in _zonas_libro:
 						if not zona.rect.has_point(local): continue
 						if zona.has("pista"):
@@ -125,25 +128,37 @@ func _input_tablero(event: InputEvent) -> void:
 						elif zona.has("seccion"): _cambiar_seccion(zona.seccion)
 						elif zona.destino == -1: diario_abierto = false
 						else: _pasar_hoja(zona.destino)
-						break
+						return
+				if sobre_libro: return
+				var ids := _tarjetas_tablero.keys()
+				ids.reverse()
+				for id in ids:
+					if Rect2(_tarjetas_tablero[id], TAM_TARJETA).has_point(punto_tablero):
+						for i in range(pistas.size()):
+							if pistas[i].id == id:
+								_arrastre_pista = i
+								_arrastre_desde_tablero = true
+								_arrastre_inicio = raton
+								_arrastre_actual = raton
+								_arrastre_offset = punto_tablero - _tarjetas_tablero[id]
+						return
 			else:
-				if _arrastre_pista >= 0 and _arrastrando and _zona_pizarron().has_point(raton):
+				if _arrastre_pista >= 0 and _arrastrando and not sobre_libro and _zona_pizarron().has_point(punto_tablero):
 					var zona := _zona_pizarron()
-					var posicion := raton - _arrastre_offset
-					posicion = posicion.clamp(zona.position, zona.end - TAM_TARJETA)
+					var posicion := (punto_tablero - _arrastre_offset).clamp(zona.position, zona.end - TAM_TARJETA)
 					var id := pistas[_arrastre_pista].id
 					_tarjetas_tablero.erase(id)
 					_tarjetas_tablero[id] = posicion
 				_arrastre_pista = -1
 				_arrastrando = false
-		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and not sobre_libro:
 			var ids := _tarjetas_tablero.keys()
 			ids.reverse()
 			for id in ids:
-				if Rect2(_tarjetas_tablero[id], TAM_TARJETA).has_point(raton):
+				if Rect2(_tarjetas_tablero[id], TAM_TARJETA).has_point(punto_tablero):
 					_tarjetas_tablero.erase(id)
 					break
-		elif diario_abierto and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
+		elif sobre_libro and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			_pasar_hoja(_hoja + (-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1))
 
 ## Expediente del caso (TAB). La carpeta, el objetivo y la guía de teclas los dibuja este HUD.
@@ -224,6 +239,7 @@ var _lienzo: Control
 var _bold: FontVariation
 var _medium: FontVariation
 var _papel: ImageTexture
+var _corcho: ImageTexture
 const DISPLAY = preload("res://hud/fonts/BigShouldersDisplay.ttf")
 const MONO = preload("res://hud/fonts/IBMPlexMono-Regular.ttf")
 const AMBAR = Color("efca08")
@@ -236,6 +252,7 @@ func _ready() -> void:
 	_bold = _fuente(800)
 	_medium = _fuente(500)
 	_papel = _crear_papel()
+	_corcho = _crear_corcho()
 	for i in range(4):
 		_papeles_libro.append(_crear_papel_libro(i))
 	_lienzo = Control.new()
@@ -425,6 +442,27 @@ func _parrafo(texto: String, p: Vector2, ancho: float, tam: int, color: Color, m
 func _linea(a: Vector2, b: Vector2, color: Color) -> void:
 	_lienzo.draw_line(a, b, color, 1.0, true)
 
+func _crear_corcho() -> ImageTexture:
+	# Grano fijo de corcho natural: fragmentos cálidos, poros y variación suave.
+	var grano := FastNoiseLite.new()
+	grano.seed = 1947
+	grano.frequency = 0.42
+	var manchas := FastNoiseLite.new()
+	manchas.seed = 318
+	manchas.frequency = 0.025
+	var azar := RandomNumberGenerator.new()
+	azar.seed = 7241
+	var imagen := Image.create(640, 360, false, Image.FORMAT_RGB8)
+	var base := Color("b48a56")
+	for y in range(360):
+		for x in range(640):
+			var variacion := grano.get_noise_2d(x, y) * 0.19 + manchas.get_noise_2d(x, y) * 0.06
+			var poro := azar.randf()
+			if poro < 0.045: variacion -= 0.16
+			elif poro > 0.95: variacion += 0.10
+			imagen.set_pixel(x, y, Color(base.r + variacion, base.g + variacion * 0.85, base.b + variacion * 0.65))
+	return ImageTexture.create_from_image(imagen)
+
 func _crear_papel() -> ImageTexture:
 	# Material generado una sola vez: fibra, humedad y dobleces, sin ruido animado.
 	var ruido := FastNoiseLite.new()
@@ -496,6 +534,9 @@ func _dibujar() -> void:
 	_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
 	var w := size.x / escala
 	var h := size.y / escala
+	if tablero_abierto:
+		_dibujar_tablero(w, h, escala)
+		return
 	# Expediente compacto inspirado en la referencia, sin logotipo.
 	var carpeta := Color("c1a259")
 	_lienzo.draw_colored_polygon(PackedVector2Array([Vector2(57, 53), Vector2(62, 43), Vector2(79, 43), Vector2(85, 49), Vector2(106, 49), Vector2(106, 83), Vector2(57, 83)]), carpeta.darkened(0.22))
@@ -692,34 +733,32 @@ func _dibujar_postit_pista(p: Vector2, indice: int, alfa: float = 1.0) -> void:
 	_linea(p + Vector2(22, 141), p + Vector2(333, 141), Color(TINTA, 0.2 * alfa))
 
 func _dibujar_tablero(w: float, h: float, escala: float) -> void:
-	_lienzo.draw_rect(Rect2(0, 0, w, h), Color("131b1b"))
-	_texto("PIZARRÓN DE INVESTIGACIÓN", Vector2(44, 66), _bold, 42, Color("f3eddf"))
-	_texto("Arrastra las fotos del diario al pizarrón y acomoda tus pistas.", Vector2(44, 104), MONO, 17, Color("c6c1b1"))
-	if not _nota_tablero.is_empty():
-		_parrafo(_nota_tablero, Vector2(44, 156), 640, 16, AMBAR, 3)
-	var zona := _zona_pizarron()
-	_lienzo.draw_rect(zona.grow(12), Color("73553b"))
-	_lienzo.draw_rect(zona.grow(5), Color("302b24"))
-	_lienzo.draw_rect(zona, Color("24483e"))
-	for i in range(16):
-		var y := zona.position.y + 20 + i * (zona.size.y - 40) / 16
-		_linea(Vector2(zona.position.x + 12, y), Vector2(zona.end.x - 12, y + 3), Color(0.8, 0.9, 0.8, 0.025))
-	if _tarjetas_tablero.is_empty():
-		_parrafo("Toda investigación empieza con una pista.\n\nArrastra una fotografía hasta aquí.", zona.position + Vector2(44, 80), zona.size.x - 88, 20, Color("c1d0bf"), 6)
+	# La superficie y las pistas se ven en 3D; el diario queda encima, en la parte baja.
 	if diario_abierto:
-		_lienzo.draw_set_transform(ORIGEN_DIARIO_TABLERO * escala, 0, Vector2.ONE * escala * ESCALA_DIARIO_TABLERO)
+		_lienzo.draw_set_transform(_origen_diario_tablero() * escala, 0, Vector2.ONE * escala * ESCALA_DIARIO_TABLERO)
 		_dibujar_libro(1600, 900)
 		_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
-	else:
-		_texto("[Q] ABRIR DIARIO", Vector2(80, 360), _bold, 32, Color("c6c1b1"))
+	if _arrastrando and _arrastre_pista >= 0:
+		_dibujar_tarjeta_tablero(_arrastre_pista, _arrastre_actual - TAM_TARJETA / 2)
+
+func dibujar_superficie_pizarron(lienzo: Control) -> void:
+	# La misma tarjeta conserva fotos y fuentes tanto en la mano como sobre el pizarrón.
+	var anterior := _lienzo
+	_lienzo = lienzo
+	_lienzo.draw_texture_rect(_corcho, Rect2(0, 0, 1600, 900), false)
 	for id in _tarjetas_tablero:
 		for i in range(pistas.size()):
 			if pistas[i].id == id:
 				if _arrastrando and _arrastre_desde_tablero and _arrastre_pista == i: continue
 				_dibujar_tarjeta_tablero(i, _tarjetas_tablero[id])
-	if _arrastrando and _arrastre_pista >= 0:
-		_dibujar_tarjeta_tablero(_arrastre_pista, _arrastre_actual - _arrastre_offset)
-	_texto("[Q] Diario   ·   [R / Esc] Cerrar   ·   Clic derecho: retirar pista", Vector2(44, h - 30), MONO, 16, Color("c6c1b1"))
+	_lienzo = anterior
+
+func _tachuela(centro: Vector2) -> void:
+	_lienzo.draw_circle(centro + Vector2(3, 5), 8, Color(0, 0, 0, 0.32))
+	_lienzo.draw_line(centro + Vector2(1, 4), centro + Vector2(2, 12), Color("9a9c99"), 2.0, true)
+	_lienzo.draw_circle(centro, 8, Color("692922"))
+	_lienzo.draw_circle(centro + Vector2(-1, -2), 6, Color("bb4e3c"))
+	_lienzo.draw_circle(centro + Vector2(-3, -4), 2, Color("efaf87"))
 
 func _dibujar_tarjeta_tablero(indice: int, posicion: Vector2) -> void:
 	var pista := pistas[indice]
@@ -733,4 +772,4 @@ func _dibujar_tarjeta_tablero(indice: int, posicion: Vector2) -> void:
 		_parrafo(pista.titulo, posicion + Vector2(10, 112), 170, 13, TINTA, 2)
 	else:
 		_parrafo(pista.titulo, posicion + Vector2(12, 28), 166, 17, TINTA, 4)
-	_lienzo.draw_rect(Rect2(posicion + Vector2(68, -5), Vector2(54, 16)), Color(0.76, 0.67, 0.43, 0.8))
+	_tachuela(posicion + Vector2(TAM_TARJETA.x / 2, 7))

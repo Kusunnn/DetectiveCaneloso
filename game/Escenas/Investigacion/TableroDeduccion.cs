@@ -19,13 +19,23 @@ public class Carta
 	}
 }
 
-// El HUD comparte el diario y el pizarrón para arrastrar las pistas originales.
+// Pizarrón físico con cámara dedicada; el HUD superpone el diario para arrastrar pistas.
 public partial class TableroDeduccion : CanvasLayer
 {
 	// Se conserva el contrato del caso para la futura formulación de ideas.
 	public Func<string, string, string> Probar;
 	public Func<IList<Carta>> ObtenerCartas;
 	public Func<IList<string>> ObtenerConclusiones;
+	public override void _Ready()
+	{
+		var pizarron = (Node3D)GD.Load<GDScript>("res://Escenas/Investigacion/pizarron_espacial.gd").New();
+		pizarron.Name = "PizarronInvestigacion";
+		pizarron.Position = new Vector3(3.88f, 2.5f, -1.2f);
+		pizarron.Rotation = new Vector3(0, -Mathf.Pi / 2, 0);
+		pizarron.Set("hud", Hud);
+		Hud.Set("pizarron_espacial", pizarron);
+		GetParent().CallDeferred(Node.MethodName.AddChild, pizarron);
+	}
 	private Node Hud => GetParent().GetNode("HUD");
 	public bool Abierto => Hud.Get("tablero_abierto").AsBool();
 	public void Alternar() { if (Abierto) Cerrar(); else Abrir(); }
