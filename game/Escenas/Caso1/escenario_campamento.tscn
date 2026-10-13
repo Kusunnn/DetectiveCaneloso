@@ -63,6 +63,7 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="e61"]
 [ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="e62"]
 [ext_resource type="Script" path="res://Escenas/Caso1/Caso1.cs" id="e63"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/embarcadero.tscn" id="e64"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
 shader = ExtResource("e1")
@@ -750,6 +751,9 @@ transform = Transform3D(-0.1868, 0.0, 1.0712, 0.0, 1.0873, 0.0, -1.0712, 0.0, -0
 
 [node name="Roca15" parent="Orilla" instance=ExtResource("e11")]
 transform = Transform3D(0.47, 0.0, 0.96, 0.0, 1.0689, 0.0, -0.96, 0.0, 0.47, 36.7242, -0.25, -48.5027)
+
+[node name="Embarcadero" parent="." groups=["auditoria_fuera_ok"] instance=ExtResource("e64")]
+transform = Transform3D(0.9945, 0, 0.1045, 0, 1, 0, -0.1045, 0, 0.9945, 6.5, 0, -46.0)
 
 [node name="Bosque" type="Node3D" parent="."]
 script = ExtResource("e14")
