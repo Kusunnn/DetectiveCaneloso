@@ -30,6 +30,7 @@ var _aviso: float = 0.0
 var diario_abierto: bool = false
 var tablero_abierto: bool = false
 var pizarron_espacial: Node3D
+var herramientas_pizarron: RefCounted
 # Posiciones en el espacio de referencia del pizarrón; se conservan al cerrar R.
 var _tarjetas_tablero: Dictionary = {}
 var _arrastre_pista: int = -1
@@ -64,6 +65,7 @@ func abrir_tablero() -> void:
 	panel_cambiado.emit(true, false)
 
 func cerrar_tablero() -> void:
+	herramientas_pizarron.cancelar()
 	if is_instance_valid(pizarron_espacial): pizarron_espacial.cerrar()
 	tablero_abierto = false
 	_nota_tablero = ""
@@ -92,6 +94,7 @@ func _punto_pizarron(pantalla: Vector2) -> Vector2:
 func _input_tablero(event: InputEvent) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
 	if is_instance_valid(pizarron_espacial): pizarron_espacial.recibir_raton(event)
+	if herramientas_pizarron.input(event): return
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_R, KEY_ESCAPE:
@@ -260,6 +263,7 @@ func _ready() -> void:
 	_lienzo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_lienzo)
 	_lienzo.draw.connect(_dibujar)
+	herramientas_pizarron = preload("res://hud/herramientas_pizarron.gd").new(self)
 	# Después del lienzo, para que el expediente abierto quede por encima de todo
 	_expediente = EXPEDIENTE.instantiate()
 	add_child(_expediente)
@@ -740,17 +744,20 @@ func _dibujar_tablero(w: float, h: float, escala: float) -> void:
 		_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
 	if _arrastrando and _arrastre_pista >= 0:
 		_dibujar_tarjeta_tablero(_arrastre_pista, _arrastre_actual - TAM_TARJETA / 2)
+	herramientas_pizarron.dibujar_herramientas(_lienzo)
 
 func dibujar_superficie_pizarron(lienzo: Control) -> void:
 	# La misma tarjeta conserva fotos y fuentes tanto en la mano como sobre el pizarrón.
 	var anterior := _lienzo
 	_lienzo = lienzo
 	_lienzo.draw_texture_rect(_corcho, Rect2(0, 0, 1600, 900), false)
+	herramientas_pizarron.dibujar_tinta(_lienzo)
 	for id in _tarjetas_tablero:
 		for i in range(pistas.size()):
 			if pistas[i].id == id:
 				if _arrastrando and _arrastre_desde_tablero and _arrastre_pista == i: continue
 				_dibujar_tarjeta_tablero(i, _tarjetas_tablero[id])
+	herramientas_pizarron.dibujar_notas(_lienzo)
 	_lienzo = anterior
 
 func _tachuela(centro: Vector2) -> void:

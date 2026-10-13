@@ -75,7 +75,7 @@ func _process(delta: float) -> void:
 	var medida := get_viewport().get_visible_rect().size
 	var movimiento := Vector2.ZERO
 	var margen := 42.0
-	if not moviendo_vista:
+	if not moviendo_vista and not hud.herramientas_pizarron.dibujando:
 		if _cursor.x < margen: movimiento.x = -1
 		elif _cursor.x > medida.x - margen: movimiento.x = 1
 		if _cursor.y < margen: movimiento.y = 1
