@@ -249,11 +249,13 @@ public partial class VistaExamen : CanvasLayer
 				else if (_moviendo) Desplazar(movimiento.Relative);
 				break;
 			case InputEventKey tecla when tecla.Pressed && !tecla.Echo:
+				// Diario y linterna siguen la tecla que el jugador eligió en Opciones
+				if (tecla.IsActionPressed("diario")) { Cerrar(); break; }
+				if (tecla.IsActionPressed("linterna")) { AlternarLinterna(); break; }
 				switch (tecla.Keycode)
 				{
-					case Key.Escape: case Key.Q: case Key.Backspace: Cerrar(); break;
+					case Key.Escape: case Key.Backspace: Cerrar(); break;
 					case Key.R: Reiniciar(); Sonidos.ReproducirUI(this, Sonidos.Tipo.Clic, -4f); break;
-					case Key.F: AlternarLinterna(); break;
 					case Key.E: case Key.Enter: case Key.Space: Confirmar(); break;
 				}
 				break;

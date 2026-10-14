@@ -11,6 +11,9 @@ public partial class MenuOpciones : PanelMenu
 	private CheckButton _interruptorAgacharse;
 	private CheckButton _interruptorAyudas;
 	private HSlider _deslizadorSensibilidad;
+	private OptionButton _tamanoTexto;
+	private Button _botonTeclas;
+	private PanelTeclas _panelTeclas;
 	private ulong _ultimaMuestra;
 
 	public override void _Ready()
@@ -24,6 +27,7 @@ public partial class MenuOpciones : PanelMenu
 		_interruptorAgacharse = GetNode<CheckButton>("%InterruptorAgacharse");
 		_interruptorAyudas = GetNode<CheckButton>("%InterruptorAyudas");
 		_deslizadorSensibilidad = GetNode<HSlider>("%DeslizadorSensibilidad");
+		CrearAccesibilidad();
 		base._Ready();
 
 		foreach (var (bus, deslizador) in _volumenes)
@@ -46,6 +50,24 @@ public partial class MenuOpciones : PanelMenu
 		_deslizadorSensibilidad.ValueChanged += valor => Configuracion.Instancia.SensibilidadRaton = (float)valor;
 	}
 
+	// Tamaño del texto y cambio de teclas: dos filas más en la rejilla de la escena
+	private void CrearAccesibilidad()
+	{
+		var rejilla = _deslizadorSensibilidad.GetParent();
+		rejilla.AddChild(new Label { Text = "Tamaño del texto" });
+		_tamanoTexto = new OptionButton { CustomMinimumSize = new Vector2(240, 0) };
+		foreach (var (_, nombre) in Configuracion.EscalasTexto) _tamanoTexto.AddItem(nombre);
+		_tamanoTexto.ItemSelected += indice => Configuracion.Instancia.EscalaTexto = Configuracion.EscalasTexto[indice].Escala;
+		rejilla.AddChild(_tamanoTexto);
+		rejilla.AddChild(new Label { Text = "Teclas" });
+		_botonTeclas = new Button { Text = "Cambiar teclas…", CustomMinimumSize = new Vector2(240, 0) };
+		rejilla.AddChild(_botonTeclas);
+		_panelTeclas = new PanelTeclas();
+		AddChild(_panelTeclas);
+		_botonTeclas.Pressed += _panelTeclas.Abrir;
+		_panelTeclas.Cerrado += () => _botonTeclas.GrabFocus();
+	}
+
 	public override void Abrir()
 	{
 		foreach (var (bus, deslizador) in _volumenes)
@@ -54,6 +76,8 @@ public partial class MenuOpciones : PanelMenu
 		_interruptorAgacharse.SetPressedNoSignal(Configuracion.Instancia.AgacharseAlternar);
 		_interruptorAyudas.SetPressedNoSignal(Configuracion.Instancia.AyudasVisuales);
 		_deslizadorSensibilidad.SetValueNoSignal(Configuracion.Instancia.SensibilidadRaton);
+		int escala = Array.FindIndex(Configuracion.EscalasTexto, e => Mathf.IsEqualApprox(e.Escala, Configuracion.Instancia.EscalaTexto));
+		_tamanoTexto.Select(Math.Max(escala, 0));
 		base.Abrir();
 	}
 

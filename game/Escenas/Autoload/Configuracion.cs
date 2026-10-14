@@ -62,6 +62,51 @@ public partial class Configuracion : Node
 	// Ayudas visuales del tutorial (íconos de tecla, foco, flecha al objetivo). Se pueden apagar en Opciones.
 	public bool AyudasVisuales { get; set; } = true;
 
+	// Tamaño del texto del HUD, el diario, el expediente y los diálogos (1 = normal)
+	public static readonly (float Escala, string Nombre)[] EscalasTexto = { (1f, "Normal"), (1.15f, "Grande"), (1.3f, "Muy grande") };
+	private float _escalaTexto = 1f;
+	public float EscalaTexto { get => _escalaTexto; set => _escalaTexto = Mathf.Clamp(value, 1f, 1.3f); }
+
+	// Acciones que el jugador puede cambiar de tecla en Opciones → Controles (Esc y las del control no se cambian)
+	public static readonly (string Accion, string Nombre)[] AccionesTeclas =
+	{
+		("mover_adelante", "Avanzar"), ("mover_atras", "Retroceder"), ("mover_izquierda", "Izquierda"), ("mover_derecha", "Derecha"),
+		("correr", "Correr"), ("agacharse", "Agacharse"), ("interactuar", "Interactuar"), ("diario", "Diario"),
+		("expediente", "Expediente"), ("deducir", "Tablero de deducción"), ("linterna", "Linterna"),
+		("cambiar_camara", "Cambiar cámara"), ("ayuda", "Ayuda"),
+	};
+
+	// Tecla de teclado de una acción (la primera, si tiene varias)
+	public static Key TeclaDe(string accion)
+	{
+		if (!InputMap.HasAction(accion)) return Key.None;
+		foreach (InputEvent e in InputMap.ActionGetEvents(accion))
+			if (e is InputEventKey k) return k.PhysicalKeycode != Key.None ? k.PhysicalKeycode : k.Keycode;
+		return Key.None;
+	}
+
+	// Asigna una tecla a la acción. Si otra acción la usaba, se queda con la tecla anterior (se intercambian).
+	public void CambiarTecla(string accion, Key tecla)
+	{
+		Key anterior = TeclaDe(accion);
+		foreach (var (otra, _) in AccionesTeclas)
+			if (otra != accion && TeclaDe(otra) == tecla) PonerTecla(otra, anterior);
+		PonerTecla(accion, tecla);
+	}
+
+	private static void PonerTecla(string accion, Key tecla)
+	{
+		foreach (InputEvent e in InputMap.ActionGetEvents(accion))
+			if (e is InputEventKey) InputMap.ActionEraseEvent(accion, e);
+		if (tecla != Key.None) InputMap.ActionAddEvent(accion, new InputEventKey { PhysicalKeycode = tecla });
+	}
+
+	// Vuelve a las teclas de project.godot
+	public void RestablecerTeclas()
+	{
+		InputMap.LoadFromProjectSettings();
+	}
+
 	// true si lo último que tocó el jugador fue un control; las ayudas muestran sus botones
 	public bool UsandoMando { get; private set; } = false;
 	[Signal] public delegate void DispositivoCambiadoEventHandler(bool mando);
@@ -95,6 +140,11 @@ public partial class Configuracion : Node
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
 		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
+		EscalaTexto = archivo.GetValue("accesibilidad", "escala_texto", EscalaTexto).AsSingle();
+		// Teclas cambiadas: solo se guardan las que el jugador cambió
+		if (archivo.HasSection("teclas"))
+			foreach (string accion in archivo.GetSectionKeys("teclas"))
+				if (InputMap.HasAction(accion)) PonerTecla(accion, (Key)archivo.GetValue("teclas", accion).AsInt64());
 	}
 
 	private void CrearContadorFps()
@@ -148,6 +198,16 @@ public partial class Configuracion : Node
 		_contadorFps.Text = Engine.GetFramesPerSecond() + " FPS";
 	}
 
+	// Tecla de project.godot, para guardar solo las que cambian
+	private static Key TeclaOriginal(string accion)
+	{
+		var datos = ProjectSettings.GetSetting("input/" + accion).AsGodotDictionary();
+		if (datos == null || !datos.ContainsKey("events")) return Key.None;
+		foreach (Variant v in datos["events"].AsGodotArray())
+			if (v.As<InputEvent>() is InputEventKey k) return k.PhysicalKeycode != Key.None ? k.PhysicalKeycode : k.Keycode;
+		return Key.None;
+	}
+
 	public void Guardar()
 	{
 		var archivo = new ConfigFile();
@@ -158,6 +218,12 @@ public partial class Configuracion : Node
 		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
 		archivo.SetValue("controles", "sensibilidad_raton", SensibilidadRaton);
 		archivo.SetValue("controles", "ayudas_visuales", AyudasVisuales);
+		archivo.SetValue("accesibilidad", "escala_texto", EscalaTexto);
+		foreach (var (accion, _) in AccionesTeclas)
+		{
+			Key actual = TeclaDe(accion), original = TeclaOriginal(accion);
+			if (actual != original) archivo.SetValue("teclas", accion, (long)actual);
+		}
 
 		Error error = archivo.Save(RutaConfiguracion);
 		if (error != Error.Ok)

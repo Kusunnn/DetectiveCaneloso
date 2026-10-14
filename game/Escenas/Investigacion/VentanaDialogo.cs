@@ -319,7 +319,7 @@ public partial class VentanaDialogo : CanvasLayer
 	{
 		var boton = new Button { Text = texto, Alignment = HorizontalAlignment.Left, Flat = false };
 		boton.AddThemeFontOverride("font", _mono);
-		boton.AddThemeFontSizeOverride("font_size", 21);
+		boton.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(21 * (Configuracion.Instancia?.EscalaTexto ?? 1f)));
 		var normal = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
 		normal.SetContentMarginAll(4);
 		var foco = new StyleBoxFlat { BgColor = new Color(Ambar, 0.35f), BorderColor = Ambar };
@@ -398,10 +398,21 @@ public partial class VentanaDialogo : CanvasLayer
 	private void Abrir()
 	{
 		_abiertoEn = Time.GetTicksMsec();
+		AplicarTamanoTexto();
 		_ayuda.Text = "Clic o [E] para continuar";
 		if (_nivel++ > 0) return;
 		_caja.Show();
 		JugadorActual()?.Bloquear(true);
+	}
+
+	// Tamaño del texto elegido en Opciones (se aplica cada vez que se abre la caja)
+	private void AplicarTamanoTexto()
+	{
+		float e = Configuracion.Instancia?.EscalaTexto ?? 1f;
+		_nombre.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(40 * e));
+		_animo.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(18 * e));
+		_texto.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(25 * e));
+		_ayuda.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(16 * e));
 	}
 
 	private void Cerrar()
