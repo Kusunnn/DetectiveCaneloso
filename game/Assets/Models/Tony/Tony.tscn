@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://rhte5yp67s1y"]
 
 [ext_resource type="PackedScene" uid="uid://c45ycjvivsoef" path="res://Assets/Models/Tony/Tony.fbx" id="1_um1rc"]
-[ext_resource type="Animation" uid="uid://dkghushfcftxn" path="res://Assets/Models/Tony/AltTony.res" id="2_xcrop"]
-[ext_resource type="Animation" uid="uid://cxp87enbnaig5" path="res://Assets/Models/Tony/CaminaTony.res" id="3_0wx8c"]
-[ext_resource type="Animation" uid="uid://dpn0twxdnmk0e" path="res://Assets/Models/Tony/InacTony.res" id="4_bx5x6"]
-[ext_resource type="Animation" uid="uid://bru5je2uvvj28" path="res://Assets/Models/Tony/TensoTony.res" id="5_v7wmm"]
+[ext_resource type="Animation" uid="uid://qmpa3trdno61" path="res://Assets/Models/Tony/AltTony.res" id="2_xcrop"]
+[ext_resource type="Animation" uid="uid://b4ea8jg3wi1n2" path="res://Assets/Models/Tony/CaminaTony.res" id="3_0wx8c"]
+[ext_resource type="Animation" uid="uid://bibpvnjhvm36u" path="res://Assets/Models/Tony/InacTony.res" id="4_bx5x6"]
+[ext_resource type="Animation" uid="uid://vywga2n73jvq" path="res://Assets/Models/Tony/TensoTony.res" id="5_v7wmm"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_k15sw"]
 _data = {

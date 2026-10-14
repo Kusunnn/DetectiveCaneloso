@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://cynr5ey3k4g0p"]
 
 [ext_resource type="PackedScene" uid="uid://gaksym50ufv0" path="res://Assets/Models/Aya/Breathing Idle (1).fbx" id="1_vhqe0"]
-[ext_resource type="Animation" uid="uid://cw6qcx1pfnmfy" path="res://Assets/Models/Aya/Alteraya.res" id="2_0fokn"]
-[ext_resource type="Animation" uid="uid://8pwptx1ssn8k" path="res://Assets/Models/Aya/Caminaya.res" id="3_giri1"]
+[ext_resource type="Animation" uid="uid://bfqa0bin65nvw" path="res://Assets/Models/Aya/Alteraya.res" id="2_0fokn"]
+[ext_resource type="Animation" uid="uid://bvmc7s6bdx4wr" path="res://Assets/Models/Aya/Caminaya.res" id="3_giri1"]
 [ext_resource type="Animation" uid="uid://dvci1usmxuebm" path="res://Assets/Models/Aya/Inaya.res" id="4_120jm"]
-[ext_resource type="Animation" uid="uid://dcurjri5rq2af" path="res://Assets/Models/Aya/Tensaya.res" id="5_vcq46"]
+[ext_resource type="Animation" uid="uid://bjyqtbj1ecatu" path="res://Assets/Models/Aya/Tensaya.res" id="5_vcq46"]
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_41ma1"]
 _data = {
