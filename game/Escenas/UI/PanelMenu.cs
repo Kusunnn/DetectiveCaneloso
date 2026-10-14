@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Linq;
 
-// Base para pantallas secundarias de menú (opciones, créditos, códice...).
+// Base para pantallas secundarias de menú (opciones, créditos...).
 // Se abre con Abrir(), se cierra con el botón %BotonVolver o con Esc (ui_cancel).
 public partial class PanelMenu : Control
 {

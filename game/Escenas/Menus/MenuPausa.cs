@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-// Menú de pausa (CA-02): reanudar, guardar partida, códice de reglas, opciones, volver al menú de inicio
+// Menú de pausa (CA-02): reanudar, guardar partida, opciones, volver al menú de inicio
 // y salir del juego. Diseño "01 · Pausa": título PAUSA en ámbar y opciones numeradas a la izquierda.
 // Basta con instanciarlo en cualquier escena de juego. Se abre y cierra con la acción
 // "pausa" (Esc / Start) y sigue funcionando con el árbol pausado (process_mode = Always).
@@ -11,11 +11,9 @@ public partial class MenuPausa : CanvasLayer
 	private Control _pantallaPrincipal;
 	private Button _botonReanudar;
 	private Button _botonGuardar;
-	private Button _botonCodice;
 	private Button _botonOpciones;
 	private Button _botonMenuInicio;
 	private Button _botonSalirJuego;
-	private PanelMenu _codiceReglas;
 	private PanelMenu _menuOpciones;
 	private PanelRanuras _panelRanuras;
 	private DialogoConfirmacion _dialogoConfirmacion;
@@ -30,7 +28,6 @@ public partial class MenuPausa : CanvasLayer
 	public override void _Ready()
 	{
 		_raiz = GetNode<Control>("%Raiz");
-		_codiceReglas = GetNode<PanelMenu>("%CodiceReglas");
 		_menuOpciones = GetNode<PanelMenu>("%MenuOpciones");
 		_dialogoConfirmacion = GetNode<DialogoConfirmacion>("%DialogoConfirmacion");
 		ConstruirPantallaPrincipal();
@@ -43,15 +40,13 @@ public partial class MenuPausa : CanvasLayer
 		_raiz.Hide();
 		_botonReanudar.Pressed += Reanudar;
 		_botonGuardar.Pressed += () => AbrirRanuras();
-		_botonCodice.Pressed += () => AbrirPanel(_codiceReglas, _botonCodice);
 		_botonOpciones.Pressed += () => AbrirPanel(_menuOpciones, _botonOpciones);
 		_botonMenuInicio.Pressed += () => _ = GestorPartida.Instancia.VolverAlMenuInicio();
 		_botonSalirJuego.Pressed += () => _ = GestorPartida.Instancia.SalirDelJuego();
-		_codiceReglas.Cerrado += AlCerrarPanel;
 		_menuOpciones.Cerrado += AlCerrarPanel;
 		_panelRanuras.Cerrado += AlCerrarPanel;
 		UtilidadesUI.ConectarFocoConRaton(_raiz);
-		UtilidadesUI.EncadenarFoco(new Control[] { _botonReanudar, _botonGuardar, _botonCodice, _botonOpciones, _botonMenuInicio, _botonSalirJuego });
+		UtilidadesUI.EncadenarFoco(new Control[] { _botonReanudar, _botonGuardar, _botonOpciones, _botonMenuInicio, _botonSalirJuego });
 	}
 
 	private void ConstruirPantallaPrincipal()
@@ -76,11 +71,10 @@ public partial class MenuPausa : CanvasLayer
 		columna.AddChild(lista);
 		_botonReanudar = new OpcionMenu("01", "REANUDAR");
 		_botonGuardar = new OpcionMenu("02", "GUARDAR PARTIDA");
-		_botonCodice = new OpcionMenu("03", "CÓDICE DE REGLAS");
-		_botonOpciones = new OpcionMenu("04", "OPCIONES");
-		_botonMenuInicio = new OpcionMenu("05", "VOLVER AL MENÚ PRINCIPAL");
-		_botonSalirJuego = new OpcionMenu("06", "SALIR DEL JUEGO");
-		foreach (var opcion in new[] { _botonReanudar, _botonGuardar, _botonCodice, _botonOpciones, _botonMenuInicio, _botonSalirJuego })
+		_botonOpciones = new OpcionMenu("03", "OPCIONES");
+		_botonMenuInicio = new OpcionMenu("04", "VOLVER AL MENÚ PRINCIPAL");
+		_botonSalirJuego = new OpcionMenu("05", "SALIR DEL JUEGO");
+		foreach (var opcion in new[] { _botonReanudar, _botonGuardar, _botonOpciones, _botonMenuInicio, _botonSalirJuego })
 		{
 			opcion.SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin;
 			lista.AddChild(opcion);
