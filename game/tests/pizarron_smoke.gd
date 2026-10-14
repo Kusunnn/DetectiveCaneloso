@@ -194,6 +194,27 @@ func probar() -> void:
 	tablero.Cerrar()
 	tablero.Abrir()
 	assert(relaciones.conexiones.size() == 3 and hud._tarjetas_tablero.has(&"persona:Eriz"))
+	# La paleta abre al pulsar el hilo y solo cambia su color visual.
+	var conexion: Dictionary = relaciones.conexiones[0]
+	var tramo: PackedVector2Array = relaciones._puntos_hilo(relaciones.tachuela(conexion.a), relaciones.tachuela(conexion.resultado))
+	var clic_hilo: Vector2 = en_pantalla(tramo[8])
+	var comprobaciones: int = caso_prueba.Comprobaciones
+	for color in [1, 2, 0]:
+		boton(clic_hilo, true)
+		boton(clic_hilo, false)
+		assert(not relaciones.conexion_paleta.is_empty())
+		boton(relaciones._muestra_color(color).get_center(), true)
+		boton(relaciones._muestra_color(color).get_center(), false)
+		assert(conexion.color == relaciones.COLORES_HILO[color])
+		assert(relaciones.conexion_paleta.is_empty())
+	assert(caso_prueba.Comprobaciones == comprobaciones and hud.notas.size() == 2)
+	boton(clic_hilo, true)
+	boton(clic_hilo, false)
+	boton(relaciones._muestra_color(1).get_center(), true)
+	boton(relaciones._muestra_color(1).get_center(), false)
+	tablero.Cerrar()
+	tablero.Abrir()
+	assert(conexion.color == relaciones.COLORES_HILO[1])
 	relaciones.retirar(&"persona:Eriz")
 	assert(relaciones.conexiones.size() == 1 and hud.personas.size() == 1)
 	assert(hud._tarjetas_tablero.has(deduccion))

@@ -2,6 +2,10 @@ extends RefCounted
 ## Tarjetas del diario y conexiones confirmadas por el guion del caso.
 const TAM_DEDUCCION := Vector2(280, 180)
 const HILO := Color("a92c26")
+const COLORES_HILO := [HILO, Color("285e9a"), Color("252321")]
+var conexion_paleta: Dictionary = {}
+var origen_paleta := Vector2.ZERO
+var _consumir_suelta := false
 var hud: Node
 var tarjetas: Dictionary = {}
 var conexiones: Array[Dictionary] = []
@@ -26,6 +30,8 @@ func sincronizar() -> void:
 		tarjetas[StringName("persona:" + persona.nombre)] = {"tipo": "PERSONA", "titulo": persona.nombre, "imagen": persona.imagen}
 
 func cancelar() -> void:
+	conexion_paleta = {}
+	_consumir_suelta = false
 	if arrastre != &"" and desde_tablero and hud._tarjetas_tablero.has(arrastre):
 		hud._tarjetas_tablero[arrastre] = posicion_original
 		actualizar_centros()
@@ -75,7 +81,7 @@ func conectar(a: StringName, b: StringName) -> void:
 			hud._tarjetas_tablero[b] = (centro + direccion * 250 - medida(b) / 2).clamp(Vector2.ZERO, Vector2(1600, 900) - medida(b))
 		var posicion: Vector2 = (hud._tarjetas_tablero[a] + medida(a) / 2 + hud._tarjetas_tablero[b] + medida(b) / 2) / 2 - TAM_DEDUCCION / 2
 		hud._tarjetas_tablero[id_resultado] = posicion.clamp(Vector2.ZERO, Vector2(1600, 900) - TAM_DEDUCCION)
-	if existente.is_empty(): conexiones.append({"a": a, "b": b, "resultado": id_resultado})
+	if existente.is_empty(): conexiones.append({"a": a, "b": b, "resultado": id_resultado, "color": HILO})
 	else: existente.resultado = id_resultado
 
 func actualizar_centros() -> void:
@@ -119,6 +125,16 @@ func input(evento: InputEvent) -> void:
 	var local: Vector2 = (raton - hud._origen_diario_tablero()) / hud.ESCALA_DIARIO_TABLERO
 	var sobre_diario: bool = hud.diario_abierto and Rect2(202, 52, 1192, 800).has_point(local)
 	var id := tarjeta_en(punto) if not sobre_diario else &""
+	if evento.button_index == MOUSE_BUTTON_LEFT and not evento.pressed and _consumir_suelta:
+		_consumir_suelta = false
+		return
+	if not conexion_paleta.is_empty() and evento.pressed:
+		if evento.button_index == MOUSE_BUTTON_LEFT:
+			for i in range(3):
+				if _muestra_color(i).has_point(raton): conexion_paleta.color = COLORES_HILO[i]
+			_consumir_suelta = true
+		conexion_paleta = {}
+		return
 	if evento.button_index == MOUSE_BUTTON_LEFT:
 		if evento.pressed:
 			for i in range(2):
@@ -144,7 +160,14 @@ func input(evento: InputEvent) -> void:
 					return
 			if sobre_diario: return
 			if id == &"":
-				hilo_desde = &""
+				if hilo_desde == &"":
+					var conexion := _conexion_en(evento.position)
+					if not conexion.is_empty():
+						conexion_paleta = conexion
+						var tam_pantalla: Vector2 = hud._lienzo.size / escala
+						origen_paleta = (raton + Vector2(10, 10)).clamp(Vector2(8, 8), tam_pantalla - Vector2(152, 60))
+						_consumir_suelta = true
+				else: hilo_desde = &""
 				return
 			if herramienta == "hilo" or punto.distance_to(tachuela(id)) < 14 or hilo_desde != &"":
 				if hilo_desde != &"" and hilo_desde != id:
@@ -181,24 +204,28 @@ func input(evento: InputEvent) -> void:
 	elif sobre_diario and evento.pressed and evento.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 		hud._pasar_hoja(hud._hoja + (-1 if evento.button_index == MOUSE_BUTTON_WHEEL_UP else 1))
 
-func _hilo(lienzo: Control, a: Vector2, b: Vector2) -> void:
+func _puntos_hilo(a: Vector2, b: Vector2) -> PackedVector2Array:
 	var puntos := PackedVector2Array()
 	for i in range(17):
 		var t := i / 16.0
 		puntos.append(a.lerp(b, t) + Vector2(0, sin(t * PI) * 10))
+	return puntos
+
+func _hilo(lienzo: Control, a: Vector2, b: Vector2, color: Color = HILO) -> void:
+	var puntos := _puntos_hilo(a, b)
 	var sombra := PackedVector2Array()
 	for p in puntos: sombra.append(p + Vector2(2, 3))
 	lienzo.draw_polyline(sombra, Color(0, 0, 0, 0.24), 4, true)
-	lienzo.draw_polyline(puntos, HILO, 3, true)
+	lienzo.draw_polyline(puntos, color, 3, true)
 
 func dibujar_hilos(lienzo: Control) -> void:
 	actualizar_centros()
 	for conexion in conexiones:
 		if not hud._tarjetas_tablero.has(conexion.a) or not hud._tarjetas_tablero.has(conexion.b): continue
 		if conexion.resultado != &"" and hud._tarjetas_tablero.has(conexion.resultado):
-			_hilo(lienzo, tachuela(conexion.a), tachuela(conexion.resultado))
-			_hilo(lienzo, tachuela(conexion.resultado), tachuela(conexion.b))
-		else: _hilo(lienzo, tachuela(conexion.a), tachuela(conexion.b))
+			_hilo(lienzo, tachuela(conexion.a), tachuela(conexion.resultado), conexion.get("color", HILO))
+			_hilo(lienzo, tachuela(conexion.resultado), tachuela(conexion.b), conexion.get("color", HILO))
+		else: _hilo(lienzo, tachuela(conexion.a), tachuela(conexion.b), conexion.get("color", HILO))
 	if hilo_desde != &"" and hud._tarjetas_tablero.has(hilo_desde): _hilo(lienzo, tachuela(hilo_desde), punto_hilo)
 
 func dibujar_tarjeta(lienzo: Control, id: StringName, posicion: Vector2) -> void:
@@ -236,3 +263,42 @@ func dibujar_overlay(lienzo: Control) -> void:
 			lienzo.draw_rect(Rect2(p + Vector2(9, 13), Vector2(38, 6)), Color("e0c595"))
 			lienzo.draw_rect(Rect2(p + Vector2(9, 49), Vector2(38, 6)), Color("e0c595"))
 			for k in range(5): lienzo.draw_line(p + Vector2(14, 23 + k * 5), p + Vector2(42, 20 + k * 5), Color("da6454"), 1, true)
+
+	dibujar_paleta(lienzo)
+
+func _muestra_color(indice: int) -> Rect2:
+	return Rect2(origen_paleta + Vector2(8 + indice * 44, 8), Vector2(36, 36))
+
+func _conexion_en(pantalla: Vector2) -> Dictionary:
+	if not is_instance_valid(hud.pizarron_espacial): return {}
+	var mas_cercana: Dictionary = {}
+	var distancia := 9.0
+	for conexion in conexiones:
+		if not hud._tarjetas_tablero.has(conexion.a) or not hud._tarjetas_tablero.has(conexion.b): continue
+		var destinos: Array[Vector2] = [tachuela(conexion.a)]
+		if conexion.resultado != &"" and hud._tarjetas_tablero.has(conexion.resultado): destinos.append(tachuela(conexion.resultado))
+		destinos.append(tachuela(conexion.b))
+		for j in range(destinos.size() - 1):
+			var puntos := _puntos_hilo(destinos[j], destinos[j + 1])
+			for k in range(puntos.size() - 1):
+				var a: Vector2 = hud.pizarron_espacial.pizarron_a_pantalla(puntos[k])
+				var b: Vector2 = hud.pizarron_espacial.pizarron_a_pantalla(puntos[k + 1])
+				var cercano := Geometry2D.get_closest_point_to_segment(pantalla, a, b)
+				var d := pantalla.distance_to(cercano)
+				if d < distancia:
+					distancia = d
+					mas_cercana = conexion
+	return mas_cercana
+
+func dibujar_paleta(lienzo: Control) -> void:
+	if conexion_paleta.is_empty(): return
+	var estilo := StyleBoxFlat.new()
+	estilo.bg_color = Color("ede3ce")
+	estilo.set_corner_radius_all(8)
+	estilo.shadow_size = 4
+	lienzo.draw_style_box(estilo, Rect2(origen_paleta, Vector2(140, 52)))
+	for i in range(3):
+		var muestra := _muestra_color(i)
+		lienzo.draw_circle(muestra.get_center(), 13, COLORES_HILO[i])
+		if conexion_paleta.get("color", HILO) == COLORES_HILO[i]:
+			lienzo.draw_arc(muestra.get_center(), 16, 0, TAU, 32, Color("8a754f"), 2, true)
