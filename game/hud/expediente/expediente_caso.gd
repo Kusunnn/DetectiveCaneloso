@@ -334,7 +334,8 @@ func _barra_lateral() -> Control:
 	lbl_espacio = b_esp[1]
 	pie.add_child(b_esp[0])
 	# Volver a ver la cinemática de inicio del caso (solo si el caso tiene expediente)
-	if informe:
+	# El tutorial (caso 00) no tiene presentación por ahora (IntroCaso.CasoSinPresentacion)
+	if informe and _caso != "00":
 		pie.add_child(_boton_atajo("VER", "PRESENTACIÓN DEL CASO", ver_presentacion)[0])
 	pie.add_child(_boton_atajo("TAB", "CERRAR", cerrar)[0])
 	v.add_child(pie)

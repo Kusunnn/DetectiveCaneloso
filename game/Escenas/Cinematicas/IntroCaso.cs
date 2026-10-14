@@ -24,7 +24,9 @@ public partial class IntroCaso : CanvasLayer
 	public bool Manual { get; set; }
 
 	public static string RutaInforme(string caso) => $"res://hud/expediente/casos/caso_{caso}.tres";
-	public static bool Disponible(string caso) => ResourceLoader.Exists(RutaInforme(caso));
+	// El tutorial (Caso 0) no tiene presentación por ahora, aunque algún día tenga expediente
+	public const string CasoSinPresentacion = "00";
+	public static bool Disponible(string caso) => caso != CasoSinPresentacion && ResourceLoader.Exists(RutaInforme(caso));
 
 	public static bool Vista(string caso)
 	{
