@@ -121,6 +121,8 @@ public partial class Caso1 : Node
 		}
 		// Si se llegó por el flujo de capítulos, muestra la tarjeta de título
 		if (gestor != null) await gestor.PresentarCapitulo();
+		// Si el jugador salió al menú durante la presentación, la escena ya no existe
+		if (!IsInstanceValid(this) || !IsInsideTree()) return;
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
 		_enDialogo = true;
 		await Dialogo.Decir(_caneloso,

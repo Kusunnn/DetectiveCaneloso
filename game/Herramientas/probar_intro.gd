@@ -2,7 +2,7 @@ extends SceneTree
 ## Prueba la cinemática de inicio dentro del flujo de capítulos (con ventana).
 ## Uso: --path game --script res://Herramientas/probar_intro.gd -- <carpeta_capturas>
 ## 1) El Caso 0 empieza sin cinemática. 2) El Capítulo 1 la muestra la primera vez, con el juego en pausa.
-## 3) Mantener [Espacio] la salta, el juego sigue y aparece el aviso del expediente. 4) La segunda vez ya no sale.
+## 3) Mantener [Espacio] la salta, el juego sigue y aparece el aviso del expediente. 4) Al repetir el capítulo ya vista, no vuelve a salir.
 ## Respalda y devuelve las ranuras y el registro de cinemáticas vistas.
 
 const PARTIDAS := "user://partidas/"
@@ -43,7 +43,7 @@ func _initialize() -> void:
 
 	gestor.IniciarCapitulo("capitulo1", true, false)
 	await create_timer(5.0).timeout
-	_revisar(_intro() == null, "la segunda vez ya no sale")
+	_revisar(_intro() == null, "al repetir el capítulo ya no sale")
 
 	for archivo in DirAccess.get_files_at(PARTIDAS):
 		DirAccess.remove_absolute(PARTIDAS + archivo)

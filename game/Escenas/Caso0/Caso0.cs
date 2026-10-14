@@ -153,6 +153,8 @@ public partial class Caso0 : Node
 
 	private async void Presentacion()
 	{
+		// Si el jugador salió al menú durante la tarjeta del título, la escena ya no existe
+		if (!IsInstanceValid(this) || !IsInsideTree()) return;
 		await ToSignal(GetTree().CreateTimer(0.6), SceneTreeTimer.SignalName.Timeout);
 		_enDialogo = true;
 		// El gancho en tres líneas; los controles se aprenden usándolos (indicación en pantalla)

@@ -173,6 +173,8 @@ public partial class IntroCaso : CanvasLayer
 			return;
 		}
 
+		// Que nada de abajo la despause mientras dura (p. ej. una tarjeta de título que termina después)
+		GetTree().Paused = true;
 		ProcesarSalto(delta);
 		if (_saltando)
 		{
