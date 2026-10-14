@@ -52,6 +52,7 @@ func probar() -> void:
 	tecla(KEY_Q)
 	assert(hud.diario_abierto)
 	hud.pizarron_espacial.desplazar(Vector2(0, -1.05))
+	hud.pizarron_espacial._actualizar_vista(1.0)
 	await process_frame
 	await process_frame
 	var origenes: Array[Vector2] = []
@@ -66,8 +67,8 @@ func probar() -> void:
 	# Dos pistas se pueden soltar y mover sin duplicarlas.
 	for i in range(2):
 		boton(origenes[i], true)
-		mover(en_pantalla(Vector2(300 + i * 300, 650)))
-		boton(en_pantalla(Vector2(300 + i * 300, 650)), false)
+		mover(en_pantalla(Vector2(300 + i * 300, 550)))
+		boton(en_pantalla(Vector2(300 + i * 300, 550)), false)
 	assert(hud._tarjetas_tablero.size() == 2)
 	assert(hud.notas.is_empty(), "El pizarrón no debe deducir automáticamente")
 	var id = hud.pistas[0].id
@@ -99,6 +100,7 @@ func probar() -> void:
 	tablero.Abrir()
 	assert(hud._tarjetas_tablero.size() == 2)
 	hud.pizarron_espacial.desplazar(Vector2(0, -1.05))
+	hud.pizarron_espacial._actualizar_vista(1.0)
 	boton(en_pantalla(hud._tarjetas_tablero[id] + Vector2(20, 20)), true, MOUSE_BUTTON_RIGHT)
 	assert(hud._tarjetas_tablero.size() == 1 and hud.pistas.size() == 2)
 	tecla(KEY_ESCAPE)
@@ -109,73 +111,97 @@ func probar() -> void:
 	tablero.Abrir()
 	var orientacion: Vector3 = hud.pizarron_espacial.camara.rotation
 	hud.pizarron_espacial.desplazar(Vector2(100, -100))
-	assert(hud.pizarron_espacial.desplazamiento == Vector2(0.55, -1.05))
+	assert(hud.pizarron_espacial.desplazamiento_objetivo == Vector2(0.55, -1.05))
 	assert(hud.pizarron_espacial.camara.rotation == orientacion)
 	tablero.Cerrar()
-	# Marcadores, tinta local de post-its y deshacer a través de la entrada del ratón.
+	# La cámara llega gradualmente a su destino sin saltar en el primer cuadro.
 	tablero.Abrir()
-	var utiles = hud.herramientas_pizarron
-	boton(utiles._zona_herramienta(1).get_center(), true)
-	boton(utiles._zona_herramienta(1).get_center(), false)
-	assert(utiles.herramienta == "rojo")
-	boton(en_pantalla(Vector2(200, 180)), true)
-	mover(en_pantalla(Vector2(260, 205)))
-	mover(en_pantalla(Vector2(350, 230)))
-	boton(en_pantalla(Vector2(350, 230)), false)
-	assert(utiles.trazos.size() == 1 and utiles.trazos[0].puntos.size() >= 3)
-	assert(utiles.trazos[0].color == utiles.ROJO and not utiles.dibujando)
-	boton(utiles._zona_herramienta(2).get_center(), true)
-	boton(utiles._zona_herramienta(2).get_center(), false)
-	boton(en_pantalla(Vector2(700, 280)), true)
-	boton(en_pantalla(Vector2(700, 280)), false)
-	assert(utiles.trazos.size() == 2 and utiles.trazos[1].puntos.size() == 1)
-	assert(utiles.trazos[1].color == utiles.NEGRO)
-	boton(utiles._zona_herramienta(3).get_center(), true)
-	boton(utiles._zona_herramienta(3).get_center(), false)
-	boton(en_pantalla(Vector2(900, 250)), true)
-	boton(en_pantalla(Vector2(900, 250)), false)
-	assert(utiles.postits.size() == 1 and utiles.herramienta == "mano")
-	var nota: Dictionary = utiles.postits[0]
-	boton(utiles._zona_herramienta(2).get_center(), true)
-	boton(utiles._zona_herramienta(2).get_center(), false)
-	boton(en_pantalla(nota.posicion + Vector2(20, 40)), true)
-	mover(en_pantalla(nota.posicion + Vector2(100, 100)))
-	mover(en_pantalla(Vector2(100, 800)))
-	boton(en_pantalla(Vector2(100, 800)), false)
-	assert(nota.trazos.size() == 1 and utiles.trazos.size() == 2)
-	var puntos_originales: PackedVector2Array = nota.trazos[0].puntos.duplicate()
-	boton(utiles._zona_herramienta(0).get_center(), true)
-	boton(utiles._zona_herramienta(0).get_center(), false)
-	boton(en_pantalla(nota.posicion + Vector2(10, 10)), true)
-	mover(en_pantalla(Vector2(1200, 350)))
-	boton(en_pantalla(Vector2(1200, 350)), false)
-	assert(nota.posicion.distance_to(Vector2(1190, 340)) < 1.0)
-	assert(nota.trazos[0].puntos == puntos_originales, "La tinta debe seguir pegada a la nota")
+	var espacial = hud.pizarron_espacial
+	espacial.desplazar(Vector2(0.5, 0))
+	assert(espacial.desplazamiento.x == 0)
+	espacial._actualizar_vista(1.0 / 60)
+	assert(espacial.desplazamiento.x > 0 and espacial.desplazamiento.x < 0.5)
+	espacial._actualizar_vista(1.0)
+	assert(absf(espacial.desplazamiento.x - 0.5) < 0.001)
 	tablero.Cerrar()
 	tablero.Abrir()
-	assert(utiles.trazos.size() == 2 and utiles.postits.size() == 1)
-	boton(utiles._zona_herramienta(4).get_center(), true)
-	boton(utiles._zona_herramienta(4).get_center(), false)
-	assert(nota.trazos.is_empty() and utiles.trazos.size() == 2)
-	var deshacer := InputEventKey.new()
-	deshacer.keycode = KEY_Z
-	deshacer.ctrl_pressed = true
-	deshacer.pressed = true
-	hud._input(deshacer)
-	assert(utiles.postits.is_empty() and utiles.trazos.size() == 2)
+	var relaciones = hud.relaciones_pizarron
+	var caso_prueba = load("res://tests/PizarronCasoPrueba.cs").new()
+	caso.add_child(caso_prueba)
+	caso_prueba.Configurar(tablero, hud)
+	hud.registrar_persona("Eriz", "Volvió a las tres.", null)
+	relaciones.sincronizar()
+	# Arrastrar una persona desde la página del diario, incluso sin retrato.
+	tecla(KEY_Q)
+	hud._cambiar_seccion("PERSONAS")
+	espacial.desplazar(Vector2(0, -1.05))
+	espacial._actualizar_vista(1.0)
+	await process_frame
+	await process_frame
+	var origen_persona := Vector2.ZERO
+	for zona in hud._zonas_libro:
+		if zona.has("persona"):
+			origen_persona = hud._origen_diario_tablero() + zona.rect.get_center() * hud.ESCALA_DIARIO_TABLERO
+	assert(origen_persona != Vector2.ZERO)
+	boton(origen_persona, true)
+	mover(en_pantalla(Vector2(1100, 550)))
+	boton(en_pantalla(Vector2(1100, 550)), false)
+	assert(hud._tarjetas_tablero.has(&"persona:Eriz"))
+	tecla(KEY_Q)
 	tablero.Cerrar()
-	print("PIZARRON_OK: pizarrón 3D, cámara limitada y restaurada, diario abajo, arrastre, límites, duplicados, retiro, tinta roja/negra, post-its móviles, deshacer y persistencia")
+	tablero.Abrir()
+	hud._tarjetas_tablero[&"prueba_a"] = Vector2(150, 300)
+	hud._tarjetas_tablero[&"prueba_b"] = Vector2(1100, 300)
+	# Un hilo entre tachuelas crea la deducción central y la nota del caso.
+	boton(en_pantalla(relaciones.tachuela(&"prueba_a")), true)
+	mover(en_pantalla(relaciones.tachuela(&"prueba_b")))
+	boton(en_pantalla(relaciones.tachuela(&"prueba_b")), false)
+	assert(relaciones.conexiones.size() == 1)
+	var deduccion: StringName = relaciones.conexiones[0].resultado
+	assert(deduccion != &"" and hud._tarjetas_tablero.has(deduccion))
+	assert(hud.notas.size() == 1)
+	var centro: Vector2 = hud._tarjetas_tablero[deduccion] + relaciones.TAM_DEDUCCION / 2
+	assert(centro.distance_to(Vector2(720, 377)) < 1)
+	relaciones.conectar(&"prueba_b", &"prueba_a")
+	assert(relaciones.conexiones.size() == 1 and caso_prueba.Comprobaciones == 1)
+	# Mover una fuente conserva la conexión y reposiciona la deducción entre ambas.
+	boton(en_pantalla(Vector2(170, 340)), true)
+	var pin_original: Vector2 = relaciones.tachuela(&"prueba_a")
+	var centro_original: Vector2 = hud._tarjetas_tablero[deduccion]
+	mover(en_pantalla(Vector2(170, 540)))
+	assert(relaciones.moviendo and relaciones.arrastre == &"prueba_a")
+	assert(relaciones.tachuela(&"prueba_a").y > pin_original.y + 150, "El hilo sigue la tarjeta antes de soltar")
+	assert(hud._tarjetas_tablero[deduccion].y > centro_original.y + 80, "La deducción central se actualiza durante el arrastre")
+	boton(en_pantalla(Vector2(170, 540)), false)
+	assert(hud._tarjetas_tablero[deduccion].y > 300)
+	# Una persona utiliza únicamente su testimonio obtenido.
+	relaciones.conectar(&"persona:Eriz", &"prueba_b")
+	assert(relaciones.conexiones.size() == 2 and hud.notas.size() == 2)
+	assert(relaciones.conexiones[1].resultado != &"")
+	# Las personas también mueven sus hilos mientras sigue pulsado el botón.
+	var posicion_persona: Vector2 = hud._tarjetas_tablero[&"persona:Eriz"]
+	var pin_persona: Vector2 = relaciones.tachuela(&"persona:Eriz")
+	boton(en_pantalla(posicion_persona + Vector2(20, 40)), true)
+	mover(en_pantalla(posicion_persona + Vector2(-80, 40)))
+	assert(relaciones.tachuela(&"persona:Eriz").x < pin_persona.x - 80)
+	tecla(KEY_Q)
+	assert(hud._tarjetas_tablero[&"persona:Eriz"] == posicion_persona, "Cancelar restaura la tarjeta y sus conexiones")
+	tecla(KEY_Q)
+	# Una unión sin regla guarda el hilo sin inventar una conclusión.
+	relaciones.conectar(&"persona:Eriz", &"prueba_a")
+	assert(relaciones.conexiones.size() == 3 and relaciones.conexiones[2].resultado == &"")
+	assert(hud.notas.size() == 2)
+	tablero.Cerrar()
+	tablero.Abrir()
+	assert(relaciones.conexiones.size() == 3 and hud._tarjetas_tablero.has(&"persona:Eriz"))
+	relaciones.retirar(&"persona:Eriz")
+	assert(relaciones.conexiones.size() == 1 and hud.personas.size() == 1)
+	assert(hud._tarjetas_tablero.has(deduccion))
+	print("PIZARRON_OK: diario, personas arrastrables, hilo por tachuelas, deducción central, reglas C#, duplicados, movimiento y persistencia")
 	if "--capturar" in OS.get_cmdline_user_args():
-		tablero.Abrir()
-		hud._tarjetas_tablero[hud.pistas[0].id] = Vector2(300, 400)
-		hud._tarjetas_tablero[hud.pistas[1].id] = Vector2(950, 550)
-		utiles.postits.append({"posicion": Vector2(1000, 240), "trazos": [{"puntos": PackedVector2Array([Vector2(30, 60), Vector2(100, 160), Vector2(170, 60)]), "color": utiles.NEGRO}]})
+		hud._tarjetas_tablero[&"persona:Eriz"] = Vector2(1150, 550)
+		relaciones.conectar(&"persona:Eriz", &"prueba_b")
 		await process_frame
 		await RenderingServer.frame_post_draw
 		root.get_texture().get_image().save_png("/tmp/dc_pizarron.png")
-		tecla(KEY_Q)
-		hud.pizarron_espacial.desplazar(Vector2(0, -0.9))
-		await process_frame
-		await RenderingServer.frame_post_draw
-		root.get_texture().get_image().save_png("/tmp/dc_pizarron_diario.png")
 	quit()

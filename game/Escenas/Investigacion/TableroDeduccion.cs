@@ -28,6 +28,7 @@ public partial class TableroDeduccion : CanvasLayer
 	public Func<IList<string>> ObtenerConclusiones;
 	public override void _Ready()
 	{
+		Hud.Set("gestor_tablero", this);
 		var pizarron = (Node3D)GD.Load<GDScript>("res://Escenas/Investigacion/pizarron_espacial.gd").New();
 		pizarron.Name = "PizarronInvestigacion";
 		pizarron.Position = new Vector3(3.88f, 2.5f, -1.2f);
@@ -42,6 +43,27 @@ public partial class TableroDeduccion : CanvasLayer
 	public void Sugerir(string nota, params string[] ids)
 	{
 		Hud.Call("sugerir_tablero", nota, new Godot.Collections.Array<string>(ids));
+	}
+	// Una ficha de persona puede usar solo los testimonios ya obtenidos en el caso.
+	private IList<string> Identidades(string id)
+	{
+		if (!id.StartsWith("persona:")) return new List<string> { id };
+		string nombre = id.Substring("persona:".Length);
+		var lista = new List<string>();
+		foreach (var carta in ObtenerCartas?.Invoke() ?? new List<Carta>())
+			if (carta.Tipo == "TESTIMONIO" && carta.Titulo.StartsWith(nombre + ":", StringComparison.OrdinalIgnoreCase))
+				lista.Add(carta.Id);
+		return lista;
+	}
+	public string ProbarRelacion(string a, string b)
+	{
+		foreach (string x in Identidades(a))
+			foreach (string y in Identidades(b))
+			{
+				string conclusion = Probar?.Invoke(x, y);
+				if (!string.IsNullOrEmpty(conclusion)) return conclusion;
+			}
+		return "";
 	}
 	public void Abrir() => Hud.Call("abrir_tablero");
 	public void Cerrar() => Hud.Call("cerrar_tablero");

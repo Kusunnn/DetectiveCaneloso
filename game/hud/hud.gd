@@ -31,6 +31,8 @@ var diario_abierto: bool = false
 var tablero_abierto: bool = false
 var pizarron_espacial: Node3D
 var herramientas_pizarron: RefCounted
+var relaciones_pizarron: RefCounted
+var gestor_tablero: Node
 # Posiciones en el espacio de referencia del pizarrón; se conservan al cerrar R.
 var _tarjetas_tablero: Dictionary = {}
 var _arrastre_pista: int = -1
@@ -55,6 +57,7 @@ func sugerir_tablero(nota: String, ids: Array[String]) -> void:
 	_pistas_sugeridas = ids
 
 func abrir_tablero() -> void:
+	relaciones_pizarron.sincronizar()
 	if _expediente and _expediente.abierto:
 		_expediente.cerrar()
 	tablero_abierto = true
@@ -65,6 +68,7 @@ func abrir_tablero() -> void:
 	panel_cambiado.emit(true, false)
 
 func cerrar_tablero() -> void:
+	relaciones_pizarron.cancelar()
 	herramientas_pizarron.cancelar()
 	if is_instance_valid(pizarron_espacial): pizarron_espacial.cerrar()
 	tablero_abierto = false
@@ -92,77 +96,7 @@ func _punto_pizarron(pantalla: Vector2) -> Vector2:
 	return pantalla / minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
 
 func _input_tablero(event: InputEvent) -> void:
-	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-	if is_instance_valid(pizarron_espacial): pizarron_espacial.recibir_raton(event)
-	if herramientas_pizarron.input(event): return
-	if event is InputEventKey and event.pressed and not event.echo:
-		match event.keycode:
-			KEY_R, KEY_ESCAPE:
-				cerrar_tablero()
-			KEY_Q:
-				diario_abierto = not diario_abierto
-				_arrastre_pista = -1
-				_arrastrando = false
-			KEY_LEFT, KEY_UP:
-				if diario_abierto: _pasar_hoja(_hoja - 1)
-			KEY_RIGHT, KEY_DOWN:
-				if diario_abierto: _pasar_hoja(_hoja + 1)
-	elif event is InputEventMouseMotion and _arrastre_pista >= 0:
-		_arrastre_actual = event.position / escala
-		if _arrastre_actual.distance_to(_arrastre_inicio) > 6.0:
-			_arrastrando = true
-	elif event is InputEventMouseButton:
-		var raton: Vector2 = event.position / escala
-		var punto_tablero := _punto_pizarron(event.position)
-		var local := (raton - _origen_diario_tablero()) / ESCALA_DIARIO_TABLERO
-		var sobre_libro := diario_abierto and Rect2(202, 104, 1192, 748).has_point(local)
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed:
-				if diario_abierto:
-					for zona in _zonas_libro:
-						if not zona.rect.has_point(local): continue
-						if zona.has("pista"):
-							_pista_diario = zona.pista
-							_arrastre_pista = zona.pista
-							_arrastre_desde_tablero = false
-							_arrastre_inicio = raton
-							_arrastre_actual = raton
-							_arrastre_offset = TAM_TARJETA / 2
-						elif zona.has("seccion"): _cambiar_seccion(zona.seccion)
-						elif zona.destino == -1: diario_abierto = false
-						else: _pasar_hoja(zona.destino)
-						return
-				if sobre_libro: return
-				var ids := _tarjetas_tablero.keys()
-				ids.reverse()
-				for id in ids:
-					if Rect2(_tarjetas_tablero[id], TAM_TARJETA).has_point(punto_tablero):
-						for i in range(pistas.size()):
-							if pistas[i].id == id:
-								_arrastre_pista = i
-								_arrastre_desde_tablero = true
-								_arrastre_inicio = raton
-								_arrastre_actual = raton
-								_arrastre_offset = punto_tablero - _tarjetas_tablero[id]
-						return
-			else:
-				if _arrastre_pista >= 0 and _arrastrando and not sobre_libro and _zona_pizarron().has_point(punto_tablero):
-					var zona := _zona_pizarron()
-					var posicion := (punto_tablero - _arrastre_offset).clamp(zona.position, zona.end - TAM_TARJETA)
-					var id := pistas[_arrastre_pista].id
-					_tarjetas_tablero.erase(id)
-					_tarjetas_tablero[id] = posicion
-				_arrastre_pista = -1
-				_arrastrando = false
-		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed and not sobre_libro:
-			var ids := _tarjetas_tablero.keys()
-			ids.reverse()
-			for id in ids:
-				if Rect2(_tarjetas_tablero[id], TAM_TARJETA).has_point(punto_tablero):
-					_tarjetas_tablero.erase(id)
-					break
-		elif sobre_libro and event.pressed and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
-			_pasar_hoja(_hoja + (-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1))
+	relaciones_pizarron.input(event)
 
 ## Expediente del caso (TAB). La carpeta, el objetivo y la guía de teclas los dibuja este HUD.
 const EXPEDIENTE := preload("res://hud/expediente/expediente_caso.tscn")
@@ -213,7 +147,7 @@ func _paginas_libro() -> Array[Dictionary]:
 		if not nota.begins_with("Deducción: "):
 			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
 	for persona in personas:
-		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen})
+		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen, "persona": persona.nombre})
 	if personas.is_empty():
 		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Habla con las personas del caso para añadir sus fichas al diario."})
 	return paginas.filter(func(pagina: Dictionary) -> bool: return pagina.seccion == _seccion)
@@ -264,6 +198,7 @@ func _ready() -> void:
 	add_child(_lienzo)
 	_lienzo.draw.connect(_dibujar)
 	herramientas_pizarron = preload("res://hud/herramientas_pizarron.gd").new(self)
+	relaciones_pizarron = preload("res://hud/relaciones_pizarron.gd").new(self)
 	# Después del lienzo, para que el expediente abierto quede por encima de todo
 	_expediente = EXPEDIENTE.instantiate()
 	add_child(_expediente)
@@ -669,6 +604,8 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 		medida *= minf(264.0 / medida.x, 192.0 / medida.y)
 		_lienzo.draw_texture_rect(imagen, Rect2(marco.get_center() - medida / 2, medida), false)
 		texto_y = 422.0
+	if pagina.has("persona"):
+		_zonas_libro.append({"rect": Rect2(p + Vector2(38, 165), Vector2(504, 405)), "persona": pagina.persona})
 	_parrafo(pagina.texto, p + Vector2(38, texto_y), 504, 17, TINTA, 7 if imagen else 16)
 
 func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
@@ -742,22 +679,17 @@ func _dibujar_tablero(w: float, h: float, escala: float) -> void:
 		_lienzo.draw_set_transform(_origen_diario_tablero() * escala, 0, Vector2.ONE * escala * ESCALA_DIARIO_TABLERO)
 		_dibujar_libro(1600, 900)
 		_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
-	if _arrastrando and _arrastre_pista >= 0:
-		_dibujar_tarjeta_tablero(_arrastre_pista, _arrastre_actual - TAM_TARJETA / 2)
-	herramientas_pizarron.dibujar_herramientas(_lienzo)
+	relaciones_pizarron.dibujar_overlay(_lienzo)
 
 func dibujar_superficie_pizarron(lienzo: Control) -> void:
 	# La misma tarjeta conserva fotos y fuentes tanto en la mano como sobre el pizarrón.
 	var anterior := _lienzo
 	_lienzo = lienzo
+	_lienzo.draw_set_transform(Vector2.ZERO, 0, _lienzo.size / Vector2(1600, 900))
 	_lienzo.draw_texture_rect(_corcho, Rect2(0, 0, 1600, 900), false)
-	herramientas_pizarron.dibujar_tinta(_lienzo)
+	relaciones_pizarron.dibujar_hilos(_lienzo)
 	for id in _tarjetas_tablero:
-		for i in range(pistas.size()):
-			if pistas[i].id == id:
-				if _arrastrando and _arrastre_desde_tablero and _arrastre_pista == i: continue
-				_dibujar_tarjeta_tablero(i, _tarjetas_tablero[id])
-	herramientas_pizarron.dibujar_notas(_lienzo)
+		relaciones_pizarron.dibujar_tarjeta(_lienzo, id, _tarjetas_tablero[id])
 	_lienzo = anterior
 
 func _tachuela(centro: Vector2) -> void:
@@ -779,4 +711,5 @@ func _dibujar_tarjeta_tablero(indice: int, posicion: Vector2) -> void:
 		_parrafo(pista.titulo, posicion + Vector2(10, 112), 170, 13, TINTA, 2)
 	else:
 		_parrafo(pista.titulo, posicion + Vector2(12, 28), 166, 17, TINTA, 4)
+	herramientas_pizarron.dibujar_tinta_pista(_lienzo, pista.id, posicion)
 	_tachuela(posicion + Vector2(TAM_TARJETA.x / 2, 7))

@@ -158,9 +158,9 @@ public partial class Caso0
 	{
 		if (!GuiaActiva) return;
 		if (!_deducciones.Contains(D1) && _pistas.Contains(Grabadora) && _pistas.Contains(Reloj))
-			Tablero.Sugerir("Arrastra la grabadora y el reloj del diario al pizarrón.", Grabadora, Reloj);
+			Tablero.Sugerir("Arrastra la grabadora y el reloj al pizarrón y une sus tachuelas con hilo.", Grabadora, Reloj);
 		else if (!_deducciones.Contains(D2) && _pistas.Contains(Huellas) && _pistas.Contains(Turnos))
-			Tablero.Sugerir("Arrastra las huellas y el libro de turnos del diario al pizarrón.", Huellas, Turnos);
+			Tablero.Sugerir("Arrastra las huellas y el libro de turnos al pizarrón y únelos con hilo.", Huellas, Turnos);
 	}
 
 	// Ayuda gradual (solo en el tutorial): 35 s un pensamiento, 60 s foco sobre el objetivo, 90 s señalarlo

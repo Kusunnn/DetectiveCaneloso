@@ -7,6 +7,8 @@ var camara: Camera3D
 var camara_anterior: Camera3D
 var superficie: Control
 var desplazamiento := Vector2.ZERO
+var desplazamiento_objetivo := Vector2.ZERO
+var _distancia := 2.5
 var abierto := false
 var moviendo_vista := false
 var _cursor := Vector2.ZERO
@@ -14,12 +16,12 @@ var _viewport: SubViewport
 
 func _ready() -> void:
 	_viewport = SubViewport.new()
-	_viewport.size = Vector2i(RESOLUCION)
+	_viewport.size = Vector2i(RESOLUCION * 2)
 	_viewport.disable_3d = true
 	_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(_viewport)
 	superficie = Control.new()
-	superficie.size = RESOLUCION
+	superficie.size = RESOLUCION * 2
 	superficie.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_viewport.add_child(superficie)
 	superficie.draw.connect(func() -> void: hud.dibujar_superficie_pizarron(superficie))
@@ -42,8 +44,8 @@ func _ready() -> void:
 	panel.material_override = material
 	add_child(panel)
 	camara = Camera3D.new()
-	camara.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camara.size = 2.5
+	camara.projection = Camera3D.PROJECTION_PERSPECTIVE
+	camara.fov = 55
 	camara.position = Vector3(0, 0, 1.9)
 	camara.near = 0.05
 	add_child(camara)
@@ -51,10 +53,12 @@ func _ready() -> void:
 func abrir() -> void:
 	camara_anterior = get_viewport().get_camera_3d()
 	desplazamiento = Vector2.ZERO
-	camara.position = Vector3(0, 0, 1.9)
+	desplazamiento_objetivo = Vector2.ZERO
+	camara.rotation = Vector3.ZERO
 	_cursor = get_viewport().get_visible_rect().size / 2
 	abierto = true
 	_ajustar_encuadre()
+	_actualizar_vista(1.0)
 	camara.make_current()
 
 func cerrar() -> void:
@@ -65,7 +69,8 @@ func cerrar() -> void:
 
 func _ajustar_encuadre() -> void:
 	var medida := get_viewport().get_visible_rect().size
-	camara.size = maxf(MEDIDA.y + 0.12, (MEDIDA.x + 0.12) / (medida.x / medida.y))
+	var alto := maxf(MEDIDA.y + 0.18, (MEDIDA.x + 0.18) / (medida.x / medida.y))
+	_distancia = alto / (2 * tan(deg_to_rad(camara.fov / 2)))
 
 func _process(delta: float) -> void:
 	superficie.queue_redraw()
@@ -74,24 +79,32 @@ func _process(delta: float) -> void:
 	# El cursor queda libre para las pistas. Acercarlo a un borde recorre el tablero.
 	var medida := get_viewport().get_visible_rect().size
 	var movimiento := Vector2.ZERO
-	var margen := 42.0
-	if not moviendo_vista and not hud.herramientas_pizarron.dibujando:
-		if _cursor.x < margen: movimiento.x = -1
-		elif _cursor.x > medida.x - margen: movimiento.x = 1
-		if _cursor.y < margen: movimiento.y = 1
-		elif _cursor.y > medida.y - margen: movimiento.y = -1
-		desplazar(movimiento * delta * 0.9)
+	var margen := 70.0
+	if not moviendo_vista and not (hud.relaciones_pizarron.hilo_desde != &"" or hud.relaciones_pizarron.moviendo):
+		# La velocidad crece hacia el borde para evitar arranques bruscos.
+		movimiento.x = -clampf((margen - _cursor.x) / margen, 0, 1) + clampf((_cursor.x - medida.x + margen) / margen, 0, 1)
+		movimiento.y = clampf((margen - _cursor.y) / margen, 0, 1) - clampf((_cursor.y - medida.y + margen) / margen, 0, 1)
+		desplazar(movimiento.limit_length() * delta * 0.9)
+	if (hud.relaciones_pizarron.hilo_desde != &"" or hud.relaciones_pizarron.moviendo):
+		# Mantener la vista estable al tender un hilo o arrastrar una tarjeta.
+		desplazamiento_objetivo = desplazamiento
+	_actualizar_vista(delta)
 
 func desplazar(paso: Vector2) -> void:
-	desplazamiento = (desplazamiento + paso).clamp(Vector2(-0.55, -1.05), Vector2(0.55, 0.35))
-	camara.position = Vector3(desplazamiento.x, desplazamiento.y, 1.9)
+	desplazamiento_objetivo = (desplazamiento_objetivo + paso).clamp(Vector2(-0.55, -1.05), Vector2(0.55, 0.35))
+
+func _actualizar_vista(delta: float) -> void:
+	desplazamiento = desplazamiento.lerp(desplazamiento_objetivo, 1.0 - exp(-delta * 12.0))
+	camara.position = Vector3(desplazamiento.x, desplazamiento.y, _distancia)
+	# Pequeña inclinación de la mirada: el corcho conserva profundidad al recorrerlo.
+	camara.rotation = Vector3(-desplazamiento.y * 0.035, desplazamiento.x * 0.08, 0)
 
 func recibir_raton(evento: InputEvent) -> void:
 	if evento is InputEventMouseMotion:
 		_cursor = evento.position
 		if moviendo_vista:
 			var alto := get_viewport().get_visible_rect().size.y
-			desplazar(Vector2(-evento.relative.x, evento.relative.y) * camara.size / alto)
+			desplazar(Vector2(-evento.relative.x, evento.relative.y) * (2 * _distancia * tan(deg_to_rad(camara.fov / 2))) / alto)
 	elif evento is InputEventMouseButton and evento.button_index == MOUSE_BUTTON_MIDDLE:
 		moviendo_vista = evento.pressed
 
