@@ -162,7 +162,7 @@ public partial class MenuInicio : Control
 	private async void AlPresionarNuevaPartida()
 	{
 		bool omitir = await _dialogoConfirmacion.Preguntar(
-			"¿Deseas omitir el tutorial?", "Omitir tutorial", "Jugar tutorial");
+			"¿Deseas omitir el tutorial?", "Omitir tutorial", "Jugar tutorial", peligro: false);
 		GestorPartida.Instancia.NuevaPartida(omitir);
 	}
 

@@ -34,7 +34,8 @@ var _expediente: ExpedienteCaso
 ## Zona de la carpeta del caso (en coordenadas de referencia 1600×900) para abrir con clic.
 const ZONA_CARPETA := Rect2(48, 36, 300, 96)
 ## Guía de teclas de la esquina inferior izquierda; se desvanece mientras el detective camina.
-const TECLAS := [["Q", "Libreta"], ["F", "Linterna"], ["R", "Tablero"], ["TAB", "Expediente"]]
+## [tecla por defecto, texto, acción]: si la acción existe se muestra la tecla que eligió el jugador.
+const TECLAS := [["Q", "Libreta", ""], ["F", "Linterna", "linterna"], ["R", "Tablero", "deducir"], ["TAB", "Expediente", ""]]
 const ROJO_AVISO := Color("e0463c")
 var linterna_encendida: bool = false
 ## Diario del caso (Q): pistas, deducciones, testimonios y personas.
@@ -249,6 +250,12 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			cambiar_pista(-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1)
 			get_viewport().set_input_as_handled()
+	# Linterna: acción configurable en Opciones (F por defecto; RB en el control)
+	if event.is_action_pressed("linterna") and not event.is_echo():
+		linterna_encendida = not linterna_encendida
+		linterna_cambiada.emit(linterna_encendida)
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode in [KEY_UP, KEY_LEFT, KEY_DOWN, KEY_RIGHT]:
 			if diario_abierto:
@@ -269,17 +276,13 @@ func _input(event: InputEvent) -> void:
 				diario_abierto = not diario_abierto
 				if diario_abierto:
 					_giro = 1.0
-			KEY_F:
-				linterna_encendida = not linterna_encendida
-				linterna_cambiada.emit(linterna_encendida)
 			KEY_ESCAPE:
 				if not diario_abierto:
 					return
 				diario_abierto = false
 			_:
 				return
-		if event.keycode != KEY_F:
-			panel_cambiado.emit(diario_abierto, false)
+		panel_cambiado.emit(diario_abierto, false)
 		get_viewport().set_input_as_handled()
 
 func _texto(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float = -1) -> void:
@@ -415,11 +418,25 @@ func _dibujar_teclas(h: float) -> void:
 		return
 	var y := h - 44.0 - TECLAS.size() * 40.0
 	for par in TECLAS:
-		var ancho := maxf(30.0, MONO.get_string_size(par[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x + 16.0)
+		var tecla := _tecla_de(par[2], par[0])
+		var ancho := maxf(30.0, MONO.get_string_size(tecla, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x + 16.0)
 		_lienzo.draw_rect(Rect2(53, y, ancho, 28), Color(BLANCO, 0.85 * _ayuda_alpha), false, 1.5)
-		_texto(par[0], Vector2(53 + 8, y + 19), MONO, 13, Color(BLANCO, _ayuda_alpha))
+		_texto(tecla, Vector2(53 + 8, y + 19), MONO, 13, Color(BLANCO, _ayuda_alpha))
 		_texto(par[1], Vector2(53 + ancho + 14, y + 20), MONO, 15, Color(BLANCO, 0.9 * _ayuda_alpha))
 		y += 40.0
+
+## Primera tecla del teclado asignada a la acción (o la tecla por defecto si no hay acción)
+func _tecla_de(accion: String, por_defecto: String) -> String:
+	if accion.is_empty() or not InputMap.has_action(accion):
+		return por_defecto
+	for evento in InputMap.action_get_events(accion):
+		if evento is InputEventKey:
+			var codigo: Key = evento.keycode
+			if evento.physical_keycode != KEY_NONE:
+				# Sin ventana (pruebas automáticas) no hay distribución de teclado que consultar
+				codigo = evento.physical_keycode if DisplayServer.get_name() == "headless" else DisplayServer.keyboard_get_keycode_from_physical(evento.physical_keycode)
+			return OS.get_keycode_string(codigo).to_upper()
+	return por_defecto
 
 func _boton_libro(texto: String, rect: Rect2, destino: int, activo: bool = true) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)

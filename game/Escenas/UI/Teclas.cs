@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 
 // Texto de la tecla o botón de una acción, según si el jugador usa teclado o control.
-// Acciones del InputMap ("interactuar", "agacharse"...) más las del HUD, que lee teclas fijas:
-// "libreta" (Q), "expediente" (TAB) y "linterna" (F); y dos de movimiento: "mover" y "mirar".
+// Acciones del InputMap ("interactuar", "agacharse", "linterna"...) más las del HUD, que lee teclas fijas:
+// "libreta" (Q) y "expediente" (TAB); y dos de movimiento: "mover" y "mirar".
 public static class Teclas
 {
 	// Botones de control (estilo Xbox) por índice de JoyButton
@@ -31,23 +31,53 @@ public static class Teclas
 
 	public static string Etiqueta(string accion)
 	{
-		if (Especiales.TryGetValue(accion, out var especial))
+		// Las acciones configurables (como la linterna) muestran la tecla que eligió el jugador
+		if (Especiales.TryGetValue(accion, out var especial) && (UsandoMando || !InputMap.HasAction(accion)))
 			return UsandoMando ? especial.Mando : especial.Teclado;
 		if (!InputMap.HasAction(accion)) return accion.ToUpper();
+		if (!UsandoMando) return EtiquetaTeclado(accion);
 
 		var nombres = new List<string>();
 		foreach (InputEvent evento in InputMap.ActionGetEvents(accion))
 		{
-			if (UsandoMando && evento is InputEventJoypadButton boton && NombresBoton.TryGetValue((int)boton.ButtonIndex, out string nombre))
+			if (evento is InputEventJoypadButton boton && NombresBoton.TryGetValue((int)boton.ButtonIndex, out string nombre))
 				nombres.Add(nombre);
-			else if (!UsandoMando && evento is InputEventKey tecla)
-			{
-				Key codigo = tecla.PhysicalKeycode != Key.None
-					? DisplayServer.KeyboardGetKeycodeFromPhysical(tecla.PhysicalKeycode)
-					: tecla.Keycode;
-				nombres.Add(codigo == Key.Ctrl ? "Ctrl" : codigo == Key.Shift ? "Shift" : OS.GetKeycodeString(codigo));
-			}
 		}
 		return nombres.Count == 0 ? accion.ToUpper() : string.Join(" / ", nombres);
+	}
+
+	// Teclas del teclado de una acción, aunque se esté usando el control (Opciones > Controles)
+	public static string EtiquetaTeclado(string accion)
+	{
+		if (!InputMap.HasAction(accion)) return accion.ToUpper();
+		var nombres = new List<string>();
+		foreach (InputEvent evento in InputMap.ActionGetEvents(accion))
+		{
+			if (evento is InputEventKey tecla)
+				nombres.Add(NombreTecla(tecla.PhysicalKeycode != Key.None ? tecla.PhysicalKeycode : tecla.Keycode, tecla.PhysicalKeycode != Key.None));
+		}
+		return nombres.Count == 0 ? "—" : string.Join(" / ", nombres);
+	}
+
+	// Nombre corto de una tecla, según la distribución del teclado del jugador
+	public static string NombreTecla(Key tecla, bool fisica = true)
+	{
+		// Sin ventana (pruebas automáticas) no hay distribución de teclado: se usa la tecla tal cual
+		bool hayTeclado = DisplayServer.GetName() != "headless";
+		Key codigo = fisica && hayTeclado ? DisplayServer.KeyboardGetKeycodeFromPhysical(tecla) : tecla;
+		return codigo switch
+		{
+			Key.Ctrl => "Ctrl",
+			Key.Shift => "Shift",
+			Key.Alt => "Alt",
+			Key.Space => "Espacio",
+			Key.Enter => "Enter",
+			Key.Backspace => "Retroceso",
+			Key.Up => "↑",
+			Key.Down => "↓",
+			Key.Left => "←",
+			Key.Right => "→",
+			_ => OS.GetKeycodeString(codigo),
+		};
 	}
 }
