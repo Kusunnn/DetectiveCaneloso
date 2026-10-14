@@ -300,13 +300,18 @@ public partial class VistaExamen : CanvasLayer
 		var media = new Vector2(t * tam.X / tam.Y, t);
 		float d1 = DistanciaCamara / anterior, d2 = DistanciaCamara / _zoomObjetivo;
 		_desplObjetivo = LimitarDespl(_desplObjetivo + n * media * (d1 - d2), _zoomObjetivo);
-		if (Mathf.Abs(_zoomObjetivo - _ultimoZoomSonado) >= 0.4f)
+		// Un sonido por gesto: no vuelve a sonar hasta que pasan 0.25 s, así las copias no se enciman ni saturan.
+		// Acercar y alejar suenan distinto, y el tono ya no sube con el zoom.
+		double ahora = Time.GetTicksMsec() / 1000.0;
+		if (Mathf.Abs(_zoomObjetivo - _ultimoZoomSonado) >= 0.4f && ahora - _ultimoSonidoZoom >= 0.25)
 		{
 			_ultimoZoomSonado = _zoomObjetivo;
-			Sonidos.ReproducirUI(this, Sonidos.Tipo.ExamenAcercar, 0f, 0.9f + _zoomObjetivo * 0.08f);
+			_ultimoSonidoZoom = ahora;
+			Sonidos.ReproducirUI(this, paso > 0 ? Sonidos.Tipo.ExamenAcercar : Sonidos.Tipo.ExamenAlejar);
 		}
 	}
 	private float _ultimoZoomSonado = 1f;
+	private double _ultimoSonidoZoom;
 
 	private void Desplazar(Vector2 relativo)
 	{

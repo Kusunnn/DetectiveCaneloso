@@ -72,7 +72,8 @@ Están en `Assets/Audio/Examen/`. Son los OGG originales de Kenney copiados tal 
 | Examen/abrir.ogg (`handleSmallLeather`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
 | Examen/cerrar.ogg (`dropLeather`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
 | Examen/girar_1..3.ogg (`beltHandle1`, `beltHandle2`, `handleSmallLeather2`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
-| Examen/acercar_1..3.ogg (`scroll_001`..`scroll_003`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
+| Examen/acercar_1..2.ogg (`maximize_008`, `maximize_006`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
+| Examen/alejar_1..2.ogg (`minimize_008`, `minimize_006`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
 | Examen/tic.ogg (`glass_001`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
 | Examen/descubrir.ogg (`jingles_PIZZI04`) | Kenney · Music Jingles | Kenney | CC0 1.0 | https://kenney.nl/assets/music-jingles |
 
