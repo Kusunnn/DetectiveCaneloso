@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bfccqcgv6qsc5"]
+
+[ext_resource type="PackedScene" uid="uid://kbtrqusgsoiu" path="res://Assets/Models/poli/Poli/Neutral Idle.fbx" id="1_43poc"]
+[ext_resource type="Animation" uid="uid://c4yq3vhywliom" path="res://Assets/Models/poli/Poli/caminarpoli.res" id="2_futed"]
+[ext_resource type="Animation" uid="uid://beku07gedy64a" path="res://Assets/Models/poli/Poli/inapoli.res" id="3_4owio"]
+[ext_resource type="Animation" uid="uid://clt321bvs0dv4" path="res://Assets/Models/poli/Poli/ten.res" id="4_7lqwv"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_k3tyc"]
+_data = {
+&"caminarpoli": ExtResource("2_futed"),
+&"inapoli": ExtResource("3_4owio"),
+&"ten": ExtResource("4_7lqwv")
+}
+
+[node name="Policia" type="Node3D" unique_id=1794000624]
+
+[node name="Neutral Idle" parent="." unique_id=1912222935 instance=ExtResource("1_43poc")]
+transform = Transform3D(2000, 0, 0, 0, 2000, 0, 0, 0, 2000, -0.5643563, -2.5366516, 2.16436)
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="Neutral Idle" unique_id=1142267984]
+libraries/ = SubResource("AnimationLibrary_k3tyc")
