@@ -1,0 +1,17 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/treasure_chest/treasure_chest_1k.gltf" id="1_modelo"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/baul_disfraces/contenido.tscn" id="2_contenido"]
+
+[node name="BaulAbierto" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("1_modelo")]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0, 0, 0)
+
+[node name="treasure_chest_lid" parent="Modelo"]
+transform = Transform3D(1, 0, 0, 0, -0.30902, 0.95106, 0, -0.95106, -0.30902, 0, 0.421, -0.257)
+
+[node name="Contenido" parent="." instance=ExtResource("2_contenido")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+
+[editable path="Modelo"]

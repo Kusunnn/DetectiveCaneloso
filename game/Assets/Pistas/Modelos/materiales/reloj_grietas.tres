@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/reloj_grietas.png" id="1_m2bav"]
+
+[resource]
+resource_name = "reloj_grietas"
+transparency = 1
+albedo_texture = ExtResource("1_m2bav")
+metallic_specular = 0.8
+roughness = 0.1

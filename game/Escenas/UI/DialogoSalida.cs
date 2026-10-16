@@ -2,9 +2,9 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 
-// Advertencia al salir con progreso sin guardar, con el estilo del HUD (papel, máquina de escribir, ámbar):
-// [Guardar y salir] [Salir sin guardar] [Cancelar]. El foco empieza en "Guardar y salir"
-// y Esc (o B en el control) cancela, para que perder progreso nunca sea lo fácil.
+// Advertencia al salir de la partida (al menú o del juego), con el estilo del HUD (papel, máquina de escribir, ámbar):
+// [Guardar y salir] [Salir sin guardar] [Cancelar]. Sale siempre que se deja una partida, haya o no cambios.
+// El foco empieza en "Guardar y salir" y Esc (o B en el control) cancela, para que perder progreso nunca sea lo fácil.
 public partial class DialogoSalida : Control
 {
 	public enum Respuesta { GuardarYSalir, SalirSinGuardar, Cancelar }
@@ -13,7 +13,7 @@ public partial class DialogoSalida : Control
 	private static readonly Color Tinta = new Color("20272b");
 	private static readonly Color Papel = new Color(0.84f, 0.81f, 0.72f);
 
-	private Label _detalle;
+	private Label _mensaje, _detalle;
 	private Button _guardar, _salir, _cancelar;
 	private TaskCompletionSource<Respuesta> _respuesta;
 
@@ -51,15 +51,11 @@ public partial class DialogoSalida : Control
 		columna.AddChild(titulo);
 		columna.AddChild(new ColorRect { Color = Ambar, CustomMinimumSize = new Vector2(150, 5), SizeFlagsHorizontal = SizeFlags.ShrinkBegin });
 
-		var mensaje = new Label
-		{
-			Text = "Tienes progreso sin guardar. Si sales ahora, se perderá lo que hiciste desde el último guardado.",
-			AutowrapMode = TextServer.AutowrapMode.WordSmart,
-		};
-		mensaje.AddThemeFontOverride("font", mono);
-		mensaje.AddThemeFontSizeOverride("font_size", 20);
-		mensaje.AddThemeColorOverride("font_color", Tinta);
-		columna.AddChild(mensaje);
+		_mensaje = new Label { AutowrapMode = TextServer.AutowrapMode.WordSmart };
+		_mensaje.AddThemeFontOverride("font", mono);
+		_mensaje.AddThemeFontSizeOverride("font_size", 20);
+		_mensaje.AddThemeColorOverride("font_color", Tinta);
+		columna.AddChild(_mensaje);
 		_detalle = new Label();
 		_detalle.AddThemeFontOverride("font", mono);
 		_detalle.AddThemeFontSizeOverride("font_size", 17);
@@ -109,18 +105,30 @@ public partial class DialogoSalida : Control
 		return boton;
 	}
 
-	public Task<Respuesta> Preguntar(string ultimoGuardado)
+	// hayCambios: hay progreso desde el último guardado. puedeGuardar: false al repetir un capítulo (no se guarda en las ranuras).
+	public Task<Respuesta> Preguntar(string ultimoGuardado, bool hayCambios = true, bool puedeGuardar = true)
 	{
-		_detalle.Text = ultimoGuardado;
+		_mensaje.Text = !puedeGuardar
+			? "Estás repitiendo un capítulo: lo que hagas aquí no se guarda en tus ranuras. ¿Salir de todos modos?"
+			: hayCambios
+				? "Tienes progreso sin guardar. Si sales ahora, se perderá lo que hiciste desde el último guardado."
+				: "Vas a salir de la partida sin guardar. Al volver, seguirás desde tu último guardado.";
+		_detalle.Text = puedeGuardar ? ultimoGuardado : "";
+		_detalle.Visible = puedeGuardar;
+		_guardar.Visible = puedeGuardar;
 		_respuesta = new TaskCompletionSource<Respuesta>();
 		Show();
-		_guardar.GrabFocus();
+		var foco = puedeGuardar ? _guardar : _cancelar;
+		foco.GrabFocus();
 		// Otra vez al siguiente cuadro: que un botón de abajo no se quede con el foco por el cursor
-		_guardar.CallDeferred(Control.MethodName.GrabFocus);
+		foco.CallDeferred(Control.MethodName.GrabFocus);
 		return _respuesta.Task;
 	}
 
 	public bool Abierto => Visible;
+
+	// Si la escena cambia con el aviso abierto, se cierra como si se hubiera cancelado
+	public void Cancelar() { if (Visible) Responder(Respuesta.Cancelar); }
 
 	private void Responder(Respuesta r)
 	{

@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/hoja_reverso.jpg" id="1_78fsy"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_i8b12"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_qph1a"]
+
+[resource]
+resource_name = "hoja_reverso"
+albedo_texture = ExtResource("1_78fsy")
+roughness_texture = ExtResource("3_qph1a")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_i8b12")
+texture_filter = 5

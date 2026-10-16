@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/foto_grupo_reverso.jpg" id="1_3mjoj"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Cork002/Cork002_NormalGL.jpg" id="2_4hs04"]
+
+[resource]
+resource_name = "foto_reverso"
+albedo_texture = ExtResource("1_3mjoj")
+roughness = 0.95
+normal_enabled = true
+normal_scale = 0.3
+normal_texture = ExtResource("2_4hs04")

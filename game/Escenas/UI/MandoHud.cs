@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-// El HUD (hud.gd) escucha teclas fijas: Q libreta, TAB expediente, F linterna y flechas.
+// El HUD (hud.gd) escucha teclas fijas: Q diario (pistas), TAB expediente del caso, F linterna y flechas.
 // Este nodo traduce los botones del control a esas teclas, sin tocar el HUD.
 public partial class MandoHud : Node
 {

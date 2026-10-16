@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/cinta_etiqueta.jpg" id="1_ccgqp"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_2bsq0"]
+
+[resource]
+resource_name = "etiqueta_cinta"
+albedo_texture = ExtResource("1_ccgqp")
+roughness = 0.5
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_2bsq0")
+texture_filter = 5

@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/quemado_hoja_b_q.png" id="1_o1cx7"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_sg64k"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_5e7mk"]
+
+[resource]
+resource_name = "quemado_b_frente"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("1_o1cx7")
+roughness_texture = ExtResource("3_5e7mk")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_sg64k")
+texture_filter = 5

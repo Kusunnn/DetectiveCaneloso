@@ -1,0 +1,23 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/candado_caseta/cuerpo.res" id="1_tvmm3"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/candado_caseta/arco.res" id="2_soycn"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/candado_ojo.tres" id="3_y2f3w"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_3fgr7"]
+material = ExtResource("3_y2f3w")
+size = Vector2(0.012, 0.012)
+
+[node name="Candado" type="Node3D" unique_id=1747126717]
+
+[node name="Cuerpo" type="MeshInstance3D" parent="." unique_id=1108302173]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.019, 0)
+mesh = ExtResource("1_tvmm3")
+
+[node name="Arco" type="MeshInstance3D" parent="." unique_id=509616066]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.0135, 0.009, 0)
+mesh = ExtResource("2_soycn")
+
+[node name="OjoLlave" type="MeshInstance3D" parent="." unique_id=1948193527]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.013, 0.0092)
+mesh = SubResource("QuadMesh_3fgr7")

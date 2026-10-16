@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/delantal/tela.res" id="1_44qmy"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/delantal/bolsillo.res" id="2_q6shp"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/delantal/cuello.res" id="3_s5b3m"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/delantal/tira_-1.res" id="4_no1bs"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/delantal/tira_1.res" id="5_oyvvh"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/delantal/gancho.res" id="6_vlw7n"]
+
+[node name="Delantal" type="Node3D" unique_id=1980696240]
+
+[node name="Tela" type="MeshInstance3D" parent="." unique_id=1053255876]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
+mesh = ExtResource("1_44qmy")
+
+[node name="Bolsillo" type="MeshInstance3D" parent="." unique_id=409290746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.62, 0.016077736)
+mesh = ExtResource("2_q6shp")
+
+[node name="Cuello" type="MeshInstance3D" parent="." unique_id=443536496]
+mesh = ExtResource("3_s5b3m")
+
+[node name="Tira" type="MeshInstance3D" parent="." unique_id=886193182]
+mesh = ExtResource("4_no1bs")
+
+[node name="@MeshInstance3D@3" type="MeshInstance3D" parent="." unique_id=523847046]
+mesh = ExtResource("5_oyvvh")
+
+[node name="Gancho" type="MeshInstance3D" parent="." unique_id=1379144082]
+mesh = ExtResource("6_vlw7n")

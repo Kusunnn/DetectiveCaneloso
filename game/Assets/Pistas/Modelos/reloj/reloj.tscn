@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/wall_clock/wall_clock_1k.gltf" id="1_modelo"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/reloj_grietas.tres" id="2_grietas"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_grietas"]
+material = ExtResource("2_grietas")
+size = Vector2(0.288, 0.288)
+
+[node name="Reloj" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("1_modelo")]
+
+[node name="wall_clock_minute_hand" parent="Modelo"]
+transform = Transform3D(0.96771, 0.25207, 0, -0.25207, 0.96771, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="wall_clock_hours_hand" parent="Modelo"]
+transform = Transform3D(-0.87036, 0.49242, 0, -0.49242, -0.87036, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Grietas" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0476)
+cast_shadow = 0
+mesh = SubResource("QuadMesh_grietas")
+
+[editable path="Modelo"]

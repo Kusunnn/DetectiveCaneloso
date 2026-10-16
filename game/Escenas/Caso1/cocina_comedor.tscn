@@ -37,6 +37,9 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/bote_basura.tscn" id="e35"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/sarten.tscn" id="e36"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/sarten2.tscn" id="e37"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/taza_delantal/taza.tscn" id="hu07_m_taza"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/taza_delantal/taza_delantal.tscn" id="hu07_x_taza"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/delantal/delantal.tscn" id="hu07_m_delantal"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(5.2, 2.6, 0.78)
@@ -105,8 +108,7 @@ density = -0.3
 edge_fade = 0.2
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_20"]
-size = Vector3(0.35, 0.3, 0.35)
-
+size = Vector3(0.12, 0.1, 0.09)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21"]
 albedo_color = Color(0.18, 0.09, 0.05, 1.0)
 roughness = 0.4
@@ -129,8 +131,7 @@ size = Vector3(1.3, 0.05, 0.05)
 material = SubResource("StandardMaterial3D_24")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_26"]
-size = Vector3(0.6, 0.95, 0.14)
-
+size = Vector3(0.6, 0.9, 0.1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_27"]
 albedo_color = Color(0.78, 0.74, 0.66, 1.0)
 roughness = 1.0
@@ -434,17 +435,13 @@ Descripcion = "Una taza de chocolate a medio tomar, todavía tibia, y el delanta
 EsEvidencia = true
 ComentarioAlMirar = "Todavía está tibia..."
 Imagen = ExtResource("e20")
+DescripcionAmpliada = "Una taza de chocolate a medio tomar, todavía tibia, y el delantal de Porky colgado de cualquier manera en el gancho. Salió de la cocina con prisa."
+Lugar = "Cocina"
+ModeloExamen = ExtResource("hu07_x_taza")
 
 [node name="Forma" type="CollisionShape3D" parent="TazaDelantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.15, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.01, 0.05, 0)
 shape = SubResource("BoxShape3D_20")
-
-[node name="Taza" parent="TazaDelantal" instance=ExtResource("e22")]
-transform = Transform3D(0.8192, 0.0, 0.5736, 0.0, 1.0, 0.0, -0.5736, 0.0, 0.8192, 0.0, 0.0, 0.0)
-
-[node name="Chocolate" type="MeshInstance3D" parent="TazaDelantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.065, 0.0)
-mesh = SubResource("CylinderMesh_22")
 
 [node name="Refrigerador" parent="." instance=ExtResource("e23") groups=["apoyar_suelo"]]
 transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 2.9, 0.06, 16.8689)
@@ -531,20 +528,8 @@ SonidoAbrir = 2
 ObjetoQueDa = "llavero_porky"
 
 [node name="Forma" type="CollisionShape3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.1, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15, 0.02)
 shape = SubResource("BoxShape3D_26")
-
-[node name="Tela" type="MeshInstance3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.1, 0.0)
-mesh = SubResource("BoxMesh_29")
-
-[node name="Bolsillo" type="MeshInstance3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, -0.2, 0.02)
-mesh = SubResource("BoxMesh_30")
-
-[node name="Cinta" type="MeshInstance3D" parent="Delantal"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.38, -0.005)
-mesh = SubResource("BoxMesh_31")
 
 [node name="Gancho" type="MeshInstance3D" parent="Delantal"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.45, -0.02)
@@ -627,3 +612,9 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Cocina"]
 shape = SubResource("BoxShape3D_34")
+
+[node name="Modelo" parent="TazaDelantal" instance=ExtResource("hu07_m_taza")]
+transform = Transform3D(0.81915, 0, 0.57358, 0, 1, 0, -0.57358, 0, 0.81915, 0, 0, 0)
+
+[node name="Modelo" parent="Delantal" instance=ExtResource("hu07_m_delantal")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.02)

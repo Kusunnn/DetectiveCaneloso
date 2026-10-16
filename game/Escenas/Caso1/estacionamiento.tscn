@@ -13,6 +13,8 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/letrero_poste.tscn" id="e11"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/pueblo/lantern.glb" id="e12"]
 [ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/circle_05.png" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/registro_llamadas/registro_llamadas.tscn" id="hu07_m_llamadas"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/registro_llamadas/registro_llamadas.tscn" id="hu07_x_llamadas"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(0.2, 0.6, 1.0)
@@ -119,26 +121,13 @@ Descripcion = "Una hoja impresa con las llamadas del celular de Juan Carlos. Var
 EsEvidencia = true
 ComentarioAlMirar = "Una hoja impresa en el asiento del copiloto."
 Imagen = ExtResource("e3")
+DescripcionAmpliada = "Una hoja impresa con el registro de llamadas del celular de Juan Carlos: tres llamadas al mismo número a las 23:58, 00:12 y 00:31."
+Lugar = "Estacionamiento · coche de Juan Carlos"
+ModeloExamen = ExtResource("hu07_x_llamadas")
 
 [node name="Forma" type="CollisionShape3D" parent="Coche/RegistroLlamadas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
 shape = SubResource("BoxShape3D_3")
-
-[node name="Hoja" type="Node3D" parent="Coche/RegistroLlamadas"]
-transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -0.02, 0.0, 0.0)
-script = ExtResource("e5")
-Texto = "REGISTRO DE LLAMADAS
-23:58 — 3 min
-00:12 — 1 min
-00:31 — 6 min"
-Ancho = 0.26
-ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 22
-TamMinimo = 8
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0011
 
 [node name="Entrada" type="Node3D" parent="." groups=["auditoria_estructura"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 24.0, 0.0, 33.6)
@@ -268,3 +257,6 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Estacionamiento"]
 shape = SubResource("BoxShape3D_10")
+
+[node name="Modelo" parent="Coche/RegistroLlamadas" instance=ExtResource("hu07_m_llamadas")]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, -0.02, 0)

@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/interruptor_generador/base.res" id="1_gxu8o"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/interruptor_generador/brazo.res" id="2_6b8g4"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/interruptor_generador/mango.res" id="3_8q4qu"]
+
+[node name="Palanca" type="Node3D" unique_id=1660253907]
+
+[node name="Base" type="MeshInstance3D" parent="." unique_id=1732288947]
+mesh = ExtResource("1_gxu8o")
+
+[node name="Brazo" type="MeshInstance3D" parent="." unique_id=749703253]
+mesh = ExtResource("2_6b8g4")
+
+[node name="Mango" type="MeshInstance3D" parent="." unique_id=1737660792]
+mesh = ExtResource("3_8q4qu")

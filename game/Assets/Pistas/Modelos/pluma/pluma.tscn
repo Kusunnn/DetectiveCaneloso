@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/pluma/barbas.res" id="1_e25ia"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/pluma/canon.res" id="2_pwhr7"]
+
+[node name="Pluma" type="Node3D" unique_id=820480115]
+
+[node name="Barbas" type="MeshInstance3D" parent="." unique_id=1501262800]
+mesh = ExtResource("1_e25ia")
+
+[node name="Canon" type="MeshInstance3D" parent="." unique_id=1701252777]
+mesh = ExtResource("2_pwhr7")

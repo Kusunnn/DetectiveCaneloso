@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/registro_enfermeria_paginas.jpg" id="1_8sgrn"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_vw7o6"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_1ejav"]
+
+[resource]
+resource_name = "registro_enfermeria_paginas"
+albedo_texture = ExtResource("1_8sgrn")
+roughness_texture = ExtResource("3_1ejav")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_vw7o6")
+texture_filter = 5

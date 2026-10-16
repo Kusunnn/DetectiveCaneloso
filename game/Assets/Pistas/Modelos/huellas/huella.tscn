@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/huella_albedo.png" id="1_qqsak"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/huella_normal.png" id="2_fa5tl"]
+
+[node name="Huella" type="Decal" unique_id=1476475128]
+size = Vector3(0.11, 0.06, 0.29)
+texture_albedo = ExtResource("1_qqsak")
+texture_normal = ExtResource("2_fa5tl")
+normal_fade = 0.3

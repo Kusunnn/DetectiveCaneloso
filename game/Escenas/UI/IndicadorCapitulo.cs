@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-// Tira al pie de la hoja del expediente [TAB]: "Capítulo X · Fase: … · Pistas: 4/9". Sin decir qué pistas faltan.
+// Tira sobre el diario [Q] (donde están las pistas): "Capítulo X · Fase: … · Pistas: 4/9". Sin decir qué pistas faltan.
 // El HUD es del equipo (GDScript): solo se escucha su señal panel_cambiado, no se modifica.
 public partial class IndicadorCapitulo : CanvasLayer
 {
@@ -37,14 +37,15 @@ public partial class IndicadorCapitulo : CanvasLayer
 
 	private void AlCambiarPanel(bool abierto, bool expediente)
 	{
-		_tira.Visible = abierto && expediente && Texto != null;
+		// Solo con el diario: el expediente [TAB] es la historia del caso y no cuenta pistas
+		_tira.Visible = abierto && !expediente && Texto != null;
 		if (!_tira.Visible) return;
 		_etiqueta.Text = Texto();
 		_tira.ResetSize();
-		// El expediente del HUD es una hoja de 1000×550 centrada en un lienzo de 1600×900 escalado; la tira va en su margen inferior
+		// El diario es un libro de 1160×650 centrado en un lienzo de 1600×900 escalado; la tira va arriba, sobre las pestañas
 		Vector2 pantalla = _tira.GetViewportRect().Size;
 		float escala = Mathf.Min(pantalla.X / 1600f, pantalla.Y / 900f);
 		_tira.Scale = Vector2.One * Mathf.Max(escala, 0.6f);
-		_tira.Position = new Vector2(pantalla.X / 2 - _tira.Size.X * _tira.Scale.X / 2, pantalla.Y / 2 + 213 * escala);
+		_tira.Position = new Vector2(pantalla.X / 2 - _tira.Size.X * _tira.Scale.X / 2, pantalla.Y / 2 - 446 * escala);
 	}
 }

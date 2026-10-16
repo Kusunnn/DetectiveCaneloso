@@ -133,7 +133,8 @@ public partial class Caso0
 		switch (eleccion)
 		{
 			case PantallaCasoCerrado.Eleccion.Continuar:
-				gestor.IniciarCapitulo(siguiente.Id, rejugar: Capitulos.Resuelto(siguiente.Id));
+				// Si el tutorial se estaba repitiendo, el capítulo que sigue también es repetición: no pisa la partida guardada
+				gestor.IniciarCapitulo(siguiente.Id, rejugar: gestor.Rejugando || Capitulos.Resuelto(siguiente.Id));
 				break;
 			case PantallaCasoCerrado.Eleccion.Repetir:
 				gestor.IniciarCapitulo(IdCapitulo, rejugar: true);

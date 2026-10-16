@@ -1,0 +1,97 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/baul_disfraces/capa.res" id="1_oft6o"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/baul_disfraces/corona.res" id="2_tc2ly"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/oro_corona.tres" id="3_2ux43"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/gema.tres" id="4_snyvc"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/baul_disfraces/inventario.res" id="5_q5vs0"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nog5n"]
+material = ExtResource("3_2ux43")
+top_radius = 0.0
+bottom_radius = 0.011
+height = 0.035
+radial_segments = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_mk1xs"]
+material = ExtResource("4_snyvc")
+radius = 0.006
+height = 0.012
+
+[node name="ContenidoBaul" type="Node3D" unique_id=1045451027]
+
+[node name="Capa" type="MeshInstance3D" parent="." unique_id=862873721]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.04, 0, 0.16)
+mesh = ExtResource("1_oft6o")
+
+[node name="Corona" type="MeshInstance3D" parent="." unique_id=1814575360]
+transform = Transform3D(1, 0, 0, 0, 0.9689124, -0.24740396, 0, 0.24740396, 0.9689124, 0.13, 0.035, -0.06)
+mesh = ExtResource("2_tc2ly")
+
+[node name="Pico0" type="MeshInstance3D" parent="Corona" unique_id=1346436552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0765, 0.0575, 0)
+mesh = SubResource("CylinderMesh_nog5n")
+
+[node name="Gema0" type="MeshInstance3D" parent="Corona" unique_id=1207355421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.073067814, 0.02, 0.030034885)
+mesh = SubResource("SphereMesh_mk1xs")
+
+[node name="Pico1" type="MeshInstance3D" parent="Corona" unique_id=946791552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05409367, 0.0575, 0.05409367)
+mesh = SubResource("CylinderMesh_nog5n")
+
+[node name="Gema1" type="MeshInstance3D" parent="Corona" unique_id=1246706264]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.030428877, 0.02, 0.07290462)
+mesh = SubResource("SphereMesh_mk1xs")
+
+[node name="Pico2" type="MeshInstance3D" parent="Corona" unique_id=1417146985]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6841195e-18, 0.0575, 0.0765)
+mesh = SubResource("CylinderMesh_nog5n")
+
+[node name="Gema2" type="MeshInstance3D" parent="Corona" unique_id=222782403]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.030034885, 0.02, 0.073067814)
+mesh = SubResource("SphereMesh_mk1xs")
+
+[node name="Pico3" type="MeshInstance3D" parent="Corona" unique_id=1286984745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05409367, 0.0575, 0.05409367)
+mesh = SubResource("CylinderMesh_nog5n")
+
+[node name="Gema3" type="MeshInstance3D" parent="Corona" unique_id=2071418956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07290462, 0.02, 0.030428877)
+mesh = SubResource("SphereMesh_mk1xs")
+
+[node name="Pico4" type="MeshInstance3D" parent="Corona" unique_id=1643349076]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0765, 0.0575, 9.368239e-18)
+mesh = SubResource("CylinderMesh_nog5n")
+
+[node name="Gema4" type="MeshInstance3D" parent="Corona" unique_id=356408162]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.073067814, 0.02, -0.030034885)
+mesh = SubResource("SphereMesh_mk1xs")
+
+[node name="Pico5" type="MeshInstance3D" parent="Corona" unique_id=646319456]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05409367, 0.0575, -0.05409367)
+mesh = SubResource("CylinderMesh_nog5n")
+
+[node name="Gema5" type="MeshInstance3D" parent="Corona" unique_id=1814447191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.030428877, 0.02, -0.07290462)
+mesh = SubResource("SphereMesh_mk1xs")
+
+[node name="Pico6" type="MeshInstance3D" parent="Corona" unique_id=878128029]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4052358e-17, 0.0575, -0.0765)
+mesh = SubResource("CylinderMesh_nog5n")
+
+[node name="Gema6" type="MeshInstance3D" parent="Corona" unique_id=975824271]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.030034885, 0.02, -0.073067814)
+mesh = SubResource("SphereMesh_mk1xs")
+
+[node name="Pico7" type="MeshInstance3D" parent="Corona" unique_id=205240674]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05409367, 0.0575, -0.05409367)
+mesh = SubResource("CylinderMesh_nog5n")
+
+[node name="Gema7" type="MeshInstance3D" parent="Corona" unique_id=1645227149]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07290462, 0.02, -0.030428877)
+mesh = SubResource("SphereMesh_mk1xs")
+
+[node name="Inventario" type="MeshInstance3D" parent="." unique_id=645922888]
+transform = Transform3D(0.9393727, 0, 0.3428978, 0, 1, 0, -0.3428978, 0, 0.9393727, -0.12, 0.03, -0.05)
+mesh = ExtResource("5_q5vs0")

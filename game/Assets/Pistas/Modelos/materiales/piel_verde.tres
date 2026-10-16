@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Leather037/Leather037_Color.jpg" id="1_46kpt"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Leather037/Leather037_NormalGL.jpg" id="2_a85ba"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Leather037/Leather037_Roughness.jpg" id="3_4kh1u"]
+
+[resource]
+resource_name = "piel_verde"
+albedo_color = Color(0.3, 0.38, 0.32, 1)
+albedo_texture = ExtResource("1_46kpt")
+roughness_texture = ExtResource("3_4kh1u")
+normal_enabled = true
+normal_texture = ExtResource("2_a85ba")
+uv1_scale = Vector3(4, 4, 4)
+uv1_triplanar = true

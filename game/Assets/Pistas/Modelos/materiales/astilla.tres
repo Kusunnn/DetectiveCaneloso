@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/TreeEnd003/TreeEnd003_Color.jpg" id="1_ucbpn"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/TreeEnd003/TreeEnd003_NormalGL.jpg" id="2_g0gt2"]
+
+[resource]
+resource_name = "astilla"
+albedo_texture = ExtResource("1_ucbpn")
+roughness = 0.9
+normal_enabled = true
+normal_texture = ExtResource("2_g0gt2")
+uv1_scale = Vector3(0.12, 0.08, 1)
+uv1_offset = Vector3(0.42, 0.45, 0)

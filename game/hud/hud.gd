@@ -4,6 +4,8 @@ extends CanvasLayer
 signal panel_cambiado(abierto: bool, expediente: bool)
 signal pista_seleccionada(pista: Pista)
 signal tablero_modificado
+## HU-07: el jugador pidió examinar una pista desde el diario [Q] (abre la vista de examen).
+signal detalle_solicitado(pista: Pista)
 signal linterna_cambiada(encendida: bool)
 ## Al cambiar el caso se carga su expediente (res://hud/expediente/casos/caso_XX.tres).
 @export var caso: String = "03":
@@ -105,7 +107,7 @@ var _expediente: ExpedienteCaso
 ## Zona de la carpeta del caso (en coordenadas de referencia 1600×900) para abrir con clic.
 const ZONA_CARPETA := Rect2(48, 36, 300, 96)
 ## Guía de teclas de la esquina inferior izquierda; se desvanece mientras el detective camina.
-const TECLAS := [["Q", "Libreta"], ["F", "Linterna"], ["R", "Tablero"], ["TAB", "Expediente"]]
+const TECLAS := [["Q", "Diario"], ["F", "Linterna"], ["R", "Tablero"], ["TAB", "Expediente"]]
 const ROJO_AVISO := Color("e0463c")
 var linterna_encendida: bool = false
 ## Diario del caso (Q): pistas, deducciones, testimonios y personas.
@@ -121,6 +123,9 @@ var _hoja: int = 0
 var _giro: float = 0.0
 var _direccion: int = 1
 var _zonas_libro: Array[Dictionary] = []
+## HU-07: zonas clicables del expediente (filas y botón [Examinar]) y aviso "[E] Examinar" tras recoger.
+var _oferta_examen: float = 0.0
+const COLOR_SELLO = Color("a8322d")
 
 func registrar_persona(nombre: String, resumen: String, retrato: Texture2D) -> void:
 	for persona in personas:
@@ -136,7 +141,7 @@ func _paginas_libro() -> Array[Dictionary]:
 		paginas.append({"seccion": "PISTAS", "titulo": "Pistas reunidas", "galeria": inicio})
 		if _pista_diario >= inicio and _pista_diario < mini(inicio + PISTAS_POR_HOJA, pistas.size()):
 			var pista := pistas[_pista_diario]
-			paginas.append({"seccion": "PISTAS", "titulo": pista.titulo, "texto": pista.descripcion, "imagen": pista.imagen})
+			paginas.append({"seccion": "PISTAS", "titulo": pista.titulo, "texto": pista.descripcion, "imagen": pista.imagen, "pista": _pista_diario})
 		else:
 			paginas.append({"seccion": "PISTAS", "titulo": "Una mirada más de cerca", "texto": "Haz clic en una fotografía para consultar la pista." if not pistas.is_empty() else "Las pistas que encuentres aparecerán en la hoja de al lado."})
 	var conclusiones := notas.filter(func(n: String) -> bool: return n.begins_with("Deducción: "))
@@ -171,7 +176,7 @@ func _pasar_hoja(destino: int) -> void:
 	_hoja = nueva
 	_giro = 1.0
 
-var _aviso_titulo := "EXPEDIENTE ACTUALIZADO"
+var _aviso_titulo := "DIARIO ACTUALIZADO"
 var _aviso_detalle := "+1 PISTA"
 var _lienzo: Control
 var _bold: FontVariation
@@ -230,18 +235,71 @@ func agregar_pista(pista: Pista) -> bool:
 	for existente in pistas:
 		if existente.id == pista.id:
 			return false
-	pistas.append(pista)
-	avisar("EXPEDIENTE ACTUALIZADO", "+1 PISTA")
+	if pista.es_detalle():
+		# El detalle queda justo debajo de su evidencia (y de sus otros detalles), unido con un hilo
+		var posicion := _posicion_detalle(pista.origen_id)
+		pistas.insert(posicion, pista)
+		if posicion <= indice_pista and pistas.size() > 1:
+			indice_pista += 1
+		avisar("DIARIO ACTUALIZADO", "+1 NUEVO DETALLE")
+	else:
+		pistas.append(pista)
+		avisar("DIARIO ACTUALIZADO", "+1 PISTA")
 	if pistas.size() == 1:
 		pista_seleccionada.emit(pista)
 	return true
+
+func _posicion_detalle(origen: StringName) -> int:
+	for i in range(pistas.size()):
+		if pistas[i].id == origen:
+			var j := i + 1
+			while j < pistas.size() and pistas[j].origen_id == origen:
+				j += 1
+			return j
+	return pistas.size()
+
+## HU-07: muestra "[E] Examinar" unos segundos junto a la retícula (0 = quitarlo).
+func ofrecer_examen(segundos: float) -> void:
+	_oferta_examen = segundos
+
+func buscar_pista(id: StringName) -> Pista:
+	for pista in pistas:
+		if pista.id == id:
+			return pista
+	return null
+
+## Contador del expediente: evidencias examinadas sobre las reunidas (los detalles no cuentan).
+func contar_examinadas() -> Vector2i:
+	var total := 0
+	var examinadas := 0
+	for pista in pistas:
+		if not pista.es_detalle():
+			total += 1
+			if pista.examinada:
+				examinadas += 1
+	return Vector2i(examinadas, total)
+
+## 0 = recogida, 1 = examinada, 2 = detalle descubierto (o evidencia con algún detalle descubierto).
+func _estado_pista(pista: Pista) -> int:
+	if pista.es_detalle():
+		return 2
+	if not pista.examinada:
+		return 0
+	for otra in pistas:
+		if otra.origen_id == pista.id:
+			return 2
+	return 1
+
+func _examinar(indice: int) -> void:
+	if indice >= 0 and indice < pistas.size():
+		detalle_solicitado.emit(pistas[indice])
 
 ## Añade una nota a la libreta (Q) y muestra el aviso. Devuelve false si ya estaba.
 func agregar_nota(texto: String) -> bool:
 	if texto.is_empty() or notas.has(texto):
 		return false
 	notas.append(texto)
-	avisar("LIBRETA ACTUALIZADA", "+1 NOTA")
+	avisar("DIARIO ACTUALIZADO", "+1 NOTA")
 	return true
 
 ## Aviso superior central (mismo estilo para pistas, notas y deducciones).
@@ -280,6 +338,7 @@ func _process(delta: float) -> void:
 		destino = 1.0
 	_ayuda_alpha = move_toward(_ayuda_alpha, destino, delta / 0.18)
 	_aviso = maxf(0.0, _aviso - delta)
+	_oferta_examen = maxf(0.0, _oferta_examen - delta)
 	_lienzo.queue_redraw()
 
 func _input(event: InputEvent) -> void:
@@ -310,7 +369,9 @@ func _input(event: InputEvent) -> void:
 			var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
 			for zona in _zonas_libro:
 				if zona.rect.has_point(event.position / escala):
-					if zona.has("pista"):
+					if zona.has("examinar"):
+						_examinar(zona.examinar)
+					elif zona.has("pista"):
 						_pista_diario = zona.pista
 					elif zona.has("seccion"):
 						_cambiar_seccion(zona.seccion)
@@ -322,6 +383,10 @@ func _input(event: InputEvent) -> void:
 					break
 		elif event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
 			_pasar_hoja(_hoja + (-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1))
+		get_viewport().set_input_as_handled()
+		return
+	if diario_abierto and _pista_diario >= 0 and event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_A:
+		_examinar(_pista_diario)
 		get_viewport().set_input_as_handled()
 		return
 	if event is InputEventMouseButton and event.pressed and rueda_habilitada and not diario_abierto and pistas.size() > 1:
@@ -342,6 +407,14 @@ func _input(event: InputEvent) -> void:
 				# Cierra el diario si estaba abierto; el expediente avisa al jugador con su señal
 				diario_abierto = false
 				_expediente.abrir()
+				get_viewport().set_input_as_handled()
+				return
+			KEY_E, KEY_ENTER:
+				# HU-07: [E] examina la pista elegida en el diario (sección Pistas)
+				if diario_abierto and _pista_diario >= 0:
+					_examinar(_pista_diario)
+				else:
+					return
 				get_viewport().set_input_as_handled()
 				return
 			KEY_Q:
@@ -508,6 +581,10 @@ func _dibujar() -> void:
 		# Anillo ámbar: la retícula está sobre algo que se puede usar
 		_lienzo.draw_arc(Vector2(w / 2, h / 2), 13, 0, TAU, 32, Color(AMBAR, 0.9), 2.0, true)
 		_texto("[ E ]  " + interaccion, Vector2(w / 2 - 75, h / 2 + 42), _bold, 26, BLANCO)
+	elif _oferta_examen > 0 and not diario_abierto and not (_expediente and _expediente.abierto):
+		var alfa := minf(_oferta_examen / 0.4, 1.0)
+		_lupa(Vector2(w / 2 - 92, h / 2 + 34), 1, alfa)
+		_texto("[ E ]  Examinar", Vector2(w / 2 - 70, h / 2 + 42), _bold, 26, Color(AMBAR, alfa))
 	_dibujar_pistas(w, h)
 	if tablero_abierto:
 		_dibujar_tablero(w, h, escala)
@@ -607,8 +684,13 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 		texto_y = 422.0
 	if pagina.has("persona"):
 		_zonas_libro.append({"rect": Rect2(p + Vector2(38, 165), Vector2(504, 405)), "persona": pagina.persona})
-	_parrafo(pagina.texto, p + Vector2(38, texto_y), 504, 17, TINTA, 7 if imagen else 16)
-
+	_parrafo(pagina.texto, p + Vector2(38, texto_y), 504, 17, TINTA, 6 if imagen else 14)
+	if pagina.has("pista") and pagina.pista < pistas.size():
+		var pista: Pista = pistas[pagina.pista]
+		_dibujar_estado(pista, p + Vector2(38, 552), true)
+		if imagen and _estado_pista(pista) >= 1 and not pista.es_detalle():
+			_sello(p + Vector2(380, 230))
+		_boton_libro_examinar(Rect2(p + Vector2(372, 528), Vector2(170, 40)), pagina.pista)
 func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
 	if pistas.is_empty():
 		_parrafo("Todavía no has reunido pistas. Explora %s para empezar tu colección." % lugar, p + Vector2(38, 188), 504, 17, TINTA)
@@ -631,10 +713,61 @@ func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
 		else:
 			_parrafo(pistas[i].titulo, rect.position + Vector2(10, 15), 140, 13, TINTA, 4)
 		_texto("%02d" % (i + 1), rect.position + Vector2(9, 105), MONO, 11, TINTA)
+		_lupa(rect.position + Vector2(140, 18), _estado_pista(pistas[i]), 1.0, 0.7)
 		if seleccionada or sugerida:
 			_lienzo.draw_rect(rect, AMBAR if sugerida else Color("a77e3e"), false, 2.0)
 		_zonas_libro.append({"rect": rect, "pista": i})
-	_texto("%02d PISTAS  ·  CLIC PARA INSPECCIONAR" % pistas.size(), p + Vector2(38, 574), MONO, 12, Color("75654e"))
+	var cuenta := contar_examinadas()
+	_texto("%02d PISTAS  ·  EXAMINADAS %d/%d  ·  CLIC PARA INSPECCIONAR" % [pistas.size(), cuenta.x, cuenta.y], p + Vector2(38, 574), MONO, 12, Color("75654e"))
+	_texto("○ SIN REVISAR   ● EXAMINADA   ◆ DETALLE", p + Vector2(38, 552), MONO, 11, Color("75654e"))
+
+## Línea de estado con símbolo y texto (no depende solo del color).
+func _dibujar_estado(pista: Pista, p: Vector2, libreta: bool) -> void:
+	var estado := _estado_pista(pista)
+	var texto := ""
+	if pista.es_detalle():
+		var origen := buscar_pista(pista.origen_id)
+		texto = "◆ DETALLE  ·  Descubierto en: " + (origen.titulo if origen else str(pista.origen_id))
+	elif estado == 2:
+		texto = "◆ EXAMINADA  ·  CON DETALLE DESCUBIERTO"
+	elif estado == 1:
+		texto = "● EXAMINADA"
+	else:
+		texto = "○ RECOGIDA  ·  SIN REVISAR"
+	_texto_ajustado(texto, p, MONO, 13, COLOR_SELLO if estado == 2 else (Color("75654e") if estado == 0 else TINTA), 330 if libreta else 530)
+
+## Sello "EXAMINADA" ladeado, como de tinta.
+func _sello(centro: Vector2) -> void:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	_lienzo.draw_set_transform(centro * escala, -0.2, Vector2.ONE * escala)
+	_lienzo.draw_rect(Rect2(-92, -24, 184, 48), Color(COLOR_SELLO, 0.85), false, 3.0)
+	_lienzo.draw_rect(Rect2(-86, -18, 172, 36), Color(COLOR_SELLO, 0.5), false, 1.0)
+	_texto("EXAMINADA", Vector2(-74, 12), _bold, 32, Color(COLOR_SELLO, 0.85))
+	_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
+
+## Lupa de estado: 0 gris (sin revisar), 1 ámbar (examinada), 2 ámbar con destello (detalle).
+func _lupa(centro: Vector2, estado: int, alfa: float = 1.0, tam: float = 1.0) -> void:
+	var color := Color("8a8f96") if estado == 0 else Color("c99a06")
+	color.a = alfa
+	_lienzo.draw_arc(centro, 8.0 * tam, 0, TAU, 20, color, 2.5 * tam, true)
+	_lienzo.draw_line(centro + Vector2(6, 6) * tam, centro + Vector2(13, 13) * tam, color, 3.5 * tam, true)
+	if estado == 0:
+		# Sin revisar: la lupa vacía y tachada
+		_lienzo.draw_line(centro + Vector2(-5, 5) * tam, centro + Vector2(5, -5) * tam, color, 1.5 * tam, true)
+	else:
+		_lienzo.draw_circle(centro, 4.5 * tam, Color(color, alfa * 0.55))
+	if estado == 2:
+		for k in range(4):
+			var angulo := -PI / 4 + k * PI / 2
+			var dir := Vector2(cos(angulo), sin(angulo))
+			_lienzo.draw_line(centro + Vector2(-9, -9) * tam + dir * 4 * tam, centro + Vector2(-9, -9) * tam + dir * 9 * tam, Color(COLOR_SELLO, alfa), 2.0 * tam, true)
+
+func _boton_libro_examinar(rect: Rect2, indice: int) -> void:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	var encima := rect.has_point(_lienzo.get_local_mouse_position() / escala)
+	_lienzo.draw_rect(rect, Color("b99a55") if encima else Color("483b30"))
+	_texto("EXAMINAR [E]", rect.position + Vector2(22, 26), MONO, 14, BLANCO)
+	_zonas_libro.append({"rect": rect, "examinar": indice})
 
 func _dibujar_pistas(w: float, h: float) -> void:
 	var p := Vector2(w - 405, h - 220)
@@ -666,6 +799,7 @@ func _dibujar_postit_pista(p: Vector2, indice: int, alfa: float = 1.0) -> void:
 		var pista := pistas[indice]
 		var ancho := 210.0 if pista.imagen else 311.0
 		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, Color(TINTA, alfa), ancho)
+		_lupa(p + Vector2(32, 160), _estado_pista(pista), alfa, 0.7)
 		if pista.imagen:
 			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), Color(BLANCO, alfa))
 			var zona := Rect2(p + Vector2(254, 63), Vector2(76, 64))

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 //       la dejó en REC a propósito. Cabo suelto: una voz desconocida en la cinta a las 3:12.
 public partial class Caso0 : Node
 {
-	// Pistas (expediente)
+	// Pistas (diario [Q])
 	private const string Grabadora = "grabadora";
 	private const string Reloj = "reloj";
 	private const string Huellas = "huellas";
@@ -23,6 +23,8 @@ public partial class Caso0 : Node
 	private const string Cinta = "cinta";
 	private const string Pluma = "pluma";          // Secreta y opcional
 	private const int PistasTotales = 8;
+	// HU-07: detalle oculto que solo aparece examinando la grabadora (entrada nueva del diario)
+	private const string GrabadoraEtiqueta = "grabadora.etiqueta";
 
 	// Testimonios que se pueden usar en el tablero
 	private const string TEriz = "t_eriz";
@@ -109,6 +111,8 @@ public partial class Caso0 : Node
 		Hud.Set("archivo", "La cinta");
 		Jugador.EvidenciaRegistrada += AlRegistrarEvidencia;
 		Jugador.ObjetoObtenido += _ => { Progreso(); ActualizarObjetivo(); Cambio(); };
+		Jugador.EvidenciaExaminada += _ => Cambio();
+		Jugador.DetalleDescubierto += AlDescubrirDetalle;
 		Hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
 
 		Eriz.Usado += () => Conversar(() => Interrogar(_eriz, OpcionesEriz, EvidenciaEriz));
@@ -149,6 +153,8 @@ public partial class Caso0 : Node
 
 	private async void Presentacion()
 	{
+		// Si el jugador salió al menú durante la tarjeta del título, la escena ya no existe
+		if (!IsInstanceValid(this) || !IsInsideTree()) return;
 		await ToSignal(GetTree().CreateTimer(0.6), SceneTreeTimer.SignalName.Timeout);
 		_enDialogo = true;
 		// El gancho en tres líneas; los controles se aprenden usándolos (indicación en pantalla)
@@ -170,7 +176,7 @@ public partial class Caso0 : Node
 		switch (id)
 		{
 			case Grabadora:
-				Pensar("Sin cinta y en REC. Alguien la dejó grabando.");
+				Pensar("Sin cinta y en REC. Alguien la dejó grabando. La examino de cerca [E].");
 				break;
 			case Reloj:
 				Pensar("Las 3:12 en punto. Y el vidrio está estrellado.");
@@ -194,6 +200,19 @@ public partial class Caso0 : Node
 		if (_pistas.Contains(Grabadora) && _pistas.Contains(Reloj))
 			Indicar("tablero", "La grabadora y el reloj. Los uno en mi tablero [R].");
 		ActualizarObjetivo();
+	}
+
+	// HU-07: lo que se descubre examinando una evidencia
+	private void AlDescubrirDetalle(string origen, string id)
+	{
+		Cambio();
+		Autoguardar("Detalle: " + id);
+		if (id == GrabadoraEtiqueta)
+		{
+			Nota("Bajo la grabadora, una etiqueta: «Sala 1. NO DETENER hasta el cambio de turno. — B.»");
+			if (_pistas.Contains(NotaComisario))
+				Indicar("tablero_etiqueta", "La «B.» de la etiqueta y la de la nota... Las uno en mi tablero [R].");
+		}
 	}
 
 	private void ActualizarObjetivo()
@@ -246,7 +265,7 @@ public partial class Caso0 : Node
 		if (Par(Grabadora, Reloj)) return Deducir(D1, "A las 3:12 pasó algo en la Sala 1 mientras la grabadora grababa.");
 		if (Par(Huellas, Turnos)) return Deducir(D2, "Las huellas son de Porky: era el único agente de guardia.");
 		if (Par(Envoltorio, TEriz)) return Deducir(D3, "Eriz estaba con Tito en las celdas, no en la Sala 1. No fue él.");
-		if (Par(NotaComisario, Grabadora) || Par(TComisario, Grabadora))
+		if (Par(NotaComisario, Grabadora) || Par(TComisario, Grabadora) || Par(GrabadoraEtiqueta, NotaComisario))
 			return Deducir(D4, "El comisario dejó la grabadora en REC: una trampa para quien se durmiera en la guardia.");
 		return null;
 	}
@@ -302,10 +321,10 @@ public partial class Caso0 : Node
 		if (_hablados.Add(p.Nombre)) Cambio();
 		while (true)
 		{
-			// Una pregunta ya hecha desaparece (su respuesta queda en la libreta [Q]); vuelve a salir
+			// Una pregunta ya hecha desaparece (su respuesta queda en el diario [Q]); vuelve a salir
 			// solo si ahora tiene algo nuevo que contar, porque el personaje confesó.
 			var lista = opciones(p).Where(o => o.Visible() && !(o.SeOcultaAlLeer && p.Leidas.Contains(Lectura(p, o)))).ToList();
-			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Mostrarle una prueba del expediente" });
+			lista.Add(new Opcion { Id = "evidencia", Tipo = "EVIDENCIA", Texto = "Mostrarle una prueba del diario" });
 			lista.Add(new Opcion { Id = "adios", Texto = "Seguir investigando" });
 			var vistas = lista.Select(o => new OpcionVista(o.Texto, o.Tipo)).ToList();
 			SugerirEnDialogo(p, evidencia: false);
@@ -472,6 +491,9 @@ public partial class Caso0 : Node
 			case NotaComisario:
 				await Habla(p, "¡¿Era una trampa?! ...Y caí redondito.");
 				return true;
+			case GrabadoraEtiqueta:
+				await Habla(p, "Esa letra no es mía. Yo a esa grabadora ni me le acerco.");
+				return true;
 		}
 		return false;
 	}
@@ -533,6 +555,11 @@ public partial class Caso0 : Node
 			case Turnos:
 				await Habla(p, "La nota del margen es mía: «NO TOCAR». ¿Algún problema?");
 				return true;
+			case GrabadoraEtiqueta:
+				if (p.Confeso) { await Habla(p, "La etiqueta también la puse yo. Para que nadie la apagara."); return true; }
+				await Habla(p, "¿Una B.? Hay muchas B en esta comisaría, Caneloso.");
+				await Piensa("(Una etiqueta no basta. Necesito algo firmado por él.)");
+				return true;
 			case Cinta:
 				await Habla(p, "¡La cinta! Explícame quién y por qué. En la Sala 1.");
 				return true;
@@ -572,7 +599,7 @@ public partial class Caso0 : Node
 		if (quien != 1 || porque != 1 || rec != 2)
 		{
 			Sonidos.ReproducirUI(this, Sonidos.Tipo.ErrorAcusacion);
-			await Piensa("Algo no encaja. Repaso el tablero [R] y la libreta [Q].");
+			await Piensa("Algo no encaja. Repaso el tablero [R] y el diario [Q].");
 			Progreso();
 			return;
 		}
@@ -707,7 +734,7 @@ public partial class Caso0 : Node
 		Hud.Call("agregar_nota", texto);
 		Cambio();
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Nota);
-		Indicar("libreta", "Lo apunto en mi libreta [Q].");
+		Indicar("libreta", "Lo apunto en mi diario [Q].");
 	}
 
 	private void Objetivo(string texto) => Hud.Set("objetivo", ConTeclas(texto));

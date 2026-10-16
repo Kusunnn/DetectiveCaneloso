@@ -20,6 +20,9 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/perchero_pie.tscn" id="e18"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/caja_carton.tscn" id="e19"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/huacal_tapa.tscn" id="e20"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/baul_disfraces/contenido.tscn" id="hu07_m_contenido"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/baul_disfraces/baul_examen.tscn" id="hu07_x_baul"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/baul_disfraces/baul.tscn" id="hu07_m_baul"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(0.3, 2.6, 0.78)
@@ -73,8 +76,7 @@ edge_fade = 0.2
 size = Vector3(0.789, 0.576, 0.8215)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_15"]
-size = Vector3(0.5832, 0.5, 0.5331)
-
+size = Vector3(0.45, 0.16, 0.34)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_16"]
 albedo_color = Color(0.42, 0.12, 0.14, 1.0)
 roughness = 1.0
@@ -385,7 +387,7 @@ script = ExtResource("e11")
 Nombre = "Baúl de disfraces"
 MensajeAlAbrir = "Capas, coronas de cartón, una nariz de payaso... El hueco de la cornamenta está vacío."
 SonidoAbrir = 1
-Parte = NodePath("Modelo/Modelo/chest/lid")
+Parte = NodePath("Modelo/Modelo/treasure_chest_lid")
 TipoMovimiento = 0
 EjeGiro = Vector3(-1.0, 0.0, 0.0)
 AnguloApertura = 105.0
@@ -394,7 +396,7 @@ AnguloApertura = 105.0
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.288, 0.0)
 shape = SubResource("BoxShape3D_14")
 
-[node name="Modelo" parent="Baul" instance=ExtResource("e12")]
+[node name="Modelo" parent="Baul" instance=ExtResource("hu07_m_baul")]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
 
 [node name="PistaBaul" type="StaticBody3D" parent="."]
@@ -408,34 +410,13 @@ Descripcion = "En el baúl de los cuentos falta la cornamenta del disfraz de cie
 EsEvidencia = true
 ComentarioAlMirar = "El baúl de los cuentos. Hay un hueco vacío entre los disfraces."
 Imagen = ExtResource("e13")
+DescripcionAmpliada = "El baúl de disfraces del fogón de los cuentos. Están la capa y la corona, pero falta la cornamenta del ciervo. En el inventario, la cornamenta tiene una cruz y nadie firmó quién la sacó."
+Lugar = "Almacén de los cuentos · baúl"
+ModeloExamen = ExtResource("hu07_x_baul")
 
 [node name="Forma" type="CollisionShape3D" parent="PistaBaul"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.612, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
 shape = SubResource("BoxShape3D_15")
-
-[node name="Capa" type="MeshInstance3D" parent="PistaBaul"]
-transform = Transform3D(0.9903, 0.0, 0.1392, 0.0, 1.0, 0.0, -0.1392, 0.0, 0.9903, 0.0, 0.14, 0.02)
-mesh = SubResource("BoxMesh_17")
-
-[node name="Corona" type="MeshInstance3D" parent="PistaBaul"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.12, 0.19, -0.05)
-mesh = SubResource("TorusMesh_19")
-
-[node name="Inventario" type="Node3D" parent="PistaBaul"]
-transform = Transform3D(0.9397, 0.342, 0.0, 0.0, 0.0, 1.0, 0.342, -0.9397, 0.0, -0.1, 0.175, 0.05)
-script = ExtResource("e10")
-Texto = "INVENTARIO
-Capa de mago ✓
-Corona ✓
-Cornamenta de ciervo ✗"
-Ancho = 0.26
-ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 26
-TamMinimo = 10
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0011
 
 [node name="Estante" parent="." instance=ExtResource("e15") groups=["apoyar_pared"]]
 transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -20.584997, 1.5, -3.1)
@@ -597,3 +578,6 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Almacen"]
 shape = SubResource("BoxShape3D_47")
+
+[node name="Modelo" parent="PistaBaul" instance=ExtResource("hu07_m_contenido")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)

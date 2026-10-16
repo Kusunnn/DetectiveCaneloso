@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/canto_hojas.png" id="1_5f2op"]
+
+[resource]
+resource_name = "canto_hojas"
+albedo_texture = ExtResource("1_5f2op")
+roughness = 0.9

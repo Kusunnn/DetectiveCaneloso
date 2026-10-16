@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/quemado_reverso_b_q.png" id="1_oajla"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_2cyua"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_i2x6j"]
+
+[resource]
+resource_name = "quemado_b_reverso"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("1_oajla")
+roughness_texture = ExtResource("3_i2x6j")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_2cyua")
+texture_filter = 5
