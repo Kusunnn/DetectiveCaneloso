@@ -80,12 +80,12 @@ func _process(delta: float) -> void:
 	var medida := get_viewport().get_visible_rect().size
 	var movimiento := Vector2.ZERO
 	var margen := 70.0
-	if not moviendo_vista and not (hud.relaciones_pizarron.hilo_desde != &"" or hud.relaciones_pizarron.moviendo):
+	if not moviendo_vista and not (hud.relaciones_pizarron.hilo_desde != &"" or hud.relaciones_pizarron.moviendo or hud.relaciones_pizarron._nota_tinta != &""):
 		# La velocidad crece hacia el borde para evitar arranques bruscos.
 		movimiento.x = -clampf((margen - _cursor.x) / margen, 0, 1) + clampf((_cursor.x - medida.x + margen) / margen, 0, 1)
 		movimiento.y = clampf((margen - _cursor.y) / margen, 0, 1) - clampf((_cursor.y - medida.y + margen) / margen, 0, 1)
 		desplazar(movimiento.limit_length() * delta * 0.9)
-	if (hud.relaciones_pizarron.hilo_desde != &"" or hud.relaciones_pizarron.moviendo):
+	if (hud.relaciones_pizarron.hilo_desde != &"" or hud.relaciones_pizarron.moviendo or hud.relaciones_pizarron._nota_tinta != &""):
 		# Mantener la vista estable al tender un hilo o arrastrar una tarjeta.
 		desplazamiento_objetivo = desplazamiento
 	_actualizar_vista(delta)

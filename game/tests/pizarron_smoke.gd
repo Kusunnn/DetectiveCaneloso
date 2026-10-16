@@ -7,9 +7,10 @@ var escala: float
 func _initialize() -> void:
 	call_deferred("probar")
 
-func tecla(codigo: Key) -> void:
+func tecla(codigo: Key, control: bool = false) -> void:
 	var evento := InputEventKey.new()
 	evento.keycode = codigo
+	evento.ctrl_pressed = control
 	evento.pressed = true
 	hud._input(evento)
 
@@ -78,12 +79,12 @@ func probar() -> void:
 	boton(en_pantalla(Vector2(1100, 600)), false)
 	assert(hud._tarjetas_tablero[id] != anterior)
 	assert(hud._tarjetas_tablero.size() == 2)
-	# Un destino inválido conserva la ubicación anterior.
+	# Al pasar un borde, la tarjeta se detiene dentro del corcho.
 	anterior = hud._tarjetas_tablero[id]
 	boton(en_pantalla(anterior + Vector2(20, 20)), true)
 	mover(Vector2(-1000, -1000))
 	boton(Vector2(-1000, -1000), false)
-	assert(hud._tarjetas_tablero[id] == anterior)
+	assert(hud._tarjetas_tablero[id] == hud.relaciones_pizarron.MARGEN)
 	# Volver a arrastrar la misma foto reposiciona una sola tarjeta.
 	boton(origenes[0], true)
 	mover(en_pantalla(Vector2(1580, 660)))
@@ -247,7 +248,137 @@ func probar() -> void:
 	relaciones.retirar(&"persona:Eriz")
 	assert(relaciones.conexiones.size() == 1 and hud.personas.size() == 1)
 	assert(hud._tarjetas_tablero.has(deduccion))
-	print("PIZARRON_OK: diario, personas arrastrables, hilo por tachuelas, deducción central, reglas C#, duplicados, movimiento, guardado JSON en disco y carga en un HUD nuevo")
+	# Ctrl+Z restaura la composición sin quitar los descubrimientos del caso.
+	var notas_descubiertas: int = hud.notas.size()
+	relaciones.restaurar_estado({})
+	hud._tarjetas_tablero[&"prueba_a"] = Vector2(120, 150)
+	hud._tarjetas_tablero[&"prueba_b"] = Vector2(1100, 150)
+	var antes_conectar: Dictionary = hud.capturar_tablero()
+	relaciones.conectar(&"prueba_a", &"prueba_b")
+	assert(relaciones.conexiones.size() == 1)
+	tecla(KEY_Z, true)
+	assert(hud.capturar_tablero() == antes_conectar)
+	assert(hud.notas.size() == notas_descubiertas, "Deshacer no borra los descubrimientos")
+	# Herramientas secretas: no se muestran ni se pueden crear notas antes de encontrarlas.
+	relaciones.desbloqueadas.clear()
+	assert(relaciones.herramientas() == ["mano", "hilo"])
+	relaciones.guardar_nota(&"", "Bloqueada", Vector2(300, 300))
+	assert(hud._tarjetas_tablero.size() == 2)
+	hud.desbloquear_herramienta_tablero("notas")
+	assert(relaciones.herramientas() == ["mano", "hilo", "nota"])
+	# Crear una hipótesis desde la herramienta, guardarla, editarla y deshacer.
+	boton(relaciones._zona_herramienta(2).get_center(), true)
+	boton(relaciones._zona_herramienta(2).get_center(), false)
+	boton(en_pantalla(Vector2(700, 550)), true)
+	assert(relaciones.editor_abierto())
+	relaciones._texto_nota.text = "¿Quién estuvo aquí a las 3:12?"
+	relaciones._editor.confirmed.emit()
+	assert(not relaciones.editor_abierto())
+	var nota_id: StringName = hud._tarjetas_tablero.keys()[-1]
+	assert(relaciones.tarjetas[nota_id].tipo == "NOTA")
+	assert(relaciones.tarjetas[nota_id].titulo == "¿Quién estuvo aquí a las 3:12?")
+	relaciones.editar_nota(nota_id, hud._tarjetas_tablero[nota_id])
+	relaciones._texto_nota.text = "La hora aún no está confirmada."
+	relaciones._editor.confirmed.emit()
+	tecla(KEY_Z, true)
+	assert(relaciones.tarjetas[nota_id].titulo == "¿Quién estuvo aquí a las 3:12?")
+	# Cancelar el editor no crea tarjetas ni entradas de historial.
+	var cantidad_historial: int = relaciones.historial.size()
+	relaciones.editar_nota(&"", Vector2(800, 100))
+	relaciones._texto_nota.text = "No guardar"
+	relaciones._editor.hide()
+	assert(relaciones.historial.size() == cantidad_historial)
+	# Un arrastre es una sola acción; Ctrl+Z recupera el lugar original.
+	var posicion_nota: Vector2 = hud._tarjetas_tablero[nota_id]
+	boton(en_pantalla(posicion_nota + Vector2(20, 50)), true)
+	mover(en_pantalla(posicion_nota + Vector2(100, 100)))
+	boton(en_pantalla(posicion_nota + Vector2(100, 100)), false)
+	assert(hud._tarjetas_tablero[nota_id] != posicion_nota)
+	tecla(KEY_Z, true)
+	assert(hud._tarjetas_tablero[nota_id] == posicion_nota)
+	# Las notas se conectan como hipótesis sin ejecutar reglas ni generar deducciones.
+	comprobaciones = caso_prueba.Comprobaciones
+	relaciones.conectar(nota_id, &"prueba_a")
+	assert(caso_prueba.Comprobaciones == comprobaciones)
+	assert(relaciones.conexiones[0].resultado == &"")
+	var estado_nota: Dictionary = hud.capturar_tablero()
+	relaciones.retirar(nota_id)
+	assert(not hud._tarjetas_tablero.has(nota_id) and relaciones.conexiones.is_empty())
+	tecla(KEY_Z, true)
+	assert(hud.capturar_tablero() == estado_nota)
+	# El hilo se puede retirar con clic derecho y recuperar con Ctrl+Z.
+	var puntos_nota: PackedVector2Array = relaciones._puntos_hilo(relaciones.tachuela(nota_id), relaciones.tachuela(&"prueba_a"))
+	boton(en_pantalla(puntos_nota[8]), true, MOUSE_BUTTON_RIGHT)
+	assert(relaciones.conexiones.is_empty())
+	tecla(KEY_Z, true)
+	assert(hud.capturar_tablero() == estado_nota)
+	# Cambiar el color también se deshace sin repetir comprobaciones del caso.
+	var hilo_nota: Dictionary = relaciones.conexiones[0]
+	var centro_hilo: Vector2 = en_pantalla(puntos_nota[8])
+	boton(centro_hilo, true)
+	boton(centro_hilo, false)
+	assert(not relaciones.conexion_paleta.is_empty())
+	boton(relaciones._muestra_color(1).get_center(), true)
+	boton(relaciones._muestra_color(1).get_center(), false)
+	assert(hilo_nota.color == relaciones.COLORES_HILO[1])
+	tecla(KEY_Z, true)
+	assert(hud.capturar_tablero() == estado_nota)
+	# La paleta ofrece tijeras: cortar y deshacer conserva las tarjetas.
+	boton(centro_hilo, true)
+	boton(centro_hilo, false)
+	assert(not relaciones.conexion_paleta.is_empty())
+	boton(relaciones._zona_tijeras().get_center(), true)
+	boton(relaciones._zona_tijeras().get_center(), false)
+	assert(relaciones.conexiones.is_empty() and hud._tarjetas_tablero.has(nota_id))
+	tecla(KEY_Z, true)
+	assert(hud.capturar_tablero() == estado_nota)
+	# El marcador desbloqueado escribe únicamente dentro del post-it.
+	hud.desbloquear_herramienta_tablero("marcador")
+	assert(relaciones.herramientas() == ["mano", "hilo", "nota", "negro"])
+	boton(relaciones._zona_herramienta(3).get_center(), true)
+	boton(relaciones._zona_herramienta(3).get_center(), false)
+	var antes_tinta: Dictionary = hud.capturar_tablero()
+	boton(en_pantalla(Vector2(350, 650)), true)
+	mover(en_pantalla(Vector2(420, 700)))
+	boton(en_pantalla(Vector2(420, 700)), false)
+	assert(hud.capturar_tablero() == antes_tinta, "El marcador no raya el corcho")
+	boton(en_pantalla(hud._tarjetas_tablero[&"prueba_a"] + Vector2(30, 50)), true)
+	mover(en_pantalla(hud._tarjetas_tablero[&"prueba_a"] + Vector2(50, 70)))
+	boton(en_pantalla(hud._tarjetas_tablero[&"prueba_a"] + Vector2(50, 70)), false)
+	assert(hud.capturar_tablero() == antes_tinta, "El marcador no raya las evidencias")
+	posicion_nota = hud._tarjetas_tablero[nota_id]
+	boton(en_pantalla(posicion_nota + Vector2(20, 50)), true)
+	mover(en_pantalla(posicion_nota + Vector2(80, 70)))
+	mover(en_pantalla(posicion_nota + Vector2(600, 600)))
+	boton(en_pantalla(posicion_nota + Vector2(600, 600)), false)
+	assert(relaciones.tarjetas[nota_id].trazos.size() == 1)
+	for punto in relaciones.tarjetas[nota_id].trazos[0]:
+		assert(Rect2(Vector2(4, 4), relaciones.TAM_DEDUCCION - Vector2(8, 8)).has_point(Vector2(punto[0], punto[1])))
+	var tinta_json: Dictionary = JSON.parse_string(JSON.stringify(hud.capturar_tablero()))
+	tecla(KEY_Z, true)
+	assert(hud.capturar_tablero() == antes_tinta)
+	relaciones.restaurar_estado(tinta_json)
+	assert(relaciones.tarjetas[nota_id].trazos.size() == 1, "La tinta vuelve al cargar")
+	relaciones.herramienta = "mano"
+	# Todas las medidas respetan el borde, incluso al cargar posiciones antiguas.
+	assert(relaciones.limitar(Vector2(-999, -999), relaciones.TAM_DEDUCCION) == relaciones.MARGEN)
+	assert(relaciones.limitar(Vector2(9999, 9999), relaciones.TAM_DEDUCCION) == Vector2(1600, 900) - relaciones.TAM_DEDUCCION - relaciones.MARGEN)
+	# La lupa abre exactamente la pista elegida y conserva el tablero abierto.
+	var examenes: Array[String] = []
+	hud.detalle_solicitado.connect(func(pista: Pista) -> void: examenes.append(str(pista.id)))
+	boton(en_pantalla(relaciones._zona_examen(&"prueba_a").get_center()), true)
+	boton(en_pantalla(relaciones._zona_examen(&"prueba_a").get_center()), false)
+	assert(examenes == ["prueba_a"] and hud.tablero_abierto)
+	assert(relaciones.arrastre == &"" and relaciones.hilo_desde == &"")
+	# Notas y conexiones sobreviven al JSON; cargar limpia el historial de otra partida.
+	var json_nota: Dictionary = JSON.parse_string(JSON.stringify(estado_nota))
+	relaciones.restaurar_estado(json_nota)
+	assert(relaciones.tarjetas[nota_id].titulo == "¿Quién estuvo aquí a las 3:12?")
+	assert(relaciones.conexiones.size() == 1 and relaciones.historial.is_empty())
+	var estado_cargado: Dictionary = hud.capturar_tablero()
+	tecla(KEY_Z, true)
+	assert(hud.capturar_tablero() == estado_cargado)
+	print("PIZARRON_OK: tijeras, herramientas secretas, tinta solo en notas, bordes, Ctrl+Z, hilos, examen y guardado JSON")
 	if "--capturar" in OS.get_cmdline_user_args():
 		hud._tarjetas_tablero[&"persona:Eriz"] = Vector2(1150, 550)
 		relaciones.conectar(&"persona:Eriz", &"prueba_b")

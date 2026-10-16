@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Escenas/Investigacion/HerramientaTablero.cs" id="script"]
+
+[sub_resource type="StandardMaterial3D" id="papel"]
+albedo_color = Color(0.94, 0.83, 0.35, 1)
+roughness = 0.9
+[sub_resource type="StandardMaterial3D" id="borde"]
+albedo_color = Color(0.78, 0.67, 0.29, 1)
+[sub_resource type="BoxMesh" id="hojas"]
+material = SubResource("borde")
+size = Vector3(0.13, 0.018, 0.12)
+[sub_resource type="BoxMesh" id="tapa"]
+material = SubResource("papel")
+size = Vector3(0.134, 0.002, 0.124)
+[sub_resource type="BoxShape3D" id="forma"]
+size = Vector3(0.14, 0.03, 0.13)
+
+[node name="NotasAdhesivas" type="StaticBody3D"]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("script")
+Accion = "Recoger notas adhesivas"
+Herramienta = "notas"
+[node name="Colision" type="CollisionShape3D" parent="."]
+shape = SubResource("forma")
+[node name="Hojas" type="MeshInstance3D" parent="."]
+mesh = SubResource("hojas")
+[node name="Tapa" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.01, 0)
+rotation = Vector3(0, 0.06, 0)
+mesh = SubResource("tapa")

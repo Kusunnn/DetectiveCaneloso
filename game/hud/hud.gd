@@ -192,6 +192,7 @@ const TINTA = Color("20272b")
 const PAPEL = Color("c6c1b1")
 
 func _ready() -> void:
+	add_to_group("hud_investigacion")
 	_bold = _fuente(800)
 	_medium = _fuente(500)
 	_papel = _crear_papel()
@@ -245,6 +246,8 @@ func agregar_pista(pista: Pista) -> bool:
 	else:
 		pistas.append(pista)
 		avisar("DIARIO ACTUALIZADO", "+1 PISTA")
+	if relaciones_pizarron:
+		relaciones_pizarron.sincronizar()
 	if pistas.size() == 1:
 		pista_seleccionada.emit(pista)
 	return true
@@ -343,6 +346,7 @@ func _process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if tablero_abierto:
+		if relaciones_pizarron.editor_abierto(): return
 		_input_tablero(event)
 		get_viewport().set_input_as_handled()
 		return
@@ -854,3 +858,6 @@ func capturar_tablero() -> Dictionary:
 
 func restaurar_tablero(estado: Dictionary) -> void:
 	relaciones_pizarron.restaurar_estado(estado)
+
+func desbloquear_herramienta_tablero(id: String) -> void:
+	relaciones_pizarron.desbloquear(id)
