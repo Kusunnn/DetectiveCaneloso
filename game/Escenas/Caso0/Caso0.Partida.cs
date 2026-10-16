@@ -14,6 +14,7 @@ public partial class Caso0 : IEstadoPartida
 	private void PrepararPartida()
 	{
 		AddToGroup("estado_partida");
+		Hud.Connect("tablero_modificado", Callable.From(Cambio));
 		// Abrir un contenedor o una puerta también es progreso
 		foreach (var contenedor in Todos<Contenedor>()) contenedor.Abierto += Cambio;
 		foreach (var puerta in Todos<Puerta>()) puerta.Abierta += Cambio;
@@ -106,6 +107,7 @@ public partial class Caso0 : IEstadoPartida
 			{ "deducciones", Lista(_deducciones) },
 			{ "conclusiones", Lista(_conclusiones) },
 			{ "testimonios", testimonios },
+			{ "tablero", Hud.Call("capturar_tablero").AsGodotDictionary() },
 			{ "confrontaciones", Lista(_confrontaciones) },
 			{ "personajes", new Diccionario { { "Eriz", Capturar(_eriz) }, { "Porky", Capturar(_porky) }, { "Comisario", Capturar(_comisario) } } },
 			{ "contenedores", contenedores },
@@ -176,6 +178,9 @@ public partial class Caso0 : IEstadoPartida
 			string texto = titulo.AsString();
 			_testimonios[id.AsString()] = new Carta(id.AsString(), texto, "TESTIMONIO", Dialogo.Retrato(texto.Split(' ')[0]));
 		}
+		// Las partidas anteriores no contienen este campo; conservan el tablero vacío.
+		Hud.Call("restaurar_tablero", estado.TryGetValue("tablero", out Variant tableroGuardado)
+			? tableroGuardado.AsGodotDictionary() : new Diccionario());
 		foreach (string c in Textos(estado["confrontaciones"])) _confrontaciones.Add(c);
 
 		// Personajes: ánimo, preguntas hechas y si ya confesaron

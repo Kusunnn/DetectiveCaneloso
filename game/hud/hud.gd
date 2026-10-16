@@ -3,6 +3,7 @@ extends CanvasLayer
 ## HUD transparente: no contiene escenario ni modifica al jugador.
 signal panel_cambiado(abierto: bool, expediente: bool)
 signal pista_seleccionada(pista: Pista)
+signal tablero_modificado
 signal linterna_cambiada(encendida: bool)
 ## Al cambiar el caso se carga su expediente (res://hud/expediente/casos/caso_XX.tres).
 @export var caso: String = "03":
@@ -713,3 +714,9 @@ func _dibujar_tarjeta_tablero(indice: int, posicion: Vector2) -> void:
 		_parrafo(pista.titulo, posicion + Vector2(12, 28), 166, 17, TINTA, 4)
 	herramientas_pizarron.dibujar_tinta_pista(_lienzo, pista.id, posicion)
 	_tachuela(posicion + Vector2(TAM_TARJETA.x / 2, 7))
+
+func capturar_tablero() -> Dictionary:
+	return relaciones_pizarron.capturar_estado()
+
+func restaurar_tablero(estado: Dictionary) -> void:
+	relaciones_pizarron.restaurar_estado(estado)

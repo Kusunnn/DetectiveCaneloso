@@ -83,6 +83,7 @@ func conectar(a: StringName, b: StringName) -> void:
 		hud._tarjetas_tablero[id_resultado] = posicion.clamp(Vector2.ZERO, Vector2(1600, 900) - TAM_DEDUCCION)
 	if existente.is_empty(): conexiones.append({"a": a, "b": b, "resultado": id_resultado, "color": HILO})
 	else: existente.resultado = id_resultado
+	hud.tablero_modificado.emit()
 
 func actualizar_centros() -> void:
 	for conexion in conexiones:
@@ -93,9 +94,11 @@ func actualizar_centros() -> void:
 		hud._tarjetas_tablero[conexion.resultado] = (centro - TAM_DEDUCCION / 2).clamp(Vector2.ZERO, Vector2(1600, 900) - TAM_DEDUCCION)
 
 func retirar(id: StringName) -> void:
+	var estaba: bool = hud._tarjetas_tablero.has(id)
 	hud._tarjetas_tablero.erase(id)
 	conexiones = conexiones.filter(func(c: Dictionary) -> bool: return c.a != id and c.b != id and c.resultado != id)
 	cancelar()
+	if estaba: hud.tablero_modificado.emit()
 
 func input(evento: InputEvent) -> void:
 	var escala: float = minf(hud._lienzo.size.x / 1600.0, hud._lienzo.size.y / 900.0)
@@ -131,7 +134,9 @@ func input(evento: InputEvent) -> void:
 	if not conexion_paleta.is_empty() and evento.pressed:
 		if evento.button_index == MOUSE_BUTTON_LEFT:
 			for i in range(3):
-				if _muestra_color(i).has_point(raton): conexion_paleta.color = COLORES_HILO[i]
+				if _muestra_color(i).has_point(raton) and conexion_paleta.get("color", HILO) != COLORES_HILO[i]:
+					conexion_paleta.color = COLORES_HILO[i]
+					hud.tablero_modificado.emit()
 			_consumir_suelta = true
 		conexion_paleta = {}
 		return
@@ -190,9 +195,11 @@ func input(evento: InputEvent) -> void:
 				return
 			if arrastre != &"" and moviendo and not sobre_diario and hud._zona_pizarron().has_point(punto):
 				var posicion: Vector2 = (punto - offset).clamp(Vector2.ZERO, Vector2(1600, 900) - medida(arrastre))
+				var cambio: bool = not hud._tarjetas_tablero.has(arrastre) or (desde_tablero and posicion != posicion_original) or (not desde_tablero and hud._tarjetas_tablero[arrastre] != posicion)
 				hud._tarjetas_tablero.erase(arrastre)
 				hud._tarjetas_tablero[arrastre] = posicion
 				actualizar_centros()
+				if cambio: hud.tablero_modificado.emit()
 			elif arrastre != &"" and desde_tablero:
 				hud._tarjetas_tablero[arrastre] = posicion_original
 				actualizar_centros()
@@ -302,3 +309,42 @@ func dibujar_paleta(lienzo: Control) -> void:
 		lienzo.draw_circle(muestra.get_center(), 13, COLORES_HILO[i])
 		if conexion_paleta.get("color", HILO) == COLORES_HILO[i]:
 			lienzo.draw_arc(muestra.get_center(), 16, 0, TAU, 32, Color("8a754f"), 2, true)
+
+func capturar_estado() -> Dictionary:
+	var colocadas: Array[Dictionary] = []
+	for id in hud._tarjetas_tablero:
+		if not tarjetas.has(id): continue
+		var posicion: Vector2 = hud._tarjetas_tablero[id]
+		var tarjeta: Dictionary = tarjetas[id]
+		colocadas.append({"id": str(id), "x": posicion.x, "y": posicion.y, "tipo": tarjeta.tipo, "titulo": tarjeta.titulo})
+	var hilos: Array[Dictionary] = []
+	for conexion in conexiones:
+		hilos.append({"a": str(conexion.a), "b": str(conexion.b), "resultado": str(conexion.resultado), "color": conexion.get("color", HILO).to_html()})
+	return {"version": 1, "tarjetas": colocadas, "hilos": hilos}
+
+func restaurar_estado(estado: Dictionary) -> void:
+	cancelar()
+	hud._tarjetas_tablero.clear()
+	conexiones.clear()
+	tarjetas.clear()
+	sincronizar()
+	# Texturas y retratos proceden del diario restaurado; el JSON solo contiene datos.
+	for datos in estado.get("tarjetas", []):
+		var id := StringName(datos.get("id", ""))
+		if id == &"": continue
+		if datos.get("tipo", "") == "DEDUCCION":
+			tarjetas[id] = {"tipo": "DEDUCCION", "titulo": str(datos.get("titulo", "")), "imagen": null}
+		if not tarjetas.has(id): continue
+		var posicion := Vector2(float(datos.get("x", 0)), float(datos.get("y", 0)))
+		if not posicion.is_finite(): continue
+		hud._tarjetas_tablero[id] = posicion.clamp(Vector2.ZERO, Vector2(1600, 900) - medida(id))
+	for datos in estado.get("hilos", []):
+		var a := StringName(datos.get("a", ""))
+		var b := StringName(datos.get("b", ""))
+		var resultado := StringName(datos.get("resultado", ""))
+		if a == b or not hud._tarjetas_tablero.has(a) or not hud._tarjetas_tablero.has(b): continue
+		if resultado != &"" and not hud._tarjetas_tablero.has(resultado): continue
+		var color := HILO
+		for permitido in COLORES_HILO:
+			if datos.get("color", "") == permitido.to_html(): color = permitido
+		conexiones.append({"a": a, "b": b, "resultado": resultado, "color": color})
