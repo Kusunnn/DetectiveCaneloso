@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-// Menú de inicio (CA-01): nueva partida, continuar, opciones, créditos y salir.
+// Menú de inicio (CA-01): nueva partida, continuar, cargar partida, capítulos, opciones, créditos y salir.
 // Diseño: "Detective Caneloso – Inicio" (Claude Design). Colores, tamaños y estilos
 // están en la escena; aquí solo se cargan las fuentes y la animación de foco.
 public partial class MenuInicio : Control
@@ -15,6 +15,7 @@ public partial class MenuInicio : Control
 	private Control _listaOpciones;
 	private Button _botonNuevaPartida;
 	private Button _botonContinuar;
+	private Button _botonCargar;
 	private Button _botonCapitulos;
 	private Button _botonOpciones;
 	private Button _botonCreditos;
@@ -22,6 +23,7 @@ public partial class MenuInicio : Control
 	private PanelMenu _menuOpciones;
 	private PanelMenu _pantallaCreditos;
 	private TableroCapitulos _tableroCapitulos;
+	private PanelRanuras _panelCargar;
 	private DialogoConfirmacion _dialogoConfirmacion;
 
 	// Botón que abrió el panel actual, para devolverle el foco al cerrarlo.
@@ -35,6 +37,7 @@ public partial class MenuInicio : Control
 		_listaOpciones = GetNode<Control>("%ListaOpciones");
 		_botonNuevaPartida = GetNode<Button>("%BotonNuevaPartida");
 		_botonContinuar = GetNode<Button>("%BotonContinuar");
+		_botonCargar = GetNode<Button>("%BotonCargar");
 		_botonCapitulos = GetNode<Button>("%BotonCapitulos");
 		_botonOpciones = GetNode<Button>("%BotonOpciones");
 		_botonCreditos = GetNode<Button>("%BotonCreditos");
@@ -44,7 +47,7 @@ public partial class MenuInicio : Control
 		_dialogoConfirmacion = GetNode<DialogoConfirmacion>("%DialogoConfirmacion");
 
 		AplicarFuentes();
-		var botones = new[] { _botonNuevaPartida, _botonContinuar, _botonCapitulos, _botonOpciones, _botonCreditos, _botonSalir };
+		var botones = new[] { _botonNuevaPartida, _botonContinuar, _botonCargar, _botonCapitulos, _botonOpciones, _botonCreditos, _botonSalir };
 		foreach (var boton in botones)
 		{
 			var fila = FilaDe(boton);
@@ -54,6 +57,7 @@ public partial class MenuInicio : Control
 
 		_botonNuevaPartida.Pressed += AlPresionarNuevaPartida;
 		_botonContinuar.Pressed += () => _ = AlPresionarContinuar();
+		_botonCargar.Pressed += AbrirCargar;
 		_botonCapitulos.Pressed += () => AbrirTablero();
 		_botonOpciones.Pressed += () => AbrirPanel(_menuOpciones, _botonOpciones);
 		_botonCreditos.Pressed += () => AbrirPanel(_pantallaCreditos, _botonCreditos);
@@ -62,17 +66,26 @@ public partial class MenuInicio : Control
 		_pantallaCreditos.Cerrado += AlCerrarPanel;
 
 		bool puedeContinuar = GestorPartida.Instancia.HayPartidaGuardada();
-		_botonContinuar.Disabled = !puedeContinuar;
-		_botonContinuar.FocusMode = puedeContinuar ? FocusModeEnum.All : FocusModeEnum.None;
-		_botonContinuar.MouseDefaultCursorShape = puedeContinuar ? CursorShape.PointingHand : CursorShape.Arrow;
-		var filaContinuar = FilaDe(_botonContinuar);
-		filaContinuar.Modulate = new Color(filaContinuar.Modulate, puedeContinuar ? 1.0f : TransparenciaDesactivado);
+		foreach (var boton in new[] { _botonContinuar, _botonCargar })
+		{
+			boton.Disabled = !puedeContinuar;
+			boton.FocusMode = puedeContinuar ? FocusModeEnum.All : FocusModeEnum.None;
+			boton.MouseDefaultCursorShape = puedeContinuar ? CursorShape.PointingHand : CursorShape.Arrow;
+			var fila = FilaDe(boton);
+			fila.Modulate = new Color(fila.Modulate, puedeContinuar ? 1.0f : TransparenciaDesactivado);
+		}
 
 		// Tablero de capítulos: debajo del diálogo de confirmación
 		_tableroCapitulos = new TableroCapitulos();
 		AddChild(_tableroCapitulos);
 		MoveChild(_tableroCapitulos, _dialogoConfirmacion.GetIndex());
 		_tableroCapitulos.Cerrado += AlCerrarPanel;
+
+		// Cargar una ranura concreta (la partida más reciente se carga con "Continuar")
+		_panelCargar = new PanelRanuras { ModoCargar = true, Confirmar = (mensaje, boton) => _dialogoConfirmacion.Preguntar(mensaje, boton) };
+		AddChild(_panelCargar);
+		MoveChild(_panelCargar, _dialogoConfirmacion.GetIndex());
+		_panelCargar.Cerrado += AlCerrarPanel;
 
 
 		UtilidadesUI.ConectarFocoConRaton(this);
@@ -86,6 +99,13 @@ public partial class MenuInicio : Control
 			GestorPartida.Instancia.CapituloEnPreparacion = null;
 			_ = MostrarEnPreparacion(Capitulos.Obtener(enPreparacion));
 		}
+	}
+
+	private void AbrirCargar()
+	{
+		_focoAlVolver = _botonCargar;
+		_pantallaPrincipal.Hide();
+		_panelCargar.Abrir();
 	}
 
 	private void AbrirTablero(string mensaje = null)

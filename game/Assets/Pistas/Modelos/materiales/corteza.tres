@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Bark012/Bark012_Color.jpg" id="1_1qgpq"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Bark012/Bark012_NormalGL.jpg" id="2_y6yru"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Bark012/Bark012_Roughness.jpg" id="3_hc5nf"]
+
+[resource]
+resource_name = "corteza"
+albedo_texture = ExtResource("1_1qgpq")
+roughness_texture = ExtResource("3_hc5nf")
+normal_enabled = true
+normal_texture = ExtResource("2_y6yru")

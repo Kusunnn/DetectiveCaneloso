@@ -47,6 +47,13 @@ public static class Sonidos
 		Buho,
 		AguaLago,
 		ZumbidoGenerador,
+		// Vista de examen de evidencias (HU-07)
+		ExamenAbrir,
+		ExamenCerrar,
+		ExamenGirar,
+		ExamenAcercar,
+		ExamenTic,
+		ExamenDescubrir,
 	}
 
 	public const string BusMusica = "Musica";
@@ -84,6 +91,13 @@ public static class Sonidos
 		[Tipo.Texto] = new(new[] { "Interfaz/texto_1.wav", "Interfaz/texto_2.wav", "Interfaz/texto_3.wav" }, -19f),
 		[Tipo.Hover] = new(new[] { "Interfaz/hover_1.wav", "Interfaz/hover_2.wav", "Interfaz/hover_3.wav" }, -17f),
 		[Tipo.Clic] = new(new[] { "Interfaz/clic_1.wav", "Interfaz/clic_2.wav", "Interfaz/clic_3.wav" }, -9f),
+		// Vista de examen (HU-07): OGG de Kenney copiados tal cual; el volumen los iguala a los demás
+		[Tipo.ExamenAbrir] = new(new[] { "Examen/abrir.ogg" }, -6f),
+		[Tipo.ExamenCerrar] = new(new[] { "Examen/cerrar.ogg" }, -8f),
+		[Tipo.ExamenGirar] = new(new[] { "Examen/girar_1.ogg", "Examen/girar_2.ogg", "Examen/girar_3.ogg" }, -12f),
+		[Tipo.ExamenAcercar] = new(new[] { "Examen/acercar_1.ogg", "Examen/acercar_2.ogg", "Examen/acercar_3.ogg" }, -12f),
+		[Tipo.ExamenTic] = new(new[] { "Examen/tic.ogg" }, -6f, Variar: false),
+		[Tipo.ExamenDescubrir] = new(new[] { "Examen/descubrir.ogg" }, -2f, Variar: false),
 
 		// Ambientes: el volumen es la ganancia que los iguala a los efectos (se suma al de la escena)
 		[Tipo.ZumbidoFluorescente] = new(new[] { "Ambiente/zumbido_fluorescente.ogg" }, 9.4f, false, true),

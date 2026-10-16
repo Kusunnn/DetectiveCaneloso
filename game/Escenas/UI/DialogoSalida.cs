@@ -76,19 +76,24 @@ public partial class DialogoSalida : Control
 		_cancelar.FocusNeighborRight = _cancelar.GetPathTo(_salir);
 	}
 
-	public Task<Respuesta> Preguntar(string ultimoGuardado)
+	// hayCambios: hay progreso desde el último guardado. puedeGuardar: false al repetir un capítulo (no se guarda en las ranuras).
+	public Task<Respuesta> Preguntar(string ultimoGuardado, bool hayCambios = true, bool puedeGuardar = true)
 	{
 		_detalle.Text = ultimoGuardado;
 		_detalle.Visible = !string.IsNullOrEmpty(ultimoGuardado);
 		_respuesta = new TaskCompletionSource<Respuesta>();
 		Show();
-		_guardar.GrabFocus();
+		var foco = puedeGuardar ? _guardar : _cancelar;
+		foco.GrabFocus();
 		// Otra vez al siguiente cuadro: que un botón de abajo no se quede con el foco por el cursor
-		_guardar.CallDeferred(Control.MethodName.GrabFocus);
+		foco.CallDeferred(Control.MethodName.GrabFocus);
 		return _respuesta.Task;
 	}
 
 	public bool Abierto => Visible;
+
+	// Si la escena cambia con el aviso abierto, se cierra como si se hubiera cancelado
+	public void Cancelar() { if (Visible) Responder(Respuesta.Cancelar); }
 
 	private void Responder(Respuesta r)
 	{

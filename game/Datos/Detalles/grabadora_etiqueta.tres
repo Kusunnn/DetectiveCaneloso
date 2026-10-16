@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DetalleOculto" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="1_detalle"]
+
+[resource]
+script = ExtResource("1_detalle")
+Id = "etiqueta"
+Titulo = "Etiqueta bajo la grabadora"
+Descripcion = "Pegada por debajo, escrita a mano: «Sala 1. NO DETENER hasta el cambio de turno. — B.»"
+Pensamiento = "«No detener... B.» Alguien quería que grabara toda la noche. ¿Quién firma con B.?"
+Normal = Vector3(0, -1, 0)
+Tolerancia = 40.0
+ZoomMinimo = 1.5
+RequiereLinterna = false

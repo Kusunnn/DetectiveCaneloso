@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_Color.jpg" id="1_dwpfc"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_NormalGL.jpg" id="2_wmt3n"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_Roughness.jpg" id="3_ipqeq"]
+
+[resource]
+resource_name = "tela_bolsillo"
+cull_mode = 2
+albedo_color = Color(0.62, 0.27, 0.23, 1)
+albedo_texture = ExtResource("1_dwpfc")
+roughness_texture = ExtResource("3_ipqeq")
+normal_enabled = true
+normal_texture = ExtResource("2_wmt3n")
+uv1_scale = Vector3(6, 6, 6)
+uv1_triplanar = true

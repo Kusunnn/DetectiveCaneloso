@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Cork002/Cork002_Color.jpg" id="1_u17ap"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Cork002/Cork002_NormalGL.jpg" id="2_x628c"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Cork002/Cork002_Roughness.jpg" id="3_26oqm"]
+
+[resource]
+resource_name = "corcho"
+albedo_texture = ExtResource("1_u17ap")
+roughness_texture = ExtResource("3_26oqm")
+normal_enabled = true
+normal_texture = ExtResource("2_x628c")
+uv1_scale = Vector3(3, 3, 3)
+uv1_triplanar = true

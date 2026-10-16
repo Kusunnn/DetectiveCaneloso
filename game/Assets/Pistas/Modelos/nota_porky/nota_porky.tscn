@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/nota_porky/nota_porky.res" id="1_qp6ta"]
+
+[node name="NotaPorky" type="Node3D" unique_id=1437736656]
+
+[node name="Hoja" type="MeshInstance3D" parent="." unique_id=1335152903]
+mesh = ExtResource("1_qp6ta")

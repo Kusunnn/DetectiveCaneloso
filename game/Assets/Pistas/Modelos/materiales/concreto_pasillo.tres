@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_Color.jpg" id="1_j6vrv"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_NormalGL.jpg" id="2_600kk"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_Roughness.jpg" id="3_pfypf"]
+
+[resource]
+resource_name = "concreto_pasillo"
+albedo_color = Color(0.5, 0.48, 0.45, 1)
+albedo_texture = ExtResource("1_j6vrv")
+roughness_texture = ExtResource("3_pfypf")
+normal_enabled = true
+normal_texture = ExtResource("2_600kk")
+uv1_scale = Vector3(2, 2, 2)
+uv1_triplanar = true

@@ -101,10 +101,20 @@ public partial class GestorPartida : Node
 
 	// ---------- Navegación ----------
 
+	// saltarTutorial ("Omitir tutorial"): se empieza directo en el capítulo que sigue al tutorial, que queda marcado
+	// como omitido para que ese capítulo se desbloquee. Se puede jugar después desde el tablero de capítulos.
 	public void NuevaPartida(bool saltarTutorial = false)
 	{
 		RanuraActiva = RanuraAuto;
-		IniciarCapitulo(Capitulos.Lista.FirstOrDefault()?.Id ?? "caso0", rejugar: false, saltarTutorial);
+		var tutorial = Capitulos.Lista.FirstOrDefault();
+		var siguiente = tutorial != null ? Capitulos.Siguiente(tutorial.Id) : null;
+		if (saltarTutorial && siguiente != null && siguiente.TieneEscena)
+		{
+			Capitulos.MarcarOmitido(tutorial.Id);
+			IniciarCapitulo(siguiente.Id, rejugar: false, saltarTutorial: true);
+			return;
+		}
+		IniciarCapitulo(tutorial?.Id ?? "caso0", rejugar: false, saltarTutorial);
 	}
 
 	// Empieza un capítulo desde el principio. rejugar = capítulo ya resuelto: no toca las ranuras.
@@ -140,6 +150,15 @@ public partial class GestorPartida : Node
 		var lineas = capitulo.Anteriormente.ToList();
 		if (modo == Presentacion.Inicio)
 		{
+			// Si el caso tiene expediente, al empezarlo se presenta con la cinemática (ya trae la tarjeta del título).
+			// Sale cada vez que el capítulo empieza en una partida (nunca al cargar); al repetir uno ya resuelto, solo si no se ha visto.
+			string caso = capitulo.Numero.ToString("00");
+			if (IntroCaso.Disponible(caso) && (!Rejugando || !IntroCaso.Vista(caso)))
+			{
+				var intro = IntroCaso.Reproducir(this, caso, aviso: true);
+				await ToSignal(intro, IntroCaso.SignalName.Terminada);
+				return;
+			}
 			await _tarjeta.MostrarTitulo(capitulo);
 			// El primer caso no tiene "anteriormente"; los demás lo muestran al empezar
 			if (capitulo.Numero > 0 && lineas.Count > 0) await _tarjeta.MostrarAnteriormente(lineas);
@@ -174,6 +193,15 @@ public partial class GestorPartida : Node
 	{
 		var datos = LeerArchivo(RutaJson(ranura) + (desdeRespaldo ? ".bak" : ""));
 		if (datos == null) return false;
+		// Partida guardada al cerrar un caso (fase Epílogo): ya no queda nada por hacer ahí, así que sigue el próximo capítulo
+		string guardado = datos.TryGetValue("capitulo", out Variant cap) ? cap.AsString() : "caso0";
+		var siguiente = CapituloTerminado(datos) ? Capitulos.Siguiente(guardado) : null;
+		if (siguiente != null && siguiente.TieneEscena)
+		{
+			RanuraActiva = ranura;
+			IniciarCapitulo(siguiente.Id, rejugar: false, saltarTutorial: true);
+			return true;
+		}
 		SaltarTutorial = datos.TryGetValue("saltar_tutorial", out Variant saltar) && saltar.AsBool();
 		EstadoPendiente = datos.TryGetValue("estado", out Variant estado) ? estado.AsGodotDictionary() : null;
 		RanuraActiva = ranura;
@@ -185,6 +213,13 @@ public partial class GestorPartida : Node
 		string escena = datos.TryGetValue("escena", out Variant e) && ResourceLoader.Exists(e.AsString()) ? e.AsString() : EscenaJuego;
 		CambiarEscena(escena);
 		return true;
+	}
+
+	private static bool CapituloTerminado(Godot.Collections.Dictionary datos)
+	{
+		if (!datos.TryGetValue("resumen", out Variant resumen)) return false;
+		var r = resumen.AsGodotDictionary();
+		return r.TryGetValue("fase", out Variant fase) && fase.AsString() == Capitulos.Fase("epilogo")?.Nombre;
 	}
 
 	// La escena de juego lo llama tras restaurar
@@ -202,6 +237,7 @@ public partial class GestorPartida : Node
 	private void CambiarEscena(string ruta)
 	{
 		_autoguardadoPendiente = null; // Un autoguardado pendiente no pasa a otra partida
+		_dialogoSalida.Cancelar();
 		GetTree().Paused = false;
 		GetTree().ChangeSceneToFile(ruta);
 	}
@@ -387,11 +423,13 @@ public partial class GestorPartida : Node
 		if (what == NotificationWMCloseRequest) Callable.From(() => { _ = SalirDelJuego(); }).CallDeferred();
 	}
 
-	// Menú de inicio o salir del juego: si hay cambios, pregunta [Guardar y salir] [Salir sin guardar] [Cancelar]
+	// Menú de inicio o salir del juego desde una partida: siempre pregunta [Guardar y salir] [Salir sin guardar] [Cancelar]
 	public async Task<bool> ConfirmarSalida()
 	{
-		if (!HayCambiosSinGuardar || Rejugando || EscenaDeJuego() == null) return true;
-		var respuesta = await _dialogoSalida.Preguntar(TextoUltimoGuardado());
+		if (EscenaDeJuego() == null) return true;
+		// Sin ningún guardado en esta partida, todo lo hecho cuenta como progreso sin guardar
+		bool hayCambios = HayCambiosSinGuardar || SegundosDesdeUltimoGuardado < 0;
+		var respuesta = await _dialogoSalida.Preguntar(TextoUltimoGuardado(), hayCambios, puedeGuardar: !Rejugando);
 		if (respuesta == DialogoSalida.Respuesta.Cancelar) return false;
 		if (respuesta == DialogoSalida.Respuesta.GuardarYSalir)
 		{

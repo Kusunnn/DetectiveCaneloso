@@ -9,6 +9,10 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e7"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/AnimacionPersonaje.cs" id="anim"]
 [ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/libro_turnos/libro_turnos.tscn" id="hu07_m_libro"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/nota_comisario/nota_comisario.tscn" id="hu07_m_nota"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/nota_comisario/nota_comisario.tscn" id="hu07_x_nota"]
+[ext_resource type="PackedScene" path="res://Assets/Models/poli/Poli/Neutral Idle.fbx" id="modelo_comisario"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_suelo"]
 albedo_color = Color(0.3, 0.19, 0.1, 1)
@@ -128,8 +132,7 @@ material = SubResource("Mat_encimera")
 size = Vector3(3.3, 0.04, 0.72)
 
 [sub_resource type="BoxShape3D" id="Shape_0p42_0p14_0p34"]
-size = Vector3(0.42, 0.14, 0.34)
-
+size = Vector3(0.44, 0.04, 0.31)
 [sub_resource type="BoxMesh" id="Box_0p32_0p05_0p24_Mat_libro"]
 material = SubResource("Mat_libro")
 size = Vector3(0.32, 0.05, 0.24)
@@ -735,14 +738,13 @@ Id = "libro_turnos"
 Titulo = "Libro de turnos"
 Descripcion = "Eriz (conserje): salida a la 1:00. Guardia de 2:00 a 4:00: agente Porky, en recepción. Nadie más firmó. Al margen, con la letra del comisario: «Grabadora Sala 1: NO TOCAR»."
 SeRecoge = true
+DescripcionAmpliada = "El libro de firmas de la guardia. Eriz firmó su salida a la 1:00. En el turno de 2:00 a 4:00 solo aparece la firma de Porky. En el margen, con otra letra: «Grabadora Sala 1: NO TOCAR»."
+Lugar = "Recepción · mostrador"
 
 [node name="Colision" type="CollisionShape3D" parent="LibroTurnos"]
 shape = SubResource("Shape_0p42_0p14_0p34")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
 
-[node name="Malla" type="MeshInstance3D" parent="LibroTurnos"]
-mesh = SubResource("Box_0p32_0p05_0p24_Mat_libro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
 [node name="FocoMostrador" type="SpotLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 16.6, 3.2, 0.8)
 light_color = Color(1, 0.85, 0.6, 1)
@@ -1103,14 +1105,13 @@ Id = "nota_comisario"
 Titulo = "Nota del comisario"
 Descripcion = "«Dejar la grabadora de la Sala 1 en REC esta noche. Veremos quién duerme en la guardia. — B.»"
 SeRecoge = true
+DescripcionAmpliada = "Una hoja doblada en el cajón del escritorio del comisario: «Dejar la grabadora de la Sala 1 en REC esta noche. Veremos quién duerme en la guardia. — B.»"
+Lugar = "Recepción · cajón del escritorio"
+ModeloExamen = ExtResource("hu07_x_nota")
 
 [node name="Colision" type="CollisionShape3D" parent="CajonEscritorio1/Movil/NotaComisario"]
 shape = SubResource("Shape_0p22_0p04_0p16")
 
-[node name="Papel" type="MeshInstance3D" parent="CajonEscritorio1/Movil/NotaComisario"]
-mesh = SubResource("Box_0p18_0p006_0p13_Mat_papel")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
 [node name="CajonEscritorio2" parent="." instance=ExtResource("e5")]
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 18.52, 0.58, 5.4)
 Nombre = "Cajón del escritorio"
@@ -1130,81 +1131,14 @@ shape = SubResource("Cap_0p45_1p9")
 
 [node name="Figura" type="Node3D" parent="Comisario"]
 
-[node name="Torso" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
-mesh = SubResource("Mesh_torso")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="BrazoIzq" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(0.9781, 0.2079, 0, -0.2079, 0.9781, 0, 0, 0, 1, -0.38, 0.62, 0)
-mesh = SubResource("Mesh_brazo")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="BrazoDer" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(0.9781, -0.2079, 0, 0.2079, 0.9781, 0, 0, 0, 1, 0.38, 0.62, 0)
-mesh = SubResource("Mesh_brazo")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Cabeza" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.45, 0)
-mesh = SubResource("Sph_0p42_Mat_piel")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="OrejaIzq" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.38, 1.55, 0)
-mesh = SubResource("Sph_0p12_Mat_piel")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="OrejaDer" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38, 1.55, 0)
-mesh = SubResource("Sph_0p12_Mat_piel")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="OjoIzq" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14, 1.5, 0.38)
-mesh = SubResource("Sph_0p045_Mat_negro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="OjoDer" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.14, 1.5, 0.38)
-mesh = SubResource("Sph_0p045_Mat_negro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Nariz" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0.42)
-mesh = SubResource("Sph_0p06_Mat_negro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Bigote" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.33, 0.39)
-mesh = SubResource("Box_0p34_0p07_0p07_Mat_negro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Gorra" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.86, 0)
-mesh = SubResource("Cyl_0p36_0p4_0p16_Mat_uniforme")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Visera" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 0.9848, 0.1736, 0, -0.1736, 0.9848, 0, 1.8, 0.3)
-mesh = SubResource("Box_0p36_0p02_0p2_Mat_negro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="Placa" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.87, 0.37)
-mesh = SubResource("Sph_0p05_Mat_oro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="PlacaPecho" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.15, 0.85, 0.32)
-mesh = SubResource("Sph_0p04_Mat_oro")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
-[node name="TazaCafe" type="MeshInstance3D" parent="Comisario/Figura"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.45, 0.4, 0.15)
-mesh = SubResource("Cyl_0p045_0p04_0p1_Mat_blanco")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
+[node name="Modelo" parent="Comisario/Figura" instance=ExtResource("modelo_comisario")]
+transform = Transform3D(380, 0, 0, 0, 380, 0, 0, 0, 380, 0, 0.004, 0)
+
+[node name="Animacion" type="Node" parent="Comisario" node_paths=PackedStringArray("Modelo")]
+script = ExtResource("anim")
+Modelo = NodePath("../Figura/Modelo")
+Animacion = "mixamo_com"
+
 [node name="Sombra" type="Decal" parent="Comisario"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 size = Vector3(1.2, 0.6, 1.2)
@@ -1534,3 +1468,9 @@ TamPixel = 0.0025
 ColorPapel = Color(0.82, 0.8, 0.72, 1)
 ColorTexto = Color(0.12, 0.1, 0.08, 1)
 AltoMaximo = 0.6
+
+[node name="Modelo" parent="LibroTurnos" instance=ExtResource("hu07_m_libro")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Modelo" parent="CajonEscritorio1/Movil/NotaComisario" instance=ExtResource("hu07_m_nota")]
+transform = Transform3D(0, 0, 0.85, 0, 0.85, 0, -0.85, 0, 0, 0, -0.003, 0)

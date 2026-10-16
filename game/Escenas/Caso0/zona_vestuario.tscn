@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/casillero.tscn" id="e5"]
 [ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/LuzParpadeante.cs" id="luz_parpadeante"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/cinta/cinta.tscn" id="hu07_m_cinta"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_azulejo"]
 albedo_color = Color(0.34, 0.4, 0.36, 1)
@@ -731,14 +732,12 @@ Id = "cinta"
 Titulo = "La cinta desaparecida"
 Descripcion = "La cinta con la confesión de Tito Garras, escondida bajo una bolsa de donas. Alguien la rebobinó hasta el minuto 03:12."
 SeRecoge = true
+DescripcionAmpliada = "La cinta con la confesión de Tito Garras, escondida bajo una bolsa de donas. Está rebobinada justo hasta las 3:12."
+Lugar = "Vestidores · casillero de Porky"
 
 [node name="Colision" type="CollisionShape3D" parent="Cinta"]
 shape = SubResource("Shape_0p18_0p08_0p18")
 
-[node name="Malla" type="MeshInstance3D" parent="Cinta"]
-mesh = SubResource("Cyl_0p06_0p06_0p02_Mat_cinta")
-visibility_range_end = 22
-visibility_range_end_margin = 2.0
 [node name="BotaBarro1" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.9659, 0, 0.2588, 0, 1, 0, -0.2588, 0, 0.9659, -8.2, 0.6, 0.1)
 mesh = SubResource("Box_0p28_0p2_0p1_Mat_bota")
@@ -1098,3 +1097,6 @@ TamPixel = 0.0025
 ColorPapel = Color(0.86, 0.83, 0.72, 1)
 ColorTexto = Color(0.12, 0.1, 0.08, 1)
 AltoMaximo = 0.6
+
+[node name="Modelo" parent="Cinta" instance=ExtResource("hu07_m_cinta")]
+transform = Transform3D(0.96593, 0, -0.25882, 0, 1, 0, 0.25882, 0, 0.96593, 0, -0.01, 0)

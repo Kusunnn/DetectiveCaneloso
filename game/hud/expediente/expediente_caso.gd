@@ -77,6 +77,14 @@ func cargar_caso(caso: String) -> void:
 	aviso_pendiente = informe != null and not abierto
 
 
+## Cinemática de inicio (Escenas/Cinematicas/IntroCaso), encima del expediente y sin el aviso final.
+func ver_presentacion() -> void:
+	var intro = load("res://Escenas/Cinematicas/IntroCaso.tscn").instantiate()
+	intro.Caso = _caso
+	intro.MostrarAviso = false
+	get_tree().root.add_child(intro)
+
+
 func abrir() -> void: _aplicar(true)
 func cerrar() -> void: _aplicar(false)
 func alternar() -> void: _aplicar(not abierto)
@@ -325,6 +333,10 @@ func _barra_lateral() -> Control:
 	var b_esp := _boton_atajo("ESPACIO", "BAJAR", func(): bajar())
 	lbl_espacio = b_esp[1]
 	pie.add_child(b_esp[0])
+	# Volver a ver la cinemática de inicio del caso (solo si el caso tiene expediente)
+	# El tutorial (caso 00) no tiene presentación por ahora (IntroCaso.CasoSinPresentacion)
+	if informe and _caso != "00":
+		pie.add_child(_boton_atajo("VER", "PRESENTACIÓN DEL CASO", ver_presentacion)[0])
 	pie.add_child(_boton_atajo("TAB", "CERRAR", cerrar)[0])
 	v.add_child(pie)
 	return m

@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/nota_porky_reverso.jpg" id="1_dkyux"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_2nutp"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_my2ch"]
+
+[resource]
+resource_name = "nota_porky_reverso"
+albedo_texture = ExtResource("1_dkyux")
+roughness_texture = ExtResource("3_my2ch")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_2nutp")
+texture_filter = 5

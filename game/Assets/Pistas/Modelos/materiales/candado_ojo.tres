@@ -1,0 +1,12 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/candado_ojo.png" id="1_otqee"]
+
+[resource]
+resource_name = "candado_ojo"
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("1_otqee")
+metallic = 0.5
+roughness = 0.6

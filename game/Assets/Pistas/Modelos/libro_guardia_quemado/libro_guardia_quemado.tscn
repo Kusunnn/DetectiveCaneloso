@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/libro_guardia_quemado/hoja_a.res" id="1_pcs1h"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/libro_guardia_quemado/hoja_b.res" id="2_138lu"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/libro_guardia_quemado/hoja_c.res" id="3_t7l75"]
+
+[node name="LibroQuemado" type="Node3D" unique_id=119670136]
+
+[node name="Hoja_a" type="MeshInstance3D" parent="." unique_id=1967631046]
+transform = Transform3D(0.9553365, 0, 0.29552022, 0, 1, 0, -0.29552022, 0, 0.9553365, -0.06, 0, 0.01)
+mesh = ExtResource("1_pcs1h")
+
+[node name="Hoja_b" type="MeshInstance3D" parent="." unique_id=1680759025]
+transform = Transform3D(0.87758255, 0, -0.47942555, 0, 1, 0, 0.47942555, 0, 0.87758255, -0.03, 0.004, -0.06)
+mesh = ExtResource("2_138lu")
+
+[node name="Hoja_c" type="MeshInstance3D" parent="." unique_id=169811264]
+transform = Transform3D(0.3623577, 0, 0.9320391, 0, 1, 0, -0.9320391, 0, 0.3623577, 0.1, 0.008, 0.05)
+mesh = ExtResource("3_t7l75")
+
+[node name="Detalle_antonio" type="Marker3D" parent="Hoja_c" unique_id=1354626826]
+transform = Transform3D(-1, 0, 0, 0, 0, -1, 0, -1, 0, 0.004, -0.0002, -0.006)

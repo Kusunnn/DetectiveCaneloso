@@ -1,0 +1,244 @@
+[gd_scene format=3]
+
+[sub_resource type="StandardMaterial3D" id="madera"]
+albedo_color = Color(0.36, 0.25, 0.17, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="madera_oscura"]
+albedo_color = Color(0.22, 0.16, 0.11, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="tabla"]
+material = SubResource("madera")
+size = Vector3(2.4, 0.06, 0.24)
+
+[sub_resource type="BoxMesh" id="larguero"]
+material = SubResource("madera_oscura")
+size = Vector3(0.14, 0.18, 12.2)
+
+[sub_resource type="CylinderMesh" id="poste"]
+material = SubResource("madera_oscura")
+top_radius = 0.1
+bottom_radius = 0.11
+height = 2.0
+radial_segments = 8
+
+[node name="Embarcadero" type="Node3D"]
+
+[node name="Largueros" type="Node3D" parent="."]
+
+[node name="LargueroI" type="MeshInstance3D" parent="Largueros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.000, 0.16, -6.0)
+mesh = SubResource("larguero")
+
+[node name="LargueroD" type="MeshInstance3D" parent="Largueros"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.000, 0.16, -6.0)
+mesh = SubResource("larguero")
+
+[node name="Tablas" type="Node3D" parent="."]
+
+[node name="Tabla0" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.025, 0, 1, 0, 0.025, 0, 1.000, -0.013, 0.286, -0.150)
+mesh = SubResource("tabla")
+
+[node name="Tabla1" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.014, 0, 1, 0, 0.014, 0, 1.000, 0.002, 0.283, -0.425)
+mesh = SubResource("tabla")
+
+[node name="Tabla2" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.009, 0, 1, 0, 0.009, 0, 1.000, 0.015, 0.284, -0.700)
+mesh = SubResource("tabla")
+
+[node name="Tabla3" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.002, 0, 1, 0, -0.002, 0, 1.000, 0.008, 0.283, -0.975)
+mesh = SubResource("tabla")
+
+[node name="Tabla4" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.016, 0, 1, 0, -0.016, 0, 1.000, -0.008, 0.276, -1.250)
+mesh = SubResource("tabla")
+
+[node name="Tabla5" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.010, 0, 1, 0, -0.010, 0, 1.000, -0.027, 0.283, -1.525)
+mesh = SubResource("tabla")
+
+[node name="Tabla6" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.009, 0, 1, 0, -0.009, 0, 1.000, 0.025, 0.280, -1.800)
+mesh = SubResource("tabla")
+
+[node name="Tabla7" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.015, 0, 1, 0, -0.015, 0, 1.000, 0.001, 0.274, -2.075)
+mesh = SubResource("tabla")
+
+[node name="Tabla8" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.021, 0, 1, 0, -0.021, 0, 1.000, 0.009, 0.283, -2.350)
+mesh = SubResource("tabla")
+
+[node name="Tabla9" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.004, 0, 1, 0, -0.004, 0, 1.000, 0.025, 0.286, -2.625)
+mesh = SubResource("tabla")
+
+[node name="Tabla10" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.006, 0, 1, 0, 0.006, 0, 1.000, 0.020, 0.278, -2.900)
+mesh = SubResource("tabla")
+
+[node name="Tabla11" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.008, 0, 1, 0, 0.008, 0, 1.000, -0.012, 0.275, -3.175)
+mesh = SubResource("tabla")
+
+[node name="Tabla12" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.004, 0, 1, 0, 0.004, 0, 1.000, 0.026, 0.277, -3.450)
+mesh = SubResource("tabla")
+
+[node name="Tabla13" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.003, 0, 1, 0, -0.003, 0, 1.000, 0.023, 0.283, -3.725)
+mesh = SubResource("tabla")
+
+[node name="Tabla14" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.022, 0, 1, 0, 0.022, 0, 1.000, 0.004, 0.277, -4.000)
+mesh = SubResource("tabla")
+
+[node name="Tabla15" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.000, 0, 1, 0, -0.000, 0, 1.000, -0.018, 0.279, -4.275)
+mesh = SubResource("tabla")
+
+[node name="Tabla16" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.020, 0, 1, 0, -0.020, 0, 1.000, -0.008, 0.273, -4.550)
+mesh = SubResource("tabla")
+
+[node name="Tabla17" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.008, 0, 1, 0, 0.008, 0, 1.000, 0.025, 0.282, -4.825)
+mesh = SubResource("tabla")
+
+[node name="Tabla18" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.001, 0, 1, 0, -0.001, 0, 1.000, -0.006, 0.275, -5.100)
+mesh = SubResource("tabla")
+
+[node name="Tabla19" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.011, 0, 1, 0, 0.011, 0, 1.000, -0.005, 0.278, -5.375)
+mesh = SubResource("tabla")
+
+[node name="Tabla20" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.008, 0, 1, 0, 0.008, 0, 1.000, 0.007, 0.280, -5.650)
+mesh = SubResource("tabla")
+
+[node name="Tabla21" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.013, 0, 1, 0, 0.013, 0, 1.000, -0.003, 0.286, -5.925)
+mesh = SubResource("tabla")
+
+[node name="Tabla22" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.018, 0, 1, 0, -0.018, 0, 1.000, 0.008, 0.282, -6.200)
+mesh = SubResource("tabla")
+
+[node name="Tabla23" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.001, 0, 1, 0, -0.001, 0, 1.000, 0.011, 0.280, -6.475)
+mesh = SubResource("tabla")
+
+[node name="Tabla24" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.022, 0, 1, 0, -0.022, 0, 1.000, 0.012, 0.278, -6.750)
+mesh = SubResource("tabla")
+
+[node name="Tabla25" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.012, 0, 1, 0, 0.012, 0, 1.000, -0.009, 0.281, -7.025)
+mesh = SubResource("tabla")
+
+[node name="Tabla26" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.008, 0, 1, 0, 0.008, 0, 1.000, 0.018, 0.278, -7.300)
+mesh = SubResource("tabla")
+
+[node name="Tabla27" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.019, 0, 1, 0, -0.019, 0, 1.000, 0.019, 0.274, -7.575)
+mesh = SubResource("tabla")
+
+[node name="Tabla28" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.021, 0, 1, 0, 0.021, 0, 1.000, -0.021, 0.279, -7.850)
+mesh = SubResource("tabla")
+
+[node name="Tabla29" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.021, 0, 1, 0, 0.021, 0, 1.000, -0.017, 0.287, -8.125)
+mesh = SubResource("tabla")
+
+[node name="Tabla30" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.007, 0, 1, 0, -0.007, 0, 1.000, -0.003, 0.275, -8.400)
+mesh = SubResource("tabla")
+
+[node name="Tabla31" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.005, 0, 1, 0, -0.005, 0, 1.000, 0.025, 0.275, -8.675)
+mesh = SubResource("tabla")
+
+[node name="Tabla32" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.019, 0, 1, 0, -0.019, 0, 1.000, 0.023, 0.286, -8.950)
+mesh = SubResource("tabla")
+
+[node name="Tabla33" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.020, 0, 1, 0, -0.020, 0, 1.000, -0.013, 0.284, -9.225)
+mesh = SubResource("tabla")
+
+[node name="Tabla34" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.024, 0, 1, 0, 0.024, 0, 1.000, -0.025, 0.276, -9.500)
+mesh = SubResource("tabla")
+
+[node name="Tabla35" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.025, 0, 1, 0, 0.025, 0, 1.000, -0.016, 0.282, -9.775)
+mesh = SubResource("tabla")
+
+[node name="Tabla36" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.012, 0, 1, 0, -0.012, 0, 1.000, 0.011, 0.280, -10.050)
+mesh = SubResource("tabla")
+
+[node name="Tabla38" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.013, 0, 1, 0, 0.013, 0, 1.000, -0.016, 0.286, -10.600)
+mesh = SubResource("tabla")
+
+[node name="Tabla39" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.006, 0, 1, 0, 0.006, 0, 1.000, -0.023, 0.286, -10.875)
+mesh = SubResource("tabla")
+
+[node name="Tabla40" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, -0.001, 0, 1, 0, 0.001, 0, 1.000, 0.025, 0.273, -11.150)
+mesh = SubResource("tabla")
+
+[node name="Tabla41" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.007, 0, 1, 0, -0.007, 0, 1.000, -0.029, 0.286, -11.425)
+mesh = SubResource("tabla")
+
+[node name="Tabla42" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.020, 0, 1, 0, -0.020, 0, 1.000, 0.028, 0.275, -11.700)
+mesh = SubResource("tabla")
+
+[node name="Tabla43" type="MeshInstance3D" parent="Tablas"]
+transform = Transform3D(1.000, 0, 0.003, 0, 1, 0, -0.003, 0, 1.000, -0.014, 0.283, -11.975)
+mesh = SubResource("tabla")
+
+[node name="Postes" type="Node3D" parent="."]
+
+[node name="Poste0" type="MeshInstance3D" parent="Postes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.150, -0.550, -0.200)
+mesh = SubResource("poste")
+
+[node name="Poste1" type="MeshInstance3D" parent="Postes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.150, -0.550, -0.200)
+mesh = SubResource("poste")
+
+[node name="Poste2" type="MeshInstance3D" parent="Postes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.150, -0.550, -4.000)
+mesh = SubResource("poste")
+
+[node name="Poste3" type="MeshInstance3D" parent="Postes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.150, -0.550, -4.000)
+mesh = SubResource("poste")
+
+[node name="Poste4" type="MeshInstance3D" parent="Postes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.150, -0.550, -8.000)
+mesh = SubResource("poste")
+
+[node name="Poste5" type="MeshInstance3D" parent="Postes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.150, -0.550, -8.000)
+mesh = SubResource("poste")
+
+[node name="Poste6" type="MeshInstance3D" parent="Postes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.150, 0.200, -11.900)
+mesh = SubResource("poste")
+
+[node name="Poste7" type="MeshInstance3D" parent="Postes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.150, 0.200, -11.900)
+mesh = SubResource("poste")

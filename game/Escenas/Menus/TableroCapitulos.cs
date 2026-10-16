@@ -365,27 +365,46 @@ public partial class TableroCapitulos : Control
 		}
 		else
 		{
-			var texto = capitulo.TieneEscena
-				? "Tu caso actual. Si ya lo empezaste, usa «Continuar» en el menú principal."
-				: "Este capítulo todavía está en preparación.";
+			bool omitido = Capitulos.Omitido(capitulo.Id);
+			var texto = omitido
+				? "Omitiste el tutorial. Puedes jugarlo cuando quieras; no cambia tu partida guardada."
+				: capitulo.TieneEscena
+					? "Tu caso actual. Si ya lo empezaste, usa «Continuar» en el menú principal."
+					: "Este capítulo todavía está en preparación.";
 			var l = EstiloPapel.Texto(texto, 19);
 			l.AutowrapMode = TextServer.AutowrapMode.WordSmart;
 			l.CustomMinimumSize = new Vector2(750, 0);
 			_detalleColumna.AddChild(l);
-			principal = EstiloPapel.Boton(capitulo.TieneEscena ? "Jugar desde el inicio" : "Ver presentación", principal: true);
-			principal.Pressed += () => GestorPartida.Instancia.IniciarCapitulo(capitulo.Id, rejugar: false);
+			principal = EstiloPapel.Boton(omitido ? "Jugar tutorial" : capitulo.TieneEscena ? "Jugar desde el inicio" : "Ver presentación", principal: true);
+			// Un tutorial omitido se juega como repetición: no pisa la partida del capítulo en curso
+			principal.Pressed += () => GestorPartida.Instancia.IniciarCapitulo(capitulo.Id, rejugar: omitido);
 		}
 		var botones = new HBoxContainer { Alignment = BoxContainer.AlignmentMode.End };
 		botones.AddThemeConstantOverride("separation", 12);
 		var cerrar = EstiloPapel.Boton("Volver");
 		cerrar.Pressed += CerrarDetalle;
 		botones.AddChild(cerrar);
+		// Cinemática de inicio del caso, si tiene expediente
+		string caso = capitulo.Numero.ToString("00");
+		Button presentacion = null;
+		if (IntroCaso.Disponible(caso))
+		{
+			presentacion = EstiloPapel.Boton("Ver presentación del caso");
+			presentacion.Pressed += () => IntroCaso.Reproducir(this, caso, aviso: false);
+			botones.AddChild(presentacion);
+		}
 		botones.AddChild(principal);
 		_detalleColumna.AddChild(botones);
 		UtilidadesUI.ConectarFocoConRaton(_detalleColumna);
-		UtilidadesUI.EncadenarFoco(new Control[] { principal, cerrar });
-		principal.FocusNeighborLeft = principal.GetPathTo(cerrar);
-		cerrar.FocusNeighborRight = cerrar.GetPathTo(principal);
+		var orden = presentacion != null ? new Control[] { principal, presentacion, cerrar } : new Control[] { principal, cerrar };
+		UtilidadesUI.EncadenarFoco(orden);
+		for (int i = 0; i < orden.Length; i++)
+		{
+			var izquierda = orden[(i + 1) % orden.Length];
+			var derecha = orden[(i + orden.Length - 1) % orden.Length];
+			orden[i].FocusNeighborLeft = orden[i].GetPathTo(izquierda);
+			orden[i].FocusNeighborRight = orden[i].GetPathTo(derecha);
+		}
 		_focoAlCerrarDetalle = carpeta;
 		_detalle.Show();
 		principal.GrabFocus();

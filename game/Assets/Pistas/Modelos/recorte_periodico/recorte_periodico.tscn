@@ -1,0 +1,31 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/recorte_periodico/corcho.res" id="1_8nxh1"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/recorte_periodico/marco.res" id="2_om3g1"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/recorte_periodico/recorte.res" id="3_wmq30"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/tachuela.tres" id="4_xs8kl"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_o6psm"]
+material = ExtResource("4_xs8kl")
+radius = 0.006
+height = 0.008
+
+[node name="Recorte" type="Node3D" unique_id=224474422]
+
+[node name="Corcho" type="MeshInstance3D" parent="." unique_id=1288521205]
+mesh = ExtResource("1_8nxh1")
+
+[node name="Marco" type="MeshInstance3D" parent="." unique_id=951139988]
+mesh = ExtResource("2_om3g1")
+
+[node name="Recorte" type="MeshInstance3D" parent="." unique_id=1018603402]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.04, 0, 0.0128)
+mesh = ExtResource("3_wmq30")
+
+[node name="Tachuela" type="MeshInstance3D" parent="." unique_id=2007689384]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09, 0.19, 0.019)
+mesh = SubResource("SphereMesh_o6psm")
+
+[node name="@MeshInstance3D@2" type="MeshInstance3D" parent="." unique_id=217028393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17, 0.19, 0.019)
+mesh = SubResource("SphereMesh_o6psm")

@@ -23,9 +23,27 @@ public partial class ObjetoPista : StaticBody3D, IInteractuable
 	// Lo que piensa el detective la primera vez que lo mira (sin pulsar nada). Vacío = nada.
 	[Export(PropertyHint.MultilineText)] public string ComentarioAlMirar = "";
 
+	[ExportGroup("Vista de examen (HU-07)")]
+	// Modelo para la vista de examen. Vacío = se copian las mallas de esta pista (y sus Visuales).
+	[Export] public PackedScene ModeloExamen;
+	// Texto largo de la caja inferior del examen. Vacío = la descripción.
+	[Export(PropertyHint.MultilineText)] public string DescripcionAmpliada = "";
+	// Dónde se encontró, para la caja del examen ("Sala 1", "Cabaña de Porky"...)
+	[Export] public string Lugar = "";
+	// Giro inicial del modelo en el examen (grados), para que se presente por su cara buena
+	[Export] public Vector3 GiroExamen = Vector3.Zero;
+	// Detalles que solo se descubren examinándola (nunca al recogerla)
+	[Export] public Godot.Collections.Array<DetalleOculto> Detalles = new();
+
 	public bool Encontrada { get; private set; } = false;
 
 	public string IdPista => string.IsNullOrEmpty(Id) ? Name.ToString() : Id;
+
+	public override void _Ready()
+	{
+		// La vista de examen busca aquí el modelo de cada evidencia
+		AddToGroup("objetos_pista");
+	}
 
 	public string TextoAccion => SeRecoge ? "Recoger" : "Inspeccionar";
 
@@ -48,7 +66,7 @@ public partial class ObjetoPista : StaticBody3D, IInteractuable
 		}
 
 		MarcarEncontrada();
-		jugador.RegistrarEvidencia(IdPista, Titulo, Descripcion, Imagen);
+		jugador.RegistrarEvidencia(this);
 	}
 
 	// También al cargar una partida: queda examinada y, si se recoge, desaparece de la escena
