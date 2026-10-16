@@ -14,6 +14,8 @@
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/nota_comisario/nota_comisario.tscn" id="hu07_x_nota"]
 [ext_resource type="PackedScene" path="res://Assets/Models/poli/Poli/Neutral Idle.fbx" id="modelo_comisario"]
 
+[ext_resource type="PackedScene" path="res://Escenas/Investigacion/notas_coleccionable.tscn" id="coleccionable_tablero"]
+
 [sub_resource type="StandardMaterial3D" id="Mat_suelo"]
 albedo_color = Color(0.3, 0.19, 0.1, 1)
 roughness = 0.75
@@ -1474,3 +1476,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Modelo" parent="CajonEscritorio1/Movil/NotaComisario" instance=ExtResource("hu07_m_nota")]
 transform = Transform3D(0, 0, 0.85, 0, 0.85, 0, -0.85, 0, 0, 0, -0.003, 0)
+
+[node name="NotasAdhesivas" parent="CajonEscritorio2/Movil" instance=ExtResource("coleccionable_tablero")]
+position = Vector3(-0.23, 0.052, 0.03)
+rotation = Vector3(0, -0.2, 0)

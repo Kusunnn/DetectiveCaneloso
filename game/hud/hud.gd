@@ -3,6 +3,7 @@ extends CanvasLayer
 ## HUD transparente: no contiene escenario ni modifica al jugador.
 signal panel_cambiado(abierto: bool, expediente: bool)
 signal pista_seleccionada(pista: Pista)
+signal tablero_modificado
 ## HU-07: el jugador pidió examinar una pista desde el diario [Q] (abre la vista de examen).
 signal detalle_solicitado(pista: Pista)
 signal linterna_cambiada(encendida: bool)
@@ -30,6 +31,76 @@ var _moviendo: bool = false
 var _ayuda_alpha: float = 1.0
 var _aviso: float = 0.0
 var diario_abierto: bool = false
+var tablero_abierto: bool = false
+var pizarron_espacial: Node3D
+var herramientas_pizarron: RefCounted
+var relaciones_pizarron: RefCounted
+var gestor_tablero: Node
+# Posiciones en el espacio de referencia del pizarrón; se conservan al cerrar R.
+var _tarjetas_tablero: Dictionary = {}
+var _arrastre_pista: int = -1
+var _arrastre_desde_tablero: bool = false
+var _arrastre_inicio := Vector2.ZERO
+var _arrastre_actual := Vector2.ZERO
+var _nota_tablero: String = ""
+var _pistas_sugeridas: Array[String] = []
+var _arrastre_offset := Vector2.ZERO
+var _arrastrando: bool = false
+const TAM_TARJETA := Vector2(190, 154)
+func _origen_diario_tablero() -> Vector2:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	var medida := _lienzo.size / escala
+	var mirar_abajo: float = -pizarron_espacial.desplazamiento.y if is_instance_valid(pizarron_espacial) else 0.0
+	return Vector2(medida.x / 2 - 800 * ESCALA_DIARIO_TABLERO, medida.y - 220 - mirar_abajo * 450)
+
+const ESCALA_DIARIO_TABLERO := 0.56
+
+func sugerir_tablero(nota: String, ids: Array[String]) -> void:
+	_nota_tablero = nota
+	_pistas_sugeridas = ids
+
+func abrir_tablero() -> void:
+	relaciones_pizarron.sincronizar()
+	if _expediente and _expediente.abierto:
+		_expediente.cerrar()
+	tablero_abierto = true
+	diario_abierto = false
+	if is_instance_valid(pizarron_espacial): pizarron_espacial.abrir()
+	_giro = 0.0
+	_zonas_libro.clear()
+	panel_cambiado.emit(true, false)
+
+func cerrar_tablero() -> void:
+	relaciones_pizarron.cancelar()
+	herramientas_pizarron.cancelar()
+	if is_instance_valid(pizarron_espacial): pizarron_espacial.cerrar()
+	tablero_abierto = false
+	_nota_tablero = ""
+	_pistas_sugeridas.clear()
+	diario_abierto = false
+	_arrastre_pista = -1
+	_arrastrando = false
+	panel_cambiado.emit(false, false)
+
+func _raton_referencia() -> Vector2:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	return _lienzo.get_local_mouse_position() / escala
+
+func _raton_libro() -> Vector2:
+	var raton := _raton_referencia()
+	return (raton - _origen_diario_tablero()) / ESCALA_DIARIO_TABLERO if tablero_abierto else raton
+
+func _zona_pizarron() -> Rect2:
+	return Rect2(0, 0, 1600, 900)
+
+func _punto_pizarron(pantalla: Vector2) -> Vector2:
+	if is_instance_valid(pizarron_espacial):
+		return pizarron_espacial.pantalla_a_pizarron(pantalla)
+	return pantalla / minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+
+func _input_tablero(event: InputEvent) -> void:
+	relaciones_pizarron.input(event)
+
 ## Expediente del caso (TAB). La carpeta, el objetivo y la guía de teclas los dibuja este HUD.
 const EXPEDIENTE := preload("res://hud/expediente/expediente_caso.tscn")
 var _expediente: ExpedienteCaso
@@ -78,12 +149,12 @@ func _paginas_libro() -> Array[Dictionary]:
 	for conclusion in conclusiones:
 		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Una conexión confirmada", "texto": conclusion.trim_prefix("Deducción: ")})
 	if conclusiones.is_empty():
-		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Todo está por conectar", "texto": "Une las pistas en el tablero [R]. Las deducciones confirmadas quedarán anotadas aquí."})
+		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Todo está por conectar", "texto": "Organiza las pistas en el pizarrón [R] para explorar tus ideas."})
 	for nota in notas:
 		if not nota.begins_with("Deducción: "):
 			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
 	for persona in personas:
-		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen})
+		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen, "persona": persona.nombre})
 	if personas.is_empty():
 		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Habla con las personas del caso para añadir sus fichas al diario."})
 	return paginas.filter(func(pagina: Dictionary) -> bool: return pagina.seccion == _seccion)
@@ -112,6 +183,7 @@ var _lienzo: Control
 var _bold: FontVariation
 var _medium: FontVariation
 var _papel: ImageTexture
+var _corcho: ImageTexture
 const DISPLAY = preload("res://hud/fonts/BigShouldersDisplay.ttf")
 const MONO = preload("res://hud/fonts/IBMPlexMono-Regular.ttf")
 const AMBAR = Color("efca08")
@@ -121,9 +193,11 @@ const TINTA = Color("20272b")
 const PAPEL = Color("c6c1b1")
 
 func _ready() -> void:
+	add_to_group("hud_investigacion")
 	_bold = _fuente(800)
 	_medium = _fuente(500)
 	_papel = _crear_papel()
+	_corcho = _crear_corcho()
 	for i in range(4):
 		_papeles_libro.append(_crear_papel_libro(i))
 	_lienzo = Control.new()
@@ -131,6 +205,8 @@ func _ready() -> void:
 	_lienzo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_lienzo)
 	_lienzo.draw.connect(_dibujar)
+	herramientas_pizarron = preload("res://hud/herramientas_pizarron.gd").new(self)
+	relaciones_pizarron = preload("res://hud/relaciones_pizarron.gd").new(self)
 	# Después del lienzo, para que el expediente abierto quede por encima de todo
 	_expediente = EXPEDIENTE.instantiate()
 	add_child(_expediente)
@@ -171,6 +247,8 @@ func agregar_pista(pista: Pista) -> bool:
 	else:
 		pistas.append(pista)
 		avisar("DIARIO ACTUALIZADO", "+1 PISTA")
+	if relaciones_pizarron:
+		relaciones_pizarron.sincronizar()
 	if pistas.size() == 1:
 		pista_seleccionada.emit(pista)
 	return true
@@ -268,6 +346,11 @@ func _process(delta: float) -> void:
 	_lienzo.queue_redraw()
 
 func _input(event: InputEvent) -> void:
+	if tablero_abierto:
+		if relaciones_pizarron.editor_abierto(): return
+		_input_tablero(event)
+		get_viewport().set_input_as_handled()
+		return
 	# Con el expediente abierto solo cuentan sus teclas; la rueda llega al informe para desplazarlo.
 	if _expediente and _expediente.abierto:
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -379,6 +462,27 @@ func _parrafo(texto: String, p: Vector2, ancho: float, tam: int, color: Color, m
 func _linea(a: Vector2, b: Vector2, color: Color) -> void:
 	_lienzo.draw_line(a, b, color, 1.0, true)
 
+func _crear_corcho() -> ImageTexture:
+	# Grano fijo de corcho natural: fragmentos cálidos, poros y variación suave.
+	var grano := FastNoiseLite.new()
+	grano.seed = 1947
+	grano.frequency = 0.42
+	var manchas := FastNoiseLite.new()
+	manchas.seed = 318
+	manchas.frequency = 0.025
+	var azar := RandomNumberGenerator.new()
+	azar.seed = 7241
+	var imagen := Image.create(640, 360, false, Image.FORMAT_RGB8)
+	var base := Color("b48a56")
+	for y in range(360):
+		for x in range(640):
+			var variacion := grano.get_noise_2d(x, y) * 0.19 + manchas.get_noise_2d(x, y) * 0.06
+			var poro := azar.randf()
+			if poro < 0.045: variacion -= 0.16
+			elif poro > 0.95: variacion += 0.10
+			imagen.set_pixel(x, y, Color(base.r + variacion, base.g + variacion * 0.85, base.b + variacion * 0.65))
+	return ImageTexture.create_from_image(imagen)
+
 func _crear_papel() -> ImageTexture:
 	# Material generado una sola vez: fibra, humedad y dobleces, sin ruido animado.
 	var ruido := FastNoiseLite.new()
@@ -450,6 +554,9 @@ func _dibujar() -> void:
 	_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
 	var w := size.x / escala
 	var h := size.y / escala
+	if tablero_abierto:
+		_dibujar_tablero(w, h, escala)
+		return
 	# Expediente compacto inspirado en la referencia, sin logotipo.
 	var carpeta := Color("c1a259")
 	_lienzo.draw_colored_polygon(PackedVector2Array([Vector2(57, 53), Vector2(62, 43), Vector2(79, 43), Vector2(85, 49), Vector2(106, 49), Vector2(106, 83), Vector2(57, 83)]), carpeta.darkened(0.22))
@@ -486,7 +593,9 @@ func _dibujar() -> void:
 		_lupa(Vector2(w / 2 - 92, h / 2 + 34), 1, alfa)
 		_texto("[ E ]  Examinar", Vector2(w / 2 - 70, h / 2 + 42), _bold, 26, Color(AMBAR, alfa))
 	_dibujar_pistas(w, h)
-	if diario_abierto:
+	if tablero_abierto:
+		_dibujar_tablero(w, h, escala)
+	elif diario_abierto:
 		_dibujar_libro(w, h)
 
 ## Guía de teclas: visible mientras el detective está quieto, igual que el resto de la ayuda.
@@ -517,7 +626,7 @@ func _tecla_de(accion: String, por_defecto: String) -> String:
 
 func _boton_libro(texto: String, rect: Rect2, destino: int, activo: bool = true) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-	var hover := activo and rect.has_point(_lienzo.get_local_mouse_position() / escala)
+	var hover := activo and rect.has_point(_raton_libro())
 	_lienzo.draw_rect(rect, Color("b99a55") if hover else Color("483b30"))
 	_texto(texto, rect.position + Vector2(16, 28), MONO, 15, BLANCO if activo else Color("8c8275"))
 	if activo:
@@ -528,7 +637,8 @@ func _dibujar_libro(w: float, h: float) -> void:
 	var paginas := _paginas_libro()
 	_hoja = clampi(_hoja, 0, (paginas.size() - 1) / 2)
 	var origen := Vector2(w / 2 - 580, h / 2 - 330)
-	_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.03, 0.04, 0.88))
+	if not tablero_abierto:
+		_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.03, 0.04, 0.88))
 	# Cubierta de cuero, cantos de papel y dos páginas unidas por el lomo.
 	_lienzo.draw_rect(Rect2(origen + Vector2(-18, 0), Vector2(1204, 688)), Color(0, 0, 0, 0.35))
 	_lienzo.draw_rect(Rect2(origen + Vector2(-16, -16), Vector2(1192, 688)), Color("483329"))
@@ -564,7 +674,7 @@ func _dibujar_libro(w: float, h: float) -> void:
 		var rect := Rect2(origen + Vector2(i * 210, -68 if activa else -56), Vector2(198, 52 if activa else 40))
 		var color: Color = COLORES_SECCION[seccion]
 		var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-		if rect.has_point(_lienzo.get_local_mouse_position() / escala):
+		if rect.has_point(_raton_libro()):
 			color = color.lightened(0.1)
 		_lienzo.draw_rect(rect, color)
 		_texto(seccion, rect.position + Vector2(16, 27), MONO, 15, TINTA if seccion == "PISTAS" else Color("fff5e8"))
@@ -593,6 +703,8 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 		medida *= minf(264.0 / medida.x, 192.0 / medida.y)
 		_lienzo.draw_texture_rect(imagen, Rect2(marco.get_center() - medida / 2, medida), false)
 		texto_y = 422.0
+	if pagina.has("persona"):
+		_zonas_libro.append({"rect": Rect2(p + Vector2(38, 165), Vector2(504, 405)), "persona": pagina.persona})
 	_parrafo(pagina.texto, p + Vector2(38, texto_y), 504, 17, TINTA, 6 if imagen else 14)
 	if pagina.has("pista") and pagina.pista < pistas.size():
 		var pista: Pista = pistas[pagina.pista]
@@ -600,17 +712,17 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 		if imagen and _estado_pista(pista) >= 1 and not pista.es_detalle():
 			_sello(p + Vector2(380, 230))
 		_boton_libro_examinar(Rect2(p + Vector2(372, 528), Vector2(170, 40)), pagina.pista)
-
 func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
 	if pistas.is_empty():
 		_parrafo("Todavía no has reunido pistas. Explora %s para empezar tu colección." % lugar, p + Vector2(38, 188), 504, 17, TINTA)
 		return
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-	var raton := _lienzo.get_local_mouse_position() / escala
+	var raton := _raton_libro()
 	for i in range(inicio, mini(inicio + PISTAS_POR_HOJA, pistas.size())):
 		var k := i - inicio
 		var rect := Rect2(p + Vector2(38 + (k % 3) * 172, 179 + (k / 3) * 124), Vector2(160, 112))
 		var seleccionada := i == _pista_diario
+		var sugerida := tablero_abierto and str(pistas[i].id) in _pistas_sugeridas
 		var hover := rect.has_point(raton)
 		_lienzo.draw_rect(Rect2(rect.position + Vector2(3, 4), rect.size), Color(0, 0, 0, 0.15))
 		_lienzo.draw_rect(rect, Color("e0c48d") if seleccionada or hover else Color("f5efdf"))
@@ -623,8 +735,8 @@ func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
 			_parrafo(pistas[i].titulo, rect.position + Vector2(10, 15), 140, 13, TINTA, 4)
 		_texto("%02d" % (i + 1), rect.position + Vector2(9, 105), MONO, 11, TINTA)
 		_lupa(rect.position + Vector2(140, 18), _estado_pista(pistas[i]), 1.0, 0.7)
-		if seleccionada:
-			_lienzo.draw_rect(rect, Color("a77e3e"), false, 2.0)
+		if seleccionada or sugerida:
+			_lienzo.draw_rect(rect, AMBAR if sugerida else Color("a77e3e"), false, 2.0)
 		_zonas_libro.append({"rect": rect, "pista": i})
 	var cuenta := contar_examinadas()
 	_texto("%02d PISTAS  ·  EXAMINADAS %d/%d  ·  CLIC PARA INSPECCIONAR" % [pistas.size(), cuenta.x, cuenta.y], p + Vector2(38, 574), MONO, 12, Color("75654e"))
@@ -716,3 +828,53 @@ func _dibujar_postit_pista(p: Vector2, indice: int, alfa: float = 1.0) -> void:
 			var medida := pista.imagen.get_size() * factor
 			_lienzo.draw_texture_rect(pista.imagen, Rect2(zona.position + (zona.size - medida) / 2, medida), false, Color(1, 1, 1, alfa))
 	_linea(p + Vector2(22, 141), p + Vector2(333, 141), Color(TINTA, 0.2 * alfa))
+
+func _dibujar_tablero(w: float, h: float, escala: float) -> void:
+	# La superficie y las pistas se ven en 3D; el diario queda encima, en la parte baja.
+	if diario_abierto:
+		_lienzo.draw_set_transform(_origen_diario_tablero() * escala, 0, Vector2.ONE * escala * ESCALA_DIARIO_TABLERO)
+		_dibujar_libro(1600, 900)
+		_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
+	relaciones_pizarron.dibujar_overlay(_lienzo)
+
+func dibujar_superficie_pizarron(lienzo: Control) -> void:
+	# La misma tarjeta conserva fotos y fuentes tanto en la mano como sobre el pizarrón.
+	var anterior := _lienzo
+	_lienzo = lienzo
+	_lienzo.draw_set_transform(Vector2.ZERO, 0, _lienzo.size / Vector2(1600, 900))
+	_lienzo.draw_texture_rect(_corcho, Rect2(0, 0, 1600, 900), false)
+	relaciones_pizarron.dibujar_hilos(_lienzo)
+	for id in _tarjetas_tablero:
+		relaciones_pizarron.dibujar_tarjeta(_lienzo, id, _tarjetas_tablero[id])
+	_lienzo = anterior
+
+func _tachuela(centro: Vector2) -> void:
+	_lienzo.draw_circle(centro + Vector2(3, 5), 8, Color(0, 0, 0, 0.32))
+	_lienzo.draw_line(centro + Vector2(1, 4), centro + Vector2(2, 12), Color("9a9c99"), 2.0, true)
+	_lienzo.draw_circle(centro, 8, Color("692922"))
+	_lienzo.draw_circle(centro + Vector2(-1, -2), 6, Color("bb4e3c"))
+	_lienzo.draw_circle(centro + Vector2(-3, -4), 2, Color("efaf87"))
+
+func _dibujar_tarjeta_tablero(indice: int, posicion: Vector2) -> void:
+	var pista := pistas[indice]
+	var rect := Rect2(posicion, TAM_TARJETA)
+	_lienzo.draw_rect(Rect2(posicion + Vector2(4, 6), TAM_TARJETA), Color(0, 0, 0, 0.3))
+	_lienzo.draw_rect(rect, Color("f5efdf"))
+	if pista.imagen:
+		var medida := pista.imagen.get_size()
+		medida *= minf(170.0 / medida.x, 96.0 / medida.y)
+		_lienzo.draw_texture_rect(pista.imagen, Rect2(posicion + Vector2(95, 58) - medida / 2, medida), false)
+		_parrafo(pista.titulo, posicion + Vector2(10, 112), 170, 13, TINTA, 2)
+	else:
+		_parrafo(pista.titulo, posicion + Vector2(12, 28), 166, 17, TINTA, 4)
+	herramientas_pizarron.dibujar_tinta_pista(_lienzo, pista.id, posicion)
+	_tachuela(posicion + Vector2(TAM_TARJETA.x / 2, 7))
+
+func capturar_tablero() -> Dictionary:
+	return relaciones_pizarron.capturar_estado()
+
+func restaurar_tablero(estado: Dictionary) -> void:
+	relaciones_pizarron.restaurar_estado(estado)
+
+func desbloquear_herramienta_tablero(id: String) -> void:
+	relaciones_pizarron.desbloquear(id)
