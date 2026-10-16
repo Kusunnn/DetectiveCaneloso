@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://kbtrqusgsoiu"
-path="res://.godot/imported/Neutral Idle.fbx-c743706f01ff477a0ffa885e1747d242.scn"
+path="res://.godot/imported/Neutral Idle.fbx-a743313fdadd4bcd91d8140e154541fc.scn"
 
 [deps]
 
-source_file="res://Poli/Neutral Idle.fbx"
-dest_files=["res://.godot/imported/Neutral Idle.fbx-c743706f01ff477a0ffa885e1747d242.scn"]
+source_file="res://Assets/Models/poli/Poli/Neutral Idle.fbx"
+dest_files=["res://.godot/imported/Neutral Idle.fbx-a743313fdadd4bcd91d8140e154541fc.scn"]
 
 [params]
 
@@ -43,7 +43,7 @@ _subresources={
 "animations": {
 "mixamo_com": {
 "save_to_file/enabled": true,
-"save_to_file/fallback_path": "res://Poli/inapoli.res",
+"save_to_file/fallback_path": "res://Assets/Models/poli/Poli/inapoli.res",
 "save_to_file/keep_custom_tracks": "",
 "save_to_file/path": "uid://c87wfkye8yjid",
 "settings/loop_mode": 0,

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://du48lec4b3pdd"
-path.s3tc="res://.godot/imported/Neutral Idle_0.png-5964406bb91e6ff88efb2c9f79d39ae6.s3tc.ctex"
+path.s3tc="res://.godot/imported/Neutral Idle_0.png-1dfcdf3ec9864db75c0ece6c59d02b3b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -14,8 +14,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://Poli/Neutral Idle_0.png"
-dest_files=["res://.godot/imported/Neutral Idle_0.png-5964406bb91e6ff88efb2c9f79d39ae6.s3tc.ctex"]
+source_file="res://Assets/Models/poli/Poli/Neutral Idle_0.png"
+dest_files=["res://.godot/imported/Neutral Idle_0.png-1dfcdf3ec9864db75c0ece6c59d02b3b.s3tc.ctex"]
 
 [params]
 
