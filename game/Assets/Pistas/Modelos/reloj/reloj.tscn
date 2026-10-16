@@ -21,5 +21,6 @@ transform = Transform3D(-0.87036, 0.49242, 0, -0.49242, -0.87036, 0, 0, 0, 1, 0,
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0476)
 cast_shadow = 0
 mesh = SubResource("QuadMesh_grietas")
+metadata/sin_resaltado = true
 
 [editable path="Modelo"]

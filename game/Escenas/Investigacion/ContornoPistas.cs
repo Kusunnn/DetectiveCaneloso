@@ -120,7 +120,8 @@ public partial class ContornoPistas : Node
 		foreach (Node3D visual in pista.Visuales)
 			if (visual != null) Agregar(visual);
 
-		var mallas = todas.Where(g => g is not Label3D && g is not GpuParticles3D && g is not CpuParticles3D).Distinct().ToList();
+		var mallas = todas.Where(g => g is not Label3D && g is not GpuParticles3D && g is not CpuParticles3D && !g.HasMeta("sin_resaltado"))
+			.Distinct().ToList();
 		if (mallas.Count == 0) return mallas;
 		float mayor = mallas.Max(Volumen);
 		var grandes = mallas.Where(g => Volumen(g) >= mayor * FraccionPiezaMinima).ToList();

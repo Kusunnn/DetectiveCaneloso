@@ -307,7 +307,7 @@ public partial class GuiaTutorial : Node
 				if (visual != null) { geometrias.Add(visual); geometrias.AddRange(visual.FindChildren("*", "GeometryInstance3D", true, false)); }
 		foreach (Node n in geometrias)
 		{
-			if (n is not GeometryInstance3D g || n is Label3D || n is GpuParticles3D) continue;
+			if (n is not GeometryInstance3D g || n is Label3D || n is GpuParticles3D || n.HasMeta("sin_resaltado")) continue;
 			// No pisa el brillo de "apuntando" ni el arte; el contorno de ayuda sí cede su lugar (vuelve al quitarse este)
 			if (g.MaterialOverlay != null && !ContornoPistas.EsContorno(g.MaterialOverlay)) continue;
 			g.MaterialOverlay = _contorno;
