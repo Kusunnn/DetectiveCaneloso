@@ -32,6 +32,9 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/barril.tscn" id="e30"]
 [ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/botas_tony.png" id="e31"]
 [ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e32"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
+[ext_resource type="Resource" path="res://Datos/Detalles/botas_tony_juncos.tres" id="hu07_det_juncos"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/botas_tony/botas_tony.tscn" id="hu07_m_botas"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(2.6, 2.6, 0.78)
@@ -223,8 +226,7 @@ height = 0.008
 material = SubResource("StandardMaterial3D_45")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_47"]
-size = Vector3(0.8, 0.5, 0.7)
-
+size = Vector3(0.34, 0.38, 0.34)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_48"]
 albedo_color = Color(0.08, 0.09, 0.07, 1.0)
 roughness = 0.45
@@ -297,6 +299,30 @@ material = SubResource("StandardMaterial3D_62")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_64"]
 size = Vector3(9.0, 3.0, 11.0)
+
+[sub_resource type="StandardMaterial3D" id="Material_suela_hu07"]
+albedo_color = Color(0.12, 0.11, 0.1, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxMesh_suela_hu07"]
+material = SubResource("Material_suela_hu07")
+size = Vector3(0.15, 0.004, 0.28)
+
+[sub_resource type="StandardMaterial3D" id="Material_junco_hu07"]
+albedo_color = Color(0.32, 0.42, 0.18, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_junco_hu07"]
+material = SubResource("Material_junco_hu07")
+size = Vector3(0.008, 0.003, 0.14)
+
+[sub_resource type="StandardMaterial3D" id="Material_lodo_hu07"]
+albedo_color = Color(0.22, 0.25, 0.14, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_lodo_hu07"]
+material = SubResource("Material_lodo_hu07")
+size = Vector3(0.07, 0.003, 0.06)
 
 [node name="CabanaDirector" type="Node3D"]
 
@@ -714,46 +740,19 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("e32")
 Id = "botas_tony"
-Titulo = "Botas con barro y juncos"
-Descripcion = "Unas botas de hule grandes, con barro fresco del lago y juncos pegados. Estaban escondidas detrás de la cabaña del director."
+Titulo = "Botas de hule con barro"
+Descripcion = "Unas botas de hule grandes, con barro fresco, escondidas detrás de la cabaña del director."
 EsEvidencia = true
-ComentarioAlMirar = "¿Unas botas aquí atrás, entre los juncos?"
+ComentarioAlMirar = "¿Unas botas aquí atrás, escondidas?"
 RequiereLinterna = true
 Imagen = ExtResource("e31")
+DescripcionAmpliada = "Botas de hule de talla grande, todavía húmedas. El barro de las cañas está fresco. Alguien las escondió aquí atrás en lugar de dejarlas en la entrada, como todos."
+Lugar = "Detrás de la cabaña del director"
+Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_juncos")])
 
 [node name="Forma" type="CollisionShape3D" parent="Trasera/Botas"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.25, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19, 0)
 shape = SubResource("BoxShape3D_47")
-
-[node name="Bota0" type="Node3D" parent="Trasera/Botas"]
-transform = Transform3D(0.9848, 0.0, 0.1736, 0.0, 1.0, 0.0, -0.1736, 0.0, 0.9848, -0.15, 0.0, 0.0)
-
-[node name="Cana" type="MeshInstance3D" parent="Trasera/Botas/Bota0"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.28, 0.0)
-mesh = SubResource("CylinderMesh_50")
-
-[node name="Pie" type="MeshInstance3D" parent="Trasera/Botas/Bota0"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.05, 0.08)
-mesh = SubResource("BoxMesh_51")
-
-[node name="Barro" type="MeshInstance3D" parent="Trasera/Botas/Bota0"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.03, 0.08)
-mesh = SubResource("BoxMesh_52")
-
-[node name="Bota1" type="Node3D" parent="Trasera/Botas"]
-transform = Transform3D(0.342, 0.0, 0.9397, 0.0, 1.0, 0.0, -0.9397, 0.0, 0.342, 0.2, 0.0, 0.0)
-
-[node name="Cana" type="MeshInstance3D" parent="Trasera/Botas/Bota1"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.085, -0.05)
-mesh = SubResource("CylinderMesh_53")
-
-[node name="Pie" type="MeshInstance3D" parent="Trasera/Botas/Bota1"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.06, 0.16)
-mesh = SubResource("BoxMesh_54")
-
-[node name="Barro" type="MeshInstance3D" parent="Trasera/Botas/Bota1"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.03, 0.08)
-mesh = SubResource("BoxMesh_55")
 
 [node name="Solido" type="StaticBody3D" parent="Trasera/Botas"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.02, 0.2, 0.05)
@@ -762,22 +761,6 @@ collision_mask = 0
 
 [node name="Forma" type="CollisionShape3D" parent="Trasera/Botas/Solido"]
 shape = SubResource("BoxShape3D_56")
-
-[node name="Junco0" type="MeshInstance3D" parent="Trasera/Botas"]
-transform = Transform3D(0.5, -0.866, 0.0, 0.866, 0.5, 0.0, 0.0, 0.0, 1.0, -0.2, 0.08, 0.15)
-mesh = SubResource("BoxMesh_58")
-
-[node name="Junco1" type="MeshInstance3D" parent="Trasera/Botas"]
-transform = Transform3D(0.433, -0.75, 0.5, 0.866, 0.5, 0.0, -0.25, 0.433, 0.866, -0.08, 0.08, 0.1)
-mesh = SubResource("BoxMesh_59")
-
-[node name="Junco2" type="MeshInstance3D" parent="Trasera/Botas"]
-transform = Transform3D(0.25, -0.433, 0.866, 0.866, 0.5, 0.0, -0.433, 0.75, 0.5, 0.04, 0.08, 0.05)
-mesh = SubResource("BoxMesh_60")
-
-[node name="Junco3" type="MeshInstance3D" parent="Trasera/Botas"]
-transform = Transform3D(0.0, 0.0, 1.0, 0.866, 0.5, 0.0, -0.5, 0.866, 0.0, 0.16, 0.08, 0.0)
-mesh = SubResource("BoxMesh_61")
 
 [node name="BarroMojado" type="MeshInstance3D" parent="Trasera" groups=["solo_con_linterna"]]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.2, 0.009, 0.1)
@@ -792,3 +775,6 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Director"]
 shape = SubResource("BoxShape3D_64")
+
+[node name="Modelo" parent="Trasera/Botas" instance=ExtResource("hu07_m_botas")]
+transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, 0, 0, 0)

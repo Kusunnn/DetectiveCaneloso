@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal021/Metal021_Color.jpg" id="1_57maf"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal021/Metal021_Metalness.jpg" id="2_t41ti"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal021/Metal021_NormalGL.jpg" id="3_j0vgh"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal021/Metal021_Roughness.jpg" id="4_8xaak"]
+
+[resource]
+resource_name = "metal_palanca"
+albedo_texture = ExtResource("1_57maf")
+metallic = 1.0
+metallic_texture = ExtResource("2_t41ti")
+roughness_texture = ExtResource("4_8xaak")
+normal_enabled = true
+normal_texture = ExtResource("3_j0vgh")
+uv1_scale = Vector3(12, 12, 12)
+uv1_triplanar = true

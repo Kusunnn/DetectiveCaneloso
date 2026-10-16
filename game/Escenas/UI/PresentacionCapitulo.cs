@@ -176,16 +176,18 @@ public partial class PresentacionCapitulo : Control
 		// Máquina de escribir; una pulsación termina de escribir todo y la siguiente cierra
 		foreach (var l in etiquetas)
 		{
+			// Si otra presentación empezó encima (otra partida cargada), sus líneas ya se borraron
+			if (!IsInstanceValid(l)) break;
 			int total = l.Text.Length;
-			for (int i = 1; i <= total && !_saltar; i++)
+			for (int i = 1; i <= total && !_saltar && IsInstanceValid(l); i++)
 			{
 				l.VisibleCharacters = i;
 				if (i % 3 == 0) Sonidos.ReproducirUI(this, Sonidos.Tipo.Texto);
 				await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
 			}
-			l.VisibleRatio = 1;
+			if (IsInstanceValid(l)) l.VisibleRatio = 1;
 		}
-		foreach (var l in etiquetas) l.VisibleRatio = 1;
+		foreach (var l in etiquetas) if (IsInstanceValid(l)) l.VisibleRatio = 1;
 		_saltar = false;
 		await Esperar(2.5 + lineas.Count * 2.0);
 		await Cerrar();

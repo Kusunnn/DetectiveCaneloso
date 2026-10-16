@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/hanging_picture_frame_02/hanging_picture_frame_02_1k.gltf" id="1_modelo"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/foto_arte.tres" id="2_arte"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/foto_reverso.tres" id="3_reverso"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/vidrio_marco.tres" id="4_vidrio"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_reverso"]
+material = ExtResource("3_reverso")
+size = Vector2(0.72, 0.47)
+
+[node name="FotoGrupo" type="Node3D"]
+
+[node name="Modelo" parent="." instance=ExtResource("1_modelo")]
+
+[node name="hanging_picture_frame_02" parent="Modelo"]
+surface_material_override/0 = ExtResource("2_arte")
+surface_material_override/2 = ExtResource("4_vidrio")
+
+[node name="Reverso" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.029, 0.0015)
+mesh = SubResource("QuadMesh_reverso")
+
+[node name="Detalle_dedicatoria" type="Marker3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.029, 0.0008)
+
+[node name="Detalle_silbato" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.113, -0.035, 0.012)
+
+[editable path="Modelo"]

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="DetalleOculto" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="1_detalle"]
+
+[resource]
+script = ExtResource("1_detalle")
+Id = "silbato"
+Titulo = "El silbato del monitor"
+Descripcion = "De cerca: el monitor del fondo lleva al cuello un silbato con las iniciales «A. R.» grabadas, igual al que Tony usa para llamar a los campistas."
+Pensamiento = "A. R. en el silbato. El monitor de la foto es Antonio R... es Tony."
+Normal = Vector3(0, 0, 1)
+Tolerancia = 30.0
+ZoomMinimo = 2.4
+RequiereLinterna = false

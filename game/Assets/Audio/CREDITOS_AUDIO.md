@@ -49,3 +49,26 @@ Están en `Assets/Caso1/Sonidos/`. Las grabaciones largas se recortaron a 40 s e
 | Caso1/Sonidos/buho.ogg (#1764) | BigSoundBank · Tawny Owl #2 | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/tawny-owl-2-s1764.html |
 | Caso1/Sonidos/agua_lago.ogg (#1444) | BigSoundBank · Pontoon, marina | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/pontoon-marina-s1444.html |
 | Caso1/Sonidos/generador.ogg (`loop_generator_1.mp3`) | OpenGameArt · Generator (loop) | YCbCr | CC0 1.0 | https://opengameart.org/content/generator-loop |
+
+## Vista de examen (HU-07)
+
+Están en `Assets/Audio/Examen/`. Son los OGG originales de Kenney copiados tal cual; su ganancia se iguala en `Sonidos.cs`.
+
+| Archivo | Fuente | Autor | Licencia | Enlace |
+|---|---|---|---|---|
+| Examen/abrir.ogg (`handleSmallLeather`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
+| Examen/cerrar.ogg (`dropLeather`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
+| Examen/girar_1..3.ogg (`beltHandle1`, `beltHandle2`, `handleSmallLeather2`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
+| Examen/acercar_1..3.ogg (`scroll_001`..`scroll_003`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
+| Examen/tic.ogg (`glass_001`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
+| Examen/descubrir.ogg (`jingles_PIZZI04`) | Kenney · Music Jingles | Kenney | CC0 1.0 | https://kenney.nl/assets/music-jingles |
+
+## Cinemática de inicio de capítulo
+
+Están en `Assets/Audio/Cinematica/`, copiados tal cual. La cinemática también usa sonidos que ya estaban en el proyecto: `Interfaz/pagina.wav`, `expediente.wav`, `sello.wav`, `libreta_abrir.wav`, `clic_2.wav` (la lámpara), `Efectos/cajon_1.wav` (el golpe del sello), `Ambiente/lluvia_ventana.wav` y `Ambiente/reloj_pared.wav`.
+
+| Archivo | Fuente | Autor | Licencia | Enlace |
+|---|---|---|---|---|
+| Cinematica/musica_moil.mp3 (`ruskerdax_-_moil.mp3`) | OpenGameArt · Moil | Ruskerdax | CC0 1.0 | https://opengameart.org/content/moil |
+| Cinematica/golpe_titulo.ogg (`bad_thing_0.ogg`) | OpenGameArt · Bad thing happen | gonzalfj | CC0 1.0 | https://opengameart.org/content/bad-thing-happen |
+| Cinematica/maquina_1..5.wav (`typewriter1..5.wav`) | OpenGameArt · Typewriter Sounds | Cassie-OrbitGames | CC0 1.0 | https://opengameart.org/content/typewriter-sounds |

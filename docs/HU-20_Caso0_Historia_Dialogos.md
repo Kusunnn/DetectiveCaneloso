@@ -74,7 +74,8 @@ Saludo según ánimo
       ├─ Libro   → «Guardia de dos a cuatro.»
       ├─ Envoltorio → «Soy más de donuts.»
       ├─ Reloj   → evasivo / «estaba en el suelo»
-      └─ Nota del comisario → «¡Era una trampa!»
+      ├─ Nota del comisario → «¡Era una trampa!»
+      └─ Etiqueta bajo la grabadora (HU-07) → «Esa letra no es mía.»
 ```
 
 ### Comisario (recepción, despacho)
@@ -95,6 +96,7 @@ Saludo según ánimo
 └─ [EVIDENCIA]
       ├─ Nota del comisario → ★ CONFIESA LA TRAMPA (giro) y desbloquea la tarjeta «Testimonio del comisario»
       ├─ Libro   → «La nota del margen es mía.» + pensamiento
+      ├─ Etiqueta bajo la grabadora (HU-07) → «Hay muchas B en esta comisaría.» (no basta: hace falta la nota)
       ├─ Huellas → «¿Y quién estaba de guardia?»
       └─ Cinta   → «Explícamelo en la Sala 1.»
 ```
@@ -114,6 +116,8 @@ Saludo según ánimo
 | 7 | La cinta | Vestuario, casillero de Porky (combinación 3-1-2) | Rebobinada hasta las 03:12; contiene la voz desconocida | Comisario |
 | 8 | Pluma negra *(secreta)* | Sala 1, rejilla del techo (con linterna) | Alguien entró por la ventilación: gancho hacia «La Garra» | Ninguno (cambia los pensamientos del final) |
 
+**Detalle oculto (HU-07).** Examinando la grabadora en la vista de examen [E] y girándola hasta verla por debajo aparece una etiqueta escrita a mano: «Sala 1. NO DETENER hasta el cambio de turno. — B.». Es una entrada nueva del expediente (`grabadora.etiqueta`), no cuenta entre las 8 pistas y sirve para el tutorial de la mecánica: adelanta que alguien («B.», el comisario) quería que la grabadora siguiera en REC.
+
 **Deducciones del tablero [R]**
 
 | Deducción | Cartas | Conclusión | Desbloquea |
@@ -121,7 +125,7 @@ Saludo según ánimo
 | D1 | Grabadora + Reloj | A las 3:12 pasó algo en la Sala 1 | Objetivo: seguir el rastro |
 | D2 | Huellas + Libro de turnos | Las botas son de Porky | Presión a Porky y permiso del vestuario |
 | D3 | Envoltorio + Testimonio de Eriz | Eriz no fue | Descarta al falso sospechoso |
-| D4 | Nota del comisario (o su testimonio) + Grabadora | La grabadora era una trampa | La tercera respuesta de la resolución |
+| D4 | Nota del comisario (o su testimonio) + Grabadora, o Etiqueta bajo la grabadora + Nota del comisario | La grabadora era una trampa | La tercera respuesta de la resolución |
 
 ---
 

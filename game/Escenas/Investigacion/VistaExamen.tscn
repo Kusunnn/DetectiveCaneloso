@@ -1,0 +1,106 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://Escenas/Investigacion/VistaExamen.cs" id="1_vista"]
+[ext_resource type="Shader" path="res://Escenas/Investigacion/examen_fondo.gdshader" id="2_fondo"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fondo"]
+shader = ExtResource("2_fondo")
+shader_parameter/mezcla = 1.0
+shader_parameter/oscuridad = 0.88
+shader_parameter/desenfoque = 3.5
+
+[sub_resource type="Environment" id="Environment_estudio"]
+background_mode = 1
+background_color = Color(0, 0, 0, 0)
+ambient_light_source = 2
+ambient_light_color = Color(0.32, 0.3, 0.28, 1)
+ambient_light_energy = 0.6
+tonemap_mode = 2
+tonemap_exposure = 1.05
+
+[node name="VistaExamen" type="CanvasLayer"]
+process_mode = 3
+layer = 40
+visible = false
+script = ExtResource("1_vista")
+
+[node name="Fondo" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_fondo")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Visor" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+
+[node name="Mundo" type="SubViewport" parent="Visor"]
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+msaa_3d = 2
+size = Vector2i(1600, 900)
+render_target_update_mode = 4
+
+[node name="Entorno" type="WorldEnvironment" parent="Visor/Mundo"]
+environment = SubResource("Environment_estudio")
+
+[node name="Camara" type="Camera3D" parent="Visor/Mundo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+current = true
+fov = 30.0
+near = 0.02
+far = 20.0
+
+[node name="Linterna" type="SpotLight3D" parent="Visor/Mundo/Camara"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.15, 0)
+visible = false
+light_color = Color(1, 0.95, 0.82, 1)
+light_energy = 4.0
+shadow_enabled = true
+spot_range = 8.0
+spot_angle = 16.0
+spot_angle_attenuation = 0.6
+
+[node name="LuzPrincipal" type="DirectionalLight3D" parent="Visor/Mundo"]
+transform = Transform3D(0.819152, -0.32899, 0.469846, 0, 0.819152, 0.573576, -0.573576, -0.469846, 0.67101, 0, 0, 0)
+light_color = Color(1, 0.86, 0.7, 1)
+light_energy = 1.7
+light_angular_distance = 3.0
+shadow_enabled = true
+shadow_blur = 2.0
+directional_shadow_mode = 0
+directional_shadow_max_distance = 8.0
+
+[node name="LuzContorno" type="DirectionalLight3D" parent="Visor/Mundo"]
+transform = Transform3D(-0.766044, 0.413176, -0.492404, 0, 0.766044, 0.642788, 0.642788, 0.492404, -0.586824, 0, 0, 0)
+light_color = Color(0.72, 0.82, 1, 1)
+light_energy = 2.4
+light_specular = 1.2
+
+[node name="LuzRelleno" type="DirectionalLight3D" parent="Visor/Mundo"]
+transform = Transform3D(0.866025, 0.12941, -0.482963, 0, 0.965926, 0.258819, 0.5, -0.224144, 0.836516, 0, 0, 0)
+light_color = Color(0.85, 0.82, 0.78, 1)
+light_energy = 0.35
+light_specular = 0.2
+
+[node name="Pivote" type="Node3D" parent="Visor/Mundo"]
+
+[node name="Escala" type="Node3D" parent="Visor/Mundo/Pivote"]
+
+[node name="Interfaz" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

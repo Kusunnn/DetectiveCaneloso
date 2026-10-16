@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_Color.jpg" id="1_7wnnc"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_NormalGL.jpg" id="2_ito5x"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Fabric061/Fabric061_Roughness.jpg" id="3_8fi5u"]
+
+[resource]
+resource_name = "terciopelo"
+cull_mode = 2
+albedo_color = Color(0.55, 0.08, 0.1, 1)
+albedo_texture = ExtResource("1_7wnnc")
+roughness_texture = ExtResource("3_8fi5u")
+normal_enabled = true
+normal_texture = ExtResource("2_ito5x")
+uv1_scale = Vector3(5, 5, 5)
+uv1_triplanar = true

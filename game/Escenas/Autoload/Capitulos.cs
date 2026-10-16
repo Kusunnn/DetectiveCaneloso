@@ -49,6 +49,8 @@ public static class Capitulos
 	private static List<InfoCapitulo> _lista;
 	private static List<FaseCapitulo> _fases;
 	private static Dictionary<string, ResultadoCapitulo> _resultados;
+	// Capítulos que el jugador saltó ("Omitir tutorial"): cuentan como requisito cumplido, pero no como resueltos
+	private static HashSet<string> _omitidos;
 
 	public static IReadOnlyList<InfoCapitulo> Lista { get { Cargar(); return _lista; } }
 	public static IReadOnlyList<FaseCapitulo> Fases { get { Cargar(); return _fases; } }
@@ -109,7 +111,10 @@ public static class Capitulos
 		{
 			if (_resultados != null) return _resultados;
 			_resultados = new();
+			_omitidos = new();
 			var datos = GestorPartida.LeerArchivo(ArchivoProgreso) ?? GestorPartida.LeerArchivo(ArchivoProgreso + ".bak");
+			if (datos != null && datos.TryGetValue("omitidos", out Variant omitidos))
+				foreach (Variant id in omitidos.AsGodotArray()) _omitidos.Add(id.AsString());
 			if (datos != null && datos.TryGetValue("capitulos", out Variant capitulos))
 			{
 				foreach (var (id, valor) in capitulos.AsGodotDictionary())
@@ -128,10 +133,18 @@ public static class Capitulos
 
 	public static bool Resuelto(string id) => Resultados.ContainsKey(id);
 	public static ResultadoCapitulo Resultado(string id) => Resultados.TryGetValue(id, out var r) ? r : null;
-	public static bool Desbloqueado(InfoCapitulo c) => c.Requisitos.All(Resuelto);
+	public static bool Omitido(string id) { _ = Resultados; return _omitidos.Contains(id); }
+	public static bool Desbloqueado(InfoCapitulo c) => c.Requisitos.All(r => Resuelto(r) || Omitido(r));
 
-	// El primero desbloqueado que falta por resolver (null si ya se resolvieron todos)
-	public static InfoCapitulo Actual() => Lista.FirstOrDefault(c => Desbloqueado(c) && !Resuelto(c.Id));
+	public static void MarcarOmitido(string id)
+	{
+		if (Omitido(id)) return;
+		_omitidos.Add(id);
+		GuardarProgreso();
+	}
+
+	// El primero desbloqueado que falta por resolver y no se omitió (null si ya no queda ninguno)
+	public static InfoCapitulo Actual() => Lista.FirstOrDefault(c => Desbloqueado(c) && !Resuelto(c.Id) && !Omitido(c.Id));
 
 	// Guarda el resultado si es el primero o si mejora al anterior (por puntos; el mejor tiempo y porcentaje se conservan aparte)
 	public static void Registrar(string id, ResultadoCapitulo nuevo)
@@ -166,9 +179,11 @@ public static class Capitulos
 				{ "porcentaje", r.Porcentaje }, { "tiempo", r.Tiempo }, { "primer_intento", r.PrimerIntento },
 			};
 		}
-		GestorPartida.EscribirArchivo(ArchivoProgreso, new Godot.Collections.Dictionary { { "capitulos", capitulos } });
+		var omitidos = new Godot.Collections.Array();
+		foreach (string id in _omitidos ?? new HashSet<string>()) omitidos.Add(id);
+		GestorPartida.EscribirArchivo(ArchivoProgreso, new Godot.Collections.Dictionary { { "capitulos", capitulos }, { "omitidos", omitidos } });
 	}
 
 	// Para las pruebas: vuelve a leer el progreso del disco
-	public static void Recargar() => _resultados = null;
+	public static void Recargar() { _resultados = null; _omitidos = null; }
 }

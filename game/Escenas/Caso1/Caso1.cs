@@ -30,6 +30,13 @@ public partial class Caso1 : Node
 
 	private const string Llavero = "llavero_porky";
 
+	// HU-07: detalles que solo aparecen examinando la evidencia (entradas nuevas del diario)
+	private const string LibroAntonio = "libro_guardia_quemado.antonio";
+	private const string FotoDedicatoria = "foto_grupo.dedicatoria";
+	private const string FotoSilbato = "foto_grupo.silbato";
+	private const string RegistroTachon = "registro_enfermeria.tachon";
+	private const string BotasJuncos = "botas_tony.juncos";
+
 	[Export] public Jugador Jugador;
 	[Export] public CanvasLayer Hud;
 	[Export] public VentanaDialogo Dialogo;
@@ -64,6 +71,8 @@ public partial class Caso1 : Node
 		Hud.Set("lugar", "el campamento");
 		Jugador.EvidenciaRegistrada += AlRegistrarEvidencia;
 		Jugador.ObjetoObtenido += AlObtenerObjeto;
+		Jugador.EvidenciaExaminada += _ => Cambio();
+		Jugador.DetalleDescubierto += AlDescubrirDetalle;
 
 		Tablero.ObtenerCartas = Cartas;
 		Tablero.ObtenerConclusiones = () => Array.Empty<string>();
@@ -94,13 +103,26 @@ public partial class Caso1 : Node
 
 		if (VersionLigera) AplicarVersionLigera();
 		Objetivo("Revisa el campamento. Empieza por la fogata del centro.");
+		PrepararPartida();
 		CallDeferred(MethodName.Empezar);
 	}
 
 	private async void Empezar()
 	{
+		// Partida cargada: se restaura y se muestra el "Anteriormente..." en lugar de la presentación
+		var gestor = GestorPartida.Instancia;
+		if (gestor?.EstadoPendiente != null)
+		{
+			RestaurarEstado(gestor.EstadoPendiente);
+			var notas = Hud.Get("notas").AsGodotArray();
+			var extra = notas.Count > 0 ? new[] { "Lo último que anoté: «" + notas[notas.Count - 1].AsString() + "»" } : null;
+			await gestor.PresentarCapitulo(extra);
+			return;
+		}
 		// Si se llegó por el flujo de capítulos, muestra la tarjeta de título
-		if (GestorPartida.Instancia != null) await GestorPartida.Instancia.PresentarCapitulo();
+		if (gestor != null) await gestor.PresentarCapitulo();
+		// Si el jugador salió al menú durante la presentación, la escena ya no existe
+		if (!IsInstanceValid(this) || !IsInsideTree()) return;
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
 		_enDialogo = true;
 		await Dialogo.Decir(_caneloso,
@@ -115,20 +137,22 @@ public partial class Caso1 : Node
 	private void AlRegistrarEvidencia(string id)
 	{
 		_pistas.Add(id);
+		Cambio();
+		Autoguardar("Pista: " + id);
 		string pensamiento = id switch
 		{
 			Interruptor => "Bajado a mano. El generador está bien: el apagón fue provocado.",
 			Candado => "Sin una marca. Quien lo abrió tenía la llave.",
 			Baul => "Falta la cornamenta del disfraz de ciervo. Alguien se vistió de «ciervo de luz».",
-			Lena => "La leña sigue apilada. Miawrio dijo que fue por leña... no trajo ni una rama.",
-			LibroQuemado => "«Guardia nocturna, 14 de agosto... monitor auxiliar Antonio R.... olor a alcohol...»",
+			Lena => "La leña sigue apilada. Miaurio dijo que fue por leña... no trajo ni una rama.",
+			LibroQuemado => "«Guardia nocturna, 14 de agosto... olor a alcohol...» Alguien quería borrar esa noche.",
 			NotaPorky => "«Esta noche se lo digo. Ya tengo el libro. Por Daniel.» ¿A quién iba a decírselo?",
-			FotoGrupo => "Hace veinte años. El monitor lleva un silbato al cuello... es Tony.",
+			FotoGrupo => "La cabaña 4, hace veinte años. Porky la tenía a la vista... ¿por qué esta foto?",
 			Recorte => "Daniel. Se ahogó en el lago aquel verano. Por eso nadie habla del 14 de agosto.",
 			Oferta => "Juan Carlos quería comprar el campamento. Porky rompió la oferta.",
 			TazaDelantal => "El chocolate a medias y el delantal colgado. Porky salió con prisa.",
-			RegistroEnfermeria => "«23:20, ruido en el lago», tachado. ¿Quién no quería que se supiera?",
-			BotasTony => "Barro fresco y juncos del lago. Las escondieron detrás de la cabaña del director.",
+			RegistroEnfermeria => "Una línea de las 23:20, tachada a conciencia. Con buena luz quizá se lea algo.",
+			BotasTony => "Barro fresco. Las escondieron detrás de la cabaña del director.",
 			RegistroLlamadas => "Llamadas de Juan Carlos a medianoche. Habrá que preguntarle.",
 			_ => null,
 		};
@@ -145,20 +169,38 @@ public partial class Caso1 : Node
 		Candado => "El candado de la caseta no está forzado: lo abrió alguien con llave.",
 		Baul => "Del baúl de disfraces falta la cornamenta del ciervo.",
 		Lena => "La leña junto a la fogata está intacta: nadie trajo leña anoche.",
-		LibroQuemado => "Restos del libro de guardia en la fogata: «14 de agosto», «Antonio R.», «olor a alcohol».",
+		LibroQuemado => "Restos del libro de guardia en la fogata: «14 de agosto», «olor a alcohol».",
 		NotaPorky => "Nota de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Daniel.»",
-		FotoGrupo => "Foto de hace 20 años: Tony, el monitor, con el silbato al cuello.",
+		FotoGrupo => "Foto de hace 20 años en la cabaña de Porky: los campistas de la cabaña 4 y su monitor.",
 		Recorte => "Recorte: Daniel murió en el Lago Espejo hace 20 años.",
 		Oferta => "Oferta de compra del campamento firmada por Juan Carlos, rota en la papelera de Porky.",
 		TazaDelantal => "Cocina: chocolate a medias y el delantal de Porky colgado. Salió con prisa.",
-		RegistroEnfermeria => "Enfermería: «23:20, ruido en el lago», tachado.",
-		BotasTony => "Botas con barro y juncos escondidas detrás de la cabaña del director.",
+		RegistroEnfermeria => "Enfermería: alguien tachó la línea de las 23:20 del registro.",
+		BotasTony => "Botas con barro fresco escondidas detrás de la cabaña del director.",
 		RegistroLlamadas => "Registro de llamadas de Juan Carlos.",
 		_ => "Pista: " + id,
 	};
 
+	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
+	private void AlDescubrirDetalle(string origen, string id)
+	{
+		string nota = id switch
+		{
+			LibroAntonio => "Reverso del libro de guardia: «De guardia: monitor auxiliar Antonio R.»",
+			FotoDedicatoria => "Detrás de la foto: «Cabaña 4, 14 de agosto. Para Daniel... — A. R.»",
+			FotoSilbato => "En la foto, el silbato del monitor lleva grabado «A. R.»: es Tony.",
+			RegistroTachon => "Bajo el tachón del registro de la enfermería: «23:20, ruido en el lago».",
+			BotasJuncos => "En la suela de las botas hay juncos del lago: quien las usó bajó a la orilla.",
+			_ => null,
+		};
+		if (nota != null) Hud.Call("agregar_nota", nota);
+		Cambio();
+		Autoguardar("Detalle: " + id);
+	}
+
 	private void AlObtenerObjeto(string id)
 	{
+		Cambio();
 		if (id != Llavero) return;
 		PuertaPorky.Desbloquear();
 		Jugador.MostrarAviso("Nueva zona disponible: Cabaña de Porky", 4.0);

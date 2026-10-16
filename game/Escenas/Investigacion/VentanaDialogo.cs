@@ -227,13 +227,13 @@ public partial class VentanaDialogo : CanvasLayer
 		return elegida;
 	}
 
-	// Selector de evidencias del expediente. Devuelve el id elegido o null si se cancela.
+	// Selector de evidencias del diario. Devuelve el id elegido o null si se cancela.
 	public async Task<string> ElegirEvidencia(Hablante hablante, IList<(string Id, string Titulo, Texture2D Imagen)> pistas)
 	{
 		Abrir();
 		MostrarHablante(hablante);
 		Escribir(pistas.Count == 0 ? "Todavía no tengo pruebas que mostrar." : "¿Qué prueba le muestro?", instantaneo: true);
-		_ayuda.Text = "Elige una pista del expediente   ·   [Esc] o clic derecho: volver";
+		_ayuda.Text = "Elige una pista del diario   ·   [Esc] o clic derecho: volver";
 		LiberarRaton();
 
 		_espera = new TaskCompletionSource<int>();

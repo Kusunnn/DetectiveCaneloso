@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/libro_turnos/libro_turnos.res" id="1_y3f10"]
+
+[node name="LibroTurnos" type="Node3D" unique_id=580590156]
+
+[node name="Libro" type="MeshInstance3D" parent="." unique_id=810988780]
+mesh = ExtResource("1_y3f10")

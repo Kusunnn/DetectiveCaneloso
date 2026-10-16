@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/registro_llamadas/registro_llamadas.res" id="1_ghy2b"]
+
+[node name="RegistroLlamadas" type="Node3D" unique_id=872808000]
+
+[node name="Hoja" type="MeshInstance3D" parent="." unique_id=223132277]
+mesh = ExtResource("1_ghy2b")

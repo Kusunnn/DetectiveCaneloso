@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal038/Metal038_Color.jpg" id="1_3jpl6"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal038/Metal038_Metalness.jpg" id="2_vr4id"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal038/Metal038_NormalGL.jpg" id="3_2c1of"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal038/Metal038_Roughness.jpg" id="4_l83k2"]
+
+[resource]
+resource_name = "gancho"
+albedo_texture = ExtResource("1_3jpl6")
+metallic = 1.0
+metallic_texture = ExtResource("2_vr4id")
+roughness_texture = ExtResource("4_l83k2")
+normal_enabled = true
+normal_texture = ExtResource("3_2c1of")
+uv1_scale = Vector3(20, 20, 20)
+uv1_triplanar = true

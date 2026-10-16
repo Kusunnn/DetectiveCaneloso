@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="InformeCaso" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="InformeCaso" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://hud/expediente/informe_caso.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://klapybxjvwxt" path="res://hud/expediente/fotos/caso_01_embarcadero.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -9,6 +10,7 @@ lugar = "Campamento Pino Lunar, orilla norte del Lago Espejo."
 fecha = "Noche del 14 al 15 de agosto."
 etiqueta_victima = "VÍCTIMA"
 victima = "Porky, 34 años, cocinero y encargado de mantenimiento del campamento."
+foto = ExtResource("2")
 pie_foto = "Embarcadero · 23:47"
 sello = "CONFIDENCIAL"
 a_cargo = "Det. Caneloso"

@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/registro_enfermeria/libreta.res" id="1_uhuxn"]
+[ext_resource type="Material" path="res://Assets/Pistas/Modelos/materiales/registro_surcos.tres" id="2_j0nqn"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_cijnt"]
+material = ExtResource("2_j0nqn")
+size = Vector2(0.15, 0.0234)
+
+[node name="RegistroEnfermeria" type="Node3D" unique_id=1715828021]
+
+[node name="Libreta" type="MeshInstance3D" parent="." unique_id=269208141]
+mesh = ExtResource("1_uhuxn")
+
+[node name="Surcos" type="MeshInstance3D" parent="." unique_id=1085612097 groups=["examen_linterna"]]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.0979, 0.0118, -0.0584)
+visible = false
+mesh = SubResource("QuadMesh_cijnt")
+
+[node name="Detalle_tachon" type="Marker3D" parent="." unique_id=1938994693]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0.072, 0.012, -0.0559)

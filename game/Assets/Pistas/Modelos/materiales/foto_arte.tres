@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/foto_grupo_arte.png" id="1_ckatx"]
+
+[resource]
+resource_name = "foto_arte"
+albedo_texture = ExtResource("1_ckatx")
+roughness = 0.55
+texture_filter = 5

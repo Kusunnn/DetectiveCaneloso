@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal048B/Metal048B_Color.jpg" id="1_qthjp"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal048B/Metal048B_Metalness.jpg" id="2_qe6wt"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal048B/Metal048B_NormalGL.jpg" id="3_o8ak1"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Metal048B/Metal048B_Roughness.jpg" id="4_wu8hv"]
+
+[resource]
+resource_name = "oro_corona"
+albedo_color = Color(1, 0.82, 0.45, 1)
+albedo_texture = ExtResource("1_qthjp")
+metallic = 1.0
+metallic_texture = ExtResource("2_qe6wt")
+roughness_texture = ExtResource("4_wu8hv")
+normal_enabled = true
+normal_texture = ExtResource("3_o8ak1")
+uv1_scale = Vector3(10, 10, 10)
+uv1_triplanar = true

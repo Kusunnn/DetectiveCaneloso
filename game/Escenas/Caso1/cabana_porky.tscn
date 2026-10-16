@@ -39,6 +39,15 @@
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/papelera.tscn" id="e37"]
 [ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/oferta_compra.png" id="e38"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/caja_carton.tscn" id="e39"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
+[ext_resource type="Resource" path="res://Datos/Detalles/foto_grupo_dedicatoria.tres" id="hu07_det_dedicatoria"]
+[ext_resource type="Resource" path="res://Datos/Detalles/foto_grupo_silbato.tres" id="hu07_det_silbato"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/foto_grupo_hd.svg" id="hu07_foto_hd"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/nota_porky/nota_porky.tscn" id="hu07_m_notaporky"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/foto_grupo/foto_grupo.tscn" id="hu07_m_foto"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/recorte_periodico/recorte_periodico.tscn" id="hu07_m_recorte"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/oferta_compra/oferta_compra.tscn" id="hu07_m_oferta"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/nota_porky/nota_porky.tscn" id="hu07_x_notaporky"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(0.3, 2.6, 0.78)
@@ -180,8 +189,7 @@ albedo_color = Color(0.22, 0.14, 0.08, 1.0)
 roughness = 0.8
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_37"]
-size = Vector3(0.7, 0.6156, 0.08)
-
+size = Vector3(0.76, 0.5, 0.045)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38"]
 albedo_texture = ExtResource("e33")
 roughness = 0.8
@@ -219,8 +227,7 @@ size = Vector2(0.42, 0.3609)
 material = SubResource("StandardMaterial3D_44")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_47"]
-size = Vector3(0.72, 0.62, 0.08)
-
+size = Vector3(0.64, 0.54, 0.045)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_48"]
 albedo_color = Color(0.55, 0.4, 0.25, 1.0)
 roughness = 1.0
@@ -237,6 +244,23 @@ size = Vector3(0.36, 0.2, 0.36)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_52"]
 size = Vector3(7.8, 3.0, 5.2)
+
+[sub_resource type="StandardMaterial3D" id="Material_foto_hd_hu07"]
+albedo_texture = ExtResource("hu07_foto_hd")
+roughness = 0.7
+texture_filter = 5
+
+[sub_resource type="QuadMesh" id="QuadMesh_foto_hd_hu07"]
+material = SubResource("Material_foto_hd_hu07")
+size = Vector2(0.6, 0.5156)
+
+[sub_resource type="StandardMaterial3D" id="Material_reverso_foto_hu07"]
+albedo_color = Color(0.72, 0.64, 0.5, 1)
+roughness = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_reverso_foto_hu07"]
+material = SubResource("Material_reverso_foto_hu07")
+size = Vector2(0.64, 0.555)
 
 [node name="CabanaPorky" type="Node3D"]
 
@@ -489,25 +513,13 @@ Descripcion = "Una hoja doblada con la letra de Porky: «Esta noche se lo digo. 
 EsEvidencia = true
 ComentarioAlMirar = "Una hoja doblada, escondida a propósito."
 Imagen = ExtResource("e17")
+DescripcionAmpliada = "Una nota con la letra redonda de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Daniel.» La escribió con prisa: la tinta se corrió."
+Lugar = "Cabaña de Porky · bajo la almohada"
+ModeloExamen = ExtResource("hu07_x_notaporky")
 
 [node name="Forma" type="CollisionShape3D" parent="NotaPorky"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.2, 0.0)
 shape = SubResource("BoxShape3D_23")
-
-[node name="Hoja" type="Node3D" parent="NotaPorky"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.012, 0.0)
-script = ExtResource("e15")
-Texto = "Esta noche se lo digo.
-Ya tengo el libro.
-Por Daniel."
-Ancho = 0.2
-ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 24
-TamMinimo = 8
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0011
 
 [node name="Almohada" type="StaticBody3D" parent="." node_paths=PackedStringArray("Parte")]
 transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 31.64, 0.56, 4.0319)
@@ -635,22 +647,17 @@ collision_mask = 0
 script = ExtResource("e18")
 Id = "foto_grupo"
 Titulo = "Foto del grupo de hace 20 años"
-Descripcion = "Los campistas de la cabaña 4 hace veinte años. Al lado, el monitor auxiliar con el silbato al cuello: Tony."
+Descripcion = "Los campistas de la cabaña 4 hace veinte años, frente a su cabaña, con su monitor a un lado."
 EsEvidencia = true
-ComentarioAlMirar = "Todos tan chiquitos... y el monitor con su silbato."
+ComentarioAlMirar = "Todos tan chiquitos... Una foto de hace veinte años."
 Imagen = ExtResource("e32")
+DescripcionAmpliada = "Una foto vieja en un marco de madera: cinco campistas de la cabaña 4 frente a su cabaña y, a la izquierda, un monitor alto con gorra. El más pequeño lleva una gorra de marinero. El marco tiene polvo, menos en las orillas: alguien lo descolgó hace poco."
+Lugar = "Cabaña de Porky · pared de fotos"
+Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_dedicatoria"), ExtResource("hu07_det_silbato")])
 
 [node name="Forma" type="CollisionShape3D" parent="FotoGrupo"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
 shape = SubResource("BoxShape3D_37")
-
-[node name="MarcoFotoGrupo" type="MeshInstance3D" parent="FotoGrupo"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
-mesh = SubResource("BoxMesh_39")
-
-[node name="ImagenFotoGrupo" type="MeshInstance3D" parent="FotoGrupo"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.011)
-mesh = SubResource("QuadMesh_40")
 
 [node name="FotoLago" type="Node3D" parent="." groups=["apoyar_pared"]]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 32.030003, 1.75, 1.95)
@@ -701,29 +708,12 @@ Descripcion = "EL ECO DEL LAGO. «Muere campista de 11 años en el Lago Espejo. 
 EsEvidencia = true
 ComentarioAlMirar = "Daniel... el de la canoa."
 Imagen = ExtResource("e36")
+DescripcionAmpliada = "Un recorte amarillento: «Muere campista de 11 años en el Lago Espejo. Daniel M. salió de su cabaña de noche; la guardia no notó su ausencia.» Alguien subrayó «la guardia» con pluma roja."
+Lugar = "Cabaña de Porky · corcho"
 
 [node name="Forma" type="CollisionShape3D" parent="Recorte"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.005)
 shape = SubResource("BoxShape3D_47")
-
-[node name="Corcho" type="MeshInstance3D" parent="Recorte"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
-mesh = SubResource("BoxMesh_49")
-
-[node name="Periodico" type="Node3D" parent="Recorte"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.016)
-script = ExtResource("e15")
-Texto = "EL ECO DEL LAGO
-Muere campista de 11 años en el Lago Espejo
-Daniel M. salió de su cabaña de noche. La guardia no notó su ausencia."
-Ancho = 0.5
-ColorPapel = Color(0.82, 0.8, 0.72, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 26
-TamMinimo = 9
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0012
 
 [node name="Papelera" type="StaticBody3D" parent="."]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 27.5, 0.06, 0.59)
@@ -754,49 +744,12 @@ EsEvidencia = true
 ComentarioAlMirar = "Papeles rotos con un sello notarial."
 SoloAgachado = true
 Imagen = ExtResource("e38")
+DescripcionAmpliada = "Una oferta formal para comprar el Campamento Pino Lunar, firmada por Juan Carlos. Está rota en cuatro pedazos y tirada a la basura: Porky no pensaba vender."
+Lugar = "Cabaña de Porky · papelera"
 
 [node name="Forma" type="CollisionShape3D" parent="Oferta"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.1, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22, -0.43, 0.06)
 shape = SubResource("BoxShape3D_51")
-
-[node name="Pedazo0" type="Node3D" parent="Oferta"]
-transform = Transform3D(0.9659, -0.2588, 0.0, 0.0, 0.0, 1.0, -0.2588, -0.9659, 0.0, -0.05, 0.02, 0.03)
-script = ExtResource("e15")
-Texto = "OFERTA DE COMPRA"
-Ancho = 0.14
-ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 20
-TamMinimo = 7
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0009
-
-[node name="Pedazo1" type="Node3D" parent="Oferta"]
-transform = Transform3D(0.766, 0.6428, 0.0, 0.0, 0.0, 1.0, 0.6428, -0.766, 0.0, 0.06, 0.024, -0.04)
-script = ExtResource("e15")
-Texto = "...el campamento Pino Lunar..."
-Ancho = 0.14
-ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 20
-TamMinimo = 7
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0009
-
-[node name="Pedazo2" type="Node3D" parent="Oferta"]
-transform = Transform3D(0.1736, -0.9848, 0.0, 0.0, 0.0, 1.0, -0.9848, -0.1736, 0.0, 0.0, 0.028, 0.07)
-script = ExtResource("e15")
-Texto = "Firma: Juan Carlos"
-Ancho = 0.14
-ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
-ColorTexto = Color(0.12, 0.1, 0.08, 1.0)
-TamFuente = 20
-TamMinimo = 7
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0009
 
 [node name="CajaMudanza0" parent="." instance=ExtResource("e39") groups=["apoyar_suelo"]]
 transform = Transform3D(0.1392, 0.0, -0.9903, 0.0, 1.0, 0.0, 0.9903, 0.0, 0.1392, 25.39, 0.06, 4.25)
@@ -815,3 +768,15 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="CabanaPorky"]
 shape = SubResource("BoxShape3D_52")
+
+[node name="Modelo" parent="NotaPorky" instance=ExtResource("hu07_m_notaporky")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 0, 0.003, 0)
+
+[node name="Modelo" parent="FotoGrupo" instance=ExtResource("hu07_m_foto")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.029, -0.012)
+
+[node name="Modelo" parent="Recorte" instance=ExtResource("hu07_m_recorte")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Modelo" parent="Oferta" instance=ExtResource("hu07_m_oferta")]
+transform = Transform3D(0.75, 0, 0, 0, 0.75, 0, 0, 0, 0.75, 0.22, -0.447, 0.06)

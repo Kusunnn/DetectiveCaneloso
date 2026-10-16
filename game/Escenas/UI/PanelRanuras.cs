@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-// Ranuras de guardado (menú de pausa): miniatura, caso y zona, pistas, tiempo jugado y fecha.
-// Pide confirmación antes de sobrescribir una ranura ocupada. Teclado, mouse y control.
+// Ranuras de guardado: miniatura, caso y zona, pistas, tiempo jugado y fecha. Teclado, mouse y control.
+// Para guardar (menú de pausa) pide confirmación antes de sobrescribir una ranura ocupada.
+// Para cargar (ModoCargar, menú de inicio) muestra también el autoguardado y ofrece el respaldo si un archivo está dañado.
 public partial class PanelRanuras : Control
 {
 	[Signal] public delegate void CerradoEventHandler();
@@ -15,6 +16,8 @@ public partial class PanelRanuras : Control
 
 	// Lo asigna el menú: confirmación reutilizable (foco en "Cancelar")
 	public Func<string, string, Task<bool>> Confirmar;
+	// true: el panel carga partidas en lugar de guardarlas
+	public bool ModoCargar;
 
 	private VBoxContainer _lista;
 	private Label _autoguardado;
@@ -43,7 +46,7 @@ public partial class PanelRanuras : Control
 		columna.AddThemeConstantOverride("separation", 12);
 		panel.AddChild(columna);
 
-		var titulo = new Label { Text = "GUARDAR PARTIDA" };
+		var titulo = new Label { Text = ModoCargar ? "CARGAR PARTIDA" : "GUARDAR PARTIDA" };
 		titulo.AddThemeFontOverride("font", _titulos);
 		titulo.AddThemeFontSizeOverride("font_size", 40);
 		titulo.AddThemeColorOverride("font_color", Tinta);
@@ -108,13 +111,22 @@ public partial class PanelRanuras : Control
 		_botones.Clear();
 		var ranuras = GestorPartida.Instancia.Ranuras();
 		var auto = ranuras[GestorPartida.RanuraAuto];
-		_autoguardado.Text = auto.Ocupada && !auto.Danada
-			? $"Autoguardado: {Capitulos.Obtener(auto.Capitulo)?.Etiqueta} · {auto.Fase} · {auto.Zona} · {auto.Fecha}"
-			: "Autoguardado: todavía no hay.";
+		_autoguardado.Text = ModoCargar ? "Elige la partida que quieres seguir."
+			: auto.Ocupada && !auto.Danada
+				? $"Autoguardado: {Capitulos.Obtener(auto.Capitulo)?.Etiqueta} · {auto.Fase} · {auto.Zona} · {auto.Fecha}"
+				: "Autoguardado: todavía no hay.";
 		foreach (var r in ranuras)
 		{
-			if (r.Numero == GestorPartida.RanuraAuto) continue;
+			// El autoguardado solo se puede cargar, no elegir para guardar
+			if (r.Numero == GestorPartida.RanuraAuto && !ModoCargar) continue;
 			var boton = Boton(Describir(r));
+			// Al cargar, una ranura vacía no se puede elegir
+			if (ModoCargar && !r.Ocupada)
+			{
+				boton.Disabled = true;
+				boton.FocusMode = FocusModeEnum.None;
+				boton.Modulate = new Color(1, 1, 1, 0.5f);
+			}
 			boton.CustomMinimumSize = new Vector2(0, 96);
 			boton.Icon = r.Miniatura;
 			boton.ExpandIcon = true;
@@ -122,23 +134,27 @@ public partial class PanelRanuras : Control
 			boton.AddThemeConstantOverride("icon_max_width", 150);
 			int numero = r.Numero;
 			bool ocupada = r.Ocupada;
-			boton.Pressed += () => _ = Elegir(numero, ocupada);
+			var info = r;
+			boton.Pressed += () => _ = ModoCargar ? Cargar(info) : Elegir(numero, ocupada);
 			_lista.AddChild(boton);
-			_botones.Add(boton);
+			if (!boton.Disabled) _botones.Add(boton);
 		}
 		var cadena = new List<Control>(_botones) { _volver };
 		UtilidadesUI.EncadenarFoco(cadena);
 		UtilidadesUI.ConectarFocoConRaton(this);
 	}
 
-	private static string Describir(InfoRanura r)
+	private string Describir(InfoRanura r)
 	{
-		if (!r.Ocupada) return $"RANURA {r.Numero}  ·  vacía";
-		if (r.Danada) return $"RANURA {r.Numero}  ·  archivo dañado (se puede sobrescribir)";
+		string nombre = r.Numero == GestorPartida.RanuraAuto ? "AUTOGUARDADO" : $"RANURA {r.Numero}";
+		if (!r.Ocupada) return $"{nombre}  ·  vacía";
+		if (r.Danada) return ModoCargar
+			? $"{nombre}  ·  archivo dañado" + (r.HayRespaldo ? " (hay copia de respaldo)" : "")
+			: $"{nombre}  ·  archivo dañado (se puede sobrescribir)";
 		var t = TimeSpan.FromSeconds(r.Tiempo);
 		string capitulo = Capitulos.Obtener(r.Capitulo)?.Etiqueta ?? "Caso " + r.Caso;
 		string fase = string.IsNullOrEmpty(r.Fase) ? "" : " · " + r.Fase;
-		return $"RANURA {r.Numero}  ·  {capitulo}{fase} · {r.Zona}\n" +
+		return $"{nombre}  ·  {capitulo}{fase} · {r.Zona}\n" +
 			$"Pistas {r.Pistas}/{r.TotalPistas}  ·  Tiempo {(int)t.TotalMinutes} min {t.Seconds:00} s\n{r.Fecha}";
 	}
 
@@ -157,6 +173,23 @@ public partial class PanelRanuras : Control
 		GestorPartida.Instancia.Guardar(ranura);
 		Refrescar();
 		_botones[Math.Clamp(ranura - 1, 0, _botones.Count - 1)].GrabFocus();
+	}
+
+	// Carga la ranura; si el archivo está dañado ofrece su respaldo
+	private async Task Cargar(InfoRanura r)
+	{
+		var gestor = GestorPartida.Instancia;
+		if (!r.Danada && gestor.CargarRanura(r.Numero)) return;
+		if (r.HayRespaldo && Confirmar != null && await Confirmar("La partida guardada está dañada.\n¿Cargar la copia de respaldo?", "Cargar respaldo"))
+		{
+			if (gestor.CargarRanura(r.Numero, desdeRespaldo: true)) return;
+			gestor.MostrarAviso("El respaldo también está dañado", sello: false);
+		}
+		else if (!r.HayRespaldo)
+		{
+			gestor.MostrarAviso("La partida está dañada y no tiene respaldo", sello: false);
+		}
+		if (_botones.Count > 0) _botones[0].GrabFocus();
 	}
 
 	public override void _UnhandledInput(InputEvent evento)

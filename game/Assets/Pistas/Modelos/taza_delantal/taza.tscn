@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/taza_delantal/taza.res" id="1_jh22k"]
+
+[node name="Taza" type="Node3D" unique_id=1293459356]
+
+[node name="Taza" type="MeshInstance3D" parent="." unique_id=1108308203]
+mesh = ExtResource("1_jh22k")

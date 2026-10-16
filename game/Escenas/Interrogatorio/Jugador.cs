@@ -8,6 +8,9 @@ public partial class Jugador : CharacterBody3D
 {
 	[Signal] public delegate void EvidenciaRegistradaEventHandler(string id);
 	[Signal] public delegate void ObjetoObtenidoEventHandler(string id);
+	// HU-07: se terminó de examinar una evidencia por primera vez / se descubrió un detalle oculto
+	[Signal] public delegate void EvidenciaExaminadaEventHandler(string id);
+	[Signal] public delegate void DetalleDescubiertoEventHandler(string origenId, string id);
 
 	[Export] public float Velocidad = 3.0f;
 	[Export] public float SensibilidadRaton = 0.003f;
@@ -32,7 +35,7 @@ public partial class Jugador : CharacterBody3D
 	private Label _textoTutorial;
 	private Node _hud;
 
-	private bool _panelAbierto = false;   // Diario o expediente del HUD
+	private bool _panelAbierto = false;   // Diario [Q] o expediente del caso [TAB]
 	private bool _bloqueado = false;      // Diálogo en curso
 	private int _idAviso = 0;             // Evita que un temporizador viejo oculte un texto nuevo
 	private IInteractuable _apuntado;
@@ -49,6 +52,15 @@ public partial class Jugador : CharacterBody3D
 	private const uint MascaraInteraccion = 1u | 2u | 8u | 16u | 32u;
 	// Llaves, combinaciones... que abren contenedores en otras zonas
 	private readonly System.Collections.Generic.HashSet<string> _objetos = new System.Collections.Generic.HashSet<string>();
+	// Vista de examen (HU-07) y el aviso "[E] Examinar" justo después de recoger una evidencia
+	private const string RutaVistaExamen = "res://Escenas/Investigacion/VistaExamen.tscn";
+	private const string CarpetaDetalles = "user://detalles/";
+	private const double SegundosOfertaExamen = 4.0;
+	private VistaExamen _vistaExamen;
+	private Resource _pistaExaminada;
+	private Resource _pistaReciente;
+	private double _ofertaExamen;
+	private bool _hudVisibleAntesDeExaminar;
 
 	private static readonly Color ColorPensamiento = new Color(0.96f, 0.9f, 0.72f);
 	private static readonly Color ColorAviso = new Color(1f, 1f, 1f);
@@ -82,6 +94,8 @@ public partial class Jugador : CharacterBody3D
 		_hud.Connect("linterna_cambiada", Callable.From<bool>(AlCambiarLinterna));
 		if (_hud.HasSignal("pista_seleccionada"))
 			_hud.Connect("pista_seleccionada", Callable.From<Resource>(_ => Sonidos.ReproducirUI(this, Sonidos.Tipo.Pagina)));
+		// [E] / [Examinar] en el diario (sección Pistas) abre la vista de examen
+		_hud.Connect("detalle_solicitado", Callable.From<Resource>(Examinar));
 		AlCambiarLinterna(false);
 		_linternaLista = true;
 
@@ -128,6 +142,12 @@ public partial class Jugador : CharacterBody3D
 			{
 				GetViewport().SetInputAsHandled();
 				objetivo.Interactuar(this);
+			}
+			// Recién recogida una evidencia, [E] sin apuntar a nada la abre en la vista de examen
+			else if (!clic && _ofertaExamen > 0 && _pistaReciente != null)
+			{
+				GetViewport().SetInputAsHandled();
+				Examinar(_pistaReciente);
 			}
 		}
 	}
@@ -242,17 +262,39 @@ public partial class Jugador : CharacterBody3D
 	// Usa el sistema de pistas del HUD del equipo (aviso "Expediente actualizado", tarjeta y expediente)
 	public void RegistrarEvidencia(string id, string titulo, string descripcion, Texture2D imagen = null, bool animar = true)
 	{
-		bool nueva = AgregarPistaAlHud(id, titulo, descripcion, imagen);
+		RegistrarPista(CrearPista(id, titulo, descripcion, imagen), animar);
+	}
+
+	// Desde un ObjetoPista: además de los textos lleva lo que usa la vista de examen (modelo, detalles...)
+	public void RegistrarEvidencia(ObjetoPista objeto)
+	{
+		RegistrarPista(CrearPista(objeto), animar: true);
+	}
+
+	private void RegistrarPista(Resource pista, bool animar)
+	{
+		bool nueva = _hud.Call("agregar_pista", pista).AsBool();
 		if (!nueva) return;
+		string id = pista.Get("id").AsStringName().ToString();
 		if (animar) _cuerpo?.HacerAccion(CuerpoDetective.Agarrar);
 		// Siempre el mismo sonido de "pista encontrada" y, detrás, el sello del expediente actualizado
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Pista);
 		GetTree().CreateTimer(0.55).Timeout += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Sello);
 		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
+		// Unos segundos para examinarla de inmediato con [E]
+		_pistaReciente = pista;
+		_ofertaExamen = SegundosOfertaExamen;
+		_hud.Call("ofrecer_examen", SegundosOfertaExamen);
 		EmitSignal(SignalName.EvidenciaRegistrada, id);
 	}
 
-	private bool AgregarPistaAlHud(string id, string titulo, string descripcion, Texture2D imagen)
+	private void TerminarOfertaExamen()
+	{
+		_ofertaExamen = 0;
+		_hud.Call("ofrecer_examen", 0.0);
+	}
+
+	private static Resource CrearPista(string id, string titulo, string descripcion, Texture2D imagen)
 	{
 		// Si el objeto no trae foto, se usa la de Assets/Pistas/<id>.png
 		string rutaFoto = "res://Assets/Pistas/" + id + ".png";
@@ -262,15 +304,136 @@ public partial class Jugador : CharacterBody3D
 		pista.Set("titulo", titulo);
 		pista.Set("descripcion", descripcion);
 		pista.Set("imagen", imagen);
-		return _hud.Call("agregar_pista", pista).AsBool();
+		return pista;
+	}
+
+	private static Resource CrearPista(ObjetoPista objeto)
+	{
+		var pista = CrearPista(objeto.IdPista, objeto.Titulo, objeto.Descripcion, objeto.Imagen);
+		pista.Set("modelo", objeto.ModeloExamen);
+		pista.Set("descripcion_ampliada", objeto.DescripcionAmpliada);
+		pista.Set("lugar", objeto.Lugar);
+		var detalles = new Godot.Collections.Array<Resource>(); // Tipado: la propiedad de pista.gd es Array[Resource]
+		foreach (var detalle in objeto.Detalles) if (detalle != null) detalles.Add(detalle);
+		pista.Set("detalles", detalles);
+		return pista;
+	}
+
+	// ---------- Vista de examen (HU-07) ----------
+
+	private Godot.Collections.Array Pistas() => _hud.Get("pistas").AsGodotArray();
+
+	private Resource BuscarPista(string id) =>
+		Pistas().Select(p => p.As<Resource>()).FirstOrDefault(p => p.Get("id").AsStringName().ToString() == id);
+
+	private ObjetoPista BuscarObjeto(string id) =>
+		GetTree().GetNodesInGroup("objetos_pista").OfType<ObjetoPista>().FirstOrDefault(o => o.IdPista == id);
+
+	public bool Examinando => _vistaExamen?.Abierta ?? false;
+
+	// Abre la vista de examen. Si es la entrada de un detalle, se examina su evidencia enfocando el detalle.
+	public void Examinar(Resource pista)
+	{
+		if (pista == null || Examinando) return;
+		TerminarOfertaExamen();
+		string enfocar = null;
+		string origen = pista.Get("origen_id").AsStringName().ToString();
+		if (!string.IsNullOrEmpty(origen))
+		{
+			enfocar = pista.Get("id").AsStringName().ToString();
+			pista = BuscarPista(origen);
+			if (pista == null) return;
+		}
+		if (_vistaExamen == null)
+		{
+			_vistaExamen = GD.Load<PackedScene>(RutaVistaExamen).Instantiate<VistaExamen>();
+			// Al final de la escena: recibe las teclas antes que el juego y el menú de pausa
+			GetParent().AddChild(_vistaExamen);
+			_vistaExamen.DetalleConfirmado = AlDescubrirDetalle;
+			_vistaExamen.Cerrada += AlCerrarExamen;
+		}
+		_pistaExaminada = pista;
+		Detenerse();
+		// El HUD se oculta para que toda la atención quede en el objeto
+		if (_hud is CanvasLayer capa)
+		{
+			_hudVisibleAntesDeExaminar = capa.Visible;
+			capa.Visible = false;
+		}
+		if (_textoTutorial != null) _textoTutorial.Visible = false;
+		var descubiertos = Pistas().Select(p => p.As<Resource>().Get("id").AsStringName().ToString()).ToHashSet();
+		string id = pista.Get("id").AsStringName().ToString();
+		_vistaExamen.Abrir(pista, BuscarObjeto(id), descubiertos, enfocar);
+	}
+
+	private void AlCerrarExamen()
+	{
+		if (_hud is CanvasLayer capa) capa.Visible = _hudVisibleAntesDeExaminar;
+		var pista = _pistaExaminada;
+		_pistaExaminada = null;
+		if (pista == null || pista.Get("examinada").AsBool()) return;
+		// La primera vez que se termina de examinar queda marcada como "Examinada"
+		pista.Set("examinada", true);
+		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
+		EmitSignal(SignalName.EvidenciaExaminada, pista.Get("id").AsStringName().ToString());
+	}
+
+	// Un detalle descubierto es una entrada NUEVA del diario ("foto_grupo.silbato"), con la foto del acercamiento
+	private void AlDescubrirDetalle(DetalleOculto detalle, Texture2D foto)
+	{
+		if (_pistaExaminada == null) return;
+		string origen = _pistaExaminada.Get("id").AsStringName().ToString();
+		string id = origen + "." + detalle.Id;
+		var pista = CrearDetalle(id, detalle.Titulo, detalle.Descripcion, foto, origen);
+		if (!_hud.Call("agregar_pista", pista).AsBool()) return; // Ya estaba: no se duplica
+		// La foto se guarda aparte para que la entrada se vea igual al cargar la partida
+		DirAccess.MakeDirRecursiveAbsolute(CarpetaDetalles);
+		foto?.GetImage().SavePng(CarpetaDetalles + id + ".png");
+		GetTree().CreateTimer(0.4).Timeout += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Sello);
+		if (GestorPartida.Instancia != null) GestorPartida.Instancia.HayCambiosSinGuardar = true;
+		EmitSignal(SignalName.DetalleDescubierto, origen, id);
+	}
+
+	private static Resource CrearDetalle(string id, string titulo, string descripcion, Texture2D foto, string origen)
+	{
+		var pista = CrearPista(id, titulo, descripcion, foto);
+		pista.Set("origen_id", new StringName(origen));
+		pista.Set("examinada", true);
+		return pista;
 	}
 
 	// ---------- Partida guardada ----------
 
-	// Al cargar: la pista vuelve al expediente sin sonido, animación ni aviso al caso
+	// Al cargar: la pista vuelve al diario sin sonido, animación ni aviso al caso
 	public void RestaurarEvidencia(string id, string titulo, string descripcion, Texture2D imagen = null)
 	{
-		AgregarPistaAlHud(id, titulo, descripcion, imagen);
+		_hud.Call("agregar_pista", CrearPista(id, titulo, descripcion, imagen));
+		_hud.Set("_aviso", 0.0);
+	}
+
+	// HU-07: desde su ObjetoPista (modelo y detalles) y con su estado de examen
+	public void RestaurarEvidencia(ObjetoPista objeto, string titulo, string descripcion, bool examinada)
+	{
+		var pista = CrearPista(objeto);
+		pista.Set("titulo", titulo);
+		pista.Set("descripcion", descripcion);
+		pista.Set("examinada", examinada);
+		_hud.Call("agregar_pista", pista);
+		_hud.Set("_aviso", 0.0);
+	}
+
+	// Un detalle descubierto vuelve con la foto que se tomó al descubrirlo (o la de su evidencia, si se perdió)
+	public void RestaurarDetalle(string id, string titulo, string descripcion, string origen)
+	{
+		Texture2D foto = null;
+		string ruta = CarpetaDetalles + id + ".png";
+		if (FileAccess.FileExists(ruta))
+		{
+			var imagen = Image.LoadFromFile(ruta);
+			if (imagen != null) foto = ImageTexture.CreateFromImage(imagen);
+		}
+		foto ??= BuscarPista(origen)?.Get("imagen").As<Texture2D>();
+		_hud.Call("agregar_pista", CrearDetalle(id, titulo, descripcion, foto, origen));
 		_hud.Set("_aviso", 0.0);
 	}
 
@@ -357,6 +520,11 @@ public partial class Jugador : CharacterBody3D
 
 	public override void _Process(double delta)
 	{
+		if (_ofertaExamen > 0)
+		{
+			_ofertaExamen -= delta;
+			if (_ofertaExamen <= 0 || _panelAbierto || _bloqueado) TerminarOfertaExamen();
+		}
 		// El HUD muestra "[ E ] acción" cuando la retícula apunta a algo usable
 		IInteractuable apuntado = (_panelAbierto || _bloqueado) ? null : BuscarInteractuable();
 		if (apuntado != _apuntado)

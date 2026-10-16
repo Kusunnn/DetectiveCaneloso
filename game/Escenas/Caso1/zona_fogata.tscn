@@ -25,6 +25,10 @@
 [ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/madera_piso_color.jpg" id="e23"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log.glb" id="e24"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/silla.tscn" id="e25"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
+[ext_resource type="Resource" path="res://Datos/Detalles/libro_guardia_antonio.tres" id="hu07_det_libro"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/lena_intacta/lena_intacta.tscn" id="hu07_m_lena"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/libro_guardia_quemado/libro_guardia_quemado.tscn" id="hu07_m_quemado"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
 albedo_color = Color(0.12, 0.11, 0.1, 1.0)
@@ -78,8 +82,7 @@ radius = 0.9
 height = 0.14
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_11"]
-size = Vector3(0.45, 0.36, 0.45)
-
+size = Vector3(0.38, 0.08, 0.34)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_12"]
 albedo_color = Color(0.32, 0.27, 0.2, 1.0)
 roughness = 1.0
@@ -226,8 +229,7 @@ size = Vector3(0.62, 0.55, 0.45)
 size = Vector3(0.3, 0.9, 0.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_37"]
-size = Vector3(2.0, 1.2, 2.2)
-
+size = Vector3(1.02, 0.5, 0.46)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38"]
 albedo_texture = ExtResource("e23")
 albedo_color = Color(0.6, 0.48, 0.4, 1.0)
@@ -255,6 +257,14 @@ size = Vector3(1.2, 0.05, 2.4)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_44"]
 size = Vector3(24.0, 4.0, 20.0)
+
+[sub_resource type="StandardMaterial3D" id="Material_reverso_hu07"]
+albedo_color = Color(0.55, 0.47, 0.34, 1)
+roughness = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_reverso_hu07"]
+material = SubResource("Material_reverso_hu07")
+size = Vector2(0.1, 0.07)
 
 [node name="ZonaFogata" type="Node3D"]
 
@@ -326,43 +336,19 @@ collision_mask = 0
 script = ExtResource("e5")
 Id = "libro_guardia_quemado"
 Titulo = "Libro de guardia quemado"
-Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... monitor auxiliar Antonio R.... olor a alcohol...»."
+Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... olor a alcohol...». Lo demás está hecho ceniza."
 EsEvidencia = true
 ComentarioAlMirar = "Entre las cenizas hay hojas que no terminaron de quemarse."
 RequiereLinterna = true
 SoloAgachado = true
 Imagen = ExtResource("e4")
+DescripcionAmpliada = "Tres hojas del libro de guardia del campamento, chamuscadas por las orillas. Al frente se alcanza a leer «Guardia nocturna, 14 de agosto...» y «...olor a alcohol...». Lo demás se deshace con solo tocarlo."
+Lugar = "Fogata · entre las cenizas"
+Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_libro")])
 
 [node name="Forma" type="CollisionShape3D" parent="Fuego/LibroQuemado"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.18, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
 shape = SubResource("BoxShape3D_11")
-
-[node name="Hoja0" type="MeshInstance3D" parent="Fuego/LibroQuemado"]
-transform = Transform3D(0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, 0.9397, -0.12, 0.055, 0.05)
-mesh = SubResource("BoxMesh_14")
-
-[node name="Hoja1" type="MeshInstance3D" parent="Fuego/LibroQuemado"]
-transform = Transform3D(0.8192, 0.0, -0.5736, 0.0, 1.0, 0.0, 0.5736, 0.0, 0.8192, 0.1, 0.059, -0.08)
-mesh = SubResource("BoxMesh_15")
-
-[node name="Hoja2" type="MeshInstance3D" parent="Fuego/LibroQuemado"]
-transform = Transform3D(0.342, 0.0, 0.9397, 0.0, 1.0, 0.0, -0.9397, 0.0, 0.342, 0.02, 0.063, 0.14)
-mesh = SubResource("BoxMesh_16")
-
-[node name="Fragmento" type="Node3D" parent="Fuego/LibroQuemado"]
-transform = Transform3D(0.9848, -0.1736, 0.0, 0.0, 0.0, 1.0, -0.1736, -0.9848, 0.0, 0.0, 0.07, 0.0)
-script = ExtResource("e6")
-Texto = "Guardia nocturna, 14 de ag...
-monitor auxiliar Antonio R...
-...olor a alcohol..."
-Ancho = 0.24
-ColorPapel = Color(0.36, 0.3, 0.22, 1.0)
-ColorTexto = Color(0.08, 0.06, 0.05, 1.0)
-TamFuente = 22
-TamMinimo = 8
-ConFondo = true
-AltoMaximo = 1.2
-TamPixel = 0.0012
 
 [node name="Humo" type="GPUParticles3D" parent="Fuego"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.3, 0.0)
@@ -498,19 +484,12 @@ Descripcion = "Un montón de leña seca junto a la fogata, apilado y sin tocar. 
 EsEvidencia = true
 ComentarioAlMirar = "Leña de sobra... y la fogata se apagó sola."
 Imagen = ExtResource("e17")
+DescripcionAmpliada = "La pila de leña sigue igual de ordenada, con el hacha a un lado. Nadie tomó ni una rama anoche."
+Lugar = "Fogata · junto a la leñera"
 
 [node name="Forma" type="CollisionShape3D" parent="Lena"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.22, 0)
 shape = SubResource("BoxShape3D_37")
-
-[node name="Pila" parent="Lena" instance=ExtResource("e18")]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
-
-[node name="Pila2" parent="Lena" instance=ExtResource("e19")]
-transform = Transform3D(0.9063, 0.0, 0.4226, 0.0, 1.0, 0.0, -0.4226, 0.0, 0.9063, 0.95, 0.0, 0.9)
-
-[node name="Hacha" parent="Lena" instance=ExtResource("e20")]
-transform = Transform3D(0.3319, 0.0827, 0.9397, -0.2419, 0.9703, 0.0, -0.9118, -0.2273, 0.342, -0.95, 0.0, 0.55)
 
 [node name="Guirnaldas" type="Node3D" parent="."]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, -4.0)
@@ -737,3 +716,9 @@ monitorable = false
 
 [node name="Forma" type="CollisionShape3D" parent="Fogata"]
 shape = SubResource("BoxShape3D_44")
+
+[node name="Modelo" parent="Lena" instance=ExtResource("hu07_m_lena")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Modelo" parent="Fuego/LibroQuemado" instance=ExtResource("hu07_m_quemado")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)
