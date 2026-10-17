@@ -1095,9 +1095,6 @@ script = ExtResource("e44")
 [node name="MandoHud" type="Node" parent="."]
 script = ExtResource("e45")
 
-[node name="PuntoPizarron" type="Marker3D" parent="."]
-transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, -30.0, 30.0)
-
 [node name="Vineta" type="CanvasLayer" parent="."]
 layer = 1
 

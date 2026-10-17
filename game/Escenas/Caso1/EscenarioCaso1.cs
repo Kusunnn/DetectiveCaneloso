@@ -82,18 +82,6 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 		foreach (var puerta in Todos<Puerta>()) puerta.Abierta += Cambio;
 		if (VersionLigera) AplicarVersionLigera();
 		CallDeferred(MethodName.Empezar);
-		AcomodarPizarron();
-	}
-
-	// El pizarrón del tablero [R] aparece en un punto fijo pensado para la sala del Caso 0; aquí va donde marca
-	// el Marker3D «PuntoPizarron» de la escena (en el Lago, escondido bajo tierra: solo se ve al abrir el tablero)
-	private async void AcomodarPizarron()
-	{
-		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
-		if (!IsInsideTree()) return;
-		var punto = GetParent().FindChild("PuntoPizarron", true, false) as Node3D;
-		if (punto != null && GetParent().GetNodeOrNull("PizarronInvestigacion") is Node3D pizarron)
-			pizarron.GlobalTransform = punto.GlobalTransform;
 	}
 
 	private async void Empezar()
