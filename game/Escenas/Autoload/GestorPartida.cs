@@ -58,6 +58,8 @@ public partial class GestorPartida : Node
 
 	// Estado que la escena de juego debe restaurar al cargarse (null = partida nueva)
 	public Godot.Collections.Dictionary EstadoPendiente { get; private set; }
+	// Al pasar a otro escenario del mismo capítulo: nombre del Marker3D donde aparece el jugador (null = donde se guardó)
+	public string PuntoEntrada { get; private set; }
 	// Ranura en la que se guarda con "Guardar y salir" (la última usada)
 	public int RanuraActiva { get; private set; } = RanuraAuto;
 	public double SegundosDesdeUltimoGuardado => _ultimoGuardado < 0 ? -1 : (Time.GetTicksMsec() / 1000.0) - _ultimoGuardado;
@@ -125,6 +127,7 @@ public partial class GestorPartida : Node
 		SaltarTutorial = saltarTutorial;
 		Rejugando = rejugar;
 		EstadoPendiente = null;
+		PuntoEntrada = null;
 		HayCambiosSinGuardar = false;
 		_ultimoGuardado = -1;
 		if (!capitulo.TieneEscena)
@@ -204,6 +207,7 @@ public partial class GestorPartida : Node
 		}
 		SaltarTutorial = datos.TryGetValue("saltar_tutorial", out Variant saltar) && saltar.AsBool();
 		EstadoPendiente = datos.TryGetValue("estado", out Variant estado) ? estado.AsGodotDictionary() : null;
+		PuntoEntrada = null;
 		RanuraActiva = ranura;
 		HayCambiosSinGuardar = false;
 		Rejugando = false;
@@ -223,7 +227,23 @@ public partial class GestorPartida : Node
 	}
 
 	// La escena de juego lo llama tras restaurar
-	public void EstadoRestaurado() => EstadoPendiente = null;
+	public void EstadoRestaurado()
+	{
+		EstadoPendiente = null;
+		PuntoEntrada = null;
+	}
+
+	// Otro escenario del mismo capítulo (Campamento ↔ Lago ↔ sala): se lleva todo el progreso y el jugador
+	// aparece en el Marker3D «punto» de la escena nueva. No cuenta como cargar: no hay «Anteriormente…».
+	public void CambiarEscenaDelCapitulo(string escena, string punto)
+	{
+		var juego = EscenaDeJuego();
+		if (juego == null || !ResourceLoader.Exists(escena)) return;
+		EstadoPendiente = juego.CapturarEstado();
+		PuntoEntrada = punto;
+		_presentacion = Presentacion.Nada;
+		CambiarEscena(escena);
+	}
 
 	public void IrAlMenuInicio()
 	{
@@ -232,6 +252,12 @@ public partial class GestorPartida : Node
 		Rejugando = false;
 		_presentacion = Presentacion.Nada;
 		CambiarEscena(EscenaMenuInicio);
+	}
+
+	private string EscenaActual()
+	{
+		string ruta = GetTree().CurrentScene?.SceneFilePath;
+		return string.IsNullOrEmpty(ruta) ? null : ruta;
 	}
 
 	private void CambiarEscena(string ruta)
@@ -304,7 +330,8 @@ public partial class GestorPartida : Node
 			{ "fecha", Time.GetDatetimeStringFromSystem(false, true) },
 			{ "ranura", ranura },
 			{ "saltar_tutorial", SaltarTutorial },
-			{ "escena", Capitulos.Obtener(CapituloActual)?.Escena ?? EscenaJuego },
+			// La escena donde está el jugador (un capítulo puede tener varios escenarios)
+			{ "escena", EscenaActual() ?? Capitulos.Obtener(CapituloActual)?.Escena ?? EscenaJuego },
 			{ "capitulo", CapituloActual },
 			{ "resumen", resumen },
 			{ "estado", escena.CapturarEstado() },

@@ -33,6 +33,7 @@ public partial class TableroDeduccion : CanvasLayer
 			if (HerramientaTablero.Desbloqueada(herramienta)) Hud.Call("desbloquear_herramienta_tablero", herramienta);
 		var pizarron = (Node3D)GD.Load<GDScript>("res://Escenas/Investigacion/pizarron_espacial.gd").New();
 		pizarron.Name = "PizarronInvestigacion";
+		pizarron.AddToGroup("auditoria_colgado"); // Va colgado en la pared: la auditoría de escenarios no lo revisa como si flotara
 		pizarron.Position = new Vector3(3.88f, 2.5f, -1.2f);
 		pizarron.Rotation = new Vector3(0, -Mathf.Pi / 2, 0);
 		pizarron.Set("hud", Hud);

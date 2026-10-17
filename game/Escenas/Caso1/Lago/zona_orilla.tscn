@@ -1,0 +1,315 @@
+[gd_scene load_steps=36 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_alta.tscn" id="e1"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e2"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/mochila.tscn" id="e3"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/cuaderno_eriz.png" id="e4"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/cuaderno_eriz/cuaderno_eriz.tscn" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/botella.tscn" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/lata.tscn" id="e8"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/lata_abierta.tscn" id="e9"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/canoa.tscn" id="e10"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Lago/Texturas/red_pesca.png" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/poste_madera.tscn" id="e12"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/letrero_poste.tscn" id="e13"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e14"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/remo_sangre.png" id="e15"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/remo_sangre/remo_sangre.tscn" id="e16"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_c.tscn" id="e17"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_b.tscn" id="e18"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/roca_a.tscn" id="e19"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(1.8, 1.9, 1.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2"]
+size = Vector3(0.6, 0.55, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3"]
+size = Vector3(0.5, 0.5, 0.26)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4"]
+size = Vector3(0.36, 0.12, 0.28)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5"]
+size = Vector3(0.9, 0.5396, 3.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6"]
+albedo_texture = ExtResource("e11")
+transparency = 2
+alpha_scissor_threshold = 0.5
+cull_mode = 2
+roughness = 0.95
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_7"]
+radius = 0.12
+height = 1.3
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_8"]
+radius = 0.12
+height = 1.3
+
+[sub_resource type="QuadMesh" id="QuadMesh_9"]
+size = Vector2(2.3, 1.1)
+material = SubResource("StandardMaterial3D_6")
+
+[sub_resource type="QuadMesh" id="QuadMesh_10"]
+size = Vector2(1.4, 1.0)
+material = SubResource("StandardMaterial3D_6")
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_11"]
+radius = 0.12
+height = 1.3
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_12"]
+radius = 0.12
+height = 1.3
+
+[sub_resource type="QuadMesh" id="QuadMesh_13"]
+size = Vector2(2.3, 1.1)
+material = SubResource("StandardMaterial3D_6")
+
+[sub_resource type="QuadMesh" id="QuadMesh_14"]
+size = Vector2(1.4, 1.0)
+material = SubResource("StandardMaterial3D_6")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_15"]
+size = Vector3(0.4, 0.3, 1.6)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
+size = Vector3(52.0, 4.0, 9.0)
+
+[node name="Orilla" type="Node3D"]
+
+[node name="RocaEriz" parent="." instance=ExtResource("e1")]
+transform = Transform3D(0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, 0.9397, -22.0, -0.03, -4.5)
+
+[node name="ColRocaEriz" type="StaticBody3D" parent="."]
+transform = Transform3D(0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, 0.9397, -22.0, 0.9, -4.5)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColRocaEriz"]
+shape = SubResource("BoxShape3D_1")
+
+[node name="Mochila" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.9397, 0.0, -0.342, 0.0, 1.0, 0.0, 0.342, 0.0, -0.9397, -21.4, 0.0, -3.3)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e2")
+Nombre = "Mochila de Eriz"
+MensajeAlAbrir = "La mochila de Eriz. Adentro, su cuaderno de dibujo."
+SonidoAbrir = 2
+
+[node name="Forma" type="CollisionShape3D" parent="Mochila"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.26, 0.0)
+shape = SubResource("BoxShape3D_2")
+
+[node name="Solido" type="StaticBody3D" parent="Mochila"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.25, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Mochila/Solido"]
+shape = SubResource("BoxShape3D_3")
+
+[node name="Modelo" parent="Mochila" instance=ExtResource("e3")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="Cuaderno" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.9848, 0.0, 0.1736, 0.0, 1.0, 0.0, -0.1736, 0.0, -0.9848, -20.65, 0.01, -3.15)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e5")
+Id = "cuaderno_eriz"
+Titulo = "Cuaderno de Eriz"
+Descripcion = "El cuaderno de dibujo de Eriz. En la página de anoche: «23:20: perturbación luminosa fuerte junto al embarcadero.»"
+EsEvidencia = true
+ComentarioAlMirar = "El cuaderno de Eriz. Hay una hora anotada."
+Imagen = ExtResource("e4")
+
+[node name="Forma" type="CollisionShape3D" parent="Cuaderno"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.04, 0.0)
+shape = SubResource("BoxShape3D_4")
+
+[node name="Modelo" parent="Cuaderno" instance=ExtResource("e6")]
+transform = Transform3D(1.25, 0.0, 0.0, 0.0, 1.25, 0.0, 0.0, 0.0, 1.25, 0.0, 0.0, 0.0)
+
+[node name="CervezaEriz" parent="." instance=ExtResource("e7")]
+transform = Transform3D(0.866, 0.0, 0.5, 0.0, 1.0, 0.0, -0.5, 0.0, 0.866, -21.95, 0.0, -2.95)
+
+[node name="Lata0" parent="." instance=ExtResource("e8")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -6.0, 0.0, -2.8)
+
+[node name="Lata1" parent="." instance=ExtResource("e9")]
+transform = Transform3D(0.0, -0.766, 0.6428, 1.0, 0.0, 0.0, 0.0, 0.6428, 0.766, -6.4, 0.0, -3.1)
+
+[node name="Lata2" parent="." instance=ExtResource("e8")]
+transform = Transform3D(0.1736, 0.0, 0.9848, 0.0, 1.0, 0.0, -0.9848, 0.0, 0.1736, 14.5, 0.0005, -0.8)
+
+[node name="Lata3" parent="." instance=ExtResource("e9")]
+transform = Transform3D(-0.5, 0.0, 0.866, 0.0, 1.0, 0.0, -0.866, 0.0, -0.5, -17.0, 0.0, -5.6)
+
+[node name="CanoaVieja" type="Node3D" parent="."]
+transform = Transform3D(0.2588, 0.0, 0.9659, 0.0, 1.0, 0.0, -0.9659, 0.0, 0.2588, -10.5, -0.05, -4.0)
+
+[node name="Modelo" parent="CanoaVieja" instance=ExtResource("e10")]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.5396, 0.0)
+
+[node name="Solido" type="StaticBody3D" parent="CanoaVieja"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.2698, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="CanoaVieja/Solido"]
+shape = SubResource("BoxShape3D_5")
+
+[node name="Redes0" type="Node3D" parent="." groups=["auditoria_colgado"]]
+transform = Transform3D(0.9848, 0.0, 0.1736, 0.0, 1.0, 0.0, -0.1736, 0.0, 0.9848, -3.0, 0.0025, -4.0)
+
+[node name="Poste0" parent="Redes0" instance=ExtResource("e12")]
+transform = Transform3D(0.45, 0.0, 0.0, 0.0, 0.42, 0.0, 0.0, 0.0, 0.45, -1.1, 0.0, 0.0)
+
+[node name="ColPoste0" type="StaticBody3D" parent="Redes0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.1, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Redes0/ColPoste0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.65, 0.0)
+shape = SubResource("CylinderShape3D_7")
+
+[node name="Poste1" parent="Redes0" instance=ExtResource("e12")]
+transform = Transform3D(0.45, 0.0, 0.0, 0.0, 0.42, 0.0, 0.0, 0.0, 0.45, 1.1, 0.0, 0.0)
+
+[node name="ColPoste1" type="StaticBody3D" parent="Redes0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.1, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Redes0/ColPoste1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.65, 0.0)
+shape = SubResource("CylinderShape3D_8")
+
+[node name="Red" type="MeshInstance3D" parent="Redes0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.9903, -0.1392, 0.0, 0.1392, 0.9903, 0.0, 0.72, 0.0)
+mesh = SubResource("QuadMesh_9")
+cast_shadow = 0
+
+[node name="RedCaida" type="MeshInstance3D" parent="Redes0"]
+transform = Transform3D(0.9659, -0.2587, 0.009, 0.0, 0.0349, 0.9994, -0.2588, -0.9653, 0.0337, 0.4, 0.015, 0.6)
+mesh = SubResource("QuadMesh_10")
+cast_shadow = 0
+
+[node name="Redes1" type="Node3D" parent="." groups=["auditoria_colgado"]]
+transform = Transform3D(0.9397, 0.0, -0.342, 0.0, 1.0, 0.0, 0.342, 0.0, 0.9397, 14.0, 0.0002, -3.0)
+
+[node name="Poste0" parent="Redes1" instance=ExtResource("e12")]
+transform = Transform3D(0.45, 0.0, 0.0, 0.0, 0.42, 0.0, 0.0, 0.0, 0.45, -1.1, 0.0, 0.0)
+
+[node name="ColPoste0" type="StaticBody3D" parent="Redes1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.1, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Redes1/ColPoste0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.65, 0.0)
+shape = SubResource("CylinderShape3D_11")
+
+[node name="Poste1" parent="Redes1" instance=ExtResource("e12")]
+transform = Transform3D(0.45, 0.0, 0.0, 0.0, 0.42, 0.0, 0.0, 0.0, 0.45, 1.1, 0.0, 0.0)
+
+[node name="ColPoste1" type="StaticBody3D" parent="Redes1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.1, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Redes1/ColPoste1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.65, 0.0)
+shape = SubResource("CylinderShape3D_12")
+
+[node name="Red" type="MeshInstance3D" parent="Redes1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 0.9903, -0.1392, 0.0, 0.1392, 0.9903, 0.0, 0.72, 0.0)
+mesh = SubResource("QuadMesh_13")
+cast_shadow = 0
+
+[node name="RedCaida" type="MeshInstance3D" parent="Redes1"]
+transform = Transform3D(0.9659, -0.2587, 0.009, 0.0, 0.0349, 0.9994, -0.2588, -0.9653, 0.0337, 0.4, 0.015, 0.6)
+mesh = SubResource("QuadMesh_14")
+cast_shadow = 0
+
+[node name="PosteProhibido" parent="." instance=ExtResource("e13")]
+transform = Transform3D(-0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, -0.9397, 5.2, -0.1078, -5.6)
+
+[node name="Prohibido" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(-0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, -0.9397, 5.307463, 0.8922, -5.895232)
+script = ExtResource("e14")
+Texto = "PROHIBIDO NADAR DE NOCHE"
+Ancho = 0.6
+ColorPapel = Color(0.85, 0.82, 0.7, 1.0)
+ColorTexto = Color(0.6, 0.08, 0.06, 1.0)
+TamFuente = 30
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Remo" type="StaticBody3D" parent="."]
+transform = Transform3D(0.8829, 0.0, -0.4695, 0.0, 1.0, 0.0, 0.4695, 0.0, 0.8829, 10.05, -0.2025, -9.15)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e5")
+Id = "remo_sangre"
+Titulo = "Remo con sangre"
+Descripcion = "Un remo tirado entre los juncos, junto al embarcadero. La pala tiene sangre seca."
+EsEvidencia = true
+ComentarioAlMirar = "Algo largo entre los juncos..."
+SoloAgachado = true
+Imagen = ExtResource("e15")
+
+[node name="Forma" type="CollisionShape3D" parent="Remo"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.1, 0.0)
+shape = SubResource("BoxShape3D_15")
+
+[node name="Modelo" parent="Remo" instance=ExtResource("e16")]
+transform = Transform3D(1.15, 0.0, 0.0, 0.0, 1.15, 0.0, 0.0, 0.0, 1.15, 0.0, 0.0, 0.0)
+
+[node name="Roca0" parent="." instance=ExtResource("e17")]
+transform = Transform3D(-0.7887, 0.0, 0.4464, 0.0, 0.9063, 0.0, -0.4464, 0.0, -0.7887, -40.0, -0.1498, -9.9568)
+
+[node name="Roca1" parent="." instance=ExtResource("e18")]
+transform = Transform3D(0.3387, 0.0, -0.8903, 0.0, 0.9525, 0.0, 0.8903, 0.0, 0.3387, -34.0, -0.1458, -9.8568)
+
+[node name="Roca2" parent="." instance=ExtResource("e19")]
+transform = Transform3D(0.2038, 0.0, -0.8281, 0.0, 0.8528, 0.0, 0.8281, 0.0, 0.2038, -29.0, -0.1484, -9.8959)
+
+[node name="Roca3" parent="." instance=ExtResource("e18")]
+transform = Transform3D(0.9147, 0.0, 0.4253, 0.0, 1.0088, 0.0, -0.4253, 0.0, 0.9147, -16.0, -0.1449, -11.0973)
+
+[node name="Roca4" parent="." instance=ExtResource("e19")]
+transform = Transform3D(-0.3235, 0.0, -0.8798, 0.0, 0.9374, 0.0, 0.8798, 0.0, -0.3235, -7.0, -0.1497, -11.1562)
+
+[node name="Roca5" parent="." instance=ExtResource("e18")]
+transform = Transform3D(-0.6395, 0.0, -0.5702, 0.0, 0.8568, 0.0, 0.5702, 0.0, -0.6395, 3.0, -0.1442, -8.0093)
+
+[node name="Roca6" parent="." instance=ExtResource("e18")]
+transform = Transform3D(-0.3382, 0.0, -0.9196, 0.0, 0.9798, 0.0, 0.9196, 0.0, -0.3382, 13.0, -0.1493, -8.9559)
+
+[node name="Roca7" parent="." instance=ExtResource("e19")]
+transform = Transform3D(0.5707, 0.0, 0.8376, 0.0, 1.0135, 0.0, -0.8376, 0.0, 0.5707, 18.0, -0.1448, -8.4795)
+
+[node name="Roca8" parent="." instance=ExtResource("e19")]
+transform = Transform3D(-0.9191, 0.0, 0.2788, 0.0, 0.9604, 0.0, -0.2788, 0.0, -0.9191, 27.0, -0.1498, -8.2808)
+
+[node name="Roca9" parent="." instance=ExtResource("e18")]
+transform = Transform3D(0.5723, 0.0, 0.7992, 0.0, 0.983, 0.0, -0.7992, 0.0, 0.5723, 33.0, -0.1492, -8.8766)
+
+[node name="Orilla" type="Area3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -4.0, 1.5, -4.5)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="Forma" type="CollisionShape3D" parent="Orilla"]
+shape = SubResource("BoxShape3D_16")

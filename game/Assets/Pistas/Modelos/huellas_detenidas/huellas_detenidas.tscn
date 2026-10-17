@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_tierra_color.jpg" id="1_xegqx"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_tierra_normal.jpg" id="2_vmelj"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Lago/Texturas/huella_pezuna.png" id="3_srfwa"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ypyb3"]
+albedo_texture = ExtResource("1_xegqx")
+roughness = 0.95
+normal_enabled = true
+normal_texture = ExtResource("2_vmelj")
+uv1_scale = Vector3(0.6, 0.6, 0.6)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_pap73"]
+size = Vector3(0.9, 0.06, 2.2)
+
+[node name="HuellasDetenidas" type="Node3D" unique_id=412226039]
+
+[node name="Lodo" type="MeshInstance3D" parent="." unique_id=1433053142]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+material_override = SubResource("StandardMaterial3D_ypyb3")
+mesh = SubResource("BoxMesh_pap73")
+
+[node name="Huella0" type="Decal" parent="." unique_id=902901574]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.14, 0.06, 0.75)
+size = Vector3(0.24, 0.2, 0.3)
+texture_albedo = ExtResource("3_srfwa")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Huella1" type="Decal" parent="." unique_id=1948773077]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.14, 0.06, 0.09)
+size = Vector3(0.24, 0.2, 0.3)
+texture_albedo = ExtResource("3_srfwa")
+upper_fade = 0.2
+lower_fade = 0.2

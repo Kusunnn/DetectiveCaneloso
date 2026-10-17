@@ -1,0 +1,1128 @@
+[gd_scene load_steps=121 format=3]
+
+[ext_resource type="Shader" path="res://Escenas/Caso1/cielo_noche.gdshader" id="e1"]
+[ext_resource type="Shader" path="res://Escenas/Caso1/Lago/suelo_lago.gdshader" id="e2"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_bosque_color.jpg" id="e3"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_bosque_normal.jpg" id="e4"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_tierra_color.jpg" id="e5"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_tierra_normal.jpg" id="e6"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_pasto_color.jpg" id="e7"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_pasto_normal.jpg" id="e8"]
+[ext_resource type="ArrayMesh" path="res://Escenas/Caso1/Lago/terreno_lago.res" id="e9"]
+[ext_resource type="HeightMapShape3D" path="res://Escenas/Caso1/Lago/terreno_lago_forma.res" id="e10"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/SembradoMultiMesh.cs" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineTallA.glb" id="e12"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineTallB.glb" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineTallC.glb" id="e14"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineTallD.glb" id="e15"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineRoundA.glb" id="e16"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineRoundB.glb" id="e17"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineDefaultA.glb" id="e18"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineDefaultB.glb" id="e19"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineSmallA.glb" id="e20"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineSmallB.glb" id="e21"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/tree_pineGroundA.glb" id="e22"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/plant_bushLarge.glb" id="e23"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/plant_bush.glb" id="e24"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/grass.glb" id="e25"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/grass_large.glb" id="e26"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/grass_leafs.glb" id="e27"]
+[ext_resource type="Shader" path="res://Escenas/Caso1/Lago/viento_juncos.gdshader" id="e28"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/Lago/zona_sendero.tscn" id="e29"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/Lago/zona_bosque.tscn" id="e30"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/Lago/zona_colina.tscn" id="e31"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/Lago/zona_orilla.tscn" id="e32"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/Lago/zona_embarcadero.tscn" id="e33"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/Lago/zona_cobertizo.tscn" id="e34"]
+[ext_resource type="PackedScene" path="res://Escenas/Caso1/Lago/zona_lago.tscn" id="e35"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Particulas/light_01.png" id="e36"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e37"]
+[ext_resource type="PackedScene" path="res://hud/hud.tscn" id="e38"]
+[ext_resource type="PackedScene" path="res://Escenas/Interrogatorio/jugador.tscn" id="e39"]
+[ext_resource type="PackedScene" path="res://Escenas/Menus/menu_pausa.tscn" id="e40"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/VentanaDialogo.cs" id="e41"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/TableroDeduccion.cs" id="e42"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/Musica/investigacion.ogg" id="e43"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="e44"]
+[ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="e45"]
+[ext_resource type="Script" path="res://Escenas/Caso1/Lago/Caso1Lago.cs" id="e46"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
+shader = ExtResource("e1")
+
+[sub_resource type="Sky" id="Sky_2"]
+sky_material = SubResource("ShaderMaterial_1")
+radiance_size = 1
+
+[sub_resource type="Environment" id="Environment_3"]
+background_mode = 2
+sky = SubResource("Sky_2")
+ambient_light_source = 2
+ambient_light_color = Color(0.3, 0.36, 0.55, 1.0)
+ambient_light_energy = 0.42
+reflected_light_source = 1
+tonemap_mode = 2
+tonemap_exposure = 1.05
+tonemap_white = 6.0
+ssao_enabled = true
+ssao_radius = 1.4
+ssao_intensity = 1.6
+glow_enabled = true
+glow_intensity = 0.55
+glow_strength = 0.9
+glow_bloom = 0.08
+glow_hdr_threshold = 0.85
+fog_enabled = true
+fog_light_color = Color(0.1, 0.13, 0.2, 1.0)
+fog_density = 0.008
+fog_sky_affect = 0.35
+fog_height = 0.4
+fog_height_density = 0.08
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.012
+volumetric_fog_albedo = Color(0.55, 0.62, 0.78, 1.0)
+volumetric_fog_emission = Color(0.01, 0.015, 0.03, 1.0)
+volumetric_fog_length = 48.0
+volumetric_fog_detail_spread = 2.0
+volumetric_fog_ambient_inject = 0.25
+adjustment_enabled = true
+adjustment_saturation = 0.85
+adjustment_contrast = 1.05
+
+[sub_resource type="FogMaterial" id="FogMaterial_4"]
+density = 0.2
+albedo = Color(0.6, 0.66, 0.8, 1.0)
+height_falloff = 1.4
+edge_fade = 0.35
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5"]
+shader = ExtResource("e2")
+shader_parameter/bosque_color = ExtResource("e3")
+shader_parameter/bosque_normal = ExtResource("e4")
+shader_parameter/tierra_color = ExtResource("e5")
+shader_parameter/tierra_normal = ExtResource("e6")
+shader_parameter/pasto_color = ExtResource("e7")
+shader_parameter/pasto_normal = ExtResource("e8")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6"]
+shader = ExtResource("e28")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7"]
+size = Vector3(1.0, 8.0, 79.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8"]
+size = Vector3(1.0, 8.0, 79.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_9"]
+size = Vector3(98.0, 8.0, 1.0)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_10"]
+size = Vector3(3.162, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_11"]
+size = Vector3(3.2187, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_12"]
+size = Vector3(3.2532, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_13"]
+size = Vector3(3.226, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_14"]
+size = Vector3(3.1744, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_15"]
+size = Vector3(3.1506, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
+size = Vector3(3.1531, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_17"]
+size = Vector3(3.1523, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_18"]
+size = Vector3(3.1514, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
+size = Vector3(3.1731, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
+size = Vector3(3.2025, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_21"]
+size = Vector3(3.1981, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_22"]
+size = Vector3(3.162, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
+size = Vector3(3.1546, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_24"]
+size = Vector3(3.2102, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_25"]
+size = Vector3(3.2757, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_26"]
+size = Vector3(3.2783, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_27"]
+size = Vector3(3.2178, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_28"]
+size = Vector3(3.1611, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_29"]
+size = Vector3(1.7501, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_30"]
+size = Vector3(1.7575, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_31"]
+size = Vector3(3.1586, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_32"]
+size = Vector3(3.15, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33"]
+size = Vector3(3.1597, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_34"]
+size = Vector3(3.1723, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_35"]
+size = Vector3(3.162, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_36"]
+size = Vector3(3.1503, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_37"]
+size = Vector3(3.1849, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_38"]
+size = Vector3(3.2568, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_39"]
+size = Vector3(3.294, 6.0, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_40"]
+size = Vector3(0.2, 3.0, 26.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_41"]
+size = Vector3(0.2, 3.0, 26.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_42"]
+size = Vector3(2.8, 3.0, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_43"]
+size = Vector3(4.5, 6.0, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_44"]
+offsets = PackedFloat32Array(0.0, 0.3, 0.7, 1.0)
+colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_45"]
+gradient = SubResource("Gradient_44")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_46"]
+emission_shape = 3
+emission_box_extents = Vector3(10.0, 0.9, 2.5)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.02
+initial_velocity_max = 0.1
+gravity = Vector3(0.0, 0.0, 0.0)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.8
+turbulence_noise_scale = 4.0
+color_ramp = SubResource("GradientTexture1D_45")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_47"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.75, 1.0, 0.45, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+albedo_texture = ExtResource("e36")
+blend_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_48"]
+size = Vector2(0.12, 0.12)
+material = SubResource("StandardMaterial3D_47")
+
+[sub_resource type="Gradient" id="Gradient_49"]
+offsets = PackedFloat32Array(0.0, 0.3, 0.7, 1.0)
+colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_50"]
+gradient = SubResource("Gradient_49")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_51"]
+emission_shape = 3
+emission_box_extents = Vector3(8.0, 0.9, 2.5)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.02
+initial_velocity_max = 0.1
+gravity = Vector3(0.0, 0.0, 0.0)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.8
+turbulence_noise_scale = 4.0
+color_ramp = SubResource("GradientTexture1D_50")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_52"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.75, 1.0, 0.45, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+albedo_texture = ExtResource("e36")
+blend_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_53"]
+size = Vector2(0.12, 0.12)
+material = SubResource("StandardMaterial3D_52")
+
+[sub_resource type="Gradient" id="Gradient_54"]
+offsets = PackedFloat32Array(0.0, 0.3, 0.7, 1.0)
+colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_55"]
+gradient = SubResource("Gradient_54")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_56"]
+emission_shape = 3
+emission_box_extents = Vector3(8.0, 1.0, 8.0)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.02
+initial_velocity_max = 0.1
+gravity = Vector3(0.0, 0.0, 0.0)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.8
+turbulence_noise_scale = 4.0
+color_ramp = SubResource("GradientTexture1D_55")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_57"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.75, 1.0, 0.45, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+albedo_texture = ExtResource("e36")
+blend_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_58"]
+size = Vector2(0.12, 0.12)
+material = SubResource("StandardMaterial3D_57")
+
+[sub_resource type="Gradient" id="Gradient_59"]
+offsets = PackedFloat32Array(0.0, 0.3, 0.7, 1.0)
+colors = PackedColorArray(1.0, 1.0, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.7, 1.0, 1.0, 1.0, 0.0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_60"]
+gradient = SubResource("Gradient_59")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_61"]
+emission_shape = 3
+emission_box_extents = Vector3(5.0, 1.0, 5.0)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.02
+initial_velocity_max = 0.1
+gravity = Vector3(0.0, 0.0, 0.0)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.8
+turbulence_noise_scale = 4.0
+color_ramp = SubResource("GradientTexture1D_60")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_62"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.75, 1.0, 0.45, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+albedo_texture = ExtResource("e36")
+blend_mode = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_63"]
+size = Vector2(0.12, 0.12)
+material = SubResource("StandardMaterial3D_62")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_64"]
+emission_shape = 3
+emission_box_extents = Vector3(14.0, 3.0, 14.0)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.0
+initial_velocity_max = 0.1
+gravity = Vector3(0.12, -0.45, 0.05)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.6
+turbulence_noise_scale = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_65"]
+transparency = 1
+shading_mode = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.42, 0.25, 0.1, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_66"]
+size = Vector2(0.07, 0.07)
+material = SubResource("StandardMaterial3D_65")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_67"]
+emission_shape = 3
+emission_box_extents = Vector3(8.0, 3.0, 24.0)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.0
+initial_velocity_max = 0.1
+gravity = Vector3(0.12, -0.45, 0.05)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.6
+turbulence_noise_scale = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_68"]
+transparency = 1
+shading_mode = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.42, 0.25, 0.1, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_69"]
+size = Vector2(0.07, 0.07)
+material = SubResource("StandardMaterial3D_68")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_70"]
+emission_shape = 3
+emission_box_extents = Vector3(10.0, 3.0, 10.0)
+direction = Vector3(0.0, 1.0, 0.0)
+spread = 180
+initial_velocity_min = 0.0
+initial_velocity_max = 0.1
+gravity = Vector3(0.12, -0.45, 0.05)
+scale_min = 1.0
+scale_max = 2.0
+angle_min = -180.0
+angle_max = 180.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.6
+turbulence_noise_scale = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_71"]
+transparency = 1
+shading_mode = 1
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.42, 0.25, 0.1, 1.0)
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+
+[sub_resource type="QuadMesh" id="QuadMesh_72"]
+size = Vector2(0.07, 0.07)
+material = SubResource("StandardMaterial3D_71")
+
+[sub_resource type="Gradient" id="Gradient_73"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0.2, 0, 0, 0, 0.66)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_74"]
+gradient = SubResource("Gradient_73")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1.05, 0.5)
+
+[node name="EscenarioLago" type="Node3D"]
+
+[node name="Entorno" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_3")
+
+[node name="Luna" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.9397, 0.1812, -0.29, 0.0, 0.848, 0.5299, 0.342, 0.498, -0.7969, 0.0, 30.0, 0.0)
+light_color = Color(0.55, 0.66, 1.0, 1.0)
+light_energy = 0.42
+shadow_enabled = true
+directional_shadow_mode = 1
+directional_shadow_max_distance = 40.0
+sky_mode = 0
+
+[node name="NieblaBaja" type="FogVolume" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -5.0, 0.7, 25.0)
+size = Vector3(100.0, 2.2, 76.0)
+material = SubResource("FogMaterial_4")
+
+[node name="Terreno" type="MeshInstance3D" parent="." groups=["auditoria_estructura", "auditoria_terreno"]]
+mesh = ExtResource("e9")
+material_override = SubResource("ShaderMaterial_5")
+
+[node name="ColTerreno" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColTerreno"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 2.5)
+shape = ExtResource("e10")
+
+[node name="Pinos" type="Node3D" parent="."]
+script = ExtResource("e11")
+Modelos = Array[PackedScene]([ExtResource("e12"), ExtResource("e13"), ExtResource("e14"), ExtResource("e15"), ExtResource("e16"), ExtResource("e17"), ExtResource("e18")])
+Cantidad = 1400
+Semilla = 31
+Area = Rect2(-100, -70, 200, 160)
+Huecos = Array[Rect2]([Rect2(-52, -14, 96, 77), Rect2(40, -62, 9, 46)])
+HuecosRedondos = Array[Vector3]([Vector3(45.5, -48.0, 10.0), Vector3(-21.0, 32.0, 11.0), Vector3(22.0, -3.5, 6.5), Vector3(-22.0, -4.5, 5.0), Vector3(0.0, 58.0, 6.0), Vector3(-5.2, 55.5, 4.0), Vector3(30.0, 22.0, 8.5), Vector3(8.0, -6.0, 4.0), Vector3(22.0, -3.5, 7.5), Vector3(4.3, 18.6, 3.0), Vector3(-8.0, 31.6, 3.0), Vector3(-5.2, 55.5, 5.0), Vector3(28.53, 19.87, 3.2), Vector3(27.07, 17.73, 3.2), Vector3(25.6, 15.6, 3.2), Vector3(24.13, 13.47, 3.2), Vector3(22.67, 11.33, 3.2), Vector3(21.2, 9.2, 3.2), Vector3(19.73, 7.07, 3.2), Vector3(18.27, 4.93, 3.2), Vector3(16.8, 2.8, 3.2), Vector3(15.33, 0.67, 3.2), Vector3(13.87, -1.47, 3.2), Vector3(12.4, -3.6, 3.2), Vector3(10.93, -5.73, 3.2), Vector3(9.47, -7.87, 3.2), Vector3(8.0, -10.0, 3.2), Vector3(30.56, 19.52, 3.2), Vector3(31.12, 17.04, 3.2), Vector3(31.68, 14.56, 3.2), Vector3(32.24, 12.08, 3.2), Vector3(32.8, 9.6, 3.2), Vector3(33.36, 7.12, 3.2), Vector3(33.92, 4.64, 3.2), Vector3(34.48, 2.16, 3.2), Vector3(35.04, -0.32, 3.2), Vector3(35.6, -2.8, 3.2), Vector3(36.16, -5.28, 3.2), Vector3(36.72, -7.76, 3.2), Vector3(37.28, -10.24, 3.2), Vector3(37.84, -12.72, 3.2), Vector3(38.4, -15.2, 3.2), Vector3(38.96, -17.68, 3.2), Vector3(39.52, -20.16, 3.2), Vector3(40.08, -22.64, 3.2), Vector3(40.64, -25.12, 3.2), Vector3(41.2, -27.6, 3.2), Vector3(41.76, -30.08, 3.2), Vector3(42.32, -32.56, 3.2), Vector3(42.88, -35.04, 3.2), Vector3(43.44, -37.52, 3.2), Vector3(44.0, -40.0, 3.2), Vector3(27.94, 20.35, 3.2), Vector3(25.88, 18.71, 3.2), Vector3(23.82, 17.06, 3.2), Vector3(21.76, 15.41, 3.2), Vector3(19.71, 13.76, 3.2), Vector3(17.65, 12.12, 3.2), Vector3(15.59, 10.47, 3.2), Vector3(13.53, 8.82, 3.2), Vector3(11.47, 7.18, 3.2), Vector3(9.41, 5.53, 3.2), Vector3(7.35, 3.88, 3.2), Vector3(5.29, 2.24, 3.2), Vector3(3.24, 0.59, 3.2), Vector3(1.18, -1.06, 3.2), Vector3(-0.88, -2.71, 3.2), Vector3(-2.94, -4.35, 3.2), Vector3(-5.0, -6.0, 3.2)])
+Escala = Vector2(6.5, 9.5)
+EstiramientoAlto = 1.25
+ProyectarSombras = false
+AlturaMinima = 0.02
+Alturas = ExtResource("e10")
+OrigenAlturas = Vector3(0.0, 0.0, 2.5)
+
+[node name="PinosInterior" type="Node3D" parent="."]
+script = ExtResource("e11")
+Modelos = Array[PackedScene]([ExtResource("e12"), ExtResource("e13"), ExtResource("e14"), ExtResource("e15"), ExtResource("e16"), ExtResource("e17"), ExtResource("e18")])
+Cantidad = 420
+Semilla = 32
+Area = Rect2(-52, -14, 96, 77)
+HuecosRedondos = Array[Vector3]([Vector3(0.0, 63.0, 3.4), Vector3(0.0, 61.38, 3.4), Vector3(0.0, 59.75, 3.4), Vector3(0.0, 58.12, 3.4), Vector3(0.0, 56.5, 3.4), Vector3(0.0, 54.88, 3.4), Vector3(0.0, 53.25, 3.4), Vector3(0.0, 51.62, 3.4), Vector3(0.0, 50.0, 3.4), Vector3(0.0, 50.0, 3.4), Vector3(-0.33, 48.33, 3.4), Vector3(-0.67, 46.67, 3.4), Vector3(-1.0, 45.0, 3.4), Vector3(-1.33, 43.33, 3.4), Vector3(-1.67, 41.67, 3.4), Vector3(-2.0, 40.0, 3.4), Vector3(-2.0, 40.0, 3.4), Vector3(-1.83, 38.5, 3.4), Vector3(-1.67, 37.0, 3.4), Vector3(-1.5, 35.5, 3.4), Vector3(-1.33, 34.0, 3.4), Vector3(-1.17, 32.5, 3.4), Vector3(-1.0, 31.0, 3.4), Vector3(-1.0, 31.0, 3.4), Vector3(-0.33, 29.5, 3.4), Vector3(0.33, 28.0, 3.4), Vector3(1.0, 26.5, 3.4), Vector3(1.67, 25.0, 3.4), Vector3(2.33, 23.5, 3.4), Vector3(3.0, 22.0, 3.4), Vector3(3.0, 22.0, 3.4), Vector3(3.33, 20.33, 3.4), Vector3(3.67, 18.67, 3.4), Vector3(4.0, 17.0, 3.4), Vector3(4.33, 15.33, 3.4), Vector3(4.67, 13.67, 3.4), Vector3(5.0, 12.0, 3.4), Vector3(5.0, 12.0, 3.4), Vector3(5.33, 10.33, 3.4), Vector3(5.67, 8.67, 3.4), Vector3(6.0, 7.0, 3.4), Vector3(6.33, 5.33, 3.4), Vector3(6.67, 3.67, 3.4), Vector3(7.0, 2.0, 3.4), Vector3(7.0, 2.0, 3.4), Vector3(7.25, 0.25, 3.4), Vector3(7.5, -1.5, 3.4), Vector3(7.75, -3.25, 3.4), Vector3(8.0, -5.0, 3.4), Vector3(-1.0, 31.0, 2.9), Vector3(-2.75, 31.12, 2.9), Vector3(-4.5, 31.25, 2.9), Vector3(-6.25, 31.38, 2.9), Vector3(-8.0, 31.5, 2.9), Vector3(-8.0, 31.5, 2.9), Vector3(-9.75, 31.62, 2.9), Vector3(-11.5, 31.75, 2.9), Vector3(-13.25, 31.88, 2.9), Vector3(-15.0, 32.0, 2.9), Vector3(3.0, 22.0, 3.0), Vector3(4.5, 21.92, 3.0), Vector3(6.0, 21.83, 3.0), Vector3(7.5, 21.75, 3.0), Vector3(9.0, 21.67, 3.0), Vector3(10.5, 21.58, 3.0), Vector3(12.0, 21.5, 3.0), Vector3(12.0, 21.5, 3.0), Vector3(13.75, 21.62, 3.0), Vector3(15.5, 21.75, 3.0), Vector3(17.25, 21.88, 3.0), Vector3(19.0, 22.0, 3.0), Vector3(19.0, 22.0, 3.0), Vector3(20.67, 22.17, 3.0), Vector3(22.33, 22.33, 3.0), Vector3(24.0, 22.5, 3.0), Vector3(24.0, 22.5, 3.0), Vector3(26.0, 22.25, 3.0), Vector3(28.0, 22.0, 3.0), Vector3(7.0, 2.0, 3.0), Vector3(5.25, 1.5, 3.0), Vector3(3.5, 1.0, 3.0), Vector3(1.75, 0.5, 3.0), Vector3(0.0, 0.0, 3.0), Vector3(0.0, 0.0, 3.0), Vector3(-1.6, -0.4, 3.0), Vector3(-3.2, -0.8, 3.0), Vector3(-4.8, -1.2, 3.0), Vector3(-6.4, -1.6, 3.0), Vector3(-8.0, -2.0, 3.0), Vector3(-8.0, -2.0, 3.0), Vector3(-9.6, -2.2, 3.0), Vector3(-11.2, -2.4, 3.0), Vector3(-12.8, -2.6, 3.0), Vector3(-14.4, -2.8, 3.0), Vector3(-16.0, -3.0, 3.0), Vector3(-16.0, -3.0, 3.0), Vector3(-17.5, -2.75, 3.0), Vector3(-19.0, -2.5, 3.0), Vector3(-20.5, -2.25, 3.0), Vector3(-22.0, -2.0, 3.0), Vector3(7.0, 2.0, 3.1), Vector3(8.67, 1.67, 3.1), Vector3(10.33, 1.33, 3.1), Vector3(12.0, 1.0, 3.1), Vector3(12.0, 1.0, 3.1), Vector3(13.67, 0.33, 3.1), Vector3(15.33, -0.33, 3.1), Vector3(17.0, -1.0, 3.1), Vector3(17.0, -1.0, 3.1), Vector3(19.0, -3.0, 3.1), Vector3(-21.0, 32.0, 11.0), Vector3(22.0, -3.5, 6.5), Vector3(-22.0, -4.5, 5.0), Vector3(0.0, 58.0, 6.0), Vector3(-5.2, 55.5, 4.0), Vector3(30.0, 22.0, 8.5), Vector3(8.0, -6.0, 4.0), Vector3(22.0, -3.5, 7.5), Vector3(4.3, 18.6, 3.0), Vector3(-8.0, 31.6, 3.0), Vector3(-5.2, 55.5, 5.0), Vector3(28.53, 19.87, 3.2), Vector3(27.07, 17.73, 3.2), Vector3(25.6, 15.6, 3.2), Vector3(24.13, 13.47, 3.2), Vector3(22.67, 11.33, 3.2), Vector3(21.2, 9.2, 3.2), Vector3(19.73, 7.07, 3.2), Vector3(18.27, 4.93, 3.2), Vector3(16.8, 2.8, 3.2), Vector3(15.33, 0.67, 3.2), Vector3(13.87, -1.47, 3.2), Vector3(12.4, -3.6, 3.2), Vector3(10.93, -5.73, 3.2), Vector3(9.47, -7.87, 3.2), Vector3(8.0, -10.0, 3.2), Vector3(30.56, 19.52, 3.2), Vector3(31.12, 17.04, 3.2), Vector3(31.68, 14.56, 3.2), Vector3(32.24, 12.08, 3.2), Vector3(32.8, 9.6, 3.2), Vector3(33.36, 7.12, 3.2), Vector3(33.92, 4.64, 3.2), Vector3(34.48, 2.16, 3.2), Vector3(35.04, -0.32, 3.2), Vector3(35.6, -2.8, 3.2), Vector3(36.16, -5.28, 3.2), Vector3(36.72, -7.76, 3.2), Vector3(37.28, -10.24, 3.2), Vector3(37.84, -12.72, 3.2), Vector3(38.4, -15.2, 3.2), Vector3(38.96, -17.68, 3.2), Vector3(39.52, -20.16, 3.2), Vector3(40.08, -22.64, 3.2), Vector3(40.64, -25.12, 3.2), Vector3(41.2, -27.6, 3.2), Vector3(41.76, -30.08, 3.2), Vector3(42.32, -32.56, 3.2), Vector3(42.88, -35.04, 3.2), Vector3(43.44, -37.52, 3.2), Vector3(44.0, -40.0, 3.2), Vector3(27.94, 20.35, 3.2), Vector3(25.88, 18.71, 3.2), Vector3(23.82, 17.06, 3.2), Vector3(21.76, 15.41, 3.2), Vector3(19.71, 13.76, 3.2), Vector3(17.65, 12.12, 3.2), Vector3(15.59, 10.47, 3.2), Vector3(13.53, 8.82, 3.2), Vector3(11.47, 7.18, 3.2), Vector3(9.41, 5.53, 3.2), Vector3(7.35, 3.88, 3.2), Vector3(5.29, 2.24, 3.2), Vector3(3.24, 0.59, 3.2), Vector3(1.18, -1.06, 3.2), Vector3(-0.88, -2.71, 3.2), Vector3(-2.94, -4.35, 3.2), Vector3(-5.0, -6.0, 3.2)])
+Escala = Vector2(6, 9)
+EstiramientoAlto = 1.2
+ProyectarSombras = false
+RadioTronco = 0.42
+AltoTronco = 4.0
+ZonaColision = Rect2(-52, -14, 96, 77)
+CapaColision = 1
+AlturaMinima = 0.03
+Alturas = ExtResource("e10")
+OrigenAlturas = Vector3(0.0, 0.0, 2.5)
+
+[node name="PinosLejanos" type="Node3D" parent="."]
+script = ExtResource("e11")
+Modelos = Array[PackedScene]([ExtResource("e13"), ExtResource("e15"), ExtResource("e19")])
+Cantidad = 320
+Semilla = 33
+Area = Rect2(-130, -152, 260, 18)
+Escala = Vector2(8, 11)
+ProyectarSombras = false
+
+[node name="Matorral" type="Node3D" parent="."]
+script = ExtResource("e11")
+Modelos = Array[PackedScene]([ExtResource("e20"), ExtResource("e21"), ExtResource("e22"), ExtResource("e23"), ExtResource("e24")])
+Cantidad = 380
+Semilla = 34
+Area = Rect2(-52, -14, 96, 77)
+HuecosRedondos = Array[Vector3]([Vector3(0.0, 63.0, 3.4), Vector3(0.0, 61.38, 3.4), Vector3(0.0, 59.75, 3.4), Vector3(0.0, 58.12, 3.4), Vector3(0.0, 56.5, 3.4), Vector3(0.0, 54.88, 3.4), Vector3(0.0, 53.25, 3.4), Vector3(0.0, 51.62, 3.4), Vector3(0.0, 50.0, 3.4), Vector3(0.0, 50.0, 3.4), Vector3(-0.33, 48.33, 3.4), Vector3(-0.67, 46.67, 3.4), Vector3(-1.0, 45.0, 3.4), Vector3(-1.33, 43.33, 3.4), Vector3(-1.67, 41.67, 3.4), Vector3(-2.0, 40.0, 3.4), Vector3(-2.0, 40.0, 3.4), Vector3(-1.83, 38.5, 3.4), Vector3(-1.67, 37.0, 3.4), Vector3(-1.5, 35.5, 3.4), Vector3(-1.33, 34.0, 3.4), Vector3(-1.17, 32.5, 3.4), Vector3(-1.0, 31.0, 3.4), Vector3(-1.0, 31.0, 3.4), Vector3(-0.33, 29.5, 3.4), Vector3(0.33, 28.0, 3.4), Vector3(1.0, 26.5, 3.4), Vector3(1.67, 25.0, 3.4), Vector3(2.33, 23.5, 3.4), Vector3(3.0, 22.0, 3.4), Vector3(3.0, 22.0, 3.4), Vector3(3.33, 20.33, 3.4), Vector3(3.67, 18.67, 3.4), Vector3(4.0, 17.0, 3.4), Vector3(4.33, 15.33, 3.4), Vector3(4.67, 13.67, 3.4), Vector3(5.0, 12.0, 3.4), Vector3(5.0, 12.0, 3.4), Vector3(5.33, 10.33, 3.4), Vector3(5.67, 8.67, 3.4), Vector3(6.0, 7.0, 3.4), Vector3(6.33, 5.33, 3.4), Vector3(6.67, 3.67, 3.4), Vector3(7.0, 2.0, 3.4), Vector3(7.0, 2.0, 3.4), Vector3(7.25, 0.25, 3.4), Vector3(7.5, -1.5, 3.4), Vector3(7.75, -3.25, 3.4), Vector3(8.0, -5.0, 3.4), Vector3(-1.0, 31.0, 2.9), Vector3(-2.75, 31.12, 2.9), Vector3(-4.5, 31.25, 2.9), Vector3(-6.25, 31.38, 2.9), Vector3(-8.0, 31.5, 2.9), Vector3(-8.0, 31.5, 2.9), Vector3(-9.75, 31.62, 2.9), Vector3(-11.5, 31.75, 2.9), Vector3(-13.25, 31.88, 2.9), Vector3(-15.0, 32.0, 2.9), Vector3(3.0, 22.0, 3.0), Vector3(4.5, 21.92, 3.0), Vector3(6.0, 21.83, 3.0), Vector3(7.5, 21.75, 3.0), Vector3(9.0, 21.67, 3.0), Vector3(10.5, 21.58, 3.0), Vector3(12.0, 21.5, 3.0), Vector3(12.0, 21.5, 3.0), Vector3(13.75, 21.62, 3.0), Vector3(15.5, 21.75, 3.0), Vector3(17.25, 21.88, 3.0), Vector3(19.0, 22.0, 3.0), Vector3(19.0, 22.0, 3.0), Vector3(20.67, 22.17, 3.0), Vector3(22.33, 22.33, 3.0), Vector3(24.0, 22.5, 3.0), Vector3(24.0, 22.5, 3.0), Vector3(26.0, 22.25, 3.0), Vector3(28.0, 22.0, 3.0), Vector3(7.0, 2.0, 3.0), Vector3(5.25, 1.5, 3.0), Vector3(3.5, 1.0, 3.0), Vector3(1.75, 0.5, 3.0), Vector3(0.0, 0.0, 3.0), Vector3(0.0, 0.0, 3.0), Vector3(-1.6, -0.4, 3.0), Vector3(-3.2, -0.8, 3.0), Vector3(-4.8, -1.2, 3.0), Vector3(-6.4, -1.6, 3.0), Vector3(-8.0, -2.0, 3.0), Vector3(-8.0, -2.0, 3.0), Vector3(-9.6, -2.2, 3.0), Vector3(-11.2, -2.4, 3.0), Vector3(-12.8, -2.6, 3.0), Vector3(-14.4, -2.8, 3.0), Vector3(-16.0, -3.0, 3.0), Vector3(-16.0, -3.0, 3.0), Vector3(-17.5, -2.75, 3.0), Vector3(-19.0, -2.5, 3.0), Vector3(-20.5, -2.25, 3.0), Vector3(-22.0, -2.0, 3.0), Vector3(7.0, 2.0, 3.1), Vector3(8.67, 1.67, 3.1), Vector3(10.33, 1.33, 3.1), Vector3(12.0, 1.0, 3.1), Vector3(12.0, 1.0, 3.1), Vector3(13.67, 0.33, 3.1), Vector3(15.33, -0.33, 3.1), Vector3(17.0, -1.0, 3.1), Vector3(17.0, -1.0, 3.1), Vector3(19.0, -3.0, 3.1), Vector3(-21.0, 32.0, 11.0), Vector3(22.0, -3.5, 6.5), Vector3(-22.0, -4.5, 5.0), Vector3(0.0, 58.0, 6.0), Vector3(-5.2, 55.5, 4.0), Vector3(30.0, 22.0, 8.5), Vector3(8.0, -6.0, 4.0), Vector3(22.0, -3.5, 7.5), Vector3(4.3, 18.6, 3.0), Vector3(-8.0, 31.6, 3.0), Vector3(-5.2, 55.5, 5.0), Vector3(28.53, 19.87, 3.2), Vector3(27.07, 17.73, 3.2), Vector3(25.6, 15.6, 3.2), Vector3(24.13, 13.47, 3.2), Vector3(22.67, 11.33, 3.2), Vector3(21.2, 9.2, 3.2), Vector3(19.73, 7.07, 3.2), Vector3(18.27, 4.93, 3.2), Vector3(16.8, 2.8, 3.2), Vector3(15.33, 0.67, 3.2), Vector3(13.87, -1.47, 3.2), Vector3(12.4, -3.6, 3.2), Vector3(10.93, -5.73, 3.2), Vector3(9.47, -7.87, 3.2), Vector3(8.0, -10.0, 3.2), Vector3(30.56, 19.52, 3.2), Vector3(31.12, 17.04, 3.2), Vector3(31.68, 14.56, 3.2), Vector3(32.24, 12.08, 3.2), Vector3(32.8, 9.6, 3.2), Vector3(33.36, 7.12, 3.2), Vector3(33.92, 4.64, 3.2), Vector3(34.48, 2.16, 3.2), Vector3(35.04, -0.32, 3.2), Vector3(35.6, -2.8, 3.2), Vector3(36.16, -5.28, 3.2), Vector3(36.72, -7.76, 3.2), Vector3(37.28, -10.24, 3.2), Vector3(37.84, -12.72, 3.2), Vector3(38.4, -15.2, 3.2), Vector3(38.96, -17.68, 3.2), Vector3(39.52, -20.16, 3.2), Vector3(40.08, -22.64, 3.2), Vector3(40.64, -25.12, 3.2), Vector3(41.2, -27.6, 3.2), Vector3(41.76, -30.08, 3.2), Vector3(42.32, -32.56, 3.2), Vector3(42.88, -35.04, 3.2), Vector3(43.44, -37.52, 3.2), Vector3(44.0, -40.0, 3.2), Vector3(27.94, 20.35, 3.2), Vector3(25.88, 18.71, 3.2), Vector3(23.82, 17.06, 3.2), Vector3(21.76, 15.41, 3.2), Vector3(19.71, 13.76, 3.2), Vector3(17.65, 12.12, 3.2), Vector3(15.59, 10.47, 3.2), Vector3(13.53, 8.82, 3.2), Vector3(11.47, 7.18, 3.2), Vector3(9.41, 5.53, 3.2), Vector3(7.35, 3.88, 3.2), Vector3(5.29, 2.24, 3.2), Vector3(3.24, 0.59, 3.2), Vector3(1.18, -1.06, 3.2), Vector3(-0.88, -2.71, 3.2), Vector3(-2.94, -4.35, 3.2), Vector3(-5.0, -6.0, 3.2)])
+Escala = Vector2(3.5, 6)
+ProyectarSombras = false
+AlturaMinima = 0.03
+Alturas = ExtResource("e10")
+OrigenAlturas = Vector3(0.0, 0.0, 2.5)
+
+[node name="Pasto" type="Node3D" parent="."]
+script = ExtResource("e11")
+Modelos = Array[PackedScene]([ExtResource("e25"), ExtResource("e26"), ExtResource("e27")])
+Cantidad = 1500
+Semilla = 35
+Area = Rect2(-52, -14, 96, 77)
+HuecosRedondos = Array[Vector3]([Vector3(0.0, 63.0, 2.2), Vector3(0.0, 61.38, 2.2), Vector3(0.0, 59.75, 2.2), Vector3(0.0, 58.12, 2.2), Vector3(0.0, 56.5, 2.2), Vector3(0.0, 54.88, 2.2), Vector3(0.0, 53.25, 2.2), Vector3(0.0, 51.62, 2.2), Vector3(0.0, 50.0, 2.2), Vector3(0.0, 50.0, 2.2), Vector3(-0.33, 48.33, 2.2), Vector3(-0.67, 46.67, 2.2), Vector3(-1.0, 45.0, 2.2), Vector3(-1.33, 43.33, 2.2), Vector3(-1.67, 41.67, 2.2), Vector3(-2.0, 40.0, 2.2), Vector3(-2.0, 40.0, 2.2), Vector3(-1.83, 38.5, 2.2), Vector3(-1.67, 37.0, 2.2), Vector3(-1.5, 35.5, 2.2), Vector3(-1.33, 34.0, 2.2), Vector3(-1.17, 32.5, 2.2), Vector3(-1.0, 31.0, 2.2), Vector3(-1.0, 31.0, 2.2), Vector3(-0.33, 29.5, 2.2), Vector3(0.33, 28.0, 2.2), Vector3(1.0, 26.5, 2.2), Vector3(1.67, 25.0, 2.2), Vector3(2.33, 23.5, 2.2), Vector3(3.0, 22.0, 2.2), Vector3(3.0, 22.0, 2.2), Vector3(3.33, 20.33, 2.2), Vector3(3.67, 18.67, 2.2), Vector3(4.0, 17.0, 2.2), Vector3(4.33, 15.33, 2.2), Vector3(4.67, 13.67, 2.2), Vector3(5.0, 12.0, 2.2), Vector3(5.0, 12.0, 2.2), Vector3(5.33, 10.33, 2.2), Vector3(5.67, 8.67, 2.2), Vector3(6.0, 7.0, 2.2), Vector3(6.33, 5.33, 2.2), Vector3(6.67, 3.67, 2.2), Vector3(7.0, 2.0, 2.2), Vector3(7.0, 2.0, 2.2), Vector3(7.25, 0.25, 2.2), Vector3(7.5, -1.5, 2.2), Vector3(7.75, -3.25, 2.2), Vector3(8.0, -5.0, 2.2), Vector3(-1.0, 31.0, 1.7), Vector3(-2.75, 31.12, 1.7), Vector3(-4.5, 31.25, 1.7), Vector3(-6.25, 31.38, 1.7), Vector3(-8.0, 31.5, 1.7), Vector3(-8.0, 31.5, 1.7), Vector3(-9.75, 31.62, 1.7), Vector3(-11.5, 31.75, 1.7), Vector3(-13.25, 31.88, 1.7), Vector3(-15.0, 32.0, 1.7), Vector3(3.0, 22.0, 1.8), Vector3(4.5, 21.92, 1.8), Vector3(6.0, 21.83, 1.8), Vector3(7.5, 21.75, 1.8), Vector3(9.0, 21.67, 1.8), Vector3(10.5, 21.58, 1.8), Vector3(12.0, 21.5, 1.8), Vector3(12.0, 21.5, 1.8), Vector3(13.75, 21.62, 1.8), Vector3(15.5, 21.75, 1.8), Vector3(17.25, 21.88, 1.8), Vector3(19.0, 22.0, 1.8), Vector3(19.0, 22.0, 1.8), Vector3(20.67, 22.17, 1.8), Vector3(22.33, 22.33, 1.8), Vector3(24.0, 22.5, 1.8), Vector3(24.0, 22.5, 1.8), Vector3(26.0, 22.25, 1.8), Vector3(28.0, 22.0, 1.8), Vector3(7.0, 2.0, 1.8), Vector3(5.25, 1.5, 1.8), Vector3(3.5, 1.0, 1.8), Vector3(1.75, 0.5, 1.8), Vector3(0.0, 0.0, 1.8), Vector3(0.0, 0.0, 1.8), Vector3(-1.6, -0.4, 1.8), Vector3(-3.2, -0.8, 1.8), Vector3(-4.8, -1.2, 1.8), Vector3(-6.4, -1.6, 1.8), Vector3(-8.0, -2.0, 1.8), Vector3(-8.0, -2.0, 1.8), Vector3(-9.6, -2.2, 1.8), Vector3(-11.2, -2.4, 1.8), Vector3(-12.8, -2.6, 1.8), Vector3(-14.4, -2.8, 1.8), Vector3(-16.0, -3.0, 1.8), Vector3(-16.0, -3.0, 1.8), Vector3(-17.5, -2.75, 1.8), Vector3(-19.0, -2.5, 1.8), Vector3(-20.5, -2.25, 1.8), Vector3(-22.0, -2.0, 1.8), Vector3(7.0, 2.0, 1.9), Vector3(8.67, 1.67, 1.9), Vector3(10.33, 1.33, 1.9), Vector3(12.0, 1.0, 1.9), Vector3(12.0, 1.0, 1.9), Vector3(13.67, 0.33, 1.9), Vector3(15.33, -0.33, 1.9), Vector3(17.0, -1.0, 1.9), Vector3(17.0, -1.0, 1.9), Vector3(19.0, -3.0, 1.9), Vector3(22.0, -3.5, 4.5), Vector3(-22.0, -4.5, 2.5)])
+Escala = Vector2(2.2, 3.4)
+ProyectarSombras = false
+AlturaMinima = -0.02
+Alturas = ExtResource("e10")
+OrigenAlturas = Vector3(0.0, 0.0, 2.5)
+
+[node name="Juncos" type="Node3D" parent="."]
+script = ExtResource("e11")
+Modelos = Array[PackedScene]([ExtResource("e26")])
+Cantidad = 520
+Semilla = 36
+Area = Rect2(-52, -15, 92, 10)
+HuecosRedondos = Array[Vector3]([Vector3(8.0, -8.0, 2.0), Vector3(-22.0, -4.5, 2.6), Vector3(-10.5, -4.0, 2.2), Vector3(10.05, -9.15, 1.0)])
+Escala = Vector2(3.2, 4.6)
+EstiramientoAlto = 1.6
+ProyectarSombras = false
+AlturaMinima = -0.45
+AlturaMaxima = -0.12
+MaterialCopias = SubResource("ShaderMaterial_6")
+Alturas = ExtResource("e10")
+OrigenAlturas = Vector3(0.0, 0.0, 2.5)
+
+[node name="Limites" type="Node3D" parent="." groups=["auditoria_invisible_ok"]]
+
+[node name="Oeste" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -52.5, 3.0, 24.5)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Oeste"]
+shape = SubResource("BoxShape3D_7")
+
+[node name="Este" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 44.5, 3.0, 24.5)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Este"]
+shape = SubResource("BoxShape3D_8")
+
+[node name="Sur" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -4.0, 3.0, 62.6)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Sur"]
+shape = SubResource("BoxShape3D_9")
+
+[node name="Orilla0" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.996, 0.0, 0.0891, 0.0, 1.0, 0.0, -0.0891, 0.0, 0.996, -50.5, 2.0, -8.4354)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla0"]
+shape = SubResource("BoxShape3D_10")
+
+[node name="Orilla1" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9776, 0.0, 0.2105, 0.0, 1.0, 0.0, -0.2105, 0.0, 0.9776, -47.5, 2.0, -8.8925)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla1"]
+shape = SubResource("BoxShape3D_11")
+
+[node name="Orilla2" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9667, 0.0, 0.2558, 0.0, 1.0, 0.0, -0.2558, 0.0, 0.9667, -44.5, 2.0, -9.6123)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla2"]
+shape = SubResource("BoxShape3D_12")
+
+[node name="Orilla3" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9753, 0.0, 0.2209, 0.0, 1.0, 0.0, -0.2209, 0.0, 0.9753, -41.5, 2.0, -10.349)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla3"]
+shape = SubResource("BoxShape3D_13")
+
+[node name="Orilla4" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9919, 0.0, 0.1268, 0.0, 1.0, 0.0, -0.1268, 0.0, 0.9919, -38.5, 2.0, -10.8805)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla4"]
+shape = SubResource("BoxShape3D_14")
+
+[node name="Orilla5" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9998, 0.0, 0.0197, 0.0, 1.0, 0.0, -0.0197, 0.0, 0.9998, -35.5, 2.0, -11.1018)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla5"]
+shape = SubResource("BoxShape3D_15")
+
+[node name="Orilla6" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.999, 0.0, -0.0456, 0.0, 1.0, 0.0, 0.0456, 0.0, 0.999, -32.5, 2.0, -11.0629)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla6"]
+shape = SubResource("BoxShape3D_16")
+
+[node name="Orilla7" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9992, 0.0, -0.0394, 0.0, 1.0, 0.0, 0.0394, 0.0, 0.9992, -29.5, 2.0, -10.9353)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla7"]
+shape = SubResource("BoxShape3D_17")
+
+[node name="Orilla8" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9995, 0.0, 0.0305, 0.0, 1.0, 0.0, -0.0305, 0.0, 0.9995, -26.5, 2.0, -10.9219)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla8"]
+shape = SubResource("BoxShape3D_18")
+
+[node name="Orilla9" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9924, 0.0, 0.1233, 0.0, 1.0, 0.0, -0.1233, 0.0, 0.9924, -23.5, 2.0, -11.1541)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla9"]
+shape = SubResource("BoxShape3D_19")
+
+[node name="Orilla10" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9828, 0.0, 0.1847, 0.0, 1.0, 0.0, -0.1847, 0.0, 0.9828, -20.5, 2.0, -11.6224)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla10"]
+shape = SubResource("BoxShape3D_20")
+
+[node name="Orilla11" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9842, 0.0, 0.1769, 0.0, 1.0, 0.0, -0.1769, 0.0, 0.9842, -17.5, 2.0, -12.1739)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla11"]
+shape = SubResource("BoxShape3D_21")
+
+[node name="Orilla12" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.996, 0.0, 0.0891, 0.0, 1.0, 0.0, -0.0891, 0.0, 0.996, -14.5, 2.0, -12.5777)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla12"]
+shape = SubResource("BoxShape3D_22")
+
+[node name="Orilla13" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9985, 0.0, -0.0553, 0.0, 1.0, 0.0, 0.0553, 0.0, 0.9985, -11.5, 2.0, -12.6288)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla13"]
+shape = SubResource("BoxShape3D_23")
+
+[node name="Orilla14" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9803, 0.0, -0.1973, 0.0, 1.0, 0.0, 0.1973, 0.0, 0.9803, -8.5, 2.0, -12.2439)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla14"]
+shape = SubResource("BoxShape3D_24")
+
+[node name="Orilla15" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9598, 0.0, -0.2807, 0.0, 1.0, 0.0, 0.2807, 0.0, 0.9598, -5.5, 2.0, -11.5032)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla15"]
+shape = SubResource("BoxShape3D_25")
+
+[node name="Orilla16" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.959, 0.0, -0.2834, 0.0, 1.0, 0.0, 0.2834, 0.0, 0.959, -2.5, 2.0, -10.6212)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla16"]
+shape = SubResource("BoxShape3D_26")
+
+[node name="Orilla17" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9779, 0.0, -0.2091, 0.0, 1.0, 0.0, 0.2091, 0.0, 0.9779, 0.5, 2.0, -9.8571)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla17"]
+shape = SubResource("BoxShape3D_27")
+
+[node name="Orilla18" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9963, 0.0, -0.0858, 0.0, 1.0, 0.0, 0.0858, 0.0, 0.9963, 3.5, 2.0, -9.4072)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla18"]
+shape = SubResource("BoxShape3D_28")
+
+[node name="Orilla19" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0096, 0.0, 1.0, 0.0, -0.0096, 0.0, 1.0, 5.8, 2.0, -9.2857)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla19"]
+shape = SubResource("BoxShape3D_29")
+
+[node name="Orilla20" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9953, 0.0, 0.0968, 0.0, 1.0, 0.0, -0.0968, 0.0, 0.9953, 10.2, 2.0, -9.5712)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla20"]
+shape = SubResource("BoxShape3D_30")
+
+[node name="Orilla21" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9971, 0.0, 0.0757, 0.0, 1.0, 0.0, -0.0757, 0.0, 0.9971, 12.5, 2.0, -9.7629)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla21"]
+shape = SubResource("BoxShape3D_31")
+
+[node name="Orilla22" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0029, 0.0, 1.0, 0.0, -0.0029, 0.0, 1.0, 15.5, 2.0, -9.8813)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla22"]
+shape = SubResource("BoxShape3D_32")
+
+[node name="Orilla23" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9968, 0.0, -0.0802, 0.0, 1.0, 0.0, 0.0802, 0.0, 0.9968, 18.5, 2.0, -9.765)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla23"]
+shape = SubResource("BoxShape3D_33")
+
+[node name="Orilla24" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9926, 0.0, -0.1213, 0.0, 1.0, 0.0, 0.1213, 0.0, 0.9926, 21.5, 2.0, -9.4609)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla24"]
+shape = SubResource("BoxShape3D_34")
+
+[node name="Orilla25" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.996, 0.0, -0.0892, 0.0, 1.0, 0.0, 0.0892, 0.0, 0.996, 24.5, 2.0, -9.1432)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla25"]
+shape = SubResource("BoxShape3D_35")
+
+[node name="Orilla26" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9999, 0.0, 0.0148, 0.0, 1.0, 0.0, -0.0148, 0.0, 0.9999, 27.5, 2.0, -9.031)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla26"]
+shape = SubResource("BoxShape3D_36")
+
+[node name="Orilla27" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9885, 0.0, 0.1513, 0.0, 1.0, 0.0, -0.1513, 0.0, 0.9885, 30.5, 2.0, -9.2827)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla27"]
+shape = SubResource("BoxShape3D_37")
+
+[node name="Orilla28" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9656, 0.0, 0.2599, 0.0, 1.0, 0.0, -0.2599, 0.0, 0.9656, 33.5, 2.0, -9.916)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla28"]
+shape = SubResource("BoxShape3D_38")
+
+[node name="Orilla29" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(0.9542, 0.0, 0.2991, 0.0, 1.0, 0.0, -0.2991, 0.0, 0.9542, 36.5, 2.0, -10.79)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla29"]
+shape = SubResource("BoxShape3D_39")
+
+[node name="MuelleOeste" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 6.7, 1.85, -20.95)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/MuelleOeste"]
+shape = SubResource("BoxShape3D_40")
+
+[node name="MuelleEste" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 9.3, 1.85, -20.95)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/MuelleEste"]
+shape = SubResource("BoxShape3D_41")
+
+[node name="MuellePunta" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 8.0, 1.85, -34.15)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/MuellePunta"]
+shape = SubResource("BoxShape3D_42")
+
+[node name="OrillaEste" type="StaticBody3D" parent="Limites"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 42.25, 2.0, -11.9454)
+collision_layer = 64
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Limites/OrillaEste"]
+shape = SubResource("BoxShape3D_43")
+
+[node name="Sendero" parent="." instance=ExtResource("e29")]
+
+[node name="Bosque" parent="." instance=ExtResource("e30")]
+
+[node name="Colina" parent="." instance=ExtResource("e31")]
+
+[node name="Orilla" parent="." instance=ExtResource("e32")]
+
+[node name="Embarcadero" parent="." instance=ExtResource("e33")]
+
+[node name="Cobertizo" parent="." instance=ExtResource("e34")]
+
+[node name="Lago" parent="." instance=ExtResource("e35")]
+
+[node name="Luciernagas0" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -14.0, 1.2031, -6.0)
+amount = 22
+lifetime = 8.0
+preprocess = 8.0
+process_material = SubResource("ParticleProcessMaterial_46")
+draw_pass_1 = SubResource("QuadMesh_48")
+cast_shadow = 0
+visibility_aabb = AABB(-12.0, -12.0, -12.0, 24.0, 24.0, 24.0)
+
+[node name="Luciernagas1" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 16.0, 1.1769, -5.0)
+amount = 22
+lifetime = 8.0
+preprocess = 8.0
+process_material = SubResource("ParticleProcessMaterial_51")
+draw_pass_1 = SubResource("QuadMesh_53")
+cast_shadow = 0
+visibility_aabb = AABB(-12.0, -12.0, -12.0, 24.0, 24.0, 24.0)
+
+[node name="Luciernagas2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -21.0, 1.3, 32.0)
+amount = 22
+lifetime = 8.0
+preprocess = 8.0
+process_material = SubResource("ParticleProcessMaterial_56")
+draw_pass_1 = SubResource("QuadMesh_58")
+cast_shadow = 0
+visibility_aabb = AABB(-12.0, -12.0, -12.0, 24.0, 24.0, 24.0)
+
+[node name="Luciernagas3" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 30.0, 9.7, 22.0)
+amount = 22
+lifetime = 8.0
+preprocess = 8.0
+process_material = SubResource("ParticleProcessMaterial_61")
+draw_pass_1 = SubResource("QuadMesh_63")
+cast_shadow = 0
+visibility_aabb = AABB(-12.0, -12.0, -12.0, 24.0, 24.0, 24.0)
+
+[node name="Hojas0" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -21.0, 9.0, 32.0)
+amount = 40
+lifetime = 12.0
+preprocess = 12.0
+process_material = SubResource("ParticleProcessMaterial_64")
+draw_pass_1 = SubResource("QuadMesh_66")
+cast_shadow = 0
+visibility_aabb = AABB(-24.0, -24.0, -24.0, 48.0, 48.0, 48.0)
+
+[node name="Hojas1" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 9.0, 35.0)
+amount = 40
+lifetime = 12.0
+preprocess = 12.0
+process_material = SubResource("ParticleProcessMaterial_67")
+draw_pass_1 = SubResource("QuadMesh_69")
+cast_shadow = 0
+visibility_aabb = AABB(-24.0, -24.0, -24.0, 48.0, 48.0, 48.0)
+
+[node name="Hojas2" type="GPUParticles3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 28.0, 12.8206, 20.0)
+amount = 40
+lifetime = 12.0
+preprocess = 12.0
+process_material = SubResource("ParticleProcessMaterial_70")
+draw_pass_1 = SubResource("QuadMesh_72")
+cast_shadow = 0
+visibility_aabb = AABB(-24.0, -24.0, -24.0, 48.0, 48.0, 48.0)
+
+[node name="Ambiente" type="Node3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="Grillos0" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -24.0, 0.5, 30.0)
+volume_db = -3.0
+unit_size = 10.0
+max_distance = 40.0
+script = ExtResource("e37")
+Tipo = 27
+
+[node name="Grillos1" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 14.0, 0.8937, 30.0)
+volume_db = -3.0
+unit_size = 10.0
+max_distance = 40.0
+script = ExtResource("e37")
+Tipo = 27
+
+[node name="Grillos2" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -6.0, 0.6115, 50.0)
+volume_db = -3.0
+unit_size = 10.0
+max_distance = 40.0
+script = ExtResource("e37")
+Tipo = 27
+
+[node name="Grillos3" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 30.0, 2.4693, 14.0)
+volume_db = -3.0
+unit_size = 10.0
+max_distance = 40.0
+script = ExtResource("e37")
+Tipo = 27
+
+[node name="Ranas0" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -30.0, 0.2, -8.0)
+volume_db = -2.0
+unit_size = 8.0
+max_distance = 30.0
+script = ExtResource("e37")
+Tipo = 39
+
+[node name="Ranas1" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.0, 0.2, -8.0)
+volume_db = -2.0
+unit_size = 8.0
+max_distance = 30.0
+script = ExtResource("e37")
+Tipo = 39
+
+[node name="Ranas2" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 24.0, 0.2, -9.0)
+volume_db = -2.0
+unit_size = 8.0
+max_distance = 30.0
+script = ExtResource("e37")
+Tipo = 39
+
+[node name="Viento0" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -48.0, 8.0, 20.0)
+volume_db = -4.0
+unit_size = 14.0
+max_distance = 60.0
+script = ExtResource("e37")
+Tipo = 28
+
+[node name="Viento1" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 40.0, 8.0, 40.0)
+volume_db = -4.0
+unit_size = 14.0
+max_distance = 60.0
+script = ExtResource("e37")
+Tipo = 28
+
+[node name="Viento2" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 8.0, 62.0)
+volume_db = -4.0
+unit_size = 14.0
+max_distance = 60.0
+script = ExtResource("e37")
+Tipo = 28
+
+[node name="Buho" type="AudioStreamPlayer3D" parent="Ambiente"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -45.0, 12.0, 45.0)
+volume_db = -2.0
+unit_size = 12.0
+max_distance = 90.0
+script = ExtResource("e37")
+Tipo = 30
+PausaMinima = 16
+PausaMaxima = 40
+
+[node name="HUD" parent="." instance=ExtResource("e38")]
+
+[node name="Jugador" parent="." instance=ExtResource("e39")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.1, 58.0)
+
+[node name="Linterna" parent="Jugador/CamaraInterrogatorio"]
+spot_range = 18.0
+spot_angle = 26.0
+light_energy = 5.0
+
+[node name="MenuPausa" parent="." instance=ExtResource("e40")]
+
+[node name="VentanaDialogo" type="CanvasLayer" parent="."]
+script = ExtResource("e41")
+
+[node name="TableroDeduccion" type="CanvasLayer" parent="."]
+script = ExtResource("e42")
+
+[node name="MusicaFondo" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("e43")
+script = ExtResource("e44")
+
+[node name="MandoHud" type="Node" parent="."]
+script = ExtResource("e45")
+
+[node name="PuntoPizarron" type="Marker3D" parent="."]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, -30.0, 30.0)
+
+[node name="Vineta" type="CanvasLayer" parent="."]
+layer = 1
+
+[node name="Degradado" type="TextureRect" parent="Vineta"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_74")
+expand_mode = 1
+
+[node name="Caso1Lago" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "Tablero", "PuertaCobertizo", "VolverCampamento", "IrEstacion", "Musica", "Entorno", "Estatica", "ContenedoresConPista", "PistasDentro", "Zonas")]
+script = ExtResource("e46")
+Jugador = NodePath("../Jugador")
+Hud = NodePath("../HUD")
+Dialogo = NodePath("../VentanaDialogo")
+Tablero = NodePath("../TableroDeduccion")
+PuertaCobertizo = NodePath("../Cobertizo/Edificio/PuertaCobertizo")
+VolverCampamento = NodePath("../Sendero/Arco/Salida")
+IrEstacion = NodePath("../Sendero/Patrulla/IrEstacion")
+Musica = NodePath("../MusicaFondo")
+Entorno = NodePath("../Entorno")
+Estatica = NodePath("../Bosque/Altavoz/Estatica")
+ContenedoresConPista = [NodePath("../Bosque/TroncoHueco"), NodePath("../Orilla/Mochila")]
+PistasDentro = [NodePath("../Bosque/Cornamenta"), NodePath("../Orilla/Cuaderno")]
+Zonas = [NodePath("../Sendero/Sendero"), NodePath("../Bosque/Bosque"), NodePath("../Colina/Colina"), NodePath("../Orilla/Orilla"), NodePath("../Embarcadero/Embarcadero"), NodePath("../Cobertizo/Cobertizo"), NodePath("../Embarcadero/Lago")]

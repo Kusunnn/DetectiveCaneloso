@@ -1,0 +1,348 @@
+[gd_scene load_steps=45 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall.glb" id="e1"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Puerta.cs" id="e2"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-door-rotate.glb" id="e3"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-window-b.glb" id="e4"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-roof.glb" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-roof-top.glb" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall-roof-center.glb" id="e7"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-corner-logs.glb" id="e8"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/madera_piso_color.jpg" id="e9"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/madera_piso_normal.jpg" id="e10"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e11"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/hueco_remo.png" id="e12"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/hueco_remo/hueco_remo.tscn" id="e14"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/banco.tscn" id="e15"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/canoa.tscn" id="e16"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Lago/Modelos/polyhaven/wooden_crate_01/wooden_crate_01_1k.gltf" id="e17"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/bidon.tscn" id="e18"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/remo.tscn" id="e19"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Lago/Texturas/red_pesca.png" id="e20"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Lago/Modelos/polyhaven/lifebuoy/lifebuoy_1k.gltf" id="e21"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(0.3, 2.6, 0.78)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2"]
+albedo_color = Color(0.32, 0.2, 0.12, 1.0)
+roughness = 0.7
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3"]
+size = Vector3(0.95, 2.1, 0.312)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4"]
+size = Vector3(0.48, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5"]
+size = Vector3(0.48, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6"]
+size = Vector3(2.0, 0.416, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7"]
+size = Vector3(2.9, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8"]
+size = Vector3(5.2, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_9"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_10"]
+size = Vector3(2.6, 2.6, 0.78)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_11"]
+size = Vector3(5.2, 2.6, 0.78)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_12"]
+albedo_texture = ExtResource("e9")
+normal_enabled = true
+normal_texture = ExtResource("e10")
+albedo_color = Color(0.62, 0.5, 0.42, 1.0)
+roughness = 0.85
+uv1_triplanar = true
+uv1_world_triplanar = false
+uv1_scale = Vector3(0.7, 0.7, 0.7)
+
+[sub_resource type="BoxMesh" id="BoxMesh_13"]
+size = Vector3(4.72, 0.08, 4.72)
+material = SubResource("StandardMaterial3D_12")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_14"]
+size = Vector3(4.72, 0.08, 4.72)
+
+[sub_resource type="FogMaterial" id="FogMaterial_15"]
+density = -0.3
+edge_fade = 0.2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_16"]
+size = Vector3(1.35, 1.4, 0.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_17"]
+size = Vector3(1.3, 1.32, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_18"]
+size = Vector3(0.9, 0.95, 3.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_19"]
+size = Vector3(0.82, 0.36, 0.42)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_20"]
+size = Vector3(0.82, 0.36, 0.42)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_21"]
+albedo_texture = ExtResource("e20")
+transparency = 2
+alpha_scissor_threshold = 0.5
+cull_mode = 2
+
+[sub_resource type="QuadMesh" id="QuadMesh_22"]
+size = Vector2(1.6, 1.4)
+material = SubResource("StandardMaterial3D_21")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_23"]
+size = Vector3(4.2, 2.6, 4.2)
+
+[node name="Cobertizo" type="Node3D"]
+
+[node name="Edificio" type="Node3D" parent="." groups=["auditoria_estructura"]]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 22.0, 0.0, -3.5)
+
+[node name="Muros" type="StaticBody3D" parent="Edificio"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Muro_frente0" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(0.3, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -2.45, 0.0, 1.3)
+
+[node name="F0" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.45, 1.3, 2.6)
+shape = SubResource("BoxShape3D_1")
+
+[node name="PuertaCobertizo" type="StaticBody3D" parent="Edificio" node_paths=PackedStringArray("Bisagra")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 0.0, 1.3)
+collision_layer = 32
+collision_mask = 0
+script = ExtResource("e2")
+Bisagra = NodePath("Modelo/cabin-door-rotate/door")
+AnguloApertura = 100.0
+Bloqueada = true
+MensajeBloqueada = "Cobertizo de botes. Cerrado con llave: solo Tony y Porky tienen copia."
+
+[node name="Modelo" parent="Edificio/PuertaCobertizo" instance=ExtResource("e3")]
+transform = Transform3D(2.0, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0)
+
+[node name="door" parent="Edificio/PuertaCobertizo/Modelo/cabin-door-rotate"]
+material_override = SubResource("StandardMaterial3D_2")
+
+[node name="Forma" type="CollisionShape3D" parent="Edificio/PuertaCobertizo"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.05, 1.495)
+shape = SubResource("BoxShape3D_3")
+
+[node name="F1" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.02, 1.3, 2.6)
+shape = SubResource("BoxShape3D_4")
+
+[node name="F2" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.58, 1.3, 2.6)
+shape = SubResource("BoxShape3D_5")
+
+[node name="F3" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 2.392, 2.6)
+shape = SubResource("BoxShape3D_6")
+
+[node name="Muro_frente2" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(2.9, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.15, 0.0, 1.3)
+
+[node name="F4" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.15, 1.3, 2.6)
+shape = SubResource("BoxShape3D_7")
+
+[node name="Muro_atras0" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(-5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 0.0, 0.0, -1.3)
+
+[node name="F5" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.3, -2.6)
+shape = SubResource("BoxShape3D_8")
+
+[node name="Muro_der0" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 1.3)
+
+[node name="F6" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, 1.3)
+shape = SubResource("BoxShape3D_9")
+
+[node name="Ventana_der1" parent="Edificio" instance=ExtResource("e4")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, -1.3)
+
+[node name="F7" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 2.6, 1.3, -1.3)
+shape = SubResource("BoxShape3D_10")
+
+[node name="Muro_izq0" parent="Edificio" instance=ExtResource("e1")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 5.2, 0.0, 0.0, -1.3, 0.0, 0.0)
+
+[node name="F8" type="CollisionShape3D" parent="Edificio/Muros"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -2.6, 1.3, 0.0)
+shape = SubResource("BoxShape3D_11")
+
+[node name="TechoE0" parent="Edificio" instance=ExtResource("e5")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, -1.3)
+
+[node name="TechoO0" parent="Edificio" instance=ExtResource("e5")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, -1.3)
+
+[node name="Cumbrera0" parent="Edificio" instance=ExtResource("e6")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, -1.3)
+
+[node name="TechoE1" parent="Edificio" instance=ExtResource("e5")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 1.3, 2.6, 1.3)
+
+[node name="TechoO1" parent="Edificio" instance=ExtResource("e5")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, -1.3, 2.6, 1.3)
+
+[node name="Cumbrera1" parent="Edificio" instance=ExtResource("e6")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 1.3)
+
+[node name="HastialFrente" parent="Edificio" instance=ExtResource("e7")]
+transform = Transform3D(5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 2.6, 1.3)
+
+[node name="HastialAtras" parent="Edificio" instance=ExtResource("e7")]
+transform = Transform3D(-5.2, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 0.0, 2.6, -1.3)
+
+[node name="Esquina0" parent="Edificio" instance=ExtResource("e8")]
+transform = Transform3D(2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, -1.3, 0.0, 1.3)
+
+[node name="Esquina1" parent="Edificio" instance=ExtResource("e8")]
+transform = Transform3D(0.0, 0.0, 2.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 1.3, 0.0, 1.3)
+
+[node name="Esquina2" parent="Edificio" instance=ExtResource("e8")]
+transform = Transform3D(-2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, -2.6, 1.3, 0.0, -1.3)
+
+[node name="Esquina3" parent="Edificio" instance=ExtResource("e8")]
+transform = Transform3D(0.0, 0.0, -2.6, 0.0, 2.6, 0.0, 2.6, 0.0, 0.0, -1.3, 0.0, -1.3)
+
+[node name="Piso" type="MeshInstance3D" parent="Edificio"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.02, 0.0)
+mesh = SubResource("BoxMesh_13")
+cast_shadow = 0
+
+[node name="ColPiso" type="StaticBody3D" parent="Edificio"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.02, 0.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Edificio/ColPiso"]
+shape = SubResource("BoxShape3D_14")
+
+[node name="SinNiebla" type="FogVolume" parent="Edificio"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.4, 0.0)
+size = Vector3(5.2, 2.8, 5.2)
+material = SubResource("FogMaterial_15")
+
+[node name="Letrero" type="Node3D" parent="Edificio"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.25, 2.68)
+script = ExtResource("e11")
+Texto = "COBERTIZO DE BOTES"
+Ancho = 1.0
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 44
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="SoporteRemos" type="StaticBody3D" parent="."]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 24.07, 0.06, -3.1)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e13")
+Id = "hueco_remo"
+Titulo = "Hueco en el soporte de remos"
+Descripcion = "En el soporte de remos del cobertizo falta uno. Donde estaba, la madera está limpia de polvo: lo sacaron hace poco."
+EsEvidencia = true
+ComentarioAlMirar = "Tres remos... y un hueco."
+Imagen = ExtResource("e12")
+
+[node name="Forma" type="CollisionShape3D" parent="SoporteRemos"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.7, 0.02)
+shape = SubResource("BoxShape3D_16")
+
+[node name="Modelo" parent="SoporteRemos" instance=ExtResource("e14")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="Solido" type="StaticBody3D" parent="SoporteRemos"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.66, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="SoporteRemos/Solido"]
+shape = SubResource("BoxShape3D_17")
+
+[node name="CanoaCobertizo" type="Node3D" parent="."]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 21.8, 0.06, -1.89)
+
+[node name="Caballete-9" parent="CanoaCobertizo" instance=ExtResource("e15")]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, -0.9)
+
+[node name="Caballete9" parent="CanoaCobertizo" instance=ExtResource("e15")]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.9)
+
+[node name="Modelo" parent="CanoaCobertizo" instance=ExtResource("e16")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.45, 0.0)
+
+[node name="Solido" type="StaticBody3D" parent="CanoaCobertizo"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.475, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="CanoaCobertizo/Solido"]
+shape = SubResource("BoxShape3D_18")
+
+[node name="Caja0" parent="." instance=ExtResource("e17")]
+transform = Transform3D(0.1736, 0.0, -0.9848, 0.0, 1.0, 0.0, 0.9848, 0.0, 0.1736, 23.71, 0.068, -5.21)
+
+[node name="ColCaja0" type="StaticBody3D" parent="."]
+transform = Transform3D(0.1736, 0.0, -0.9848, 0.0, 1.0, 0.0, 0.9848, 0.0, 0.1736, 23.71, 0.24, -5.21)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColCaja0"]
+shape = SubResource("BoxShape3D_19")
+
+[node name="Caja1" parent="." instance=ExtResource("e17")]
+transform = Transform3D(-0.0872, 0.0, -0.9962, 0.0, 1.0, 0.0, 0.9962, 0.0, -0.0872, 22.86, 0.068, -5.21)
+
+[node name="ColCaja1" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.0872, 0.0, -0.9962, 0.0, 1.0, 0.0, 0.9962, 0.0, -0.0872, 22.86, 0.24, -5.21)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColCaja1"]
+shape = SubResource("BoxShape3D_20")
+
+[node name="Bidon" parent="." instance=ExtResource("e18")]
+transform = Transform3D(0.5, 0.0, -0.866, 0.0, 1.0, 0.0, 0.866, 0.0, 0.5, 21.4, 0.06, -5.26)
+
+[node name="RemoSuelto" parent="." instance=ExtResource("e19")]
+transform = Transform3D(0.9962, 0.0, -0.0872, 0.0, 1.0, 0.0, 0.0872, 0.0, 0.9962, 20.7, 0.08, -5.41)
+
+[node name="RedColgada" type="MeshInstance3D" parent="." groups=["auditoria_pared"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 21.0, 1.5, -5.702)
+mesh = SubResource("QuadMesh_22")
+cast_shadow = 0
+
+[node name="SalvavidasPared" parent="." instance=ExtResource("e21") groups=["auditoria_pared"]]
+transform = Transform3D(-0.9, 0.0, 0.0, 0.0, 0.9, 0.0, 0.0, 0.0, -0.9, 23.3, 1.6, -1.365)
+
+[node name="Cobertizo" type="Area3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 22.0, 1.4, -3.5)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="Forma" type="CollisionShape3D" parent="Cobertizo"]
+shape = SubResource("BoxShape3D_23")
