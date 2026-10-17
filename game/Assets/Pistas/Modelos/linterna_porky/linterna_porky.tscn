@@ -15,11 +15,11 @@ height = 0.004
 radial_segments = 20
 rings = 1
 
-[node name="LinternaPorky" type="Node3D" unique_id=239950538]
+[node name="LinternaPorky" type="Node3D" unique_id=809186816]
 
 [node name="Linterna" type="Node3D" parent="." unique_id=166840139 instance=ExtResource("1_igx61")]
 
-[node name="Lente" type="MeshInstance3D" parent="." unique_id=1930882739]
+[node name="Lente" type="MeshInstance3D" parent="." unique_id=662005807]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.096, 0.155)
 material_override = SubResource("StandardMaterial3D_50xpk")
 mesh = SubResource("CylinderMesh_cyfm3")

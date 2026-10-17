@@ -63,74 +63,74 @@ outer_radius = 0.007
 inner_radius = 0.005
 outer_radius = 0.007
 
-[node name="CuadernoEriz" type="Node3D" unique_id=195532577]
+[node name="CuadernoEriz" type="Node3D" unique_id=1651098361]
 
-[node name="TapaIzq" type="MeshInstance3D" parent="." unique_id=547946931]
+[node name="TapaIzq" type="MeshInstance3D" parent="." unique_id=1336372649]
 transform = Transform3D(0.9986295, -0.05233596, 0, 0.05233596, 0.9986295, 0, 0, 0, 1, -0.08, 0.002, 0)
 material_override = SubResource("StandardMaterial3D_7cwho")
 mesh = SubResource("BoxMesh_iulgv")
 
-[node name="TapaDer" type="MeshInstance3D" parent="." unique_id=1068168023]
+[node name="TapaDer" type="MeshInstance3D" parent="." unique_id=1381814305]
 transform = Transform3D(0.9986295, 0.05233596, 0, -0.05233596, 0.9986295, 0, 0, 0, 1, 0.08, 0.002, 0)
 material_override = SubResource("StandardMaterial3D_7cwho")
 mesh = SubResource("BoxMesh_rt6u1")
 
-[node name="HojasIzq" type="MeshInstance3D" parent="." unique_id=296220751]
+[node name="HojasIzq" type="MeshInstance3D" parent="." unique_id=1653392380]
 transform = Transform3D(0.9986295, -0.05233596, 0, 0.05233596, 0.9986295, 0, 0, 0, 1, -0.077, 0.009, 0)
 material_override = SubResource("StandardMaterial3D_prdhi")
 mesh = SubResource("BoxMesh_46sso")
 
-[node name="HojasDer" type="MeshInstance3D" parent="." unique_id=1571445076]
+[node name="HojasDer" type="MeshInstance3D" parent="." unique_id=1116845458]
 transform = Transform3D(0.9986295, 0.05233596, 0, -0.05233596, 0.9986295, 0, 0, 0, 1, 0.077, 0.009, 0)
 material_override = SubResource("StandardMaterial3D_prdhi")
 mesh = SubResource("BoxMesh_o0rqp")
 
-[node name="Espiral0" type="MeshInstance3D" parent="." unique_id=1202643525]
+[node name="Espiral0" type="MeshInstance3D" parent="." unique_id=90197165]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, -0.09)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_jfxxk")
 
-[node name="Espiral1" type="MeshInstance3D" parent="." unique_id=1972310317]
+[node name="Espiral1" type="MeshInstance3D" parent="." unique_id=612516448]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, -0.0675)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_mcyg3")
 
-[node name="Espiral2" type="MeshInstance3D" parent="." unique_id=919515448]
+[node name="Espiral2" type="MeshInstance3D" parent="." unique_id=770526153]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, -0.045)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_3w8g4")
 
-[node name="Espiral3" type="MeshInstance3D" parent="." unique_id=32253696]
+[node name="Espiral3" type="MeshInstance3D" parent="." unique_id=387608003]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, -0.0225)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_2h6lw")
 
-[node name="Espiral4" type="MeshInstance3D" parent="." unique_id=1754209414]
+[node name="Espiral4" type="MeshInstance3D" parent="." unique_id=1710700073]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, 0)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_sbd45")
 
-[node name="Espiral5" type="MeshInstance3D" parent="." unique_id=1080666977]
+[node name="Espiral5" type="MeshInstance3D" parent="." unique_id=844379476]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, 0.0225)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_52cws")
 
-[node name="Espiral6" type="MeshInstance3D" parent="." unique_id=1925524134]
+[node name="Espiral6" type="MeshInstance3D" parent="." unique_id=1264602647]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, 0.045)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_hph57")
 
-[node name="Espiral7" type="MeshInstance3D" parent="." unique_id=1904910108]
+[node name="Espiral7" type="MeshInstance3D" parent="." unique_id=1275638905]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, 0.0675)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_qy0vm")
 
-[node name="Espiral8" type="MeshInstance3D" parent="." unique_id=710782366]
+[node name="Espiral8" type="MeshInstance3D" parent="." unique_id=850451590]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, 0.09)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_g3n4x")
 
-[node name="Dibujo" type="Label3D" parent="." unique_id=1837433209]
+[node name="Dibujo" type="Label3D" parent="." unique_id=593760978]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.14, 0.0165, -0.085)
 pixel_size = 0.0004
 shaded = true
@@ -145,7 +145,7 @@ outline_size = 0
 horizontal_alignment = 0
 vertical_alignment = 0
 
-[node name="Fecha" type="Label3D" parent="." unique_id=1148741265]
+[node name="Fecha" type="Label3D" parent="." unique_id=1501898774]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.14, 0.0165, 0.04)
 pixel_size = 0.0004
 shaded = true
@@ -158,7 +158,7 @@ outline_size = 0
 horizontal_alignment = 0
 vertical_alignment = 0
 
-[node name="Notas" type="Label3D" parent="." unique_id=1617784124]
+[node name="Notas" type="Label3D" parent="." unique_id=696169755]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.014, 0.0178, -0.09)
 pixel_size = 0.0004
 shaded = true
@@ -177,5 +177,5 @@ outline_size = 0
 horizontal_alignment = 0
 vertical_alignment = 0
 
-[node name="Detalle_nota" type="Marker3D" parent="." unique_id=974348766]
+[node name="Detalle_nota" type="Marker3D" parent="." unique_id=1764966575]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.075, 0.015, -0.02)

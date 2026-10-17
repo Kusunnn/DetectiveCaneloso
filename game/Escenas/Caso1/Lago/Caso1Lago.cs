@@ -26,9 +26,11 @@ public partial class Caso1Lago : EscenarioCaso1
 	// La estática del altavoz escondido: se apaga cuando Caneloso lo encuentra
 	[Export] public AudioStreamPlayer3D Estatica;
 
-	// El tablado cruje bajo los pasos
+	// El tablado cruje bajo los pasos: trocitos al azar de dos grabaciones largas
 	private Area3D[] _muelle = Array.Empty<Area3D>();
 	private double _crujido = 1.5;
+	private double _finCrujido;
+	private AudioStreamPlayer3D _tablado;
 
 	protected override string Escena => PartidaEscenas.Lago;
 	protected override string Lugar => "el lago";
@@ -42,6 +44,8 @@ public partial class Caso1Lago : EscenarioCaso1
 		VolverCampamento.Usado += () => Conversar(AlVolverCampamento);
 		IrEstacion.Usado += () => Conversar(AlIrEstacion);
 		_muelle = Array.FindAll(Zonas, z => z.Name == "Embarcadero" || z.Name == "Lago");
+		_tablado = new AudioStreamPlayer3D { Bus = Sonidos.BusEfectos, UnitSize = 3f, MaxDistance = 14f };
+		AddChild(_tablado);
 		ActualizarObjetivo();
 	}
 
@@ -151,6 +155,12 @@ public partial class Caso1Lago : EscenarioCaso1
 	public override void _Process(double delta)
 	{
 		base._Process(delta);
+		if (_tablado.Playing)
+		{
+			_tablado.GlobalPosition = Jugador.GlobalPosition;
+			_finCrujido -= delta;
+			if (_finCrujido <= 0) _tablado.Stop();
+		}
 		// Cruje el tablado de vez en cuando mientras se camina por el muelle
 		if (EnDialogo || Jugador.Velocity.LengthSquared() < 0.5f) return;
 		bool enMuelle = false;
@@ -158,8 +168,13 @@ public partial class Caso1Lago : EscenarioCaso1
 		if (!enMuelle) return;
 		_crujido -= delta;
 		if (_crujido > 0) return;
-		_crujido = GD.RandRange(2.5, 6.0);
-		Sonidos.Reproducir(this, GD.Randf() < 0.6f ? Sonidos.Tipo.MuelleCrujido : Sonidos.Tipo.MuellePasos, Jugador.GlobalPosition, -2f);
+		_crujido = GD.RandRange(2.0, 5.0);
+		var tipo = GD.Randf() < 0.65f ? Sonidos.Tipo.MuelleCrujido : Sonidos.Tipo.MuellePasos;
+		_tablado.Stream = Sonidos.Obtener(tipo);
+		_tablado.VolumeDb = Sonidos.VolumenDe(tipo) - 2f;
+		_tablado.GlobalPosition = Jugador.GlobalPosition;
+		_tablado.Play((float)GD.RandRange(0.0, Math.Max(0.0, _tablado.Stream.GetLength() - 2.0)));
+		_finCrujido = GD.RandRange(0.9, 1.6);
 	}
 
 	// ---------- Salidas ----------

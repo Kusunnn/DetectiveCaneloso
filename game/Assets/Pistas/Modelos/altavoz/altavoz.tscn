@@ -20,17 +20,17 @@ height = 0.35
 radial_segments = 6
 rings = 1
 
-[node name="Altavoz" type="Node3D" unique_id=323293676]
+[node name="Altavoz" type="Node3D" unique_id=1999081942]
 
 [node name="Bocina" type="Node3D" parent="." unique_id=2115299140 instance=ExtResource("1_0bkkk")]
 transform = Transform3D(0.42, 0, 0, 0, 0.42, 0, 0, 0, 0.42, 0, 0, 0)
 
-[node name="Cinta" type="MeshInstance3D" parent="." unique_id=566565431]
+[node name="Cinta" type="MeshInstance3D" parent="." unique_id=1984743540]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09, 0.088, 0)
 material_override = SubResource("StandardMaterial3D_6o2ah")
 mesh = SubResource("BoxMesh_rtara")
 
-[node name="Cable" type="MeshInstance3D" parent="." unique_id=1101183817]
+[node name="Cable" type="MeshInstance3D" parent="." unique_id=735767949]
 transform = Transform3D(0.99026805, -0.1391731, 0, 0.1391731, 0.99026805, 0, 0, 0, 1, 0.16, -0.12, -0.02)
 material_override = SubResource("StandardMaterial3D_gp7yx")
 mesh = SubResource("CylinderMesh_fxugq")

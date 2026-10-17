@@ -112,7 +112,7 @@ func _texto(padre: Node3D, nombre: String, texto: String, pos: Vector3, giro: Ve
 ## Silbato metálico de monitor con «T. S.» grabado y el cordón rojo roto (unos 6 cm)
 func _silbato() -> Node3D:
 	var r := Node3D.new()
-	var cromo := _mat(Color(0.78, 0.78, 0.75), 0.28, 0.9)
+	var cromo := _mat(Color(0.86, 0.85, 0.8), 0.32, 0.55)
 	var cuerpo := _malla(r, "Cuerpo", _cilindro(0.0105, 0.0105, 0.034, 20), cromo, Vector3(0, 0.0105, 0), Vector3(0, 0, 90))
 	cuerpo.name = "Cuerpo"
 	_malla(r, "Boquilla", _caja(Vector3(0.026, 0.008, 0.012)), cromo, Vector3(0.027, 0.016, 0))

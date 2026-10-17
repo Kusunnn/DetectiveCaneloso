@@ -273,7 +273,7 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.1, 0
 shape = SubResource("BoxShape3D_15")
 
 [node name="Modelo" parent="Remo" instance=ExtResource("e16")]
-transform = Transform3D(1.15, 0.0, 0.0, 0.0, 1.15, 0.0, 0.0, 0.0, 1.15, 0.0, 0.0, 0.0)
+transform = Transform3D(1.15, 0.0, 0.0, 0.0, 1.15, 0.0, 0.0, 0.0, 1.15, 0.0, 0.0, -0.7245)
 
 [node name="Roca0" parent="." instance=ExtResource("e17")]
 transform = Transform3D(-0.7887, 0.0, 0.4464, 0.0, 0.9063, 0.0, -0.4464, 0.0, -0.7887, -40.0, -0.1498, -9.9568)
