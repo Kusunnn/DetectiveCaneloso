@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1040" font-family="Segoe UI, Arial, sans-serif">
+  <title>Escenario 2 · El Lago y el Bosque (vista desde arriba)</title>
+  <defs>
+    <pattern id="pinos" width="22" height="22" patternUnits="userSpaceOnUse">
+      <rect width="22" height="22" fill="#1d3b2a"/>
+      <circle cx="6" cy="7" r="5" fill="#2b5a3e"/>
+      <circle cx="16" cy="15" r="5.5" fill="#274f37"/>
+    </pattern>
+    <radialGradient id="algas" cx="0.62" cy="0.78" r="0.55">
+      <stop offset="0" stop-color="#5ec8ff"/>
+      <stop offset="0.35" stop-color="#1f74b8"/>
+      <stop offset="1" stop-color="#0b2740"/>
+    </radialGradient>
+    <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#f2d16b"/>
+    </marker>
+  </defs>
+
+  <rect width="1000" height="1040" fill="#0f1a14"/>
+  <text x="30" y="40" fill="#f3efe4" font-size="26" font-weight="700">Escenario 2 · El Lago y el Bosque</text>
+  <text x="30" y="66" fill="#b9b3a3" font-size="15">Vista desde arriba · norte arriba · 1 cuadro = 10 m · el Campamento queda al sur</text>
+
+  <!-- Bosque denso (límite) -->
+  <rect x="30" y="90" width="940" height="900" fill="url(#pinos)" opacity="0.95"/>
+
+  <!-- Lago -->
+  <path d="M30,90 H970 V420 C880,470 790,455 700,470 C620,482 560,470 470,486 C380,500 300,470 210,488 C140,500 80,470 30,480 Z" fill="url(#algas)"/>
+  <text x="380" y="190" fill="#d9f2ff" font-size="22" font-weight="700">7 · LAGO ESPEJO</text>
+  <text x="380" y="214" fill="#b7e3ff" font-size="14">Algas luminosas; brillo más fuerte junto al embarcadero</text>
+  <text x="380" y="234" fill="#b7e3ff" font-size="14">Borde invisible en el agua: no se puede nadar</text>
+
+  <!-- Enfermería a lo lejos (del Campamento, solo silueta iluminada) -->
+  <rect x="842" y="452" width="46" height="30" fill="#3a2f22" stroke="#f2c86b" stroke-width="2"/>
+  <rect x="852" y="460" width="10" height="8" fill="#ffd27a"/>
+  <rect x="868" y="460" width="10" height="8" fill="#ffd27a"/>
+  <text x="955" y="440" fill="#f2c86b" font-size="13" text-anchor="end">Enfermería del Campamento, a lo lejos</text>
+
+  <!-- Orilla -->
+  <path d="M30,480 C80,470 140,500 210,488 C300,470 380,500 470,486 C560,470 620,482 700,470 C790,455 880,470 970,420 V560 H30 Z" fill="#8a7a5a" opacity="0.9"/>
+  <text x="150" y="535" fill="#1b140c" font-size="20" font-weight="700">4 · ORILLA</text>
+  <text x="150" y="553" fill="#2a2116" font-size="13">arena, piedras y juncos</text>
+
+  <!-- Embarcadero -->
+  <rect x="590" y="300" width="34" height="190" fill="#7b5a3c" stroke="#3e2b1b" stroke-width="2"/>
+  <g fill="#3e2b1b"><rect x="586" y="300" width="6" height="6"/><rect x="622" y="300" width="6" height="6"/><rect x="586" y="360" width="6" height="6"/><rect x="622" y="360" width="6" height="6"/><rect x="586" y="420" width="6" height="6"/><rect x="622" y="420" width="6" height="6"/></g>
+  <text x="634" y="330" fill="#fff4dc" font-size="20" font-weight="700">5 · EMBARCADERO</text>
+  <ellipse cx="575" cy="470" rx="26" ry="14" fill="#5f7d3a" opacity="0.9"/>
+  <text x="470" y="452" fill="#e7f2d0" font-size="12">juncos bajo el muelle</text>
+
+  <!-- Cobertizo -->
+  <rect x="700" y="480" width="110" height="70" fill="#5a3f2a" stroke="#f2d16b" stroke-width="3" stroke-dasharray="8 4"/>
+  <text x="706" y="500" fill="#fff4dc" font-size="16" font-weight="700">6 · COBERTIZO</text>
+  <text x="706" y="517" fill="#f2d16b" font-size="12">cerrado: llavero de Porky</text>
+
+  <!-- Sendero -->
+  <path d="M500,1000 C500,930 470,880 480,820 C490,760 530,720 520,660 C512,615 560,585 600,560" fill="none" stroke="#a88b5f" stroke-width="22" stroke-linecap="round"/>
+  <path d="M500,1000 C500,930 470,880 480,820 C490,760 530,720 520,660 C512,615 560,585 600,560" fill="none" stroke="#c4a879" stroke-width="2" stroke-dasharray="6 8"/>
+  <text x="540" y="880" fill="#fff4dc" font-size="20" font-weight="700">1 · SENDERO DEL LAGO</text>
+  <text x="540" y="900" fill="#e8dcc0" font-size="13">baja desde el Campamento entre pinos</text>
+
+  <!-- Bosque (zona jugable) -->
+  <path d="M90,600 C150,580 300,590 400,620 C440,700 430,800 400,880 C300,900 160,890 90,860 Z" fill="#244a33" stroke="#7fb08a" stroke-width="2" stroke-dasharray="4 4"/>
+  <text x="140" y="660" fill="#e3f1e6" font-size="20" font-weight="700">2 · BOSQUE</text>
+  <text x="140" y="680" fill="#c6ddc9" font-size="13">troncos caídos, rocas, niebla baja</text>
+
+  <!-- Colina -->
+  <ellipse cx="760" cy="690" rx="120" ry="80" fill="#3a5f3f" stroke="#cfe3a5" stroke-width="2"/>
+  <ellipse cx="760" cy="690" rx="70" ry="45" fill="#4b7650"/>
+  <text x="700" y="680" fill="#f4f8e4" font-size="20" font-weight="700">3 · COLINA</text>
+  <text x="688" y="700" fill="#e3edc8" font-size="13">claro elevado (+4 m)</text>
+  <!-- Líneas de vista -->
+  <line x1="760" y1="660" x2="607" y2="420" stroke="#f2d16b" stroke-width="2" stroke-dasharray="6 5"/>
+  <line x1="760" y1="660" x2="865" y2="470" stroke="#f2d16b" stroke-width="2" stroke-dasharray="6 5"/>
+  <line x1="740" y1="660" x2="300" y2="520" stroke="#f2d16b" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="770" y="600" fill="#f2d16b" font-size="12">línea de vista</text>
+
+  <!-- Entrada / salidas -->
+  <circle cx="500" cy="990" r="12" fill="#f2d16b"/>
+  <text x="520" y="995" fill="#f2d16b" font-size="14" font-weight="700">Entrada desde el Campamento ↔ salida_sendero</text>
+  <rect x="400" y="945" width="58" height="30" rx="5" fill="#2f4a8a" stroke="#cdd8ff"/>
+  <text x="300" y="935" fill="#cdd8ff" font-size="13">Patrulla de Hecdog: «Ir a la estación»</text>
+
+  <!-- Pistas -->
+  <g font-size="13" font-weight="700">
+    <g fill="#e04b3b" stroke="#fff" stroke-width="1.5">
+      <circle cx="490" cy="800" r="11"/>
+      <circle cx="560" cy="610" r="11"/>
+      <circle cx="250" cy="720" r="11"/>
+      <circle cx="320" cy="820" r="11"/>
+      <circle cx="790" cy="535" r="11"/>
+      <circle cx="565" cy="470" r="11"/>
+      <circle cx="626" cy="305" r="11"/>
+      <circle cx="575" cy="345" r="11"/>
+      <circle cx="300" cy="520" r="11"/>
+    </g>
+    <g fill="#fff" text-anchor="middle">
+      <text x="490" y="805">1</text><text x="560" y="615">2</text><text x="250" y="725">3</text><text x="320" y="825">4</text>
+      <text x="790" y="540">5</text><text x="565" y="475">6</text><text x="626" y="310">7</text><text x="575" y="350">8</text><text x="300" y="525">9</text>
+    </g>
+  </g>
+
+  <!-- Leyenda -->
+  <rect x="30" y="1000" width="940" height="1" fill="#3a4a40"/>
+  <g font-size="12.5" fill="#efe9da">
+    <text x="30" y="1022">1 huellas_pezuna · 2 huellas_detenidas (30 m antes del muelle) · 3 altavoz (árbol) · 4 cornamenta_zancos (tronco hueco) · 5 hueco_remo (cobertizo)</text>
+    <text x="30" y="1037">6 remo_sangre (juncos bajo el muelle) · 7 silbato_ts (clavo del poste) · 8 linterna_porky (fondo del agua) · 9 cuaderno_eriz (mochila junto a la roca)</text>
+  </g>
+</svg>
