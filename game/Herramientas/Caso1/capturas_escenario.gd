@@ -1,7 +1,7 @@
 extends SceneTree
 ## HU-20.6: capturas y FPS de un escenario desde varios puntos de vista, con la escena completa (luces, niebla,
 ## partículas) y sin la interfaz. Necesita ventana.
-## Uso: --path game --script res://Herramientas/Caso1/capturas_escenario.gd -- <escena.tscn> <carpeta> nombre=px,py,pz,tx,ty,tz [más vistas...] [--sin-linterna]
+## Uso: --path game --script res://Herramientas/Caso1/capturas_escenario.gd -- <escena.tscn> <carpeta> nombre=px,py,pz,tx,ty,tz [más vistas...] [--sin-linterna] [--visible=nodo]
 ## Escribe <carpeta>/<nombre>.png y <carpeta>/rendimiento.txt (FPS y ms de CPU/GPU por vista, sin vsync).
 
 func _initialize() -> void:
@@ -32,6 +32,11 @@ func _initialize() -> void:
 	_ocultar_interfaz(escena)
 	cam.current = true
 	var jugador := escena.get_node_or_null("Jugador")
+	# «--visible=Ruta/Del/Nodo» muestra algo que empieza oculto (por ejemplo, un implicado de la sala)
+	for a in args:
+		if a.begins_with("--visible="):
+			var n := escena.get_node_or_null(a.get_slice("=", 1))
+			if n: n.visible = true
 	var rid := root.get_viewport_rid()
 	RenderingServer.viewport_set_measure_render_time(rid, true)
 	var reporte := PackedStringArray()

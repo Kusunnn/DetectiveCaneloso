@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 // Caso 1 «La Noche del Ciervo de Luz» — Escenario 1: el Campamento Pino Lunar (HU-20.5).
 // Solo el escenario: pistas físicas, la cabaña de Porky cerrada hasta encontrar su llavero y la salida
-// al sendero del lago (Escenario 2, próximamente). Los interrogatorios y deducciones vendrán después.
+// al sendero del lago (Escenario 2, HU-20.6) o a la estación. Los interrogatorios y deducciones vendrán después.
 // Igual que Caso0.cs, es el único script que conoce la historia; los sistemas siguen siendo genéricos.
 public partial class Caso1 : Node
 {
@@ -25,7 +25,7 @@ public partial class Caso1 : Node
 	// Pendiente de confirmar con el equipo: mientras sea false, la pista del coche no aparece
 	private const bool RegistroLlamadasConfirmado = false;
 	private static int PistasTotales => RegistroLlamadasConfirmado ? 13 : 12;
-	// Cuántas pistas hacen falta para que el sendero del lago "se abra" (por ahora, el cartel de próximamente)
+	// Cuántas pistas hacen falta para que el sendero del lago "se abra"
 	private const int PistasParaSalir = 8;
 
 	private const string Llavero = "llavero_porky";
@@ -259,7 +259,10 @@ public partial class Caso1 : Node
 		await Dialogo.Decir(_caneloso,
 			"El sendero baja al Lago Espejo. Ahí vieron al «ciervo de luz».",
 			"Lo que pasó anoche terminó allá abajo.");
-		Hud.Call("avisar", "ESCENARIO 2", "LAGO Y BOSQUE · PRÓXIMAMENTE");
+		// HU-20.6: el sendero lleva al Lago y el Bosque; desde ahí, la patrulla de Hecdog va a la estación
+		int opcion = await Dialogo.Elegir("Caneloso", "¿A dónde voy?", "Bajar al lago", "Ir a la estación con Hecdog", "Quedarme en el campamento");
+		if (opcion == 0) GestorPartida.Instancia?.CambiarEscenaDelCapitulo(PartidaEscenas.Lago, "EntradaDesdeCampamento");
+		else if (opcion == 1) GestorPartida.Instancia?.CambiarEscenaDelCapitulo(PartidaEscenas.Sala, "EntradaDesdeCampamento");
 	}
 
 	private async void Conversar(Func<System.Threading.Tasks.Task> conversacion)
