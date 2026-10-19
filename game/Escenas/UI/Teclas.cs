@@ -70,6 +70,7 @@ public static class Teclas
 			Key.Ctrl => "Ctrl",
 			Key.Shift => "Shift",
 			Key.Alt => "Alt",
+			Key.Meta => OS.GetName() == "macOS" ? "Cmd" : "Win",
 			Key.Space => "Espacio",
 			Key.Enter => "Enter",
 			Key.Backspace => "Retroceso",
