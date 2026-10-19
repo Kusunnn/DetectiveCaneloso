@@ -37,6 +37,9 @@ public partial class ObjetoPista : StaticBody3D, IInteractuable
 
 	public bool Encontrada { get; private set; } = false;
 
+	// Se emite al examinarla por primera vez (o al cargar una partida en la que ya estaba examinada)
+	[Signal] public delegate void MarcadaEncontradaEventHandler();
+
 	public string IdPista => string.IsNullOrEmpty(Id) ? Name.ToString() : Id;
 
 	public override void _Ready()
@@ -78,5 +81,6 @@ public partial class ObjetoPista : StaticBody3D, IInteractuable
 			Visible = false;
 			CollisionLayer = 0; // Ya no se puede apuntar ni chocar con ella
 		}
+		EmitSignal(SignalName.MarcadaEncontrada);
 	}
 }
