@@ -119,6 +119,7 @@ public partial class Caso1 : IEstadoPartida
 			{ "contenedores", contenedores },
 			{ "puertas", puertas },
 			{ "zonas_vistas", new Arreglo(_zonasVistas.Select(z => Variant.From(z))) },
+			{ "dialogos", _dialogos.Estado.Capturar() },
 			{ "tiempo", _tiempoCaso },
 		};
 	}
@@ -167,6 +168,8 @@ public partial class Caso1 : IEstadoPartida
 				PistasDentro[i].CollisionLayer = CapaInteractuable;
 
 		foreach (Variant zona in estado["zonas_vistas"].AsGodotArray()) _zonasVistas.Add(zona.AsString());
+		// HU-27: opciones vistas y nodos recorridos (las partidas de antes no lo traen)
+		_dialogos.Estado.Restaurar(estado.TryGetValue("dialogos", out Variant dialogos) ? dialogos.AsGodotDictionary() : null);
 		_tiempoCaso = estado["tiempo"].AsDouble();
 		ActualizarObjetivo();
 

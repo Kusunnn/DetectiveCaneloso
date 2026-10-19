@@ -95,6 +95,7 @@ public partial class Caso1 : Node
 		}
 
 		Salida.Usado += () => Conversar(AlUsarSalida);
+		PrepararDialogos();
 		foreach (var zona in Zonas)
 		{
 			var area = zona;
@@ -260,6 +261,31 @@ public partial class Caso1 : Node
 			"El sendero baja al Lago Espejo. Ahí vieron al «ciervo de luz».",
 			"Lo que pasó anoche terminó allá abajo.");
 		Hud.Call("avisar", "ESCENARIO 2", "LAGO Y BOSQUE · PRÓXIMAMENTE");
+	}
+
+	// ---------- Diálogos ramificados (HU-27) ----------
+
+	// Prueba del motor: Juan Carlos habla con un árbol de datos. El guion real llega con la integración narrativa.
+	private const string RutaDialogoPrueba = "res://Datos/Dialogos/prueba_juan_carlos.json";
+	private MotorDialogos _dialogos;
+	private ArbolDialogo _dialogoJuanCarlos;
+
+	private void PrepararDialogos()
+	{
+		_dialogos = new MotorDialogos(Dialogo)
+		{
+			TienePista = id => _pistas.Contains(id),
+			Cambio = Cambio,
+			NotaNueva = nota => Hud.Call("agregar_nota", nota),
+		};
+		_dialogoJuanCarlos = ArbolDialogo.Cargar(RutaDialogoPrueba);
+		var juanCarlos = GetParent().GetNodeOrNull<Npc>("Personajes/JuanCarlos/Colision");
+		if (juanCarlos != null && _dialogoJuanCarlos != null)
+			juanCarlos.Usado += () => Conversar(async () =>
+			{
+				await _dialogos.Recorrer(_dialogoJuanCarlos);
+				Autoguardar("Diálogo: Juan Carlos");
+			});
 	}
 
 	private async void Conversar(Func<System.Threading.Tasks.Task> conversacion)

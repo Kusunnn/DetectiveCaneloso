@@ -26,6 +26,9 @@ public class OpcionVista
 	public string Texto;
 	public string Etiqueta;   // PREGUNTAR, PRESIONAR, EVIDENCIA...
 	public bool Leida;
+	// HU-27: falta una pista o conclusión; se ve apagada, con el motivo, y no se puede elegir
+	public bool Bloqueada;
+	public string Motivo = "";
 
 	public OpcionVista(string texto, string etiqueta = "", bool leida = false)
 	{
@@ -214,10 +217,11 @@ public partial class VentanaDialogo : CanvasLayer
 			var o = opciones[i];
 			string etiqueta = string.IsNullOrEmpty(o.Etiqueta) ? "" : "[" + o.Etiqueta + "] ";
 			var boton = CrearBoton((i + 1) + ". " + etiqueta + o.Texto + (o.Leida ? "  ✓" : ""), o.Leida);
+			if (o.Bloqueada) Bloquear(boton, o.Motivo);
 			boton.Pressed += () => _espera?.TrySetResult(indice);
 			_opciones.AddChild(boton);
 		}
-		if (!AplicarSugerencia(_opciones)) ((Button)_opciones.GetChild(0)).GrabFocus();
+		if (!AplicarSugerencia(_opciones)) PrimeraDisponible()?.GrabFocus();
 
 		int elegida = await _espera.Task;
 		_indiceSalir = -1;
@@ -340,6 +344,24 @@ public partial class VentanaDialogo : CanvasLayer
 		return boton;
 	}
 
+	// Opción que todavía no se puede elegir: apagada y con el motivo al lado
+	private void Bloquear(Button boton, string motivo)
+	{
+		boton.Disabled = true;
+		boton.Text += string.IsNullOrEmpty(motivo) ? "  [BLOQUEADA]" : "  [BLOQUEADA: " + motivo + "]";
+		var vacio = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
+		vacio.SetContentMarginAll(4);
+		boton.AddThemeStyleboxOverride("disabled", vacio);
+		boton.AddThemeColorOverride("font_disabled_color", new Color(Tinta, 0.35f));
+	}
+
+	private Button PrimeraDisponible()
+	{
+		foreach (Node n in _opciones.GetChildren())
+			if (n is Button boton && !boton.Disabled) return boton;
+		return null;
+	}
+
 	private void MostrarHablante(Hablante h)
 	{
 		_nombre.Text = h.Nombre.ToUpper();
@@ -450,7 +472,7 @@ public partial class VentanaDialogo : CanvasLayer
 		if (_opciones.GetChildCount() > 0 && evento is InputEventKey numero && numero.Pressed && !numero.Echo)
 		{
 			int indice = (int)numero.Keycode - (int)Key.Key1;
-			if (indice >= 0 && indice < _opciones.GetChildCount())
+			if (indice >= 0 && indice < _opciones.GetChildCount() && !((Button)_opciones.GetChild(indice)).Disabled)
 			{
 				GetViewport().SetInputAsHandled();
 				_espera?.TrySetResult(indice);

@@ -321,7 +321,7 @@ public partial class MenuOpciones : PanelMenu
 		CancelarCaptura();
 		Configuracion.Instancia.RestaurarPredeterminados();
 		CargarValores();
-		MostrarAyuda("Se restauraron los valores predeterminados.", EstiloMenus.Ambar);
+		MostrarAyuda("Se restauraron los valores predeterminados: las teclas volvieron a los controles originales.", EstiloMenus.Ambar);
 	}
 
 	// ---------- Cambio de teclas ----------
@@ -343,38 +343,75 @@ public partial class MenuOpciones : PanelMenu
 		if (_ayuda != null) MostrarAyuda(Ayudas[_pestanaActual]);
 	}
 
-	// Mientras se espera una tecla, esa pulsación no llega al resto del juego ni cierra el menú
+	// Mientras se espera una tecla, esa pulsación no llega al resto del juego ni cierra el menú.
+	// Solo se aceptan teclas del teclado: el ratón y el control no se pueden asignar (HU-19).
 	public override void _Input(InputEvent evento)
 	{
 		if (_esperando == null || !Visible) return;
-		if (evento is InputEventMouseButton { Pressed: true } clic && clic.ButtonIndex != MouseButton.Left)
+		var fila = _esperando;
+		if (evento is InputEventMouseButton { Pressed: true } clic)
+		{
+			// El clic izquierdo sigue sirviendo para navegar el menú: cancela la espera y hace su clic normal
+			if (clic.ButtonIndex == MouseButton.Left)
+			{
+				CancelarCaptura();
+				return;
+			}
+			GetViewport().SetInputAsHandled();
+			MostrarAyuda("Los botones y la rueda del mouse no se pueden asignar. Pulsa una tecla del teclado · ESC cancela", EstiloMenus.Coral);
+			return;
+		}
+		if (evento is InputEventJoypadButton { Pressed: true } boton)
 		{
 			GetViewport().SetInputAsHandled();
+			if (boton.IsAction("ui_cancel"))
+			{
+				CancelarCaptura();
+				fila.GrabFocus();
+				return;
+			}
+			MostrarAyuda("Los botones del control no se pueden asignar. Pulsa una tecla del teclado · B cancela", EstiloMenus.Coral);
 			return;
 		}
 		if (evento is not InputEventKey tecla || !tecla.Pressed || tecla.Echo) return;
 		GetViewport().SetInputAsHandled();
 
-		var fila = _esperando;
-		if (tecla.Keycode == Key.Escape)
+		// ESC queda reservada para pausar y cancelar: nunca se asigna a una acción del juego
+		if (tecla.Keycode == Key.Escape || tecla.PhysicalKeycode == Key.Escape)
 		{
 			CancelarCaptura();
 			fila.GrabFocus();
 			return;
 		}
 		Key fisica = tecla.PhysicalKeycode != Key.None ? tecla.PhysicalKeycode : tecla.Keycode;
+		string sistema = Configuracion.ReservadaPorSistema(fisica);
+		if (sistema != null)
+		{
+			MostrarAyuda($"La tecla {Teclas.NombreTecla(fisica)} está reservada para {sistema}. Elige otra · ESC cancela", EstiloMenus.Coral);
+			return;
+		}
 		string ocupada = Configuracion.Instancia.UsoDeTecla(fisica, fila.Accion);
 		if (ocupada != null)
 		{
-			MostrarAyuda($"La tecla {Teclas.NombreTecla(fisica)} ya se usa para {ocupada}. Elige otra · ESC cancela", EstiloMenus.Coral);
+			MostrarAyuda($"La tecla {Teclas.NombreTecla(fisica)} ya está asignada a {ocupada}. Elige otra · ESC cancela", EstiloMenus.Coral);
 			return;
 		}
-		Configuracion.Instancia.AsignarTecla(fila.Accion, fisica);
+		if (!Configuracion.Instancia.AsignarTecla(fila.Accion, fisica)) return;
 		_esperando = null;
 		fila.Esperando = false;
 		fila.MostrarTecla(Teclas.EtiquetaTeclado(fila.Accion));
-		MostrarAyuda(Ayudas[_pestanaActual]);
+		MostrarAyuda($"{Configuracion.NombreAccion(fila.Accion)} ahora usa {Teclas.NombreTecla(fisica)}. Cambio guardado.", EstiloMenus.Ambar);
 		fila.GrabFocus();
+	}
+
+	// Avisa si alguna acción se quedó sin tecla; true si falta alguna
+	private bool AvisarTeclasFaltantes()
+	{
+		var faltan = Configuracion.AccionesSinTecla();
+		if (faltan.Count == 0) return false;
+		MostrarPestana("controles");
+		MostrarAyuda($"Falta asignar una tecla a: {string.Join(", ", faltan)}. Selecciónala y pulsa una tecla, o restaura los predeterminados.", EstiloMenus.Coral);
+		return true;
 	}
 
 	// ---------- Abrir y cerrar ----------
@@ -383,6 +420,7 @@ public partial class MenuOpciones : PanelMenu
 	{
 		CargarValores();
 		MostrarPestana(_pestanaActual);
+		AvisarTeclasFaltantes();
 		base.Abrir();
 		_pestanas[_pestanaActual].GrabFocus();
 	}
@@ -390,6 +428,8 @@ public partial class MenuOpciones : PanelMenu
 	public override void Cerrar()
 	{
 		CancelarCaptura();
+		// Sin tecla, esa acción no se podría usar en el juego: no se sale hasta asignarla
+		if (AvisarTeclasFaltantes()) return;
 		Configuracion.Instancia.Guardar();
 		base.Cerrar();
 	}
