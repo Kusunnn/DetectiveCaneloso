@@ -12,10 +12,15 @@ public partial class Npc : PuntoInteraccion
 	private Vector3 _escalaBase;
 	private float _fase;
 
+	// Si tiene un AnimadorPersonaje, sus animaciones ya respiran y reaccionan: el Npc solo le pasa el ánimo
+	public AnimadorPersonaje Animador { get; private set; }
+
 	public override void _Ready()
 	{
 		if (Cuerpo != null) _escalaBase = Cuerpo.Scale;
 		_fase = (float)GD.RandRange(0.0, Mathf.Tau); // Que no respiren todos a la vez
+		foreach (Node hijo in GetChildren())
+			if (hijo is AnimadorPersonaje animador) Animador = animador;
 	}
 
 	// Ánimo: -2 cerrado, -1 nervioso, 0 tranquilo, 1+ cooperativo. Los nervios aceleran la respiración.
@@ -25,11 +30,18 @@ public partial class Npc : PuntoInteraccion
 	{
 		_velocidadRespiracion = animo <= -1 ? 4.5f : 2.2f;
 		Respiracion = animo <= -1 ? 0.022f : 0.012f;
+		Animador?.FijarAnimo(animo);
 	}
+
+	// Mientras dice su línea gesticula (si tiene animaciones)
+	public void Hablar(bool hablando) => Animador?.Hablar(hablando);
+
+	// Negar, asentir...: una animación de una vez (si tiene animaciones)
+	public void Gesto(string animacion) => Animador?.Gesto(animacion);
 
 	public override void _Process(double delta)
 	{
-		if (Cuerpo == null) return;
+		if (Cuerpo == null || Animador != null) return;
 		_fase += (float)delta * _velocidadRespiracion;
 		float s = Mathf.Sin(_fase);
 		// Respira: sube un poco en alto y se estrecha lo mismo, sin mover los pies
