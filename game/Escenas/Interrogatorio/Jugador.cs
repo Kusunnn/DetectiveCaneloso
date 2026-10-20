@@ -556,6 +556,8 @@ public partial class Jugador : CharacterBody3D
 		foreach (Node hijo in geometrias)
 		{
 			if (hijo is not GeometryInstance3D geometria || hijo is Label3D || hijo is GpuParticles3D) continue;
+			// Calcomanías con transparencia (las grietas del reloj): el brillo pintaría su cuadro entero
+			if (geometria.HasMeta("sin_resaltado")) continue;
 			if (activo)
 			{
 				// Guarda el material de superposición del arte para devolverlo al dejar de apuntar

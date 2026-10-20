@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/reloj/reloj.tscn" id="hu07_m_reloj"]
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/pluma/pluma.tscn" id="hu07_m_pluma"]
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/pluma/pluma.tscn" id="hu07_x_pluma"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/ContornoPistas.cs" id="contorno_pistas"]
 
 [sub_resource type="StandardMaterial3D" id="Material_techo"]
 albedo_color = Color(0.1, 0.1, 0.1, 1)
@@ -914,3 +915,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.03)
 
 [node name="Modelo" parent="PlumaSecreta/Marcas" instance=ExtResource("hu07_m_pluma")]
 transform = Transform3D(0.93969, -0.17101, 0.2962, 0, 0.86603, 0.5, -0.34202, -0.46985, 0.8138, 0.08, -0.06, 0.05)
+
+[node name="ContornoPistas" type="Node" parent="."]
+script = ExtResource("contorno_pistas")
