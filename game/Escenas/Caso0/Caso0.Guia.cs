@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 // Tutorial guiado del Caso 0: una mecánica a la vez, con la guía visual (GuiaTutorial),
-// sugerencias en diálogos y tablero, ayuda gradual si el jugador se atora y [H] para repetir.
+// sugerencias en diálogos y tablero; la orientación de investigación solo se muestra al solicitarla.
 public partial class Caso0
 {
 	[Export] public GuiaTutorial Guia;
@@ -164,31 +164,35 @@ public partial class Caso0
 			Tablero.Sugerir("Arrastra las huellas y el libro de turnos al pizarrón y únelos con hilo.", Huellas, Turnos);
 	}
 
-	// Ayuda gradual (solo en el tutorial): 35 s un pensamiento, 60 s foco sobre el objetivo, 90 s señalarlo
+	// Solo el tutorial enseña la acción, una vez por partida y sin adelantar la orientación.
 	private void AyudaGradual()
 	{
-		int nivel = _sinProgreso > 90 ? 3 : _sinProgreso > 60 ? 2 : _sinProgreso > 35 ? 1 : 0;
-		if (nivel <= _nivelAyuda) return;
-		_nivelAyuda = nivel;
-		if (Guia != null) Guia.Insistencia = nivel;
-		string ayuda = Ayuda(nivel >= 2 ? 2 : 1);
-		if (ayuda == null) return;
-		if (!_avisoAyudaDado)
-		{
-			_avisoAyudaDado = true;
-			ayuda += $"  ([{Teclas.Etiqueta("ayuda")}] repite la pista)";
-		}
-		Jugador.MostrarPensamiento(ConTeclas(ayuda), 7.0);
+		if (_avisoAyudaDado || !_ayudasInvestigacion.Disponible(AyudasHabilitadas, UmbralAyudaSegundos)) return;
+		_avisoAyudaDado = true;
+		Jugador.MostrarPensamiento($"Si te estancas, pulsa [{Teclas.Etiqueta("ayuda")}] para pedir orientación.", 7.0);
+		Cambio();
 	}
 
-	// [H]: repite la última indicación y señala el objetivo
 	private void RepetirAyuda()
 	{
-		string texto = _pasoMostrado != null ? Guia?.PasoActual?.Texto : null;
-		if (string.IsNullOrEmpty(texto)) texto = Ayuda(2) ?? _ultimaIndicacion;
-		if (!string.IsNullOrEmpty(texto)) Jugador.MostrarPensamiento(ConTeclas(texto), 6.0);
-		if (Guia != null) Guia.Insistencia = Math.Max(Guia.Insistencia, 2);
+		var (id, texto) = OrientacionInvestigacion();
+		if (!_ayudasInvestigacion.Solicitar(AyudasHabilitadas, UmbralAyudaSegundos, id, texto,
+			t => Jugador.MostrarPensamiento(t, 6.0))) return;
+		Cambio();
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Pagina);
+	}
+
+	private (string, string) OrientacionInvestigacion()
+	{
+		if (!_pistas.Contains(Grabadora) || !_pistas.Contains(Reloj)) return ("sala", "Todavía hay algo que revisar en la Sala 1.");
+		if (!_deducciones.Contains(D1)) return ("tablero_sala", "Conviene repasar en el tablero lo que encontré en la Sala 1.");
+		if (!_pistas.Contains(Huellas) || !_pistas.Contains(Envoltorio)) return ("pasillo", "Quizá el pasillo conserve algo que pasé por alto.");
+		if (!_pistas.Contains(Turnos)) return ("recepcion", "Debería revisar con calma la recepción.");
+		if (!_deducciones.Contains(D2)) return ("tablero_recepcion", "Lo que encontré en recepción merece otra mirada en el tablero.");
+		if (!_autorizado) return ("comisario", "El comisario en recepción podría orientarme sobre cómo continuar.");
+		if (!Jugador.TieneObjeto(Combinacion)) return ("espera", "Tal vez dejé algo sin revisar en la zona de espera de recepción.");
+		if (!_pistas.Contains(Cinta)) return ("vestidores", "Aún queda algo por investigar en los vestidores.");
+		return ("resolver", "Es momento de volver a la Sala 1 y hablar de lo ocurrido.");
 	}
 
 	// Los textos escriben las teclas de teclado ("[E]", "[R]"...); si el jugador usa control se cambian por sus botones

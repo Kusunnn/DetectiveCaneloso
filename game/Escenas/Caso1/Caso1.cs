@@ -37,6 +37,11 @@ public partial class Caso1 : Node
 	private const string RegistroTachon = "registro_enfermeria.tachon";
 	private const string BotasJuncos = "botas_tony.juncos";
 
+	[Export(PropertyHint.Range, "1,600,1,or_greater")] public double UmbralAyudaSegundos = 120;
+	private readonly SistemaAyudas _ayudasInvestigacion = new();
+	private bool InvestigacionActiva => !_restaurando && !_enDialogo && !Dialogo.Abierto && !Tablero.Abierto && Jugador.Investigando;
+	private bool AyudasHabilitadas => Configuracion.Instancia?.AyudasInvestigacion ?? true;
+
 	[Export] public Jugador Jugador;
 	[Export] public CanvasLayer Hud;
 	[Export] public VentanaDialogo Dialogo;
@@ -136,7 +141,7 @@ public partial class Caso1 : Node
 
 	private void AlRegistrarEvidencia(string id)
 	{
-		_pistas.Add(id);
+		if (_pistas.Add(id)) _ayudasInvestigacion.NuevaPista();
 		Cambio();
 		Autoguardar("Pista: " + id);
 		string pensamiento = id switch
@@ -184,6 +189,7 @@ public partial class Caso1 : Node
 	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
 	private void AlDescubrirDetalle(string origen, string id)
 	{
+		_ayudasInvestigacion.NuevaPista();
 		string nota = id switch
 		{
 			LibroAntonio => "Reverso del libro de guardia: «De guardia: monitor auxiliar Antonio R.»",
@@ -273,8 +279,30 @@ public partial class Caso1 : Node
 		_enDialogo = false;
 	}
 
+	private (string, string) OrientacionInvestigacion()
+	{
+		if (!_pistas.Contains(Lena) || !_pistas.Contains(LibroQuemado)) return ("fogata", "La zona de la fogata todavía merece otra mirada.");
+		if (!_pistas.Contains(TazaDelantal) || !Jugador.TieneObjeto(Llavero)) return ("cocina", "Quizá haya algo pendiente en la cocina.");
+		if (!_pistas.Contains(NotaPorky) || !_pistas.Contains(FotoGrupo) || !_pistas.Contains(Recorte) || !_pistas.Contains(Oferta))
+			return ("porky", "Ahora puedo investigar con más calma la cabaña de Porky.");
+		if (!_pistas.Contains(Baul)) return ("almacen", "Debería revisar el almacén.");
+		if (!_pistas.Contains(RegistroEnfermeria)) return ("enfermeria", "La enfermería es un buen lugar para seguir investigando.");
+		if (!_pistas.Contains(BotasTony)) return ("director", "Conviene recorrer los alrededores de la cabaña del director.");
+		if (!_pistas.Contains(Interruptor) || !_pistas.Contains(Candado)) return ("caseta", "Falta revisar algo en la caseta del generador.");
+		if (RegistroLlamadasConfirmado && !_pistas.Contains(RegistroLlamadas)) return ("coche", "Podría volver al estacionamiento.");
+		return (null, null); // El siguiente escenario aún no está disponible.
+	}
+
 	public override void _UnhandledInput(InputEvent evento)
 	{
+		if (evento.IsActionPressed("ayuda") && !evento.IsEcho() && InvestigacionActiva)
+		{
+			GetViewport().SetInputAsHandled();
+			var (id, texto) = OrientacionInvestigacion();
+			if (_ayudasInvestigacion.Solicitar(AyudasHabilitadas, UmbralAyudaSegundos, id, texto,
+				t => Jugador.MostrarPensamiento(t, 6.0))) Cambio();
+			return;
+		}
 		if (evento.IsActionPressed("deducir") && !_enDialogo && !Tablero.Abierto)
 		{
 			GetViewport().SetInputAsHandled();

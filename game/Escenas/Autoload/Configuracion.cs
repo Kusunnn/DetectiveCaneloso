@@ -61,6 +61,7 @@ public partial class Configuracion : Node
 
 	// Ayudas visuales del tutorial (íconos de tecla, foco, flecha al objetivo). Se pueden apagar en Opciones.
 	public bool AyudasVisuales { get; set; } = true;
+	public bool AyudasInvestigacion { get; set; } = true;
 
 	// Teclas que el jugador puede cambiar en Opciones > Controles (nombre visible, acción del InputMap)
 	public static readonly (string Nombre, string Accion)[] TeclasConfigurables =
@@ -147,6 +148,7 @@ public partial class Configuracion : Node
 		AgacharseAlternar = false;
 		SensibilidadRaton = 1f;
 		AyudasVisuales = true;
+		AyudasInvestigacion = true;
 		RestaurarTeclas();
 	}
 
@@ -182,6 +184,7 @@ public partial class Configuracion : Node
 		PantallaCompleta = eleccionGuardada ? archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool() : PantallaCompleta;
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
+		AyudasInvestigacion = archivo.GetValue("controles", "ayudas_investigacion", true).AsBool();
 		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
 		if (archivo.HasSection("teclas"))
 		{
@@ -254,6 +257,7 @@ public partial class Configuracion : Node
 		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
 		archivo.SetValue("controles", "sensibilidad_raton", SensibilidadRaton);
 		archivo.SetValue("controles", "ayudas_visuales", AyudasVisuales);
+		archivo.SetValue("controles", "ayudas_investigacion", AyudasInvestigacion);
 		foreach (var (accion, tecla) in _teclas)
 			archivo.SetValue("teclas", accion, (long)tecla);
 
