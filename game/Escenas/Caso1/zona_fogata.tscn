@@ -229,7 +229,7 @@ size = Vector3(0.62, 0.55, 0.45)
 size = Vector3(0.3, 0.9, 0.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_37"]
-size = Vector3(1.02, 0.5, 0.46)
+size = Vector3(1.5, 0.5, 0.7)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38"]
 albedo_texture = ExtResource("e23")
 albedo_color = Color(0.6, 0.48, 0.4, 1.0)
@@ -488,7 +488,7 @@ DescripcionAmpliada = "La pila de leña sigue igual de ordenada, con el hacha a 
 Lugar = "Fogata · junto a la leñera"
 
 [node name="Forma" type="CollisionShape3D" parent="Lena"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.22, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.02, 0.25, 0)
 shape = SubResource("BoxShape3D_37")
 
 [node name="Guirnaldas" type="Node3D" parent="."]

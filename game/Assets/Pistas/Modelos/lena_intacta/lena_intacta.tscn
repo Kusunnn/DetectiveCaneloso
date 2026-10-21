@@ -15,54 +15,55 @@
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/hatchet/hatchet_1k.gltf" id="13_d4e4y"]
 
 [node name="Lena" type="Node3D" unique_id=908059039]
+transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 0, 0, 0)
 
 [node name="Tronco0" type="MeshInstance3D" parent="." unique_id=779806671]
-transform = Transform3D(-0.99903554, -0.041278537, -0.014969122, 0.041283164, -0.9991475, 0, -0.01495636, -0.0006179727, 0.99988794, -0.332438, 0.06951751, 0.0021461528)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3059499, 0.07783322, 0)
 mesh = ExtResource("1_t7e4n")
 
 [node name="Tronco1" type="MeshInstance3D" parent="." unique_id=1292337243]
-transform = Transform3D(0.113266215, 0.9921728, 0.052573226, -0.9935468, 0.11342307, 0, -0.0059630168, -0.05223396, 0.99861705, -0.1586144, 0.06071496, 0.013345726)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.22716387, 0.13926566, 0)
 mesh = ExtResource("2_5ygab")
 
 [node name="Tronco2" type="MeshInstance3D" parent="." unique_id=1689108563]
-transform = Transform3D(-0.48297474, 0.8744611, 0.045311403, -0.8753602, -0.4834713, 0, 0.021906763, -0.0396638, 0.9989729, -0.009597001, 0.065899715, 0.004147105)
+transform = Transform3D(0.9800666, -0.19866933, 0, 0.19866933, 0.9800666, 0, 0, 0, 1, -0.14324738, 0.16440013, 0)
 mesh = ExtResource("3_klu6w")
 
 [node name="Tronco3" type="MeshInstance3D" parent="." unique_id=1031702741]
-transform = Transform3D(-0.39430276, 0.9176414, 0.04959344, -0.918772, -0.39478856, 0, 0.019578923, -0.045565065, 0.99876946, 0.16412874, 0.060602207, -0.0030073468)
+transform = Transform3D(0.26749888, -0.9635582, 0, 0.9635582, 0.26749888, 0, 0, 0, 1, -0.15399459, 0.074789606, 0)
 mesh = ExtResource("4_5jmr2")
 
 [node name="Tronco4" type="MeshInstance3D" parent="." unique_id=21471149]
-transform = Transform3D(-0.96531, -0.25875962, -0.03492994, 0.25891763, -0.9658994, 0, -0.033738807, -0.009043977, 0.99938977, 0.32282197, 0.067324884, 0.017682783)
+transform = Transform3D(-0.12884454, -0.9916648, 0, 0.9916648, -0.12884454, 0, 0, 0, 1, 0.002870284, 0.17368366, 0.01)
 mesh = ExtResource("5_iicnl")
 
 [node name="Tronco5" type="MeshInstance3D" parent="." unique_id=1192321599]
-transform = Transform3D(-0.9786121, 0.20203167, 0.038748205, -0.20218351, -0.97934765, 0, 0.037947964, -0.007834248, 0.999249, -0.2554466, 0.19108665, 0.01527518)
+transform = Transform3D(0.3623577, -0.9320391, 0, 0.9320391, 0.3623577, 0, 0, 0, 1, 0.05952216, 0.15763617, 0)
 mesh = ExtResource("6_lh2ns")
 
 [node name="Tronco6" type="MeshInstance3D" parent="." unique_id=109608432]
-transform = Transform3D(-0.8125979, 0.5808645, -0.047761183, -0.5815281, -0.8135263, 0, -0.03885498, 0.027774472, 0.9988588, -0.08482607, 0.17959094, 0.0031527653)
+transform = Transform3D(-0.8568887, -0.51550144, 0, 0.51550144, -0.8568887, 0, 0, 0, 1, 0.00058472186, 0.0739247, 0)
 mesh = ExtResource("7_mbsnc")
 
 [node name="Tronco7" type="MeshInstance3D" parent="." unique_id=2020492659]
-transform = Transform3D(0.053113665, -0.9984973, -0.013493072, 0.9985882, 0.0531185, 0, 0.00071673177, -0.013474023, 0.999909, 0.080901444, 0.1929043, 0.009599986)
+transform = Transform3D(-0.90407217, -0.42737985, 0, 0.42737985, -0.90407217, 0, 0, 0, 1, 0.1657043, 0.2250222, 0.01)
 mesh = ExtResource("8_05xo2")
 
 [node name="Tronco8" type="MeshInstance3D" parent="." unique_id=2082988172]
-transform = Transform3D(0.4855155, 0.8724855, 0.05517008, -0.8738164, 0.4862561, 0, -0.026826788, -0.04820852, 0.998477, 0.25411952, 0.19112986, -0.004975275)
+transform = Transform3D(-0.72593224, 0.68776625, 0, -0.68776625, -0.72593224, 0, 0, 0, 1, 0.1546003, 0.07600998, 0)
 mesh = ExtResource("9_pcyx3")
 
 [node name="Tronco9" type="MeshInstance3D" parent="." unique_id=1164897058]
-transform = Transform3D(-0.315918, -0.9487822, 0.0028690917, 0.9487861, -0.3159193, 0, 0.0009064015, 0.0027221544, 0.9999959, -0.16132766, 0.30154526, -0.0067771627)
+transform = Transform3D(-0.58850116, -0.80849636, 0, 0.80849636, -0.58850116, 0, 0, 0, 1, 0.23409933, 0.19973177, 0)
 mesh = ExtResource("10_1u2bf")
 
 [node name="Tronco10" type="MeshInstance3D" parent="." unique_id=841537459]
-transform = Transform3D(0.70829165, 0.7058253, 0.011553124, -0.7058725, 0.7083389, 0, -0.008183527, -0.008155032, 0.99993324, 0.003244835, 0.3131208, -0.0075063333)
+transform = Transform3D(0.4685165, 0.88345474, 0, -0.88345474, 0.4685165, 0, 0, 0, 1, 0.30467334, 0.07846216, 0)
 mesh = ExtResource("11_aigwh")
 
 [node name="Tronco11" type="MeshInstance3D" parent="." unique_id=1108859400]
-transform = Transform3D(0.9159953, 0.40010265, 0.029505206, -0.4002769, 0.91639423, 0, -0.027038401, -0.011810252, 0.99956465, 0.15598975, 0.30680445, 0.009511784)
+transform = Transform3D(-0.8481, 0.5298362, 0, -0.5298362, -0.8481, 0, 0, 0, 1, 0.27697945, 0.25414222, 0.01)
 mesh = ExtResource("12_x3p5x")
 
 [node name="Hacha" type="Node3D" parent="." unique_id=2061459592 instance=ExtResource("13_d4e4y")]
-transform = Transform3D(-4.1061284e-08, -0.3428978, 0.9393727, -1.4988538e-08, 0.9393727, 0.3428978, -1, 0, -4.371139e-08, 0.5, 0, 0.1)
+transform = Transform3D(-4.1061284e-08, -0.3428978, 0.9393727, -1.4988538e-08, 0.9393727, 0.3428978, -1, 0, -4.371139e-08, 0.44, 0, 0.08)
