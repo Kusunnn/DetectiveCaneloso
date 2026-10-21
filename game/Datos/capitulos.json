@@ -32,7 +32,7 @@
 			"titulo": "La noche del Ciervo de Luz",
 			"ilustracion": "res://Assets/Capitulos/capitulo1.png",
 			"escena": "res://Escenas/Caso1/escenario_campamento.tscn",
-			"pistas_totales": 12,
+			"pistas_totales": 21,
 			"dialogos_clave": 0,
 			"secretos": 0,
 			"requisitos": ["caso0"],

@@ -50,6 +50,19 @@ Están en `Assets/Caso1/Sonidos/`. Las grabaciones largas se recortaron a 40 s e
 | Caso1/Sonidos/agua_lago.ogg (#1444) | BigSoundBank · Pontoon, marina | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/pontoon-marina-s1444.html |
 | Caso1/Sonidos/generador.ogg (`loop_generator_1.mp3`) | OpenGameArt · Generator (loop) | YCbCr | CC0 1.0 | https://opengameart.org/content/generator-loop |
 
+## Caso 1 · Escenario 2 (Lago y Bosque, HU-20.6)
+
+También están en `Assets/Caso1/Sonidos/` y se usan tal como los entrega BigSoundBank (OGG); su ganancia se iguala en `Sonidos.cs`. Las ranas son un bucle; del crujido del muelle y de los pasos en el pontón `Caso1Lago` toca trocitos al azar de 1 a 1.6 s mientras se camina por el tablado. La estática sale del altavoz escondido hasta que Caneloso lo encuentra.
+
+| Archivo | Fuente | Autor | Licencia | Enlace |
+|---|---|---|---|---|
+| Caso1/Sonidos/ranas.ogg (#0997) | BigSoundBank · Frogs #1 | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/frogs-1-s0997.html |
+| Caso1/Sonidos/muelle_crujido.ogg (#0518) | BigSoundBank · Floating floor squeaks | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/floating-floor-squeaks-s0518.html |
+| Caso1/Sonidos/muelle_pasos.ogg (#1845) | BigSoundBank · Walk on pontoon | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/walk-on-pontoon-s1845.html |
+| Caso1/Sonidos/altavoz_estatica.ogg (#0312) | BigSoundBank · Crackling radio #1 | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/crackling-radio-1-s0312.html |
+
+El agua contra el muelle, los grillos, el viento en los pinos y el búho son los mismos archivos del Campamento (tabla de arriba).
+
 ## Vista de examen (HU-07)
 
 Están en `Assets/Audio/Examen/`. Son los OGG originales de Kenney copiados tal cual; su ganancia se iguala en `Sonidos.cs`.
