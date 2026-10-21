@@ -618,7 +618,7 @@ public partial class Caso0 : Node
 		string[] cinta =
 		{
 			"[Tito Garras] «...sí, yo me robé la cartera del alcalde.»",
-			"[03:12 · Ronquidos. Un ruido metálico junto al micrófono]",
+			"[Ronquidos. Ruido metálico en el techo]",
 			"«La Garra no olvida, Caneloso.»",
 		};
 		// Mientras suena la cinta se ve lo que pasó en la Sala 1 a las 3:12
@@ -672,6 +672,8 @@ public partial class Caso0 : Node
 
 	public override void _Process(double delta)
 	{
+		// Durante la cinemática de la cinta no corre la guía ni ninguna ayuda
+		if (CinematicaCinta.EnCurso) return;
 		ActualizarGuia(delta);
 		if (_resuelto) return;
 		_tiempoCaso += delta;
