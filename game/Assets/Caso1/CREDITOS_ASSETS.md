@@ -96,3 +96,7 @@ El escenario reusa los modelos del Campamento (Kenney, KayKit, Quaternius, `_pre
 ## Caso 1 · Escenario 3 (sala de interrogatorio del Capítulo 1, HU-20.6)
 
 `Escenas/Caso1/Interrogatorio/sala_interrogatorio_caso1.tscn` se arma con `Herramientas/Caso1/sala_caso1.gd` a partir de la sala del Caso 0 (mismos materiales y muebles). El corcho, la mesa de pruebas y la puerta cerrada son mallas simples hechas para el proyecto. Los personajes son los modelos del equipo (`Assets/Models/`).
+
+## Cinemática de la cinta (Caso 0)
+
+No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La cinta que se ve en la grabadora y en la mano de Porky es el casete que trae el modelo **Poly Haven · Cassette Player** (`cassette_player_tape`, el mismo de la grabadora de arriba). La figura es el maniquí de Quaternius (ver `Animaciones/CREDITOS_ANIMACIONES.md`) con capucha y gabardina hechas con mallas de Godot (esferas y cilindros pegados a sus huesos) en `CinematicaCinta.cs`.

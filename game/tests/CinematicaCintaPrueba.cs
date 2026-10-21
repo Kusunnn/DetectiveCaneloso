@@ -16,7 +16,7 @@ public partial class CinematicaCintaPrueba : Node
 		var tarea = CinematicaCinta.Reproducir(sala, new CinematicaCinta.Actores
 		{
 			Porky = caso.Porky, Eriz = caso.Eriz, Jugador = caso.Jugador, Reloj = caso.RelojSala, Grabadora = caso.GrabadoraSala, Musica = caso.Musica,
-			Lineas = new[] { "[Tito Garras] «...sí, yo me robé la cartera del alcalde.»", "[03:12 · Ronquidos. Un ruido metálico junto al micrófono]", "«La Garra no olvida, Caneloso.»" },
+			Lineas = new[] { "[Tito Garras] «...sí, yo me robé la cartera del alcalde.»", "[Ronquidos. Ruido metálico en el techo]", "«La Garra no olvida, Caneloso.»" },
 		});
 		Cinematica = sala.GetChildren().OfType<CinematicaCinta>().LastOrDefault();
 		if (Cinematica != null) Cinematica.Manual = manual;
