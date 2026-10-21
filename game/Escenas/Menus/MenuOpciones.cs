@@ -34,6 +34,7 @@ public partial class MenuOpciones : PanelMenu
 	private FilaInterruptor _agacharse;
 	private FilaInterruptor _pantallaCompleta;
 	private FilaInterruptor _ayudas;
+	private FilaTecla _tamanoTexto;
 	private readonly List<FilaTecla> _filasTecla = new();
 	private FilaTecla _esperando;
 
@@ -178,9 +179,19 @@ public partial class MenuOpciones : PanelMenu
 		_pantallaCompleta.Cambiado += activado => Configuracion.Instancia.PantallaCompleta = activado;
 		_ayudas = new FilaInterruptor("Ayudas visuales del tutorial", "Muestra indicaciones en pantalla durante el caso 00");
 		_ayudas.Cambiado += activado => Configuracion.Instancia.AyudasVisuales = activado;
+		// Tamaño del texto: cada pulsación pasa al siguiente (Normal, Grande, Muy grande)
+		_tamanoTexto = new FilaTecla("Tamaño del texto", "");
+		_tamanoTexto.Pressed += () =>
+		{
+			var escalas = Configuracion.EscalasTexto;
+			int actual = Array.FindIndex(escalas, e => Mathf.IsEqualApprox(e.Escala, Configuracion.Instancia.EscalaTexto));
+			Configuracion.Instancia.EscalaTexto = escalas[(actual + 1) % escalas.Length].Escala;
+			MostrarTamanoTexto();
+		};
 		lista.AddChild(_pantallaCompleta);
 		lista.AddChild(_ayudas);
-		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas };
+		lista.AddChild(_tamanoTexto);
+		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas, _tamanoTexto };
 		var contenedor = new Control { MouseFilter = MouseFilterEnum.Ignore };
 		contenedor.AddChild(lista);
 		return contenedor;
@@ -313,7 +324,15 @@ public partial class MenuOpciones : PanelMenu
 		_agacharse.Fijar(config.AgacharseAlternar);
 		_pantallaCompleta.Fijar(config.PantallaCompleta);
 		_ayudas.Fijar(config.AyudasVisuales);
+		MostrarTamanoTexto();
 		foreach (var fila in _filasTecla) fila.MostrarTecla(Teclas.EtiquetaTeclado(fila.Accion));
+	}
+
+	private void MostrarTamanoTexto()
+	{
+		var escalas = Configuracion.EscalasTexto;
+		int actual = Math.Max(0, Array.FindIndex(escalas, e => Mathf.IsEqualApprox(e.Escala, Configuracion.Instancia.EscalaTexto)));
+		_tamanoTexto.MostrarTecla(escalas[actual].Nombre);
 	}
 
 	private void Restaurar()

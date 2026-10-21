@@ -62,6 +62,11 @@ public partial class Configuracion : Node
 	// Ayudas visuales del tutorial (íconos de tecla, foco, flecha al objetivo). Se pueden apagar en Opciones.
 	public bool AyudasVisuales { get; set; } = true;
 
+	// Tamaño del texto del HUD, el diario, el expediente y los diálogos (1 = normal)
+	public static readonly (float Escala, string Nombre)[] EscalasTexto = { (1f, "Normal"), (1.15f, "Grande"), (1.3f, "Muy grande") };
+	private float _escalaTexto = 1f;
+	public float EscalaTexto { get => _escalaTexto; set => _escalaTexto = Mathf.Clamp(value, 1f, 1.3f); }
+
 	// Teclas que el jugador puede cambiar en Opciones > Controles (nombre visible, acción del InputMap)
 	public static readonly (string Nombre, string Accion)[] TeclasConfigurables =
 	{
@@ -147,6 +152,7 @@ public partial class Configuracion : Node
 		AgacharseAlternar = false;
 		SensibilidadRaton = 1f;
 		AyudasVisuales = true;
+		EscalaTexto = 1f;
 		RestaurarTeclas();
 	}
 
@@ -183,6 +189,7 @@ public partial class Configuracion : Node
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
 		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
+		EscalaTexto = archivo.GetValue("accesibilidad", "escala_texto", EscalaTexto).AsSingle();
 		if (archivo.HasSection("teclas"))
 		{
 			foreach (string accion in archivo.GetSectionKeys("teclas"))
@@ -254,6 +261,7 @@ public partial class Configuracion : Node
 		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
 		archivo.SetValue("controles", "sensibilidad_raton", SensibilidadRaton);
 		archivo.SetValue("controles", "ayudas_visuales", AyudasVisuales);
+		archivo.SetValue("accesibilidad", "escala_texto", EscalaTexto);
 		foreach (var (accion, tecla) in _teclas)
 			archivo.SetValue("teclas", accion, (long)tecla);
 

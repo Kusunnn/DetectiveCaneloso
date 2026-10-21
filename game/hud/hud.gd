@@ -441,19 +441,29 @@ func _input(event: InputEvent) -> void:
 		panel_cambiado.emit(diario_abierto, false)
 		get_viewport().set_input_as_handled()
 
+## Tamaño del texto elegido en Opciones (Configuracion.EscalaTexto)
+func _tam(tam: int) -> int:
+	var configuracion := get_node_or_null("/root/Configuracion")
+	return int(round(tam * (float(configuracion.get("EscalaTexto")) if configuracion else 1.0)))
+
+## Si con el tamaño elegido no cabe en el ancho, se reduce hasta caber (nunca por debajo del normal)
 func _texto(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float = -1) -> void:
-	_lienzo.draw_string(fuente, p, texto, HORIZONTAL_ALIGNMENT_LEFT, ancho, tam, color)
+	var t := _tam(tam)
+	if ancho > 0:
+		while t > tam and fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x > ancho:
+			t -= 1
+	_lienzo.draw_string(fuente, p, texto, HORIZONTAL_ALIGNMENT_LEFT, ancho, t, color)
 
 ## Como _texto, pero si no cabe en el ancho baja la fuente (mínimo 60 %) en lugar de cortar el texto.
 func _texto_ajustado(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float) -> void:
-	var t := tam
+	var t := _tam(tam)
 	while t > int(tam * 0.6) and fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x > ancho:
 		t -= 1
-	_texto(texto, p, fuente, t, color, ancho)
+	_lienzo.draw_string(fuente, p, texto, HORIZONTAL_ALIGNMENT_LEFT, ancho, t, color)
 
 func _parrafo(texto: String, p: Vector2, ancho: float, tam: int, color: Color, max_lineas: int = 4) -> void:
 	var parrafo := TextParagraph.new()
-	parrafo.add_string(texto, MONO, tam)
+	parrafo.add_string(texto, MONO, _tam(tam))
 	parrafo.width = ancho
 	parrafo.max_lines_visible = max_lineas
 	parrafo.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS

@@ -51,6 +51,7 @@ var tween: Tween
 var tween_scroll: Tween
 
 var _fuentes := {}
+var _escala_construida := 1.0
 
 
 func _ready() -> void:
@@ -85,7 +86,19 @@ func ver_presentacion() -> void:
 	get_tree().root.add_child(intro)
 
 
-func abrir() -> void: _aplicar(true)
+func abrir() -> void:
+	# Si cambió el tamaño del texto en Opciones, se vuelve a armar con el nuevo
+	if overlay and not is_equal_approx(_escala_construida, _escala_texto()):
+		overlay.queue_free()
+		overlay = null
+		_construir_expediente()
+		_aplicar(false, false)
+	_aplicar(true)
+
+
+func _escala_texto() -> float:
+	var configuracion := get_node_or_null("/root/Configuracion")
+	return float(configuracion.get("EscalaTexto")) if configuracion else 1.0
 func cerrar() -> void: _aplicar(false)
 func alternar() -> void: _aplicar(not abierto)
 
@@ -161,7 +174,7 @@ func _label(t: String, f: Font, tam: int, c: Color, envolver := false) -> Label:
 	var l := Label.new()
 	l.text = t
 	l.add_theme_font_override("font", f)
-	l.add_theme_font_size_override("font_size", tam)
+	l.add_theme_font_size_override("font_size", int(round(tam * _escala_construida)))
 	l.add_theme_color_override("font_color", c)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if envolver:
@@ -227,6 +240,7 @@ func _tecla(texto: String, color: Color, tam := 11) -> PanelContainer:
 # ---------- Expediente ----------
 
 func _construir_expediente() -> void:
+	_escala_construida = _escala_texto()
 	overlay = Control.new()
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(overlay)
