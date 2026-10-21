@@ -15,7 +15,6 @@
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/polyhaven/hatchet/hatchet_1k.gltf" id="13_d4e4y"]
 
 [node name="Lena" type="Node3D" unique_id=908059039]
-transform = Transform3D(1.6, 0, 0, 0, 1.6, 0, 0, 0, 1.6, 0, 0, 0)
 
 [node name="Tronco0" type="MeshInstance3D" parent="." unique_id=779806671]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3059499, 0.07783322, 0)
