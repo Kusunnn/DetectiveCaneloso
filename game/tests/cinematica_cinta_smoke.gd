@@ -51,6 +51,11 @@ func probar() -> void:
 	revisar(prueba.Cinematica != null, "la cinemática empieza")
 	revisar(root.get_viewport().get_camera_3d() != camara_antes, "usa su propia cámara")
 	revisar(not caso.Jugador.visible, "el detective no sale en el recuerdo")
+	# Nada de pensamientos ni avisos encima de la cinemática
+	caso.Jugador.MostrarPensamiento("Prueba de pensamiento", 3.0)
+	var texto_tutorial: Label = sala.get_node("CanvasLayer/TextoTutorial")
+	revisar(texto_tutorial.text != "“Prueba de pensamiento”", "no aparece ningún pensamiento encima")
+	revisar(AudioServer.get_bus_index("Cinta") >= 0, "el audio pasa por el bus de la cinta")
 	var limite := 0
 	while not prueba.Terminada and limite < 2000:
 		await process_frame
@@ -65,6 +70,44 @@ func probar() -> void:
 	revisar(not caso.Porky.Animador.Controlado, "Porky vuelve a su reposo")
 	revisar(sala.get_node("HUD").visible == hud_antes, "el HUD vuelve como estaba")
 	revisar(sala.get_node_or_null("FiguraCinta") == null, "la figura se borra")
+	var grabadora = caso.GrabadoraSala
+	revisar(grabadora.find_child("Contador", true, false).text == "03:12", "el contador queda en 03:12")
+	revisar(not grabadora.find_child("cassette_player_tape", true, false).visible, "la grabadora queda sin cinta")
+	revisar(caso.RelojSala.get_node("Modelo/Grietas").visible, "el reloj queda con el cristal rajado")
+	revisar(sala.get_node("FocoReloj").visible, "vuelve el foco del reloj")
+	revisar(not sala.get_node("PlumaSecreta/Marcas").visible, "la pluma vuelve a verse solo con linterna")
+	revisar(AudioServer.get_bus_index("Cinta") < 0, "se quita el bus de la cinta")
+	await create_timer(3.0 / Engine.time_scale).timeout
+	revisar(AudioServer.get_bus_volume_db(AudioServer.get_bus_index("Musica")) > -20.0, "la música regresa con un fundido")
+
+	# Adelantar con clic de toma en toma: el tic-tac se corta aunque se salte el golpe del reloj
+	var prueba3 = load("res://tests/CinematicaCintaPrueba.cs").new()
+	root.add_child(prueba3)
+	prueba3.Empezar(sala, false)
+	await cuadros(2)
+	var cine = prueba3.Cinematica
+	cine.IrA(22.0)
+	await cuadros(2)
+	var tictac_antes := false
+	for n in cine.get_children():
+		if n is AudioStreamPlayer and n.stream != null and n.stream.resource_path.ends_with("reloj_pared.wav"): tictac_antes = n.playing
+	var clic := InputEventMouseButton.new()
+	clic.button_index = MOUSE_BUTTON_LEFT
+	clic.pressed = true
+	for i in 2:
+		Input.parse_input_event(clic)
+		await cuadros(3)
+	var tictac_despues := true
+	for n in cine.get_children():
+		if n is AudioStreamPlayer and n.stream != null and n.stream.resource_path.ends_with("reloj_pared.wav"): tictac_despues = n.playing
+	revisar(tictac_antes and not tictac_despues, "al adelantar más allá del golpe se corta el tic-tac")
+	Engine.time_scale = 8.0
+	limite = 0
+	while not prueba3.Terminada and limite < 2000:
+		await process_frame
+		limite += 1
+	Engine.time_scale = 1.0
+	revisar(prueba3.Terminada, "termina después de adelantar")
 
 	# Saltar: mantener Espacio
 	var prueba2 = load("res://tests/CinematicaCintaPrueba.cs").new()
@@ -84,7 +127,7 @@ func probar() -> void:
 	tecla.pressed = false
 	Input.parse_input_event(tecla)
 	var segundos := (Time.get_ticks_msec() - inicio) / 1000.0
-	# Dura 41 s; saltarla toma 1.2 s de mantener + el fundido
+	# Dura 55 s; saltarla toma 1.2 s de mantener + el fundido
 	revisar(prueba2.Terminada and segundos < 5.0, "mantener Espacio la salta (%.1f s)" % segundos)
 	revisar(root.get_viewport().get_camera_3d() == camara_antes, "al saltarla también devuelve la cámara")
 
