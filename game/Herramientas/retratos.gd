@@ -59,11 +59,7 @@ func _initialize() -> void:
 	current_scene = escena
 	await create_timer(2.0).timeout
 	paused = false
-	for capa in escena.find_children("*", "CanvasLayer", true, false):
-		capa.visible = false
-	for n in root.get_children():
-		if n is CanvasLayer:
-			n.visible = false
+	_ocultar_capas()
 	var jugador: Node3D = escena.get_node("Jugador")
 	var cam := Camera3D.new()
 	escena.add_child(cam)
@@ -99,6 +95,8 @@ func _initialize() -> void:
 		jugador.global_position = posicion - Vector3.UP * 1.4
 		cam.look_at_from_position(posicion, cara + Vector3.UP * datos[3])
 		await create_timer(1.6).timeout
+		# Por si apareció algún aviso o ventana del juego mientras tanto
+		_ocultar_capas()
 		await RenderingServer.frame_post_draw
 		_guardar(root.get_texture().get_image(), carpeta.path_join(nombre + ".png"))
 
@@ -117,6 +115,11 @@ func _initialize() -> void:
 		var f := FileAccess.open(PARTIDAS + archivo, FileAccess.WRITE)
 		f.store_buffer(respaldo[archivo])
 	quit()
+
+## Oculta toda la interfaz (HUD, avisos y diálogos de los autoloads) para que no salga en la foto.
+func _ocultar_capas() -> void:
+	for capa in root.find_children("*", "CanvasLayer", true, false):
+		capa.visible = false
 
 ## Centro de la cara: los huesos de la cabeza si hay esqueleto, la malla Cabeza si es de piezas, o el centro de las mallas.
 func _cara(nodo: Node3D) -> Vector3:
