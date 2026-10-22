@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="InformeCaso" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://hud/expediente/informe_caso.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://bn1t1o60j20c3" path="res://hud/expediente/fotos/caso_00_grabadora.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+titulo = "\"LA CINTA DE LAS 3:12\""
+lugar = "Comisaría central, Sala de interrogatorios 1."
+fecha = "Madrugada del juicio de Tito Garras."
+etiqueta_victima = "OBJETO DESAPARECIDO"
+victima = "La cinta con la confesión grabada de Tito Garras."
+foto = ExtResource("2")
+pie_foto = "Sala 1 · 6:02"
+sello = "CONFIDENCIAL"
+a_cargo = "Det. Caneloso"
+estado = "ABIERTO"
+examen = PackedStringArray("La grabadora sigue en REC, sin cinta.", "El reloj de la pared se paró a las 3:12.", "No hay señales de que forzaran la puerta.")
+hallazgo = "A las 6:02 se descubrió que la confesión grabada de Tito Garras ya no estaba en la grabadora de la Sala 1."
+circunstancias = "Tito Garras, carterista detenido en la celda C-2, confesó haber robado la cartera del alcalde. Su juicio es hoy a las 12:00 y sin la cinta no hay confesión."
+linea_tiempo = PackedStringArray("1:00|Eriz firma su salida en el libro.", "3:12|El reloj de la Sala 1 se detiene.|!", "6:02|Se descubre que falta la cinta.|!", "12:00|Juicio de Tito Garras.")
+notas = PackedStringArray("Tito asegura que trabaja para un tal «La Garra». Nadie le cree.")
+antecedente = "Eriz, el conserje, fue carterista y estuvo preso. Tiene llave de todas las puertas de la comisaría."
+titulo_personas = "PERSONAS EN LA COMISARÍA ESA NOCHE"
+personas = PackedStringArray("Porky||Agente de guardia", "Eriz||Conserje|Excarterista, apodado «Dedos»", "Comisario||Jefe de la comisaría", "Tito Garras||Detenido en la celda C-2|Carterista")
+etiqueta_pasado = "ANTECEDENTES"
+objetivo = "Encontrar la cinta antes del juicio de las 12:00 y averiguar quién se la llevó y por qué."
