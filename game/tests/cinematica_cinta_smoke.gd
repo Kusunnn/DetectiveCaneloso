@@ -69,7 +69,7 @@ func probar() -> void:
 	revisar(caso.Porky.global_transform.origin.is_equal_approx(caso.PuntoPorkyFinal.global_transform.origin), "Porky vuelve a su lugar")
 	revisar(not caso.Porky.Animador.Controlado, "Porky vuelve a su reposo")
 	revisar(sala.get_node("HUD").visible == hud_antes, "el HUD vuelve como estaba")
-	revisar(sala.get_node_or_null("FiguraCinta") == null, "la figura se borra")
+	revisar(sala.get_node_or_null("CinematicaCintaBlender") == null, "la animación de Blender se borra")
 	var grabadora = caso.GrabadoraSala
 	revisar(grabadora.find_child("Contador", true, false).text == "03:12", "el contador queda en 03:12")
 	revisar(not grabadora.find_child("cassette_player_tape", true, false).visible, "la grabadora queda sin cinta")
@@ -127,7 +127,7 @@ func probar() -> void:
 	tecla.pressed = false
 	Input.parse_input_event(tecla)
 	var segundos := (Time.get_ticks_msec() - inicio) / 1000.0
-	# Dura 55 s; saltarla toma 1.2 s de mantener + el fundido
+	# Dura 60 s; saltarla toma 1.2 s de mantener + el fundido
 	revisar(prueba2.Terminada and segundos < 5.0, "mantener Espacio la salta (%.1f s)" % segundos)
 	revisar(root.get_viewport().get_camera_3d() == camara_antes, "al saltarla también devuelve la cámara")
 

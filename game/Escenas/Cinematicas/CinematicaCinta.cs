@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 
 // Cinemática final del Caso 0: se reproduce la cinta y se ve lo que grabó en la Sala 1 de madrugada.
 // Primero, sobre negro, la confesión de Tito (es una grabación, no algo que pase en la sala).
-// 03:09 Porky duerme en la silla y la grabadora graba (la trampa del comisario). 03:12 una figura sin rostro
-// baja por la rejilla del techo, le susurra al micrófono, descuelga el reloj a propósito y lo deja caer
-// (por eso se paró a las 3:12); se va por la rejilla y deja la pluma negra enganchada. 03:15 Porky despierta,
-// recoge el reloj y lo vuelve a colgar, ve la luz de REC, para la grabadora, rebobina la cinta hasta el 03:12,
-// la saca y se va al vestidor; sus botas son las huellas del pasillo. No se ve el rostro de la figura.
+// 03:09 Porky duerme sobre la mesa y la grabadora graba (la trampa del comisario). 03:12 la rejilla del techo
+// vibra y se abre; una figura sin rostro se descuelga, le susurra al micrófono, descuelga el reloj a propósito
+// y lo deja caer (por eso se paró a las 3:12); se va trepando por su cuerda y la pluma negra queda enganchada en
+// la tapa mal puesta. 03:15 Porky despierta, arrastra su silla hasta la pared, se sube y cuelga el reloj; regresa
+// la silla, ve la luz de REC, para la grabadora, rebobina hasta 03:12, saca la cinta y se va al vestidor
+// (sus botas son las huellas del pasillo). No se ve el rostro de la figura.
 //
-// Se rueda en la sala real con una cámara propia y al terminar deja todo como estaba.
-// Todo depende del segundo t (posiciones, animaciones, cámara, luces y estado de los sonidos continuos),
-// así que IrA, adelantar con clic o Enter y Movie Maker dan siempre lo mismo. Mantener [Espacio], [Esc]
-// o B/Start la salta. Todo lo que se oye viene de la cinta: va por un bus con filtro de cinta.
+// La animación está hecha en Blender (Assets/Cinematicas/Blender, ver construir_cinta.py) y llega en
+// cinta_caso0.glb: Porky, la figura, la cámara y vacíos con el recorrido del reloj, la tapa de la rejilla, la
+// puerta, la silla y la cinta. Aquí un AnimationPlayer se pone en el segundo t cada cuadro y los objetos reales
+// de la sala copian a sus vacíos. Todo depende de t (también luces y sonidos continuos), así que IrA, adelantar
+// con clic o Enter y Movie Maker dan siempre lo mismo. Mantener [Espacio], [Esc] o B/Start la salta.
+// Todo lo que se oye viene de la cinta: va por un bus con filtro de cinta. Al terminar deja la sala como estaba.
 public partial class CinematicaCinta : CanvasLayer
 {
 	[Signal] public delegate void TerminadaEventHandler();
@@ -31,6 +34,8 @@ public partial class CinematicaCinta : CanvasLayer
 		// Las tres líneas de la cinta: la confesión de Tito, el ruido de la rejilla y la voz desconocida
 		public string[] Lineas;
 	}
+
+	public const string Animacion = "res://Assets/Cinematicas/Caso0/cinta_caso0.glb";
 
 	// Mientras dura no debe aparecer ninguna ayuda, pensamiento ni aviso encima (ver Jugador y Caso0)
 	public static bool EnCurso { get; private set; }
@@ -54,69 +59,44 @@ public partial class CinematicaCinta : CanvasLayer
 		await cinematica.ToSignal(cinematica, SignalName.Terminada);
 	}
 
-	// ---------- Tiempos (segundos) ----------
+	// ---------- Tiempos (segundos; los mismos de coreografia.py) ----------
 
 	private const double TPlay = 0.25;           // clic de PLAY sobre negro
 	private const double TImagen = 4.2;          // termina el negro: SALA 1 · 03:09
-	private const double TRejilla = 12.0;        // ruido metálico: se abre la rejilla
+	private const double TRejilla = 12.0;        // la rejilla vibra y suena
+	private const double TTapa = 12.6;           // la tapa se desliza hacia adentro
+	private const double TAterriza = 15.75;
 	private const double TSusurro = 20.1;
-	private const double TSuelta = 25.8;         // la figura suelta el reloj
-	private const double TGolpe = 26.45;         // el reloj golpea el piso: se para a las 3:12
-	private const double TRebote = 26.75;
-	private const double TSeVa = 31.2;           // la figura desaparece por la rejilla
-	private const double TCierraRejilla = 31.4;
-	private const double TDespierta = 32.6;      // 03:15
-	private const double TAgarra = 38.25;        // Porky levanta el reloj del piso
-	private const double TCuelga = 40.35;        // el reloj queda colgado otra vez
-	private const double TSobresalto = 42.6;
-	private const double TStop = 44.7;
-	private const double TRebobina = 45.1;
-	private const double TFinRebobinado = 47.6;
-	private const double TExpulsa = 48.3;
-	private const double TTomaCinta = 48.75;
-	private const double TAbrePuerta = 51.9;
-	private const double TCierraPuerta = 54.3;
-	private const double TFin = 55.6;
+	private const double TDescuelga = 24.95;
+	private const double TGolpe = 26.4;          // el reloj golpea el piso (Rigid Body): se para a las 3:12
+	private const double TRebote = 26.53;
+	private const double TSeVa = 32.0;
+	private const double TCierraTapa = 32.5;
+	private const double TDespierta = 33.6;      // 03:15
+	private const double TEmpuja = 37.8;
+	private const double TSillaPared = 39.3;
+	private const double TSubeSilla = 41.0;
+	private const double TCuelga = 42.3;         // el reloj queda colgado otra vez
+	private const double TBajaSilla = 42.6;
+	private const double TJala = 43.4;
+	private const double TSillaMesa = 44.9;
+	private const double TSobresalto = 46.45;
+	private const double TStop = 48.0;
+	private const double TRebobina = 48.4;
+	private const double TFinRebobinado = 50.9;
+	private const double TExpulsa = 51.1;
+	private const double TAbrePuerta = 55.0;
+	private const double TCierraPuerta = 57.7;
+	private const double TBotas = 56.3;
+	private const double TFin = 59.7;
 	private const double SegundosParaSaltar = 1.2;
 
-	// Tomas: inicio, cámara (posición y punto al que mira, al empezar y al terminar), campo de visión y
-	// distancia de enfoque (0 = sin desenfoque)
-	private record struct Toma(double Inicio, Vector3 Desde, Vector3 Hasta, Vector3 MiraDesde, Vector3 MiraHasta, float Fov, float Enfoque = 0);
-
-	private static readonly Toma[] Tomas =
+	// Inicio de cada toma (la cámara viene del .glb) y distancia de enfoque para el desenfoque (0 = sin él)
+	private static readonly (double Inicio, float Enfoque)[] Tomas =
 	{
-		// 0 · Negro: solo se oye la cinta (la cámara ya espera en la toma 1)
-		new(0.0, new(0.62f, 1.36f, -1.42f), new(0.62f, 1.36f, -1.42f), new(0.4f, 1.31f, -1.88f), new(0.4f, 1.31f, -1.88f), 34, 0.48f),
-		// 1 · Inserto de la grabadora a ras de mesa; Porky dormido, desenfocado al fondo
-		new(TImagen, new(0.66f, 1.37f, -1.38f), new(0.6f, 1.35f, -1.46f), new(0.4f, 1.31f, -1.88f), new(0.38f, 1.31f, -1.9f), 34, 0.48f),
-		// 2 · General picado desde la esquina de la puerta: Porky duerme, la rejilla queda fuera de cuadro
-		new(8.4, new(3.3f, 3.05f, 2.3f), new(3.1f, 2.95f, 2.0f), new(-0.4f, 1.1f, -2.7f), new(-0.6f, 1.1f, -2.5f), 55),
-		// 3 · Contrapicado bajo la rejilla: la figura baja recortada contra la luz que entra por ella
-		new(13.2, new(-1.35f, 0.8f, -0.05f), new(-1.4f, 0.78f, 0.0f), new(-2.2f, 3.2f, 1.0f), new(-2.2f, 1.7f, 1.0f), 60),
-		// 4 · Medio del susurro, del mismo lado que la toma 2 (frente de la sala): figura, micrófono y Porky atrás
-		new(17.6, new(1.1f, 1.7f, -0.3f), new(0.95f, 1.55f, -0.55f), new(0.75f, 1.4f, -1.7f), new(0.7f, 1.38f, -1.8f), 46, 1.3f),
-		// 5 · Medio lateral desde la izquierda: la figura descuelga el reloj y lo suelta
-		new(23.2, new(-2.3f, 1.5f, -3.1f), new(-2.15f, 1.5f, -3.35f), new(0.3f, 2.05f, -4.5f), new(0.0f, 1.55f, -4.6f), 42),
-		// 6 · Inserto cenital de la carátula en el piso: 3:12
-		new(26.9, new(-0.12f, 1.05f, -4.4f), new(-0.13f, 0.98f, -4.42f), new(-0.2f, 0.52f, -4.55f), new(-0.2f, 0.52f, -4.55f), 40, 0.5f),
-		// 7 · General desde el fondo derecho: la figura vuelve a la rejilla y sube
-		new(29.4, new(3.3f, 2.4f, -4.3f), new(3.2f, 2.35f, -4.1f), new(-1.6f, 1.9f, 0.6f), new(-2.1f, 2.6f, 0.95f), 40),
-		// 8 · Medio frontal de Porky (desde el lado del detective): despierta y mira alrededor
-		new(32.2, new(0.2f, 1.5f, -0.75f), new(0.15f, 1.52f, -0.9f), new(0.0f, 1.7f, -2.7f), new(0.0f, 1.8f, -2.6f), 46),
-		// 9 · Medio lateral derecho: recoge el reloj del piso y lo cuelga
-		new(36.0, new(-2.3f, 1.2f, -4.45f), new(-2.2f, 1.4f, -4.5f), new(0.1f, 1.0f, -4.2f), new(0.0f, 1.9f, -4.7f), 50),
-		// 10 · Inserto POV de Porky: la luz roja de REC
-		new(41.2, new(0.52f, 1.48f, -2.0f), new(0.5f, 1.46f, -1.98f), new(0.44f, 1.33f, -1.86f), new(0.44f, 1.33f, -1.86f), 30, 0.55f),
-		// 11 · Contraplano: Porky se sobresalta
-		new(42.4, new(0.05f, 1.55f, -1.35f), new(0.1f, 1.55f, -1.45f), new(0.55f, 1.8f, -2.95f), new(0.55f, 1.82f, -2.95f), 44),
-		// 12 · Inserto de la grabadora desde el frente: STOP, rebobinado, el contador a 03:12, sale la cinta
-		new(44.4, new(0.47f, 1.62f, -1.35f), new(0.46f, 1.6f, -1.38f), new(0.41f, 1.3f, -1.88f), new(0.41f, 1.3f, -1.88f), 24, 0.65f),
-		// 13 · General con la puerta de frente: Porky se va con la cinta
-		new(49.2, new(-1.6f, 2.2f, -1.4f), new(-1.45f, 2.15f, -1.15f), new(1.6f, 1.3f, 1.4f), new(2.3f, 1.4f, 2.6f), 42),
-		// 14 · Inserto de las botas cruzando hacia el pasillo
-		new(52.8, new(1.75f, 0.6f, 1.35f), new(1.8f, 0.6f, 1.45f), new(2.5f, 0.5f, 2.6f), new(2.5f, 0.5f, 3.3f), 46),
-		// 15 · General: la puerta se cierra
-		new(54.0, new(-1.45f, 2.15f, -1.15f), new(-1.4f, 2.12f, -1.05f), new(2.3f, 1.4f, 2.6f), new(2.4f, 1.4f, 2.8f), 42),
+		(0.0, 0.48f), (TImagen, 0.48f), (8.4, 0), (11.6, 0), (17.2, 0), (23.0, 0), (27.45, 0.5f), (29.6, 0),
+		(33.3, 0), (37.1, 0), (39.45, 0), (40.7, 0), (42.6, 0), (45.75, 0.6f), (46.3, 0), (47.6, 0.6f), (51.9, 0),
+		(TBotas, 0), (57.5, 0),
 	};
 	private static readonly double[] Paradas = Tomas.Select(t => t.Inicio).Where(t => t > 0).Append(TFin).ToArray();
 
@@ -130,68 +110,6 @@ public partial class CinematicaCinta : CanvasLayer
 		(TSusurro, TSusurro + 2.7, 2),
 	};
 
-	// ---------- Movimiento de los personajes ----------
-
-	// Dónde está y hacia dónde mira (grados; 0 = hacia +Z) en el segundo T; Caer acelera el tramo (caída libre)
-	private record struct Punto(double T, Vector3 Pos, float Giro, bool Caer = false);
-	// Qué animación hace desde el segundo T; Congelar >= 0 la deja fija en esa fracción
-	private record struct Paso(double T, string Animacion, bool Bucle = true, double Congelar = -1, double Velocidad = 1);
-
-	private static readonly Vector3 Silla = new(0f, 0.5f, -2.8f);
-	private static readonly Vector3 BajoRejilla = new(-2.2f, 0.5f, 1.0f);
-	private static readonly Vector3 RelojPiso = new(-0.2f, 0.52f, -4.55f);
-
-	private static readonly Punto[] RutaPorky =
-	{
-		new(0, Silla, 0), new(TDespierta, Silla, 0), new(TDespierta + 1.3, Silla + new Vector3(0, 0, 0.18f), 0),
-		// Mira alrededor y ve el reloj en el piso, detrás de él
-		new(34.3, Silla + new Vector3(0, 0, 0.18f), 35), new(34.9, Silla + new Vector3(0, 0, 0.18f), -30), new(35.7, Silla + new Vector3(0.05f, 0, 0.18f), -160),
-		// Rodea la silla y se para frente al reloj
-		new(36.4, new(0.6f, 0.5f, -3.05f), 175), new(37.2, new(-0.12f, 0.5f, -4.05f), 180),
-		// Lo recoge, da un paso a la pared y lo cuelga
-		new(39.6, new(-0.12f, 0.5f, -4.05f), 180), new(39.95, new(-0.05f, 0.5f, -4.48f), 180),
-		new(40.5, new(-0.05f, 0.5f, -4.48f), 180),
-		// Vuelve a la mesa, junto a la grabadora
-		new(40.9, new(0.3f, 0.5f, -4.1f), 60), new(41.4, new(0.7f, 0.5f, -3.3f), 20), new(41.9, new(0.55f, 0.5f, -2.95f), 0),
-		// Para, rebobina y saca la cinta (del lado de la silla, frente a la grabadora)
-		new(48.9, new(0.55f, 0.5f, -2.95f), 0),
-		// Se va al vestidor con la cinta
-		new(49.4, new(1.25f, 0.5f, -2.75f), 70), new(49.9, new(1.45f, 0.5f, -1.4f), 25), new(50.6, new(2.05f, 0.5f, 0.6f), 20), new(51.7, new(2.5f, 0.5f, 2.15f), 0),
-		new(52.2, new(2.5f, 0.5f, 2.2f), 0), new(53.9, new(2.5f, 0.5f, 4.1f), 0), new(55.6, new(2.5f, 0.5f, 6.0f), 0),
-	};
-
-	private static readonly Paso[] AnimPorky =
-	{
-		new(0, "Sitting_Idle"), new(TDespierta, "Sitting_Exit", false, Velocidad: 0.8), new(TDespierta + 1.3, "Idle"),
-		new(35.7, "Walk"), new(37.2, "Farm_Harvest", false), new(39.6, "Walk"), new(39.95, "Interact", false), new(40.5, "Walk"),
-		new(41.9, "Idle"), new(TSobresalto, "Hit_Chest", false, Velocidad: 0.4), new(43.6, "Idle"),
-		new(44.35, "Interact", false), new(46.4, "Idle"), new(47.9, "Interact", false), new(48.9, "Walk"), new(51.7, "Idle"),
-		new(52.2, "Walk"),
-	};
-
-	private static readonly Punto[] RutaFigura =
-	{
-		// Arriba del techo, fuera de la vista: baja por la rejilla colgada de las manos y se suelta
-		new(0, BajoRejilla + new Vector3(0, 3.5f, 0), 180), new(13.5, BajoRejilla + new Vector3(0, 3.15f, 0), 180),
-		new(15.4, BajoRejilla + new Vector3(0, 0.82f, 0), 180), new(15.8, BajoRejilla, 180, true),
-		// Camina hasta la mesa y se agacha junto al micrófono
-		new(17.0, BajoRejilla, 150), new(19.6, new(1.12f, 0.5f, -1.62f), -90),
-		new(23.0, new(1.12f, 0.5f, -1.62f), -90),
-		// Va a la pared del reloj
-		new(24.0, new(1.05f, 0.5f, -3.3f), 200), new(24.9, new(0.32f, 0.5f, -4.32f), 180),
-		new(26.9, new(0.32f, 0.5f, -4.32f), 180), new(27.3, new(0.32f, 0.5f, -4.32f), 20),
-		// De vuelta a la rejilla, salta, se agarra y sube
-		new(29.9, BajoRejilla, -20), new(30.0, BajoRejilla, 0), new(30.4, BajoRejilla + new Vector3(0, 1.0f, 0), 0),
-		new(TSeVa, BajoRejilla + new Vector3(0, 3.4f, 0), 0), new(TFin, BajoRejilla + new Vector3(0, 3.5f, 0), 0),
-	};
-
-	private static readonly Paso[] AnimFigura =
-	{
-		new(0, "Jump_Loop"), new(15.8, "NinjaJump_Land", false), new(17.0, "Walk"), new(19.6, "Crouch_Idle"),
-		new(23.0, "Walk"), new(24.9, "Interact", false), new(26.9, "Idle"), new(27.3, "Jog_Fwd"),
-		new(29.9, "NinjaJump_Start", false), new(30.4, "ClimbUp_1m_RM", false, Velocidad: 0.8),
-	};
-
 	// ---------- Estado ----------
 
 	private Actores _a;
@@ -202,31 +120,26 @@ public partial class CinematicaCinta : CanvasLayer
 	private readonly List<(double T, Action Accion)> _eventos = new();
 	private int _siguienteEvento;
 
+	private Node3D _escena;
+	private AnimationPlayer _anim;
 	private Camera3D _camara, _camaraAntes;
 	private CameraAttributesPractical _enfoque;
-	private Node3D _figura;
-	private AnimadorPersonaje _animFigura, _animPorky;
-	private Node3D _cintaEnGrabadora, _cintaEnMano;
-	private bool _cintaVisibleAntes;
-	private Vector3 _cintaPosAntes;
+	private Node3D _porky, _figura;
+	private Node3D _animReloj, _animRejilla, _animPuerta, _animSilla, _animCinta;
+	private Node3D _cinta, _silla, _rejilla, _pluma, _puerta, _grietas, _minutero, _horario, _huellas;
+	private bool _cintaVisibleAntes, _plumaVisible, _grietasVisible, _huellasVisibles, _porkyVisible;
+	private Transform3D _cintaAntes, _sillaAntes, _rejillaAntes, _puertaAntes, _relojAntes, _minuteroAntes, _horarioAntes;
 	private Label3D _contador;
 	private string _contadorAntes;
 	private Node3D _luzRecMalla;
-	private OmniLight3D _luzRec;
+	private OmniLight3D _luzRec, _rebote, _luzPasillo;
 	private SpotLight3D _luzRejilla;
-	private OmniLight3D _rebote, _luzPasillo;
-	private Node3D _rejilla, _pluma, _puerta, _grietas, _minutero, _horario;
 	private MeshInstance3D _hueco;
-	private Transform3D _rejillaAntes, _puertaAntes, _minuteroAntes, _horarioAntes;
-	private bool _plumaVisible, _grietasVisible;
 	private Light3D _focoReloj;
 	private bool _focoRelojVisible;
 	private bool _ayudasAntes = true;
 	private Node3D _pizarron;
 	private bool _pizarronVisible;
-	private Label3D _suenoPorky;
-	private bool _suenoVisible;
-	private Transform3D _porkyAntes, _relojAntes;
 	private bool _erizVisible, _jugadorVisible;
 	private float _intensidadMusica;
 	private readonly List<CanvasLayer> _capasOcultas = new();
@@ -237,7 +150,7 @@ public partial class CinematicaCinta : CanvasLayer
 	private Label _hora, _subtitulo, _pista;
 	private CirculoSalto _circulo;
 	private AudioStreamPlayer _tictac, _zumbido, _ronquido, _siseo, _voz;
-	private double _relojPaso;
+	private double _relojPaso, _relojPasoFigura;
 	private Vector3 _pasoPorky, _pasoFigura;
 	private float _escala = 1f;
 
@@ -258,13 +171,32 @@ public partial class CinematicaCinta : CanvasLayer
 
 	// ---------- Montaje y desmontaje ----------
 
+	private T Guardar<T>(string ruta) where T : Node => _sala.GetNodeOrNull<T>(ruta);
+
 	private void Preparar()
 	{
 		_camaraAntes = GetViewport().GetCamera3D();
+
+		// La animación de Blender: personajes, cámara y vacíos de los objetos
+		_escena = GD.Load<PackedScene>(Animacion).Instantiate<Node3D>();
+		_escena.Name = "CinematicaCintaBlender";
+		_sala.AddChild(_escena);
+		_anim = _escena.FindChildren("*", "AnimationPlayer", true, false).OfType<AnimationPlayer>().First();
+		_anim.Play("Cinta");
+		_anim.Pause();
+		_porky = _escena.GetNode<Node3D>("Porky");
+		_figura = _escena.GetNode<Node3D>("Figura");
+		_animReloj = _escena.GetNode<Node3D>("Anim_Reloj");
+		_animRejilla = _escena.GetNode<Node3D>("Anim_Rejilla");
+		_animPuerta = _escena.GetNode<Node3D>("Anim_Puerta");
+		_animSilla = _escena.GetNode<Node3D>("Anim_Silla");
+		_animCinta = _escena.GetNode<Node3D>("Anim_Cinta");
+		_camara = _escena.GetNode<Camera3D>("Camara");
 		_enfoque = new CameraAttributesPractical { DofBlurAmount = 0.06f, DofBlurFarTransition = 0.5f };
-		_camara = new Camera3D { Near = 0.02f, Attributes = _enfoque };
-		_sala.AddChild(_camara);
+		_camara.Near = 0.02f;
+		_camara.Attributes = _enfoque;
 		_camara.MakeCurrent();
+		VestirFigura();
 
 		// Todo lo que se dibuja encima del juego (HUD, diálogo, viñeta, guía) se esconde mientras dura
 		foreach (Node n in _sala.FindChildren("*", "CanvasLayer", true, false))
@@ -273,12 +205,9 @@ public partial class CinematicaCinta : CanvasLayer
 		_jugadorVisible = _a.Jugador.Visible;
 		_a.Jugador.Visible = false;
 		if (_a.Eriz != null) { _erizVisible = _a.Eriz.Visible; _a.Eriz.Visible = false; }
-
-		_porkyAntes = _a.Porky.GlobalTransform;
-		_animPorky = _a.Porky.Animador;
-		_animPorky?.Controlar(true);
-		_suenoPorky = _a.Porky.GetNodeOrNull<Label3D>("Sueno");
-		if (_suenoPorky != null) _suenoVisible = _suenoPorky.Visible;
+		// El Porky del juego se esconde: el de la cinemática es el del .glb
+		_porkyVisible = _a.Porky.Visible;
+		_a.Porky.Visible = false;
 
 		// El reloj: entero (sin grietas) y con las manecillas avanzando hasta que cae
 		_relojAntes = _a.Reloj.GlobalTransform;
@@ -290,71 +219,58 @@ public partial class CinematicaCinta : CanvasLayer
 		if (_horario != null) _horarioAntes = _horario.Transform;
 
 		// La grabadora: la cinta adentro, la luz de REC y el contador
-		_cintaEnGrabadora = _a.Grabadora.FindChild("cassette_player_tape", true, false) as Node3D;
-		if (_cintaEnGrabadora != null)
-		{
-			_cintaVisibleAntes = _cintaEnGrabadora.Visible;
-			_cintaPosAntes = _cintaEnGrabadora.Position;
-			_cintaEnMano = (Node3D)_cintaEnGrabadora.Duplicate();
-			_cintaEnMano.Visible = false;
-			_sala.AddChild(_cintaEnMano);
-		}
+		_cinta = _a.Grabadora.FindChild("cassette_player_tape", true, false) as Node3D;
+		if (_cinta != null) { _cintaVisibleAntes = _cinta.Visible; _cintaAntes = _cinta.GlobalTransform; }
 		_contador = _a.Grabadora.FindChild("Contador", true, false) as Label3D;
 		if (_contador != null) _contadorAntes = _contador.Text;
 		_luzRecMalla = _a.Grabadora.FindChild("LuzRec", true, false) as Node3D;
-		_luzRec = new OmniLight3D { LightColor = new Color(1f, 0.1f, 0.06f), OmniRange = 0.14f, OmniAttenuation = 2f, LightEnergy = 0f };
+		_luzRec = new OmniLight3D { LightColor = new Color(1f, 0.1f, 0.06f), OmniRange = 0.07f, OmniAttenuation = 2f, LightEnergy = 0f };
 		_sala.AddChild(_luzRec);
 		_luzRec.GlobalPosition = (_luzRecMalla ?? _a.Grabadora).GlobalPosition + new Vector3(0, 0.03f, 0);
 
-		// La luz de la escena es la lámpara del techo (encendida, como en el juego). El foco del reloj no:
-		// en el recuerdo parecía una luna detrás de la figura y dejaba una mancha en la pared al caer.
-		_focoReloj = _sala.GetNodeOrNull<Light3D>("FocoReloj");
-		if (_focoReloj != null) { _focoRelojVisible = _focoReloj.Visible; _focoReloj.Visible = false; }
-
-		// La rejilla del techo: se abre como trampilla; por el hueco entra luz fría del ducto
-		_rejilla = _sala.GetNodeOrNull<Node3D>("Detalles/RejillaVentilacion");
+		// La silla de Porky, la tapa de la rejilla, la puerta y la pluma
+		_silla = Guardar<Node3D>("SillaSospechoso");
+		if (_silla != null) _sillaAntes = _silla.GlobalTransform;
+		_rejilla = Guardar<Node3D>("Detalles/RejillaVentilacion");
 		if (_rejilla != null) _rejillaAntes = _rejilla.GlobalTransform;
+		_puerta = Guardar<Node3D>("Detalles/Puerta");
+		if (_puerta != null) _puertaAntes = _puerta.GlobalTransform;
+		_pluma = Guardar<Node3D>("PlumaSecreta/Marcas");
+		if (_pluma != null) _plumaVisible = _pluma.Visible;
+		_huellas = Guardar<Node3D>("ZonaPasillo/Huellas/Marcas");
+		if (_huellas != null) _huellasVisibles = _huellas.Visible;
+
+		// La luz de la escena es la lámpara del techo (encendida, como en el juego), con un rebote cálido muy bajo.
+		// El foco del reloj no: en el recuerdo parecía una luna detrás de la figura.
+		_focoReloj = Guardar<Light3D>("FocoReloj");
+		if (_focoReloj != null) { _focoRelojVisible = _focoReloj.Visible; _focoReloj.Visible = false; }
+		_rebote = new OmniLight3D { LightColor = new Color(1f, 0.86f, 0.66f), LightEnergy = 1.2f, OmniRange = 6f, OmniAttenuation = 1.2f, ShadowEnabled = false, LightSpecular = 0.1f };
+		_sala.AddChild(_rebote);
+		_rebote.GlobalPosition = new Vector3(0.3f, 2.6f, -3.8f);
+		// Al abrirse la rejilla entra luz fría del ducto y la figura se recorta contra ella
+		var rejilla = new Vector3(-2.2f, 3.5f, 1.0f);
 		_hueco = new MeshInstance3D
 		{
 			Mesh = new QuadMesh { Size = new Vector2(0.48f, 0.48f), Orientation = PlaneMesh.OrientationEnum.Y },
-			// El ducto, iluminado desde arriba: la figura se recorta contra él
 			MaterialOverride = new StandardMaterial3D { AlbedoColor = new Color(0.42f, 0.5f, 0.66f), ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded, CullMode = BaseMaterial3D.CullModeEnum.Disabled },
 			CastShadow = GeometryInstance3D.ShadowCastingSetting.Off,
 			Visible = false,
 		};
 		_sala.AddChild(_hueco);
-		_hueco.GlobalPosition = BajoRejilla + new Vector3(0, 2.997f, 0);
-		_luzRejilla = new SpotLight3D
-		{
-			LightColor = new Color(0.62f, 0.72f, 1f), LightEnergy = 0f, SpotRange = 4.2f, SpotAngle = 32f, SpotAttenuation = 0.8f,
-			ShadowEnabled = true, LightVolumetricFogEnergy = 0f,
-		};
+		_hueco.GlobalPosition = rejilla - new Vector3(0, 0.003f, 0);
+		_luzRejilla = new SpotLight3D { LightColor = new Color(0.62f, 0.72f, 1f), LightEnergy = 0f, SpotRange = 4.2f, SpotAngle = 32f, SpotAttenuation = 0.8f, ShadowEnabled = true };
 		_sala.AddChild(_luzRejilla);
-		_luzRejilla.GlobalTransform = new Transform3D(new Basis(Vector3.Right, -Mathf.Pi / 2), BajoRejilla + new Vector3(0, 2.93f, 0));
-		// Rebote de la lámpara: tenue y cálido, para que la pared del reloj y la puerta no queden en negro
-		_rebote = new OmniLight3D { LightColor = new Color(1f, 0.86f, 0.66f), LightEnergy = 0.6f, OmniRange = 6f, OmniAttenuation = 1.2f, ShadowEnabled = false, LightSpecular = 0.1f };
-		_sala.AddChild(_rebote);
-		_rebote.GlobalPosition = new Vector3(0.4f, 2.9f, -3.3f);
-		// Luz del pasillo: entra cuando Porky abre la puerta
+		_luzRejilla.GlobalTransform = new Transform3D(new Basis(Vector3.Right, -Mathf.Pi / 2), rejilla - new Vector3(0, 0.07f, 0));
+		// Al abrir la puerta entra la luz del pasillo
 		_luzPasillo = new OmniLight3D { LightColor = new Color(0.95f, 0.85f, 0.7f), LightEnergy = 0f, OmniRange = 5f, ShadowEnabled = true };
 		_sala.AddChild(_luzPasillo);
 		_luzPasillo.GlobalPosition = new Vector3(2.5f, 2.3f, 4.3f);
 
-		// La pluma negra (solo se ve con linterna en el juego): queda enganchada cuando la figura se va
-		_pluma = _sala.GetNodeOrNull<Node3D>("PlumaSecreta/Marcas");
-		if (_pluma != null) _plumaVisible = _pluma.Visible;
-
-		// La puerta de la sala: cerrada de madrugada; Porky la abre al irse
-		_puerta = _sala.GetNodeOrNull<Node3D>("Detalles/Puerta");
-		if (_puerta != null) _puertaAntes = _puerta.GlobalTransform;
-
 		// El pizarrón es de la investigación de Caneloso: a las 3:12 todavía no estaba
-		_pizarron = _sala.GetNodeOrNull<Node3D>("PizarronInvestigacion");
+		_pizarron = Guardar<Node3D>("PizarronInvestigacion");
 		if (_pizarron != null) { _pizarronVisible = _pizarron.Visible; _pizarron.Visible = false; }
 
 		if (_a.Musica != null) _intensidadMusica = _a.Musica.Intensidad;
-
-		_figura = CrearFigura();
 
 		// Los contornos de ayuda de las pistas no van en un recuerdo
 		if (Configuracion.Instancia != null)
@@ -364,62 +280,32 @@ public partial class CinematicaCinta : CanvasLayer
 		}
 	}
 
-	// La figura: el maniquí de Quaternius con gabardina y capucha, negro, sin rostro y con borde de luz
-	private Node3D CrearFigura()
+	// La figura: tela negra con borde de luz (se separa del fondo) y el hueco de la cara en negro puro
+	private void VestirFigura()
 	{
-		var figura = new Node3D { Name = "FiguraCinta", Visible = false };
-		_sala.AddChild(figura);
-		var maniqui = GD.Load<PackedScene>(AnimadorPersonaje.RutaUal1).Instantiate<Node3D>();
-		maniqui.Name = "Modelo";
-		maniqui.Scale = Vector3.One * 1.15f;
-		figura.AddChild(maniqui);
 		var tela = new StandardMaterial3D { AlbedoColor = new Color(0.018f, 0.018f, 0.022f), Roughness = 0.95f, RimEnabled = true, Rim = 1f, RimTint = 0.6f };
-		foreach (Node n in maniqui.FindChildren("*", "MeshInstance3D", true, false))
-			if (n is MeshInstance3D malla) malla.MaterialOverride = tela;
-
-		var esqueleto = maniqui.FindChildren("*", "Skeleton3D", true, false).OfType<Skeleton3D>().FirstOrDefault();
-		if (esqueleto != null)
-		{
-			var sombra = new StandardMaterial3D { AlbedoColor = new Color(0.003f, 0.003f, 0.004f), Roughness = 1f, ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded };
-			// Capucha: cubre la cabeza; el hueco de la cara es negro puro
-			Ropa(esqueleto, "DEF-head", new SphereMesh { Radius = 0.15f, Height = 0.34f }, tela, new Vector3(0, 0.09f, -0.01f), new Vector3(1.05f, 1.05f, 1.1f));
-			Ropa(esqueleto, "DEF-head", new SphereMesh { Radius = 0.1f, Height = 0.2f }, sombra, new Vector3(0, 0.07f, 0.075f), new Vector3(1f, 1.1f, 0.6f));
-			// Gabardina: de los hombros a las rodillas
-			Ropa(esqueleto, "DEF-spine.003", new CylinderMesh { TopRadius = 0.2f, BottomRadius = 0.27f, Height = 0.55f, RadialSegments = 16 }, tela, new Vector3(0, -0.12f, 0), new Vector3(1.05f, 1f, 0.8f));
-			Ropa(esqueleto, "DEF-hips", new CylinderMesh { TopRadius = 0.25f, BottomRadius = 0.33f, Height = 0.62f, RadialSegments = 16 }, tela, new Vector3(0, -0.22f, 0), new Vector3(1f, 1f, 0.85f));
-		}
-
-		_animFigura = new AnimadorPersonaje { Modelo = maniqui, MirarJugador = false };
-		figura.AddChild(_animFigura);
-		_animFigura.Controlar(true);
-		return figura;
-	}
-
-	private static void Ropa(Skeleton3D esqueleto, string hueso, Mesh malla, Material material, Vector3 pos, Vector3 escala)
-	{
-		if (esqueleto.FindBone(hueso) < 0) return;
-		var union = new BoneAttachment3D { BoneName = hueso };
-		esqueleto.AddChild(union);
-		union.AddChild(new MeshInstance3D { Mesh = malla, MaterialOverride = material, Position = pos, Scale = escala });
+		var vacio = new StandardMaterial3D { AlbedoColor = Colors.Black, ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded };
+		foreach (Node n in _figura.FindChildren("*", "MeshInstance3D", true, false))
+			if (n is MeshInstance3D malla) malla.MaterialOverride = malla.Name.ToString().Contains("Rostro") ? vacio : tela;
 	}
 
 	private void Restaurar()
 	{
-		_a.Porky.GlobalTransform = _porkyAntes;
-		if (_animPorky != null) { _animPorky.InclinarCabeza = 0; _animPorky.Controlar(false); }
-		if (_suenoPorky != null) _suenoPorky.Visible = _suenoVisible;
+		_a.Porky.Visible = _porkyVisible;
 		// El reloj, colgado y parado en las 3:12, con el cristal rajado
 		_a.Reloj.GlobalTransform = _relojAntes;
 		if (_grietas != null) _grietas.Visible = _grietasVisible;
 		if (_minutero != null) _minutero.Transform = _minuteroAntes;
 		if (_horario != null) _horario.Transform = _horarioAntes;
 		// La grabadora: sin cinta, en REC y con el contador en 03:12
-		if (_cintaEnGrabadora != null) { _cintaEnGrabadora.Visible = _cintaVisibleAntes; _cintaEnGrabadora.Position = _cintaPosAntes; }
+		if (_cinta != null) { _cinta.GlobalTransform = _cintaAntes; _cinta.Visible = _cintaVisibleAntes; }
 		if (_contador != null) _contador.Text = _contadorAntes;
 		if (_luzRecMalla != null) _luzRecMalla.Visible = true;
+		if (_silla != null) _silla.GlobalTransform = _sillaAntes;
 		if (_rejilla != null) _rejilla.GlobalTransform = _rejillaAntes;
-		if (_pluma != null) _pluma.Visible = _plumaVisible;
 		if (_puerta != null) _puerta.GlobalTransform = _puertaAntes;
+		if (_pluma != null) _pluma.Visible = _plumaVisible;
+		if (_huellas != null) _huellas.Visible = _huellasVisibles;
 		if (_focoReloj != null) _focoReloj.Visible = _focoRelojVisible;
 		if (_pizarron != null) _pizarron.Visible = _pizarronVisible;
 		_a.Jugador.Visible = _jugadorVisible;
@@ -427,7 +313,7 @@ public partial class CinematicaCinta : CanvasLayer
 		foreach (CanvasLayer capa in _capasOcultas) if (IsInstanceValid(capa)) capa.Visible = true;
 		if (IsInstanceValid(_camaraAntes)) _camaraAntes.MakeCurrent();
 		RestaurarAudio();
-		foreach (Node n in new Node[] { _figura, _cintaEnMano, _luzRec, _luzRejilla, _rebote, _luzPasillo, _hueco, _camara })
+		foreach (Node n in new Node[] { _escena, _luzRec, _luzRejilla, _rebote, _luzPasillo, _hueco })
 			if (n != null && IsInstanceValid(n)) n.QueueFree();
 		if (Configuracion.Instancia != null) Configuracion.Instancia.AyudasVisuales = _ayudasAntes;
 		EnCurso = false;
@@ -481,7 +367,7 @@ public partial class CinematicaCinta : CanvasLayer
 			if (!silencio) _eventos[_siguienteEvento].Accion();
 			_siguienteEvento++;
 		}
-		Personajes();
+		_anim.Seek(Math.Min(_t, _anim.CurrentAnimationLength), true);
 		Objetos();
 		Camara();
 		Interfaz();
@@ -499,92 +385,26 @@ public partial class CinematicaCinta : CanvasLayer
 		Restaurar();
 	}
 
-	// ---------- Personajes y objetos ----------
-
-	private static (Vector3 Pos, float Giro) EnRuta(Punto[] ruta, double t)
-	{
-		if (t <= ruta[0].T) return (ruta[0].Pos, ruta[0].Giro);
-		for (int i = 1; i < ruta.Length; i++)
-		{
-			if (t > ruta[i].T) continue;
-			var a = ruta[i - 1];
-			var b = ruta[i];
-			float u = (float)((t - a.T) / Math.Max(1e-6, b.T - a.T));
-			float avance = b.Caer ? u * u : u;
-			return (a.Pos.Lerp(b.Pos, avance), Mathf.RadToDeg(Mathf.LerpAngle(Mathf.DegToRad(a.Giro), Mathf.DegToRad(b.Giro), Mathf.SmoothStep(0, 1, u))));
-		}
-		return (ruta[^1].Pos, ruta[^1].Giro);
-	}
-
-	private static Paso? PasoEn(Paso[] pasos, double t)
-	{
-		Paso? actual = null;
-		foreach (Paso p in pasos) if (p.T <= t) actual = p;
-		return actual;
-	}
-
-	private static void Animar(AnimadorPersonaje animador, Paso[] pasos, double t)
-	{
-		if (animador == null || PasoEn(pasos, t) is not Paso p) return;
-		double local = p.Congelar >= 0 ? p.Congelar * animador.Duracion(p.Animacion) : (t - p.T) * p.Velocidad;
-		animador.Fijar(p.Animacion, local, p.Bucle);
-	}
+	// ---------- Objetos ----------
 
 	private static float Rampa(double t, double desde, double hasta) => (float)Mathf.Clamp((t - desde) / (hasta - desde), 0, 1);
 
-	private void Personajes()
-	{
-		var (pos, giro) = EnRuta(RutaPorky, _t);
-		_a.Porky.GlobalTransform = new Transform3D(new Basis(Vector3.Up, Mathf.DegToRad(giro)), pos);
-		Animar(_animPorky, AnimPorky, _t);
-		if (_animPorky != null)
-		{
-			// Dormido cabecea; con el golpe del reloj se medio despierta y vuelve a dormirse;
-			// despierto mira el reloj en el piso y luego la grabadora
-			float dormido = 30f + 4f * Mathf.Sin((float)_t * 1.9f);
-			float golpe = (float)Mathf.Clamp(1 - Math.Abs(_t - (TGolpe + 0.5)) / 1.0, 0, 1);
-			float cabeza;
-			if (_t < TDespierta) cabeza = Mathf.Lerp(dormido, 12f, golpe);
-			else if (_t < 35.2) cabeza = Mathf.Lerp(20f, -12f, Rampa(_t, TDespierta, TDespierta + 1.2));
-			else if (_t < 39.6) cabeza = 22f;
-			else if (_t < 41.0) cabeza = -8f;
-			else if (_t < 44.3) cabeza = -12f;
-			else if (_t < 48.9) cabeza = 16f;
-			else cabeza = 0f;
-			_animPorky.InclinarCabeza = cabeza;
-		}
-		if (_suenoPorky != null) _suenoPorky.Visible = _t < TDespierta;
-
-		// La figura existe solo mientras está bajo el techo (antes y después está arriba, en el ducto)
-		var (fp, fg) = EnRuta(RutaFigura, _t);
-		_figura.GlobalTransform = new Transform3D(new Basis(Vector3.Up, Mathf.DegToRad(fg)), fp);
-		_figura.Visible = _t > 13.3 && _t < TSeVa + 0.2;
-		Animar(_animFigura, AnimFigura, _t);
-		// Agachada junto a la grabadora, acerca la cabeza al micrófono
-		_animFigura.InclinarCabeza = 24f * Rampa(_t, 19.7, 20.1) * (1 - Rampa(_t, 22.7, 23.0));
-	}
-
 	private void Objetos()
 	{
-		Reloj();
+		// Los objetos reales siguen a sus vacíos animados en Blender
+		_a.Reloj.GlobalTransform = _animReloj.GlobalTransform;
+		if (_silla != null) _silla.GlobalTransform = _animSilla.GlobalTransform;
+		if (_rejilla != null) _rejilla.GlobalTransform = _animRejilla.GlobalTransform;
+		if (_puerta != null) _puerta.GlobalTransform = _animPuerta.GlobalTransform;
+		if (_cinta != null) { _cinta.Visible = true; _cinta.GlobalTransform = _animCinta.GlobalTransform; }
+		_figura.Visible = _t > 13.3 && _t < TSeVa + 0.2;
 
-		// La cinta: en la grabadora hasta que Porky la saca; luego en su mano
-		bool enMano = _t >= TTomaCinta && _animPorky != null;
-		if (_cintaEnGrabadora != null)
-		{
-			// Al expulsarla sube un poco antes de que Porky la tome
-			_cintaEnGrabadora.Visible = !enMano;
-			_cintaEnGrabadora.Position = _cintaPosAntes + new Vector3(0, 0, 0.012f * Rampa(_t, TExpulsa, TExpulsa + 0.25f));
-		}
-		if (_cintaEnMano != null)
-		{
-			_cintaEnMano.Visible = enMano;
-			if (enMano)
-			{
-				Transform3D mano = _animPorky.Mano(false);
-				_cintaEnMano.GlobalTransform = new Transform3D(_a.Porky.GlobalBasis.Orthonormalized() * new Basis(Vector3.Right, 0.4f), mano.Origin + _a.Porky.GlobalBasis.Z.Normalized() * 0.03f);
-			}
-		}
+		// Cristal entero hasta el golpe; las manecillas avanzan de las 3:09 a las 3:12 y se paran con el golpe
+		if (_grietas != null) _grietas.Visible = _t >= TGolpe;
+		double minuto = Mathf.Lerp(9.0, 12.0, Mathf.Clamp((_t - TImagen) / (TGolpe - TImagen), 0, 1));
+		float atraso = (float)(12.0 - minuto);
+		if (_minutero != null) _minutero.Transform = _minuteroAntes with { Basis = new Basis(Vector3.Back, Mathf.DegToRad(6f * atraso)) * _minuteroAntes.Basis };
+		if (_horario != null) _horario.Transform = _horarioAntes with { Basis = new Basis(Vector3.Back, Mathf.DegToRad(0.5f * atraso)) * _horarioAntes.Basis };
 
 		// REC parpadea todo el tiempo: es la trampa del comisario y nadie la apagó (a las 6:02 sigue en REC).
 		// El STOP solo detiene la cinta.
@@ -595,112 +415,31 @@ public partial class CinematicaCinta : CanvasLayer
 		// Contador de la cinta: avanza mientras graba; el STOP lo detiene y el rebobinado lo regresa a 03:12
 		if (_contador != null)
 		{
-			double minuto;
-			if (_t < TStop) minuto = Mathf.Lerp(9.0, 15.0, Mathf.Clamp((_t - 4.0) / (TStop - 4.0), 0, 1));
-			else minuto = Mathf.Lerp(15.0, 12.0, Rampa(_t, TRebobina, TFinRebobinado));
-			int m = (int)minuto;
-			_contador.Text = $"03:{m:00}";
+			double m = _t < TStop ? Mathf.Lerp(9.0, 15.0, Mathf.Clamp((_t - 4.0) / (TStop - 4.0), 0, 1)) : Mathf.Lerp(15.0, 12.0, Rampa(_t, TRebobina, TFinRebobinado));
+			_contador.Text = $"03:{(int)m:00}";
 		}
 
-		// La rejilla: se abre con el ruido metálico y se cierra cuando la figura sube
-		float abierta = Rampa(_t, TRejilla, TRejilla + 0.35) * (1 - Rampa(_t, TCierraRejilla - 0.25, TCierraRejilla));
-		if (_rejilla != null)
-		{
-			// Bisagra en el borde -X de la rejilla
-			Vector3 bisagra = _rejillaAntes.Origin + new Vector3(-0.25f, 0, 0);
-			var giro = new Basis(Vector3.Back, -1.75f * abierta);
-			_rejilla.GlobalTransform = new Transform3D(giro * _rejillaAntes.Basis, bisagra + giro * (_rejillaAntes.Origin - bisagra));
-		}
+		// El ducto abierto (con su luz) mientras la tapa está corrida
+		float abierta = Rampa(_t, TTapa + 0.15, TTapa + 0.45) * (1 - Rampa(_t, TCierraTapa - 0.25, TCierraTapa));
 		_hueco.Visible = abierta > 0.01f;
 		_luzRejilla.LightEnergy = 9f * abierta;
-		if (_pluma != null) _pluma.Visible = _t >= TCierraRejilla;
-
-		// La puerta: cerrada; Porky la abre, sale y se cierra detrás de él
-		if (_puerta != null)
-		{
-			float a = Rampa(_t, TAbrePuerta, TAbrePuerta + 0.6) * (1 - Rampa(_t, TCierraPuerta, TCierraPuerta + 0.55));
-			var bisagra = new Vector3(2.97f, _puertaAntes.Origin.Y, 3.0f);
-			var cerrada = new Vector3(2.47f, _puertaAntes.Origin.Y, 2.975f);
-			var giro = new Basis(Vector3.Up, Mathf.DegToRad(-88f * a));
-			_puerta.GlobalTransform = new Transform3D(giro, bisagra + giro * (cerrada - bisagra));
-			_luzPasillo.LightEnergy = 2.2f * a;
-		}
-	}
-
-	// El reloj: en la pared; la figura lo descuelga y lo suelta (cae, gira y rebota); en el piso marca las 3:12;
-	// Porky lo recoge y lo vuelve a colgar (por eso a las 6:02 está colgado y parado)
-	private void Reloj()
-	{
-		Transform3D pared = _relojAntes;
-		var piso = new Transform3D(new Basis(Vector3.Up, Mathf.DegToRad(-25f)) * new Basis(Vector3.Right, Mathf.DegToRad(-90f)), RelojPiso);
-		const double tDescuelga = 25.35;
-		Vector3 descolgado = pared.Origin + new Vector3(0.02f, 0.04f, 0.2f);
-
-		if (_t < tDescuelga || _t >= TCuelga) _a.Reloj.GlobalTransform = pared;
-		else if (_t < TSuelta)
-		{
-			// La figura lo levanta del clavo y lo separa de la pared
-			float u = Mathf.SmoothStep(0, 1, Rampa(_t, tDescuelga, TSuelta));
-			_a.Reloj.GlobalTransform = new Transform3D(pared.Basis * new Basis(Vector3.Right, -0.15f * u), pared.Origin.Lerp(descolgado, u));
-		}
-		else if (_t < TGolpe)
-		{
-			// Caída libre (0.65 s) inclinándose y girando
-			float u = Rampa(_t, TSuelta, TGolpe);
-			Vector3 p = descolgado.Lerp(RelojPiso, u);
-			p.Y = Mathf.Lerp(descolgado.Y, RelojPiso.Y, u * u);
-			Quaternion q = pared.Basis.GetRotationQuaternion().Slerp(piso.Basis.GetRotationQuaternion(), Mathf.Pow(u, 1.4f));
-			_a.Reloj.GlobalTransform = new Transform3D(new Basis(q) * new Basis(Vector3.Forward, 1.4f * u), p);
-		}
-		else if (_t < TRebote + 0.15)
-		{
-			// Rebote corto y se asienta
-			float u = Rampa(_t, TGolpe, TRebote);
-			float alto = 0.07f * 4 * u * (1 - u);
-			float vaiven = 0.25f * (1 - Rampa(_t, TGolpe, TRebote + 0.15)) * Mathf.Sin((float)(_t - TGolpe) * 30f);
-			_a.Reloj.GlobalTransform = new Transform3D(piso.Basis * new Basis(Vector3.Right, vaiven), RelojPiso + Vector3.Up * alto);
-		}
-		else if (_t < TAgarra || _animPorky == null) _a.Reloj.GlobalTransform = piso;
-		else
-		{
-			// En las manos de Porky, con la carátula hacia la pared; al final lo acerca al clavo
-			Transform3D mano = _animPorky.Mano(false);
-			Basis porky = _a.Porky.GlobalBasis.Orthonormalized();
-			var enMano = new Transform3D(porky * new Basis(Vector3.Up, Mathf.Pi), mano.Origin + porky.Z * 0.1f);
-			float u = Mathf.SmoothStep(0, 1, Rampa(_t, TCuelga - 0.5, TCuelga));
-			_a.Reloj.GlobalTransform = enMano.InterpolateWith(pared, u);
-		}
-
-		// Cristal entero hasta el golpe
-		if (_grietas != null) _grietas.Visible = _t >= TGolpe;
-		// Las manecillas avanzan de las 3:09 a las 3:12 y se paran con el golpe
-		double minuto = Mathf.Lerp(9.0, 12.0, Mathf.Clamp((_t - TImagen) / (TGolpe - TImagen), 0, 1));
-		float atraso = (float)(12.0 - minuto);
-		if (_minutero != null) _minutero.Transform = _minuteroAntes with { Basis = new Basis(Vector3.Back, Mathf.DegToRad(6f * atraso)) * _minuteroAntes.Basis };
-		if (_horario != null) _horario.Transform = _horarioAntes with { Basis = new Basis(Vector3.Back, Mathf.DegToRad(0.5f * atraso)) * _horarioAntes.Basis };
+		if (_pluma != null) _pluma.Visible = _t >= TCierraTapa;
+		// Las huellas de las botas de Porky, hacia el vestidor
+		if (_huellas != null) _huellas.Visible = _t >= TBotas - 0.3 || _huellasVisibles;
+		// La luz del pasillo entra con la puerta abierta
+		float puerta = Rampa(_t, TAbrePuerta + 0.15, TAbrePuerta + 0.75) * (1 - Rampa(_t, TCierraPuerta, TCierraPuerta + 0.5));
+		_luzPasillo.LightEnergy = 2.2f * puerta;
 	}
 
 	// ---------- Cámara ----------
 
 	private void Camara()
 	{
+		// La cámara (posición, giro, lente y el temblor del golpe) viene de Blender; aquí solo el desenfoque
 		int i = Array.FindLastIndex(Tomas, toma => toma.Inicio <= _t);
-		Toma toma = Tomas[Math.Max(0, i)];
-		double fin = i + 1 < Tomas.Length ? Tomas[i + 1].Inicio : TFin;
-		float u = Mathf.SmoothStep(0, 1, (float)((_t - toma.Inicio) / (fin - toma.Inicio)));
-		Vector3 mira = toma.MiraDesde.Lerp(toma.MiraHasta, u);
-		// La toma 13 sigue un poco a Porky hacia la puerta
-		if (i == 13) mira = mira.Lerp(_a.Porky.GlobalPosition + Vector3.Up * 0.9f, 0.35f);
-		// Cámara en mano, muy suave; con el golpe del reloj tiembla un instante. Depende de _t (repetible).
-		float t = (float)_t;
-		Vector3 balanceo = new Vector3(Mathf.Sin(t * 0.7f), Mathf.Sin(t * 0.53f + 1.7f), 0) * 0.005f;
-		float golpe = _t >= TGolpe ? (float)Mathf.Clamp(1 - (_t - TGolpe) / 0.45, 0, 1) : 0f;
-		Vector3 sacudida = new Vector3(Mathf.Sin(t * 63f), Mathf.Sin(t * 51f + 1f), 0) * 0.03f * golpe;
-		_camara.GlobalPosition = toma.Desde.Lerp(toma.Hasta, u) + balanceo + sacudida;
-		_camara.LookAt(mira, Vector3.Up);
-		_camara.Fov = toma.Fov;
-		_enfoque.DofBlurFarEnabled = toma.Enfoque > 0;
-		if (toma.Enfoque > 0) _enfoque.DofBlurFarDistance = toma.Enfoque;
+		float enfoque = Tomas[Math.Max(0, i)].Enfoque;
+		_enfoque.DofBlurFarEnabled = enfoque > 0;
+		if (enfoque > 0) _enfoque.DofBlurFarDistance = enfoque;
 	}
 
 	// ---------- Entrada ----------
@@ -957,6 +696,7 @@ public partial class CinematicaCinta : CanvasLayer
 	private void CrearEventos()
 	{
 		const string maquina = "res://Assets/Audio/Cinematica/";
+		const string paso = "res://Assets/Audio/Efectos/paso_";
 		_eventos.AddRange(new (double, Action)[]
 		{
 			(TPlay, () => Sonar(Cinta + "cinta_play.wav", -6f)),
@@ -965,21 +705,30 @@ public partial class CinematicaCinta : CanvasLayer
 			(Horas[0].T, () => Sonar(maquina + "maquina_2.wav", -14f, Sonidos.BusInterfaz)),
 			(Horas[1].T, () => Sonar(maquina + "maquina_4.wav", -14f, Sonidos.BusInterfaz)),
 			(Horas[2].T, () => Sonar(maquina + "maquina_5.wav", -14f, Sonidos.BusInterfaz)),
+			// La rejilla vibra y la tapa se desliza
 			(TRejilla, () => Sonar(Cinta + "rejilla_metal.wav", -3f)),
-			(15.8, () => Sonar(Cinta + "reloj_rebote.wav", -6f)),
+			(TTapa + 0.2, () => Sonar(Cinta + "reloj_rebote.wav", -14f)),
+			// Aterriza agachada, casi sin ruido
+			(TAterriza, () => Sonar(Cinta + "reloj_rebote.wav", -18f)),
 			(TSusurro, () => Sonar(Cinta + "susurro.wav", -2.5f)),
-			(TSuelta - 0.4, () => Sonar(Cinta + "reloj_rebote.wav", -16f)),
+			(TDescuelga + 0.1, () => Sonar(Cinta + "reloj_rebote.wav", -18f)),
 			// El golpe del reloj es el pico más fuerte de la cinemática
 			(TGolpe, () => Sonar(Cinta + "reloj_golpe.wav", 5f)),
-			(TRebote, () => Sonar(Cinta + "reloj_rebote.wav", -8f)),
-			(29.95, () => Sonar(Cinta + "reloj_rebote.wav", -12f)),
-			(TCierraRejilla, () => Sonar(Cinta + "rejilla_metal.wav", -10f)),
+			(TRebote, () => Sonar(Cinta + "reloj_rebote.wav", -10f)),
+			(TCierraTapa, () => Sonar(Cinta + "rejilla_metal.wav", -10f)),
+			// Porky mueve la silla, se sube, cuelga el reloj, se baja y la regresa
+			(TEmpuja, () => Sonar("res://Assets/Audio/Efectos/cajon_1.wav", -16f)),
+			(TSillaPared, () => Sonar("res://Assets/Audio/Efectos/cajon_3.wav", -14f)),
+			(TSubeSilla + 0.3, () => Sonar(paso + "2.wav", -14f)),
 			(TCuelga, () => Sonar(Cinta + "reloj_rebote.wav", -10f)),
+			(TBajaSilla + 0.35, () => Sonar(paso + "3.wav", -12f)),
+			(TJala, () => Sonar("res://Assets/Audio/Efectos/cajon_1.wav", -16f)),
+			(TSillaMesa, () => Sonar("res://Assets/Audio/Efectos/cajon_3.wav", -14f)),
 			(TSobresalto, () => Sonar(Cinta + "sobresalto.wav", -2f)),
 			(TStop, () => Sonar(Cinta + "cinta_stop.wav", -3f)),
 			(TRebobina, () => Sonar(Cinta + "cinta_rebobinar.wav", -3f)),
 			(TExpulsa, () => Sonar(Cinta + "cinta_expulsar.wav", -2f)),
-			(TAbrePuerta, () => Sonar(Cinta + "puerta_abrir.wav", -4f)),
+			(TAbrePuerta + 0.1, () => Sonar(Cinta + "puerta_abrir.wav", -4f)),
 			(TCierraPuerta, () => Sonar(Cinta + "puerta_cerrar.wav", -4f)),
 		});
 		_eventos.Sort((a, b) => a.T.CompareTo(b.T));
@@ -1006,19 +755,25 @@ public partial class CinematicaCinta : CanvasLayer
 		else if (!sonando && reproductor.Playing) reproductor.Stop();
 	}
 
-	// Pasos: las botas de Porky (bajas, son de la cinta) y los de la figura, casi mudos
+	// Pasos: las botas de Porky (bajas, son de la cinta) y los de la figura, casi mudos, cuando caminan
 	private void Pasos(double delta)
 	{
-		if ((_relojPaso -= delta) > 0) return;
-		_relojPaso = 0.4;
-		Vector3 porky = _a.Porky.GlobalPosition;
-		if (porky.DistanceTo(_pasoPorky) > 0.2f && PasoEn(AnimPorky, _t) is Paso p && p.Animacion == "Walk")
-			Sonar($"res://Assets/Audio/Efectos/paso_{GD.RandRange(1, 4)}.wav", -15f);
+		Vector3 porky = _porky.GlobalPosition with { Y = 0 };
+		Vector3 figura = _figura.GlobalPosition with { Y = 0 };
+		float vPorky = porky.DistanceTo(_pasoPorky) / (float)Math.Max(delta, 1e-4);
+		float vFigura = figura.DistanceTo(_pasoFigura) / (float)Math.Max(delta, 1e-4);
 		_pasoPorky = porky;
-		Vector3 figura = _figura.GlobalPosition;
-		if (_figura.Visible && figura.DistanceTo(_pasoFigura) > 0.2f && figura.Y < 0.6f)
-			Sonar($"res://Assets/Audio/Efectos/paso_{GD.RandRange(1, 4)}.wav", -27f);
 		_pasoFigura = figura;
+		if (vPorky > 0.4f && (_relojPaso -= delta) <= 0)
+		{
+			_relojPaso = 0.42;
+			Sonar($"res://Assets/Audio/Efectos/paso_{GD.RandRange(1, 4)}.wav", -15f);
+		}
+		if (_figura.Visible && _figura.GlobalPosition.Y < 0.7f && vFigura > 0.4f && (_relojPasoFigura -= delta) <= 0)
+		{
+			_relojPasoFigura = 0.36;
+			Sonar($"res://Assets/Audio/Efectos/paso_{GD.RandRange(1, 4)}.wav", -27f);
+		}
 	}
 
 	// Círculo que se llena mientras se mantiene la tecla de saltar
