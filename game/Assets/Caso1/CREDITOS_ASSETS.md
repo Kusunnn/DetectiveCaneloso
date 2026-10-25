@@ -99,4 +99,14 @@ El escenario reusa los modelos del Campamento (Kenney, KayKit, Quaternius, `_pre
 
 ## Cinemática de la cinta (Caso 0)
 
-No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La cinta que se ve en la grabadora y en la mano de Porky es el casete que trae el modelo **Poly Haven · Cassette Player** (`cassette_player_tape`, el mismo de la grabadora de arriba). La figura es el maniquí de Quaternius (ver `Animaciones/CREDITOS_ANIMACIONES.md`) con capucha y gabardina hechas con mallas de Godot (esferas y cilindros pegados a sus huesos) en `CinematicaCinta.cs`.
+No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La cinta que se ve en la grabadora y en la mano de Porky es el casete que trae el modelo **Poly Haven · Cassette Player** (`cassette_player_tape`, el mismo de la grabadora de arriba). La animación está hecha en Blender 5.2 (`Assets/Cinematicas/Blender/`, ver su `LEEME.md`) y se exporta a `Assets/Cinematicas/Caso0/cinta_caso0.glb`. Ese .glb solo reúne modelos que ya estaban en el juego:
+
+| Pieza | De dónde sale | Licencia |
+|---|---|---|
+| Porky | `Assets/Models/Personajes/porky.glb`, el mismo del juego | el del modelo original (ver `Assets/CREDITOS.md`) |
+| La figura | El maniquí de **Quaternius · Universal Animation Library** (`UAL1_Standard.glb`) con gabardina y capucha modeladas en Blender (un cono con pesos automáticos y dos esferas) | CC0 1.0 |
+| Animaciones base de Porky y la figura | **Quaternius · Universal Animation Library 1 y 2** (Sitting_Idle, Sitting_Exit, Idle, Walk, Crouch_Idle, Crouch_Fwd, Jog_Fwd, Hit_Chest, NinjaJump_Land, Jump_Loop), ajustadas con IK y la coreografía | CC0 1.0 |
+| La cuerda | Un cilindro de Blender | propio |
+| La sala | La Sala 1 del juego exportada a glTF (`sala1.glb`), solo como referencia en Blender | la de sus modelos |
+
+No se usaron animaciones de Mixamo ni capturas de Rokoko: Mixamo pide iniciar sesión con una cuenta de Adobe y Rokoko Vision necesita grabar a alguien con la webcam.
