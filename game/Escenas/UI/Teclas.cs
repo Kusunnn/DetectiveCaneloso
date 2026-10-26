@@ -17,7 +17,7 @@ public static class Teclas
 	// Acciones del HUD (hud.gd lee estas teclas directamente; MandoHud traduce los botones)
 	private static readonly Dictionary<string, (string Teclado, string Mando)> Especiales = new()
 	{
-		["libreta"] = ("Q", "X"),
+		["diario"] = ("Q", "X"),
 		["expediente"] = ("TAB", "LB"),
 		["linterna"] = ("F", "RB"),
 		["mover"] = ("W A S D", "Stick izq."),
@@ -31,6 +31,7 @@ public static class Teclas
 
 	public static string Etiqueta(string accion)
 	{
+		if (accion == "libreta") accion = "diario";
 		// Las acciones configurables (como la linterna) muestran la tecla que eligió el jugador
 		if (Especiales.TryGetValue(accion, out var especial) && (UsandoMando || !InputMap.HasAction(accion)))
 			return UsandoMando ? especial.Mando : especial.Teclado;

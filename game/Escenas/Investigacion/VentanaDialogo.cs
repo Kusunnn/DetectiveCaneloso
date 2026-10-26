@@ -73,7 +73,7 @@ public partial class VentanaDialogo : CanvasLayer
 
 	public override void _Ready()
 	{
-		Layer = 10; // Por encima del HUD
+		Layer = 20; // Por encima del HUD y debajo del menú de pausa
 		_mono = GD.Load<Font>("res://hud/fonts/IBMPlexMono-Regular.ttf");
 		var display = new FontVariation { BaseFont = GD.Load<Font>("res://hud/fonts/BigShouldersDisplay.ttf") };
 		display.VariationOpentype = new Godot.Collections.Dictionary { { TextServerManager.GetPrimaryInterface().NameToTag("wght"), 800 } };

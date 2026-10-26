@@ -96,6 +96,14 @@ func abrir() -> void:
 	_aplicar(true)
 
 
+## Tecla asignada al expediente (se puede cambiar en Opciones)
+func _nombre_tecla_expediente() -> String:
+	var hud := get_parent()
+	while hud and not hud.has_method("nombre_tecla"):
+		hud = hud.get_parent()
+	return hud.nombre_tecla("expediente") if hud else "TAB"
+
+
 func _escala_texto() -> float:
 	var configuracion := get_node_or_null("/root/Configuracion")
 	return float(configuracion.get("EscalaTexto")) if configuracion else 1.0
@@ -351,7 +359,7 @@ func _barra_lateral() -> Control:
 	# El tutorial (caso 00) no tiene presentación por ahora (IntroCaso.CasoSinPresentacion)
 	if informe and _caso != "00":
 		pie.add_child(_boton_atajo("VER", "PRESENTACIÓN DEL CASO", ver_presentacion)[0])
-	pie.add_child(_boton_atajo("TAB", "CERRAR", cerrar)[0])
+	pie.add_child(_boton_atajo(_nombre_tecla_expediente(), "CERRAR", cerrar)[0])
 	v.add_child(pie)
 	return m
 

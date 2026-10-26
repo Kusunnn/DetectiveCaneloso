@@ -93,7 +93,9 @@ public partial class MenuPausa : CanvasLayer
 	// que este nodo; aquí solo llega cuando está visible la lista principal.
 	public override void _UnhandledInput(InputEvent evento)
 	{
+		if (evento.IsEcho()) return;
 		if (_panelRanuras.Visible) return;
+		if (!_raiz.Visible && GetTree().Paused) return;
 		if (evento.IsActionPressed("pausa") || (_raiz.Visible && evento.IsActionPressed("ui_cancel")))
 		{
 			GetViewport().SetInputAsHandled();
@@ -110,6 +112,7 @@ public partial class MenuPausa : CanvasLayer
 
 	public void Pausar()
 	{
+		if (Abierto || GetTree().Paused) return;
 		// La miniatura de la ranura se toma antes de que aparezca el menú
 		GestorPartida.Instancia?.PrepararMiniatura();
 		GetTree().Paused = true;
