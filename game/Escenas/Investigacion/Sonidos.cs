@@ -185,9 +185,14 @@ public static class Sonidos
 			Bus = BusInterfaz,
 			ProcessMode = Node.ProcessModeEnum.Always,
 		};
-		arbol.Root.AddChild(reproductor);
 		reproductor.Finished += reproductor.QueueFree;
-		reproductor.Play();
+		// El foco inicial puede sonar durante _Ready, mientras Root agrega la escena.
+		Callable.From(() =>
+		{
+			if (!GodotObject.IsInstanceValid(arbol.Root)) { reproductor.Free(); return; }
+			arbol.Root.AddChild(reproductor);
+			reproductor.Play();
+		}).CallDeferred();
 	}
 
 	private static AudioStream ComoBucle(AudioStream sonido)

@@ -268,6 +268,8 @@ func _process(delta: float) -> void:
 	_lienzo.queue_redraw()
 
 func _input(event: InputEvent) -> void:
+	if not visible or get_tree().paused:
+		return
 	# Con el expediente abierto solo cuentan sus teclas; la rueda llega al informe para desplazarlo.
 	if _expediente and _expediente.abierto:
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -513,7 +515,7 @@ func nombre_tecla(accion: String) -> String:
 	for evento in InputMap.action_get_events(accion):
 		if evento is InputEventKey:
 			var codigo: int = evento.physical_keycode if evento.physical_keycode != KEY_NONE else evento.keycode
-			var visible := DisplayServer.keyboard_get_keycode_from_physical(codigo)
+			var visible := codigo if DisplayServer.get_name() == "headless" else DisplayServer.keyboard_get_keycode_from_physical(codigo)
 			if visible == KEY_NONE:
 				visible = codigo
 			return "TAB" if visible == KEY_TAB else OS.get_keycode_string(visible)
@@ -724,6 +726,7 @@ func _dibujar_postit_pista(p: Vector2, indice: int, alfa: float = 1.0) -> void:
 		var pista := pistas[indice]
 		var ancho := 210.0 if pista.imagen else 311.0
 		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, Color(TINTA, alfa), ancho)
+		_parrafo(pista.descripcion, p + Vector2(22, 102), ancho, 11, Color(TINTA, alfa), 2)
 		_lupa(p + Vector2(32, 160), _estado_pista(pista), alfa, 0.7)
 		if pista.imagen:
 			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), Color(BLANCO, alfa))
