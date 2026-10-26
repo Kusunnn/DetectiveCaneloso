@@ -84,13 +84,40 @@ public partial class Configuracion : Node
 		["bailar"] = "Bailar", ["morir"] = "Morir", ["pausa"] = "Pausa",
 	};
 
+	// Teclas que Windows, macOS o el propio teclado se reservan (HU-19): el juego no las recibe bien
+	// o, al pulsarlas, el sistema hace otra cosa (cambiar de ventana, cerrar el juego, captura de pantalla...)
+	private static readonly Dictionary<Key, string> TeclasSistema = new()
+	{
+		[Key.Alt] = "combinaciones del sistema como Alt + Tab, Alt + F4 y Ctrl + Alt + Supr",
+		[Key.Meta] = "el sistema (tecla Windows / Cmd)",
+		[Key.Print] = "la captura de pantalla del sistema",
+		[Key.Sysreq] = "el sistema (PetSis)",
+		[Key.Pause] = "el sistema (Pausa / Inter)",
+		[Key.Scrolllock] = "el sistema (Bloq Despl)",
+	};
+
+	// Motivo por el que el sistema se reserva la tecla, o null si el juego puede usarla
+	public static string ReservadaPorSistema(Key fisica)
+	{
+		if (TeclasSistema.TryGetValue(fisica, out string motivo)) return motivo;
+		// Menú contextual, ayuda, multimedia (volumen, reproducir...) y teclas de abrir aplicaciones
+		if ((fisica >= Key.Menu && fisica <= Key.JisKana) || fisica == Key.Unknown || fisica == Key.None)
+			return "funciones especiales del teclado";
+		return null;
+	}
+
 	// Teclas cambiadas por el jugador: acción → tecla física. Las demás siguen como en project.godot.
 	private readonly Dictionary<string, Key> _teclas = new();
 
-	public void AsignarTecla(string accion, Key fisica)
+	// Asigna la tecla si es válida: no reservada y sin repetir. Se guarda al momento para que el
+	// cambio no se pierda aunque el jugador cierre el juego sin pasar por «Guardar y volver».
+	public bool AsignarTecla(string accion, Key fisica)
 	{
+		if (ReservadaPorSistema(fisica) != null || UsoDeTecla(fisica, accion) != null) return false;
 		_teclas[accion] = fisica;
 		AplicarTecla(accion, fisica);
+		Guardar();
+		return true;
 	}
 
 	// Sustituye las teclas de la acción (los botones del control se conservan)
@@ -105,13 +132,54 @@ public partial class Configuracion : Node
 	public void RestaurarTeclas()
 	{
 		_teclas.Clear();
-		foreach (var (_, accion) in TeclasConfigurables)
+		foreach (var (_, accion) in TeclasConfigurables) RestaurarAccion(accion);
+	}
+
+	// Vuelve una acción a las teclas y botones de project.godot
+	private static void RestaurarAccion(string accion)
+	{
+		if (!InputMap.HasAction(accion) || !ProjectSettings.HasSetting("input/" + accion)) return;
+		var definicion = ProjectSettings.GetSetting("input/" + accion).AsGodotDictionary();
+		InputMap.ActionEraseEvents(accion);
+		foreach (InputEvent evento in definicion["events"].AsGodotArray<InputEvent>())
+			InputMap.ActionAddEvent(accion, evento);
+	}
+
+	// Acciones configurables que se quedaron sin ninguna tecla del teclado (nombres visibles)
+	public static List<string> AccionesSinTecla()
+	{
+		var faltan = new List<string>();
+		foreach (var (nombre, accion) in TeclasConfigurables)
 		{
-			if (!InputMap.HasAction(accion) || !ProjectSettings.HasSetting("input/" + accion)) continue;
-			var definicion = ProjectSettings.GetSetting("input/" + accion).AsGodotDictionary();
-			InputMap.ActionEraseEvents(accion);
-			foreach (InputEvent evento in definicion["events"].AsGodotArray<InputEvent>())
-				InputMap.ActionAddEvent(accion, evento);
+			if (!InputMap.HasAction(accion)) continue;
+			bool tieneTecla = false;
+			foreach (InputEvent evento in InputMap.ActionGetEvents(accion))
+				if (evento is InputEventKey) tieneTecla = true;
+			if (!tieneTecla) faltan.Add(nombre);
+		}
+		return faltan;
+	}
+
+	// Teclas guardadas en el archivo: se aplican todas y después se revisan, para que un archivo editado
+	// a mano o de otra versión no deje teclas reservadas ni repetidas (esas vuelven a la predeterminada)
+	private void CargarTeclas(ConfigFile archivo)
+	{
+		if (!archivo.HasSection("teclas")) return;
+		var configurables = new HashSet<string>();
+		foreach (var (_, accion) in TeclasConfigurables) configurables.Add(accion);
+		foreach (string accion in archivo.GetSectionKeys("teclas"))
+		{
+			var tecla = (Key)archivo.GetValue("teclas", accion, 0).AsInt64();
+			if (!configurables.Contains(accion) || !InputMap.HasAction(accion) || ReservadaPorSistema(tecla) != null) continue;
+			_teclas[accion] = tecla;
+			AplicarTecla(accion, tecla);
+		}
+		foreach (string accion in new List<string>(_teclas.Keys))
+		{
+			if (UsoDeTecla(_teclas[accion], accion) == null) continue;
+			GD.PushWarning($"Configuracion: la tecla guardada para {accion} se repetía; vuelve a la predeterminada.");
+			_teclas.Remove(accion);
+			RestaurarAccion(accion);
 		}
 	}
 
@@ -148,6 +216,7 @@ public partial class Configuracion : Node
 		SensibilidadRaton = 1f;
 		AyudasVisuales = true;
 		RestaurarTeclas();
+		Guardar();
 	}
 
 	// true si lo último que tocó el jugador fue un control; las ayudas muestran sus botones
@@ -183,14 +252,7 @@ public partial class Configuracion : Node
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
 		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
-		if (archivo.HasSection("teclas"))
-		{
-			foreach (string accion in archivo.GetSectionKeys("teclas"))
-			{
-				var tecla = (Key)archivo.GetValue("teclas", accion, 0).AsInt64();
-				if (tecla != Key.None && InputMap.HasAction(accion)) AsignarTecla(accion, tecla);
-			}
-		}
+		CargarTeclas(archivo);
 	}
 
 	private void CrearContadorFps()
@@ -237,6 +299,12 @@ public partial class Configuracion : Node
 			Guardar();
 			GetViewport().SetInputAsHandled();
 		}
+	}
+
+	// Si el jugador cierra la ventana con un menú abierto, lo que cambió se guarda igual
+	public override void _Notification(int what)
+	{
+		if (what == NotificationWMCloseRequest) Guardar();
 	}
 
 	public override void _Process(double delta)
