@@ -357,7 +357,7 @@ script = ExtResource("e3")
 Bisagra = NodePath("Modelo/cabin-door-rotate/door")
 AnguloApertura = 100.0
 Bloqueada = true
-MensajeBloqueada = "Cabaña del director. Cerrada con llave. Tony dijo que estuvo dormido toda la noche."
+MensajeBloqueada = "Cabaña del director. Cerrada con llave."
 
 [node name="Modelo" parent="Edificio/PuertaDirector" instance=ExtResource("e4")]
 transform = Transform3D(2.0, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0, 2.6, 0.0, 0.0, 0.0)
@@ -742,13 +742,13 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("e32")
 Id = "botas_tony"
-Titulo = "Botas de hule con barro"
-Descripcion = "Unas botas de hule grandes, con barro fresco, escondidas detrás de la cabaña del director."
+Titulo = "Botas con lodo"
+Descripcion = "Las botas de hule de Tony, con lodo fresco, escondidas atrás de la cabaña del director."
 EsEvidencia = true
 ComentarioAlMirar = "¿Unas botas aquí atrás, escondidas?"
 RequiereLinterna = true
 Imagen = ExtResource("e31")
-DescripcionAmpliada = "Botas de hule de talla grande, todavía húmedas. El barro de las cañas está fresco. Alguien las escondió aquí atrás en lugar de dejarlas en la entrada, como todos."
+DescripcionAmpliada = "Las botas de hule de Tony, todavía húmedas. El lodo de las cañas está fresco. Alguien las escondió aquí atrás en lugar de dejarlas en la entrada, como todos."
 Lugar = "Detrás de la cabaña del director"
 Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_juncos")])
 

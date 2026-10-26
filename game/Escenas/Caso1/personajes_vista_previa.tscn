@@ -73,6 +73,10 @@ AlturaOjos = 1.35
 [node name="Colision" type="StaticBody3D" parent="Eriz" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Eriz"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Eriz/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8419, 0.0)
@@ -115,6 +119,10 @@ AlturaOjos = 1.2
 [node name="Colision" type="StaticBody3D" parent="Miami" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Mimita"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Miami/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.75, 0.0)
@@ -135,6 +143,10 @@ Animacion = "global/InacTony"
 [node name="Colision" type="StaticBody3D" parent="Tony" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Tony"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Tony/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 0.0)
@@ -155,6 +167,10 @@ Animacion = "Inaya"
 [node name="Colision" type="StaticBody3D" parent="Aya" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Aya"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Aya/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8, 0.0)
@@ -175,6 +191,10 @@ Animacion = "global/Inactivo"
 [node name="Colision" type="StaticBody3D" parent="Miaurio" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Miawrio"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Miaurio/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.85, 0.0)

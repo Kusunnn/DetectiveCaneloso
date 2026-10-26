@@ -509,11 +509,11 @@ collision_mask = 0
 script = ExtResource("e18")
 Id = "nota_porky"
 Titulo = "Nota de Porky"
-Descripcion = "Una hoja doblada con la letra de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Daniel.»"
+Descripcion = "Una hoja doblada con la letra de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Paco.»"
 EsEvidencia = true
 ComentarioAlMirar = "Una hoja doblada, escondida a propósito."
 Imagen = ExtResource("e17")
-DescripcionAmpliada = "Una nota con la letra redonda de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Daniel.» La escribió con prisa: la tinta se corrió."
+DescripcionAmpliada = "Una nota con la letra redonda de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Paco.» La escribió con prisa: la tinta se corrió."
 Lugar = "Cabaña de Porky · bajo la almohada"
 ModeloExamen = ExtResource("hu07_x_notaporky")
 
@@ -547,7 +547,7 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("e19")
 Nombre = "Buró"
-MensajeAlAbrir = "Una linterna sin pilas y una foto de Daniel con una canoa. Porky la guardaba cerca."
+MensajeAlAbrir = "Una linterna sin pilas y una foto de Paco con una canoa. Porky la guardaba cerca."
 SonidoAbrir = 1
 Parte = NodePath("Modelo/Modelo/sideTableDrawers(Clone)/drawerLeft")
 TipoMovimiento = 1
@@ -646,12 +646,12 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("e18")
 Id = "foto_grupo"
-Titulo = "Foto del grupo de hace 20 años"
-Descripcion = "Los campistas de la cabaña 4 hace veinte años, frente a su cabaña, con su monitor a un lado."
+Titulo = "Foto del grupo de hace 10 años"
+Descripcion = "Los ocho junto al lago, hace diez años: siete campistas con Paco en el centro y, atrás, Tony de monitor."
 EsEvidencia = true
-ComentarioAlMirar = "Todos tan chiquitos... Una foto de hace veinte años."
+ComentarioAlMirar = "Todos tan chiquitos... Una foto de hace diez años."
 Imagen = ExtResource("e32")
-DescripcionAmpliada = "Una foto vieja en un marco de madera: cinco campistas de la cabaña 4 frente a su cabaña y, a la izquierda, un monitor alto con gorra. El más pequeño lleva una gorra de marinero. El marco tiene polvo, menos en las orillas: alguien lo descolgó hace poco."
+DescripcionAmpliada = "Una foto vieja en un marco de madera: siete campistas junto al lago, con Paco en el centro y su gorra de marinero, y atrás Tony, de monitor, con un silbato colgado al cuello. El marco tiene polvo, menos en las orillas: alguien lo descolgó hace poco."
 Lugar = "Cabaña de Porky · pared de fotos"
 Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_dedicatoria"), ExtResource("hu07_det_silbato")])
 
@@ -687,7 +687,7 @@ script = ExtResource("e15")
 Texto = "(dibujo con crayones)
 un ciervo que brilla
 junto al lago
-— Daniel, 10 años"
+— Paco, 9 años"
 Ancho = 0.42
 ColorPapel = Color(0.9, 0.88, 0.8, 1.0)
 ColorTexto = Color(0.15, 0.25, 0.6, 1.0)
@@ -704,11 +704,11 @@ collision_mask = 0
 script = ExtResource("e18")
 Id = "recorte_periodico"
 Titulo = "Recorte de periódico"
-Descripcion = "EL ECO DEL LAGO. «Muere campista de 11 años en el Lago Espejo. Daniel M. salió de su cabaña de noche; la guardia no notó su ausencia.»"
+Descripcion = "EL ECO DEL LAGO. «Muere ahogado un campista de 12 años en el Lago Espejo. ¿Nadie cuidaba el lago?»"
 EsEvidencia = true
-ComentarioAlMirar = "Daniel... el de la canoa."
+ComentarioAlMirar = "Paco... el de la canoa."
 Imagen = ExtResource("e36")
-DescripcionAmpliada = "Un recorte amarillento: «Muere campista de 11 años en el Lago Espejo. Daniel M. salió de su cabaña de noche; la guardia no notó su ausencia.» Alguien subrayó «la guardia» con pluma roja."
+DescripcionAmpliada = "Un recorte amarillento: «Muere ahogado un campista de 12 años en el Lago Espejo. ¿Nadie cuidaba el lago? La guardia no notó que Paco salió de su cabaña de noche.» Alguien subrayó «La guardia» con pluma roja."
 Lugar = "Cabaña de Porky · corcho"
 
 [node name="Forma" type="CollisionShape3D" parent="Recorte"]
@@ -739,12 +739,12 @@ collision_mask = 0
 script = ExtResource("e18")
 Id = "oferta_compra"
 Titulo = "Oferta de compra rota"
-Descripcion = "Pedazos de una oferta para comprar el campamento, firmada por Juan Carlos. Alguien la rompió en cuatro."
+Descripcion = "Pedazos de una oferta para que Porky dejara su cabaña antes de la venta, firmada por Miawrio. Alguien la rompió en cuatro."
 EsEvidencia = true
 ComentarioAlMirar = "Papeles rotos con un sello notarial."
 SoloAgachado = true
 Imagen = ExtResource("e38")
-DescripcionAmpliada = "Una oferta formal para comprar el Campamento Pino Lunar, firmada por Juan Carlos. Está rota en cuatro pedazos y tirada a la basura: Porky no pensaba vender."
+DescripcionAmpliada = "Una oferta formal de Miawrio: dinero para que Porky desalojara su cabaña antes de firmar la compra del Campamento Pino Lunar. Está rota en cuatro pedazos y tirada a la basura: Porky no pensaba irse."
 Lugar = "Cabaña de Porky · papelera"
 
 [node name="Forma" type="CollisionShape3D" parent="Oferta"]

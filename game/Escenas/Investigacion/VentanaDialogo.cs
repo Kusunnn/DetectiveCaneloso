@@ -26,9 +26,8 @@ public class OpcionVista
 	public string Texto;
 	public string Etiqueta;   // PREGUNTAR, PRESIONAR, EVIDENCIA...
 	public bool Leida;
-	// HU-27: falta una pista o conclusión; se ve apagada, con el motivo, y no se puede elegir
+	// HU-27: falta una pista o conclusión; se ve apagada como «???» (sin decir qué falta) y no se puede elegir
 	public bool Bloqueada;
-	public string Motivo = "";
 
 	public OpcionVista(string texto, string etiqueta = "", bool leida = false)
 	{
@@ -216,8 +215,9 @@ public partial class VentanaDialogo : CanvasLayer
 			int indice = i;
 			var o = opciones[i];
 			string etiqueta = string.IsNullOrEmpty(o.Etiqueta) ? "" : "[" + o.Etiqueta + "] ";
-			var boton = CrearBoton((i + 1) + ". " + etiqueta + o.Texto + (o.Leida ? "  ✓" : ""), o.Leida);
-			if (o.Bloqueada) Bloquear(boton, o.Motivo);
+			string texto = o.Bloqueada ? "???" : etiqueta + o.Texto + (o.Leida ? "  ✓" : "");
+			var boton = CrearBoton((i + 1) + ". " + texto, o.Leida);
+			if (o.Bloqueada) Bloquear(boton);
 			boton.Pressed += () => _espera?.TrySetResult(indice);
 			_opciones.AddChild(boton);
 		}
@@ -344,11 +344,10 @@ public partial class VentanaDialogo : CanvasLayer
 		return boton;
 	}
 
-	// Opción que todavía no se puede elegir: apagada y con el motivo al lado
-	private void Bloquear(Button boton, string motivo)
+	// Opción que todavía no se puede elegir: apagada, sin pistas de qué le falta
+	private void Bloquear(Button boton)
 	{
 		boton.Disabled = true;
-		boton.Text += string.IsNullOrEmpty(motivo) ? "  [BLOQUEADA]" : "  [BLOQUEADA: " + motivo + "]";
 		var vacio = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
 		vacio.SetContentMarginAll(4);
 		boton.AddThemeStyleboxOverride("disabled", vacio);

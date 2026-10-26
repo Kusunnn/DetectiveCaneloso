@@ -891,7 +891,7 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("e19")
 Nombre = "Saco de dormir"
-MensajeAlAbrir = "Otro saco de dormir. Un gafete de «Campista del año» de hace veinte veranos."
+MensajeAlAbrir = "Otro saco de dormir. Un gafete de «Campista del año» de hace diez veranos."
 SonidoAbrir = 2
 
 [node name="Forma" type="CollisionShape3D" parent="Saco1"]
@@ -950,8 +950,8 @@ mesh = SubResource("BoxMesh_66")
 [node name="Placa" type="Node3D" parent="."]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 13.5, 1.75, -17.7)
 script = ExtResource("e11")
-Texto = "CABAÑA 3 — VERANO DE HACE 20 AÑOS
-Porky · Juan Carlos · Miawrio · Daniel"
+Texto = "CABAÑA 3 — VERANO DE HACE 10 AÑOS
+Porky · Juan Carlos · Miawrio · Paco"
 Ancho = 1.2
 ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
 ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
@@ -981,7 +981,7 @@ transform = Transform3D(0.9976, 0, -0.0698, 0, 1, 0, 0.0698, 0, 0.9976, 14.00127
 script = ExtResource("e11")
 Texto = "(dibujo)
 «yo y mi canoa»
-— Daniel"
+— Paco"
 Ancho = 0.4
 ColorPapel = Color(0.92, 0.9, 0.82, 1.0)
 ColorTexto = Color(0.1, 0.3, 0.6, 1.0)

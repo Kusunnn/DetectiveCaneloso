@@ -1,11 +1,14 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 // Caso 1 «La Noche del Ciervo de Luz» — Escenario 1: el Campamento Pino Lunar (HU-20.5).
-// Solo el escenario: pistas físicas, la cabaña de Porky cerrada hasta encontrar su llavero y la salida
-// al sendero del lago (Escenario 2, próximamente). Los interrogatorios y deducciones vendrán después.
-// Igual que Caso0.cs, es el único script que conoce la historia; los sistemas siguen siendo genéricos.
+// Hecdog presenta el caso, Caneloso reúne pistas en el campamento (la cabaña de Porky se abre con su llavero)
+// y por el sendero del lago llega a la sala, donde interroga a los seis y acusa. El Escenario 2 (lago y bosque)
+// todavía no existe: sus pistas ya tienen texto y diálogos, y se activan en cuanto haya objetos con su id.
+// El guion vive en Datos/Dialogos/caso1_*.json; este script solo lo conecta con el escenario.
 public partial class Caso1 : Node
 {
 	// Pistas (★ señalan a Tony)
@@ -22,20 +25,12 @@ public partial class Caso1 : Node
 	private const string RegistroEnfermeria = "registro_enfermeria";
 	private const string BotasTony = "botas_tony";            // ★
 	private const string RegistroLlamadas = "registro_llamadas";
-	// Pendiente de confirmar con el equipo: mientras sea false, la pista del coche no aparece
-	private const bool RegistroLlamadasConfirmado = false;
-	private static int PistasTotales => RegistroLlamadasConfirmado ? 13 : 12;
+	// Pistas del campamento (las del lago llegan con el Escenario 2)
+	private const int PistasTotales = 13;
 	// Cuántas pistas hacen falta para que el sendero del lago "se abra" (por ahora, el cartel de próximamente)
 	private const int PistasParaSalir = 8;
 
 	private const string Llavero = "llavero_porky";
-
-	// HU-07: detalles que solo aparecen examinando la evidencia (entradas nuevas del diario)
-	private const string LibroAntonio = "libro_guardia_quemado.antonio";
-	private const string FotoDedicatoria = "foto_grupo.dedicatoria";
-	private const string FotoSilbato = "foto_grupo.silbato";
-	private const string RegistroTachon = "registro_enfermeria.tachon";
-	private const string BotasJuncos = "botas_tony.juncos";
 
 	[Export] public Jugador Jugador;
 	[Export] public CanvasLayer Hud;
@@ -43,7 +38,6 @@ public partial class Caso1 : Node
 	[Export] public TableroDeduccion Tablero;
 	[Export] public Puerta PuertaPorky;
 	[Export] public PuntoInteraccion Salida;
-	[Export] public ObjetoPista PistaLlamadas;
 	[Export] public MusicaFondo Musica;
 	[Export] public WorldEnvironment Entorno;
 	// Contenedores con una pista adentro: la pista solo se puede tomar con el contenedor abierto
@@ -79,7 +73,7 @@ public partial class Caso1 : Node
 		Tablero.Probar = (_, _) => null; // Las deducciones llegan con los interrogatorios
 
 		PuertaPorky.Bloqueada = true;
-		PuertaPorky.MensajeBloqueada = "Cabaña 4: la de Porky. Cerrada con llave... y él nunca deja la llave lejos de la cocina.";
+		PuertaPorky.MensajeBloqueada = "Cabaña 4: la de Porky. Cerrada con llave... y ella nunca dejaba la llave lejos de la cocina.";
 
 		for (int i = 0; i < ContenedoresConPista.Length && i < PistasDentro.Length; i++)
 		{
@@ -88,13 +82,7 @@ public partial class Caso1 : Node
 			ContenedoresConPista[i].Abierto += () => pista.CollisionLayer = CapaInteractuable;
 		}
 
-		if (!RegistroLlamadasConfirmado && PistaLlamadas != null)
-		{
-			PistaLlamadas.CollisionLayer = 0;
-			PistaLlamadas.Visible = false;
-		}
-
-		Salida.Usado += () => Conversar(AlUsarSalida);
+		Salida.Usado += () => _ = Conversar(AlUsarSalida);
 		PrepararDialogos();
 		foreach (var zona in Zonas)
 		{
@@ -103,7 +91,7 @@ public partial class Caso1 : Node
 		}
 
 		if (VersionLigera) AplicarVersionLigera();
-		Objetivo("Revisa el campamento. Empieza por la fogata del centro.");
+		Objetivo("Escucha a Hecdog: él tiene el expediente.");
 		PrepararPartida();
 		CallDeferred(MethodName.Empezar);
 	}
@@ -125,12 +113,19 @@ public partial class Caso1 : Node
 		// Si el jugador salió al menú durante la presentación, la escena ya no existe
 		if (!IsInstanceValid(this) || !IsInsideTree()) return;
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
-		_enDialogo = true;
-		await Dialogo.Decir(_caneloso,
-			"Campamento Pino Lunar. Las cuatro de la mañana.",
-			"La luz ya volvió, pero la fogata todavía humea.",
-			"Alguien quemó algo aquí. Y nadie quiere decirme qué.");
-		_enDialogo = false;
+		await Conversar(Introduccion);
+		// Hecdog le da el expediente: se abre en cuanto se cierra la conversación
+		if (_abrirExpediente && IsInsideTree()) Hud.Call("abrir_expediente");
+		_abrirExpediente = false;
+	}
+
+	// 2.x: Hecdog recibe a Caneloso y le da el expediente
+	private async Task Introduccion()
+	{
+		await _dialogos.Recorrer(_arboles[ArbolIntroduccion]);
+		if (!IsInsideTree()) return;
+		ActualizarObjetivo();
+		Autoguardar("Introducción");
 	}
 
 	// ---------- Pistas ----------
@@ -140,61 +135,22 @@ public partial class Caso1 : Node
 		_pistas.Add(id);
 		Cambio();
 		Autoguardar("Pista: " + id);
-		string pensamiento = id switch
+		if (_guionPistas.TryGetValue(id, out var guion))
 		{
-			Interruptor => "Bajado a mano. El generador está bien: el apagón fue provocado.",
-			Candado => "Sin una marca. Quien lo abrió tenía la llave.",
-			Baul => "Falta la cornamenta del disfraz de ciervo. Alguien se vistió de «ciervo de luz».",
-			Lena => "La leña sigue apilada. Miaurio dijo que fue por leña... no trajo ni una rama.",
-			LibroQuemado => "«Guardia nocturna, 14 de agosto... olor a alcohol...» Alguien quería borrar esa noche.",
-			NotaPorky => "«Esta noche se lo digo. Ya tengo el libro. Por Daniel.» ¿A quién iba a decírselo?",
-			FotoGrupo => "La cabaña 4, hace veinte años. Porky la tenía a la vista... ¿por qué esta foto?",
-			Recorte => "Daniel. Se ahogó en el lago aquel verano. Por eso nadie habla del 14 de agosto.",
-			Oferta => "Juan Carlos quería comprar el campamento. Porky rompió la oferta.",
-			TazaDelantal => "El chocolate a medias y el delantal colgado. Porky salió con prisa.",
-			RegistroEnfermeria => "Una línea de las 23:20, tachada a conciencia. Con buena luz quizá se lea algo.",
-			BotasTony => "Barro fresco. Las escondieron detrás de la cabaña del director.",
-			RegistroLlamadas => "Llamadas de Juan Carlos a medianoche. Habrá que preguntarle.",
-			_ => null,
-		};
-		if (pensamiento != null) Jugador.MostrarPensamiento(pensamiento, 6.0);
-		Hud.Call("agregar_nota", NotaDe(id));
+			// Lo que piensa Caneloso: el tiempo en pantalla crece con el largo del comentario
+			Jugador.MostrarPensamiento(guion.Comentario, Math.Max(6.0, guion.Comentario.Length / 15.0));
+			Hud.Call("agregar_nota", guion.Nota);
+		}
+		else Hud.Call("agregar_nota", "Pista: " + id);
 		if (_pistas.Count == PistasParaSalir)
 			Jugador.MostrarAviso("El sendero del lago ya me espera", 4.0);
 		ActualizarObjetivo();
 	}
 
-	private static string NotaDe(string id) => id switch
-	{
-		Interruptor => "Caseta del generador: el interruptor se bajó a mano. El apagón fue provocado.",
-		Candado => "El candado de la caseta no está forzado: lo abrió alguien con llave.",
-		Baul => "Del baúl de disfraces falta la cornamenta del ciervo.",
-		Lena => "La leña junto a la fogata está intacta: nadie trajo leña anoche.",
-		LibroQuemado => "Restos del libro de guardia en la fogata: «14 de agosto», «olor a alcohol».",
-		NotaPorky => "Nota de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Daniel.»",
-		FotoGrupo => "Foto de hace 20 años en la cabaña de Porky: los campistas de la cabaña 4 y su monitor.",
-		Recorte => "Recorte: Daniel murió en el Lago Espejo hace 20 años.",
-		Oferta => "Oferta de compra del campamento firmada por Juan Carlos, rota en la papelera de Porky.",
-		TazaDelantal => "Cocina: chocolate a medias y el delantal de Porky colgado. Salió con prisa.",
-		RegistroEnfermeria => "Enfermería: alguien tachó la línea de las 23:20 del registro.",
-		BotasTony => "Botas con barro fresco escondidas detrás de la cabaña del director.",
-		RegistroLlamadas => "Registro de llamadas de Juan Carlos.",
-		_ => "Pista: " + id,
-	};
-
 	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
 	private void AlDescubrirDetalle(string origen, string id)
 	{
-		string nota = id switch
-		{
-			LibroAntonio => "Reverso del libro de guardia: «De guardia: monitor auxiliar Antonio R.»",
-			FotoDedicatoria => "Detrás de la foto: «Cabaña 4, 14 de agosto. Para Daniel... — A. R.»",
-			FotoSilbato => "En la foto, el silbato del monitor lleva grabado «A. R.»: es Tony.",
-			RegistroTachon => "Bajo el tachón del registro de la enfermería: «23:20, ruido en el lago».",
-			BotasJuncos => "En la suela de las botas hay juncos del lago: quien las usó bajó a la orilla.",
-			_ => null,
-		};
-		if (nota != null) Hud.Call("agregar_nota", nota);
+		if (_notasDetalles.TryGetValue(id, out string nota)) Hud.Call("agregar_nota", nota);
 		Cambio();
 		Autoguardar("Detalle: " + id);
 	}
@@ -210,8 +166,17 @@ public partial class Caso1 : Node
 
 	private void ActualizarObjetivo()
 	{
+		if (Resuelto) { Objetivo("Caso cerrado."); return; }
+		if (!_dialogos.Estado.NodoCompletado(ArbolIntroduccion, "ir")) { Objetivo("Escucha a Hecdog: él tiene el expediente."); return; }
+		if (_dialogos.Estado.NodoCompletado(ArbolSala, "llegada"))
+		{
+			Objetivo(TonyDisponible
+				? "Todos confesaron su secreto... menos uno. Habla con Tony y luego acusa."
+				: "Interroga a los seis y enséñales la prueba que les tumbe la historia.");
+			return;
+		}
 		string cuenta = $" ({_pistas.Count}/{PistasTotales} pistas)";
-		if (_pistas.Count >= PistasTotales) { Objetivo("Ya revisé todo el campamento. El sendero del lago, al norte."); return; }
+		if (_pistas.Count >= PistasTotales) { Objetivo("Ya revisé todo el campamento. El sendero del lago, al norte: Hecdog me espera."); return; }
 		if (!Jugador.TieneObjeto(Llavero) && _pistas.Contains(TazaDelantal)) { Objetivo("Revisa el delantal de Porky en la cocina." + cuenta); return; }
 		if (Jugador.TieneObjeto(Llavero) && !_pistas.Contains(NotaPorky)) { Objetivo("Abre la cabaña de Porky, al este." + cuenta); return; }
 		if (_pistas.Count >= PistasParaSalir) { Objetivo("Sigue el sendero al Lago Espejo, al norte... o busca lo que falta." + cuenta); return; }
@@ -243,32 +208,66 @@ public partial class Caso1 : Node
 			"Director" => "La cabaña del director. Tony... ¿qué hay detrás?",
 			"Enfermeria" => "La enfermería mira directo al lago.",
 			"Caseta" => "La caseta del generador. De aquí salió el apagón.",
-			"Estacionamiento" => "Un solo coche. El de Juan Carlos.",
+			"Estacionamiento" => "Un solo carro en el estacionamiento. ¿De quién será?",
 			"Sendero" => "Allá abajo brilla el lago. Azul... como dicen las historias.",
 			_ => null,
 		};
 		if (texto != null && !_enDialogo) Jugador.MostrarPensamiento(texto, 4.5);
 	}
 
-	private async System.Threading.Tasks.Task AlUsarSalida()
+	private async Task AlUsarSalida()
 	{
+		if (Resuelto)
+		{
+			await Dialogo.Decir(_caneloso, "Ya no hay nada que buscar allá abajo. El caso está cerrado.");
+			return;
+		}
 		if (_pistas.Count < PistasParaSalir)
 		{
 			await Dialogo.Decir(_caneloso, "Todavía no. Algo pasó aquí primero.", $"Me faltan cosas por revisar ({_pistas.Count}/{PistasTotales}).");
 			return;
 		}
-		await Dialogo.Decir(_caneloso,
-			"El sendero baja al Lago Espejo. Ahí vieron al «ciervo de luz».",
-			"Lo que pasó anoche terminó allá abajo.");
-		Hud.Call("avisar", "ESCENARIO 2", "LAGO Y BOSQUE · PRÓXIMAMENTE");
+		if (!_dialogos.Estado.NodoCompletado(ArbolSala, "llegada"))
+		{
+			await Dialogo.Decir(_caneloso,
+				"El sendero baja al Lago Espejo. Ahí vieron al «ciervo de luz».",
+				"Lo que pasó anoche terminó allá abajo.");
+			// El Escenario 2 (lago y bosque) todavía no existe: de aquí se pasa directo a la sala
+			Hud.Call("avisar", "ESCENARIO 2", "LAGO Y BOSQUE · PRÓXIMAMENTE");
+		}
+		await Sala();
 	}
 
 	// ---------- Diálogos ramificados (HU-27) ----------
 
-	// Prueba del motor: Juan Carlos habla con un árbol de datos. El guion real llega con la integración narrativa.
-	private const string RutaDialogoPrueba = "res://Datos/Dialogos/prueba_juan_carlos.json";
+	// El guion del Caso 1 (Excel de Yaya, capas 2 a 12): un archivo por conversación
+	private const string ArbolIntroduccion = "caso1_introduccion";
+	private const string ArbolSala = "caso1_sala";
+	private const string ArbolAcusacion = "caso1_acusacion";
+	private const string RutaDialogos = "res://Datos/Dialogos/";
+	private const string RutaPistas = "res://Datos/Dialogos/caso1_pistas.json";
+	private const int CredibilidadInicial = 5;
+	// Nodo de cada sospechoso en la escena (Personajes/<nodo>/Colision) → su interrogatorio
+	private static readonly (string Nodo, string Id, string Nombre)[] Sospechosos =
+	{
+		("JuanCarlos", "juan_carlos", "Juan Carlos"),
+		("Aya", "aya", "Aya"),
+		("Miaurio", "miawrio", "Miawrio"),
+		("Eriz", "eriz", "Eriz"),
+		("Miami", "mimita", "Mimita"),
+		("Tony", "tony", "Tony"),
+	};
+	// Las cinco confesiones que abren el interrogatorio de Tony
+	private static readonly string[] Confesiones = { "juan_carlos_3", "aya_2", "miawrio_2", "eriz_1", "mimita_2" };
+
 	private MotorDialogos _dialogos;
-	private ArbolDialogo _dialogoJuanCarlos;
+	private readonly Dictionary<string, ArbolDialogo> _arboles = new();
+	private readonly Dictionary<string, (string Comentario, string Nota)> _guionPistas = new();
+	private readonly Dictionary<string, string> _notasDetalles = new();
+	private bool _abrirExpediente;
+
+	private bool TonyDisponible => Confesiones.All(_dialogos.Estado.TieneConclusion);
+	private bool Resuelto => _dialogos.Estado.NodoCompletado(ArbolAcusacion, "final_a") || _dialogos.Estado.NodoCompletado(ArbolAcusacion, "final_b");
 
 	private void PrepararDialogos()
 	{
@@ -277,18 +276,100 @@ public partial class Caso1 : Node
 			TienePista = id => _pistas.Contains(id),
 			Cambio = Cambio,
 			NotaNueva = nota => Hud.Call("agregar_nota", nota),
-		};
-		_dialogoJuanCarlos = ArbolDialogo.Cargar(RutaDialogoPrueba);
-		var juanCarlos = GetParent().GetNodeOrNull<Npc>("Personajes/JuanCarlos/Colision");
-		if (juanCarlos != null && _dialogoJuanCarlos != null)
-			juanCarlos.Usado += () => Conversar(async () =>
+			ContadorCambiado = AlCambiarContador,
+			Evento = AlEventoDialogo,
+			HablantePorNombre = nombre => nombre switch
 			{
-				await _dialogos.Recorrer(_dialogoJuanCarlos);
-				Autoguardar("Diálogo: Juan Carlos");
-			});
+				"Caneloso" => _caneloso,
+				"Narración" => new Hablante(""),
+				_ => Dialogo.HablantePorNombre(nombre),
+			},
+		};
+		_dialogos.Estado.Predeterminados["credibilidad"] = CredibilidadInicial;
+
+		foreach (string id in new[] { ArbolIntroduccion, ArbolSala, ArbolAcusacion }.Concat(Sospechosos.Select(s => "caso1_" + s.Id)))
+			_arboles[id] = ArbolDialogo.Cargar(RutaDialogos + id + ".json");
+		CargarGuionPistas();
+
+		foreach (var (nodo, id, nombre) in Sospechosos)
+		{
+			var npc = GetParent().GetNodeOrNull<Npc>($"Personajes/{nodo}/Colision");
+			if (npc == null) continue;
+			string quien = id;
+			npc.Usado += () => _ = Conversar(() => Interrogar(quien));
+		}
 	}
 
-	private async void Conversar(Func<System.Threading.Tasks.Task> conversacion)
+	private void CargarGuionPistas()
+	{
+		using var archivo = FileAccess.Open(RutaPistas, FileAccess.ModeFlags.Read);
+		var json = new Json();
+		if (archivo == null || json.Parse(archivo.GetAsText()) != Error.Ok)
+		{
+			GD.PushError($"Caso1: no se pudo leer {RutaPistas}.");
+			return;
+		}
+		var datos = json.Data.AsGodotDictionary();
+		foreach (var (id, pista) in datos["pistas"].AsGodotDictionary())
+		{
+			var p = pista.AsGodotDictionary();
+			_guionPistas[id.AsString()] = (p["comentario"].AsString(), p["nota"].AsString());
+		}
+		foreach (var (id, nota) in datos["detalles"].AsGodotDictionary())
+			_notasDetalles[id.AsString()] = nota.AsString();
+	}
+
+	// Un interrogatorio (en el campamento o desde la sala). Si Hecdog pierde la paciencia, se acusa ya.
+	private async Task<bool> Interrogar(string quien)
+	{
+		string salida = await _dialogos.Recorrer(_arboles["caso1_" + quien]);
+		Autoguardar("Diálogo: " + quien);
+		ActualizarObjetivo();
+		if (salida != "paciencia") return false;
+		await Sala("paciencia");
+		return true;
+	}
+
+	// 3.1 y 4.x: Hecdog y los seis en la sala. Se sale con «Seguir investigando» o acusando.
+	private async Task Sala(string desde = null)
+	{
+		while (IsInsideTree())
+		{
+			string salida = await _dialogos.Recorrer(_arboles[ArbolSala], desde);
+			ActualizarObjetivo();
+			desde = "sala";
+			if (salida.StartsWith("interrogar:"))
+			{
+				if (await Interrogar(salida.Substring("interrogar:".Length))) return;
+				continue;
+			}
+			if (salida == "acusar") await Acusar();
+			return;
+		}
+	}
+
+	// 11.x y 12.x: la acusación y uno de los dos finales
+	private async Task Acusar()
+	{
+		string final = await _dialogos.Recorrer(_arboles[ArbolAcusacion]);
+		if (!IsInsideTree()) return;
+		Hud.Call("avisar", final == "A" ? "FINAL A" : "FINAL B", final == "A" ? "LA CONFESIÓN" : "EL ERROR TRÁGICO");
+		ActualizarObjetivo();
+		Autoguardar("Fin del caso");
+	}
+
+	private void AlCambiarContador(string id, int valor)
+	{
+		if (id == "credibilidad")
+			Hud.Call("avisar", "CREDIBILIDAD", $"{Math.Max(valor, 0)} / {CredibilidadInicial}");
+	}
+
+	private void AlEventoDialogo(string evento)
+	{
+		if (evento == "abrir_expediente") _abrirExpediente = true;
+	}
+
+	private async Task Conversar(Func<Task> conversacion)
 	{
 		if (_enDialogo || Tablero.Abierto) return;
 		_enDialogo = true;

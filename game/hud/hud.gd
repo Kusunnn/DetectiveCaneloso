@@ -214,6 +214,11 @@ func _ready() -> void:
 	_expediente.expediente_cerrado.connect(func() -> void: panel_cambiado.emit(false, true))
 	_expediente.cargar_caso(caso)
 
+## Abre el expediente del caso (por ejemplo, cuando alguien se lo entrega al detective en un diálogo).
+func abrir_expediente() -> void:
+	if _expediente and not _expediente.abierto:
+		_expediente.abrir()
+
 func _al_abrir_expediente() -> void:
 	diario_abierto = false
 	panel_cambiado.emit(true, true)

@@ -336,13 +336,13 @@ collision_mask = 0
 script = ExtResource("e5")
 Id = "libro_guardia_quemado"
 Titulo = "Libro de guardia quemado"
-Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... olor a alcohol...». Lo demás está hecho ceniza."
+Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... monitor auxiliar... olor a alcohol...». Lo demás está hecho ceniza."
 EsEvidencia = true
 ComentarioAlMirar = "Entre las cenizas hay hojas que no terminaron de quemarse."
 RequiereLinterna = true
 SoloAgachado = true
 Imagen = ExtResource("e4")
-DescripcionAmpliada = "Tres hojas del libro de guardia del campamento, chamuscadas por las orillas. Al frente se alcanza a leer «Guardia nocturna, 14 de agosto...» y «...olor a alcohol...». Lo demás se deshace con solo tocarlo."
+DescripcionAmpliada = "Tres hojas del libro de guardia del campamento, chamuscadas por las orillas. Al frente se alcanza a leer «Guardia nocturna, 14 de agosto...», «...monitor auxiliar...» y «...olor a alcohol...». Lo demás se deshace con solo tocarlo."
 Lugar = "Fogata · entre las cenizas"
 Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_libro")])
 

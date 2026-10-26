@@ -82,12 +82,20 @@ public partial class Caso1 : IEstadoPartida
 	{
 		{ "caso", "01" },
 		{ "capitulo", IdCapitulo },
-		{ "fase", Capitulos.Fase(_pistas.Count == 0 ? "introduccion" : "investigacion")?.Nombre ?? "" },
+		{ "fase", Capitulos.Fase(FaseActual())?.Nombre ?? "" },
 		{ "zona", ZonaActual() },
 		{ "pistas", _pistas.Count },
 		{ "total_pistas", PistasTotales },
 		{ "tiempo", _tiempoCaso },
 	};
+
+	// Ids de fase de capitulos.json, según hasta dónde llegó el guion
+	private string FaseActual() =>
+		Resuelto ? "epilogo"
+		: _dialogos.Estado.NodoCompletado(ArbolAcusacion, "pregunta") ? "resolucion"
+		: _dialogos.Estado.NodoCompletado(ArbolSala, "llegada") ? "interrogatorios"
+		: _dialogos.Estado.NodoCompletado(ArbolIntroduccion, "ir") ? "investigacion"
+		: "introduccion";
 
 	public Diccionario CapturarEstado()
 	{
@@ -170,6 +178,8 @@ public partial class Caso1 : IEstadoPartida
 		foreach (Variant zona in estado["zonas_vistas"].AsGodotArray()) _zonasVistas.Add(zona.AsString());
 		// HU-27: opciones vistas y nodos recorridos (las partidas de antes no lo traen)
 		_dialogos.Estado.Restaurar(estado.TryGetValue("dialogos", out Variant dialogos) ? dialogos.AsGodotDictionary() : null);
+		// Toda partida guardada ya pasó la presentación de Hecdog (las de antes del guion no la traen)
+		_dialogos.Estado.MarcarNodo(ArbolIntroduccion, "ir");
 		_tiempoCaso = estado["tiempo"].AsDouble();
 		ActualizarObjetivo();
 

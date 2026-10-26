@@ -1,0 +1,976 @@
+{
+	"id": "caso1_tony",
+	"personaje": "Tony",
+	"tono_voz": 0.88,
+	"inicio": "entrada",
+	"nodos": {
+		"entrada": {
+			"ir_a": [
+				{
+					"si": {
+						"sin_conclusiones": [
+							"juan_carlos_3"
+						]
+					},
+					"destino": "bloqueado"
+				},
+				{
+					"si": {
+						"sin_conclusiones": [
+							"aya_2"
+						]
+					},
+					"destino": "bloqueado"
+				},
+				{
+					"si": {
+						"sin_conclusiones": [
+							"miawrio_2"
+						]
+					},
+					"destino": "bloqueado"
+				},
+				{
+					"si": {
+						"sin_conclusiones": [
+							"eriz_1"
+						]
+					},
+					"destino": "bloqueado"
+				},
+				{
+					"si": {
+						"sin_conclusiones": [
+							"mimita_2"
+						]
+					},
+					"destino": "bloqueado"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"tony_5"
+						]
+					},
+					"destino": "cerrado"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"tony_4"
+						]
+					},
+					"destino": "regreso_5"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"tony_3"
+						]
+					},
+					"destino": "regreso_4"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"tony_2"
+						]
+					},
+					"destino": "regreso_3"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"tony_1"
+						]
+					},
+					"destino": "regreso_2"
+				},
+				{
+					"si": {
+						"nodos_completados": [
+							"excusa_1"
+						]
+					},
+					"destino": "regreso_1"
+				},
+				{
+					"destino": "excusa_1"
+				}
+			]
+		},
+		"bloqueado": {
+			"variantes": [
+				[
+					{
+						"habla": "Tony",
+						"animo": "tranquilo",
+						"texto": "Mmh... ahorita no, detective. Tengo un campamento que cerrar. Platique primero con los demás."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "tranquilo",
+						"gesto": "Mueve la mano derecha",
+						"texto": "Mmh... ¿en serio? Hable primero con los demás. Yo aquí voy a estar."
+					}
+				]
+			],
+			"fin": true
+		},
+		"regreso_1": {
+			"variantes": [
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"texto": "Mmh... ¿otra vez usted, detective? Que sea rápido."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"gesto": "Mueve la mano derecha",
+						"texto": "Mmh... ¿y ahora qué trae? Sea breve, por favor."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "frío",
+						"gesto": "Se queda pensando",
+						"texto": "Mmh... ¿en serio? Bueno. Lo escucho."
+					}
+				]
+			],
+			"siguiente": "hub_1"
+		},
+		"regreso_2": {
+			"variantes": [
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"texto": "Mmh... ¿otra vez usted, detective? Que sea rápido."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"gesto": "Mueve la mano derecha",
+						"texto": "Mmh... ¿y ahora qué trae? Sea breve, por favor."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "frío",
+						"gesto": "Se queda pensando",
+						"texto": "Mmh... ¿en serio? Bueno. Lo escucho."
+					}
+				]
+			],
+			"siguiente": "hub_2"
+		},
+		"regreso_3": {
+			"variantes": [
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"texto": "Mmh... ¿otra vez usted, detective? Que sea rápido."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"gesto": "Mueve la mano derecha",
+						"texto": "Mmh... ¿y ahora qué trae? Sea breve, por favor."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "frío",
+						"gesto": "Se queda pensando",
+						"texto": "Mmh... ¿en serio? Bueno. Lo escucho."
+					}
+				]
+			],
+			"siguiente": "hub_3"
+		},
+		"regreso_4": {
+			"variantes": [
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"texto": "Mmh... ¿otra vez usted, detective? Que sea rápido."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"gesto": "Mueve la mano derecha",
+						"texto": "Mmh... ¿y ahora qué trae? Sea breve, por favor."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "frío",
+						"gesto": "Se queda pensando",
+						"texto": "Mmh... ¿en serio? Bueno. Lo escucho."
+					}
+				]
+			],
+			"siguiente": "hub_4"
+		},
+		"regreso_5": {
+			"variantes": [
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"texto": "Mmh... ¿otra vez usted, detective? Que sea rápido."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "molesto",
+						"gesto": "Mueve la mano derecha",
+						"texto": "Mmh... ¿y ahora qué trae? Sea breve, por favor."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "frío",
+						"gesto": "Se queda pensando",
+						"texto": "Mmh... ¿en serio? Bueno. Lo escucho."
+					}
+				]
+			],
+			"siguiente": "hub_5"
+		},
+		"excusa_1": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Tony. Ya nada más falta usted."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Mmh... no me moví de la fogata. Solo salí un momento a revisar el generador. Alguien tenía que hacerlo."
+				}
+			],
+			"siguiente": "hub_1",
+			"al_completar": {
+				"notas": [
+					"Tony dice que no se movió de la fogata y que solo salió un momento a revisar el generador."
+				]
+			}
+		},
+		"hub_1": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "foto_aya_2312",
+					"tipo": "MOSTRAR",
+					"texto": "Foto de Aya de las 23:12",
+					"destino": "e1_foto",
+					"requiere": {
+						"conclusiones": [
+							"foto_aya_2312"
+						]
+					}
+				},
+				{
+					"id": "baul_disfraces",
+					"tipo": "MOSTRAR",
+					"texto": "Baúl de disfraces",
+					"destino": "e_baul",
+					"requiere": {
+						"pistas": [
+							"baul_disfraces"
+						]
+					}
+				},
+				{
+					"id": "oferta_compra",
+					"tipo": "MOSTRAR",
+					"texto": "Oferta de compra rota",
+					"destino": "e_oferta",
+					"requiere": {
+						"pistas": [
+							"oferta_compra"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"e1_foto": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Esta foto de Aya es de las 23:12. Es usted, en el sendero del lago. Lejos del generador."
+				}
+			],
+			"ir_a": [
+				{
+					"si": {
+						"pistas": [
+							"candado_caseta"
+						],
+						"conclusiones": [
+							"jc_vio_tony_sendero"
+						]
+					},
+					"destino": "e1_cae"
+				},
+				{
+					"destino": "e1_escapa"
+				}
+			]
+		},
+		"e1_escapa": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "sarcástico",
+					"texto": "¿En serio? ¿Una foto borrosa en lo oscuro? Ese sendero también lleva a la caseta, detective. Traiga algo mejor."
+				}
+			]
+		},
+		"e1_cae": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "incómodo",
+					"gesto": "Se queda pensando",
+					"texto": "...Está bien. El candado no estaba forzado y Juan Carlos me vio en el sendero. No fui al generador. Fui a caminar. Necesitaba aire."
+				}
+			],
+			"siguiente": "excusa_2",
+			"al_completar": {
+				"conclusiones": [
+					"tony_1"
+				],
+				"notas": [
+					"Tony no fue al generador: tomó el sendero del lago (foto de Aya de las 23:12, candado sin forzar y lo que vio Juan Carlos)."
+				]
+			}
+		},
+		"e_baul": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Del baúl de disfraces falta la cornamenta."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_oferta": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Miawrio quería comprar la cabaña de Porky."
+				}
+			],
+			"siguiente": "error"
+		},
+		"excusa_2": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "dolido",
+					"texto": "Pero no me acerqué al lago. Después de... lo que pasó con Paco, no piso esa orilla. Hace años."
+				}
+			],
+			"siguiente": "hub_2"
+		},
+		"hub_2": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "botas_tony",
+					"tipo": "MOSTRAR",
+					"texto": "Botas con lodo",
+					"destino": "e2_botas",
+					"requiere": {
+						"pistas": [
+							"botas_tony"
+						]
+					}
+				},
+				{
+					"id": "huellas_pezuna",
+					"tipo": "MOSTRAR",
+					"texto": "Huellas de pezuña",
+					"destino": "e_huellas",
+					"requiere": {
+						"pistas": [
+							"huellas_pezuna"
+						]
+					}
+				},
+				{
+					"id": "taza_delantal",
+					"tipo": "MOSTRAR",
+					"texto": "Taza y delantal",
+					"destino": "e_taza",
+					"requiere": {
+						"pistas": [
+							"taza_delantal"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"e2_botas": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Sus botas estaban escondidas atrás de su cabaña. Lodo y juncos de la orilla."
+				},
+				{
+					"habla": "Tony",
+					"animo": "nervioso",
+					"gesto": "Mueve la mano derecha",
+					"texto": "Mmh... esas botas las usé ayer para arreglar el muelle. Bueno. A lo mejor bajé un momento. Eso no significa nada."
+				}
+			],
+			"siguiente": "excusa_3",
+			"al_completar": {
+				"conclusiones": [
+					"tony_2"
+				],
+				"notas": [
+					"Tony sí bajó al lago: sus botas tienen lodo y juncos de la orilla."
+				]
+			}
+		},
+		"e_huellas": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Las huellas del sendero son de zancos, no de un ciervo."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_taza": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Porky salió de la cocina con prisa."
+				}
+			],
+			"siguiente": "error"
+		},
+		"excusa_3": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "molesto",
+					"texto": "¿Ese silbato? No es mío. «G. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?"
+				}
+			],
+			"siguiente": "hub_3"
+		},
+		"hub_3": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "silbato_gs",
+					"tipo": "MOSTRAR",
+					"texto": "Silbato «G. S.»",
+					"destino": "e3_silbato",
+					"requiere": {
+						"pistas": [
+							"silbato_gs"
+						]
+					}
+				},
+				{
+					"id": "linterna_porky",
+					"tipo": "MOSTRAR",
+					"texto": "Linterna de Porky",
+					"destino": "e_linterna",
+					"requiere": {
+						"pistas": [
+							"linterna_porky"
+						]
+					}
+				},
+				{
+					"id": "interruptor_generador",
+					"tipo": "MOSTRAR",
+					"texto": "Interruptor del generador",
+					"destino": "e_interruptor",
+					"requiere": {
+						"pistas": [
+							"interruptor_generador"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"e3_silbato": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "«G. S.»: Guillermo Spínola. Su abuelo. Usted heredó el campamento... y también su silbato. Estaba atorado en un clavo del embarcadero, con el cordón roto. Y hoy trae uno nuevo."
+				}
+			],
+			"ir_a": [
+				{
+					"si": {
+						"pistas": [
+							"foto_grupo"
+						],
+						"conclusiones": [
+							"mimita_oyo_silbido"
+						]
+					},
+					"destino": "e3_cae"
+				},
+				{
+					"destino": "e3_escapa"
+				}
+			]
+		},
+		"e3_escapa": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "sarcástico",
+					"texto": "¿En serio? Mi abuelo les regalaba silbatos a todos los monitores. Hay docenas así. Usted es muy chismoso, detective."
+				}
+			]
+		},
+		"e3_cae": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "nervioso",
+					"gesto": "Se queda callado un momento",
+					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años ya lo traigo colgado. Sí. Era de mi abuelo. Se me cayó."
+				}
+			],
+			"siguiente": "excusa_4",
+			"al_completar": {
+				"conclusiones": [
+					"tony_3"
+				],
+				"notas": [
+					"El silbato «G. S.» era de Guillermo Spínola, el abuelo de Tony. Tony lo traía anoche y se le cayó en el embarcadero."
+				]
+			}
+		},
+		"e_linterna": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "La linterna de Porky estaba en el fondo del lago."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_interruptor": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Juan Carlos apagó el generador a mano."
+				}
+			],
+			"siguiente": "error"
+		},
+		"excusa_4": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "alterado",
+					"texto": "¡No tenía nada contra Porky! Era como una hermana chica para todos."
+				}
+			],
+			"siguiente": "hub_4"
+		},
+		"hub_4": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "libro_guardia_quemado",
+					"tipo": "MOSTRAR",
+					"texto": "Libro de guardia quemado",
+					"destino": "e4_libro",
+					"requiere": {
+						"pistas": [
+							"libro_guardia_quemado"
+						]
+					}
+				},
+				{
+					"id": "oferta_compra",
+					"tipo": "MOSTRAR",
+					"texto": "Oferta de compra rota",
+					"destino": "e_oferta_2",
+					"requiere": {
+						"pistas": [
+							"oferta_compra"
+						]
+					}
+				},
+				{
+					"id": "cuaderno_eriz",
+					"tipo": "MOSTRAR",
+					"texto": "Cuaderno de Eriz",
+					"destino": "e_cuaderno",
+					"requiere": {
+						"pistas": [
+							"cuaderno_eriz"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"e4_libro": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Esto estaba en las cenizas de la fogata: «Guardia nocturna, 14 de agosto... monitor auxiliar... olor a alcohol». Alguien quemó el libro completo."
+				}
+			],
+			"ir_a": [
+				{
+					"si": {
+						"pistas": [
+							"nota_porky"
+						],
+						"conclusiones": [
+							"miawrio_oyo_cita"
+						]
+					},
+					"destino": "e4_cae"
+				},
+				{
+					"destino": "e4_escapa"
+				}
+			]
+		},
+		"e4_escapa": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "sarcástico",
+					"texto": "Mmh... unos papeles quemados. Porky quemaba basura en la fogata cada noche. ¿Y eso qué tiene que ver conmigo?"
+				}
+			]
+		},
+		"e4_cae": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "enojado",
+					"gesto": "Se enoja",
+					"texto": "La nota, la cita de las 18:00... Ya. Sí, vino a verme. Habló de un libro viejo, de cosas que ya estaban enterradas. No le hice caso."
+				}
+			],
+			"siguiente": "excusa_5",
+			"al_completar": {
+				"conclusiones": [
+					"tony_4"
+				],
+				"notas": [
+					"Porky citó a Tony en el embarcadero para hablarle del libro de guardia de hace diez años. Tony lo admite."
+				]
+			}
+		},
+		"e_oferta_2": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Miawrio le ofreció dinero a Porky por su cabaña."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_cuaderno": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Eriz estaba en el lago desde las 23:00."
+				}
+			],
+			"siguiente": "error"
+		},
+		"excusa_5": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "desafiante",
+					"texto": "¿El remo? Cualquiera pudo agarrar un remo de ese cobertizo. ¿En serio?"
+				}
+			],
+			"siguiente": "hub_5"
+		},
+		"hub_5": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "soporte_remos",
+					"tipo": "MOSTRAR",
+					"texto": "Soporte de remos vacío",
+					"destino": "e5_soporte",
+					"requiere": {
+						"pistas": [
+							"soporte_remos"
+						]
+					}
+				},
+				{
+					"id": "altavoz",
+					"tipo": "MOSTRAR",
+					"texto": "Bocina escondida",
+					"destino": "e_bocina",
+					"requiere": {
+						"pistas": [
+							"altavoz"
+						]
+					}
+				},
+				{
+					"id": "baul_disfraces",
+					"tipo": "MOSTRAR",
+					"texto": "Baúl de disfraces",
+					"destino": "e_baul",
+					"requiere": {
+						"pistas": [
+							"baul_disfraces"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"e5_soporte": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Falta un remo en el soporte del cobertizo. Y ese cobertizo solo se abre con dos llaves: la de Porky... y la suya."
+				}
+			],
+			"ir_a": [
+				{
+					"si": {
+						"pistas": [
+							"remo_sangre"
+						]
+					},
+					"destino": "e5_cae"
+				},
+				{
+					"destino": "e5_escapa"
+				}
+			]
+		},
+		"e5_escapa": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "sarcástico",
+					"texto": "Un remo que falta no es un arma, detective. Ni siquiera sabe dónde está. Qué buen trabajo."
+				}
+			]
+		},
+		"e5_cae": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "acorralado",
+					"gesto": "Aprieta la mandíbula, mueve la mano derecha y aparta la vista. No contesta",
+					"texto": "..."
+				},
+				{
+					"habla": "Tony",
+					"animo": "frío",
+					"texto": "Mmh... no voy a decir nada más. Si cree que fui yo, demuéstrelo."
+				}
+			],
+			"fin": true,
+			"al_completar": {
+				"conclusiones": [
+					"tony_5"
+				],
+				"notas": [
+					"El remo salió del cobertizo, que solo abren dos llaves: la de Porky y la de Tony. Tony ya no contesta."
+				]
+			}
+		},
+		"e_bocina": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Los bramidos venían de una bocina."
+				}
+			],
+			"siguiente": "error"
+		},
+		"cerrado": {
+			"variantes": [
+				[
+					{
+						"habla": "Tony",
+						"animo": "frío",
+						"texto": "Mmh... no voy a decir nada más. Si cree que fui yo, demuéstrelo."
+					}
+				],
+				[
+					{
+						"habla": "Tony",
+						"animo": "frío",
+						"gesto": "Aprieta la mandíbula",
+						"texto": "Ya le dije que no voy a decir nada más, detective."
+					}
+				]
+			],
+			"fin": true
+		},
+		"error": {
+			"ir_a": [
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 0
+						}
+					},
+					"destino": "paciencia"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 1
+						}
+					},
+					"destino": "error_1"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 2
+						}
+					},
+					"destino": "error_2"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 3
+						}
+					},
+					"destino": "error_3"
+				},
+				{
+					"destino": "error_4"
+				}
+			],
+			"al_completar": {
+				"sumar": {
+					"credibilidad": -1
+				}
+			}
+		},
+		"error_4": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Caneloso, eso no tiene nada que ver con lo que dice Tony, Nya. Así no vamos a ningún lado."
+				}
+			]
+		},
+		"error_3": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Otra vez, Caneloso. Eso no tiene nada que ver con lo que dice Tony, Nya. Piénsale tantito."
+				}
+			]
+		},
+		"error_2": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "impaciente",
+					"texto": "Caneloso, se me está acabando la paciencia, Nya. Eso no tiene nada que ver con lo que dice Tony."
+				}
+			]
+		},
+		"error_1": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "harto",
+					"texto": "Última advertencia, Caneloso. Una prueba más así y te mando a acusar a quien sea, Nya."
+				}
+			]
+		},
+		"paciencia": {
+			"fin": true,
+			"salida": "paciencia"
+		},
+		"despedida": {
+			"variantes": [
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Volveré cuando tenga algo mejor que enseñarle, Tony."
+					}
+				],
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Ahorita regreso, Tony. No se vaya lejos."
+					}
+				]
+			]
+		}
+	}
+}
