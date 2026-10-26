@@ -2,28 +2,32 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-// Fondo animado del menú de inicio: callejón con una farola que parpadea y una puerta
-// en la que, durante los apagones, aparece la silueta de alguien. Se genera por código.
-// Diseño: "Detective Caneloso – Inicio" (Claude Design).
+// Fondo animado del menú de inicio: callejón con una farola que parpadea y, delante de la puerta
+// iluminada, Caneloso con su lupa: a contraluz (negro) en los apagones e iluminado cuando hay luz.
+// Se genera por código. Diseño: "Detective Caneloso – Inicio" (Claude Design).
 public partial class FondoMenu : Control
 {
 	// Frecuencia de los parpadeos y apagones de la farola.
 	[Export(PropertyHint.Enum, "baja,media,alta")]
 	public string IntensidadParpadeo { get; set; } = "media";
 
-	// PNG opcional para sustituir la silueta dibujada por código.
+	// Imagen del personaje delante de la puerta (por defecto, Caneloso)
 	[Export]
 	public Texture2D TexturaSilueta { get; set; }
 
-	private static readonly Color Sombra = new("#050608");
 	private const string RutaShaderGrano = "res://Escenas/Menus/Fondo/grano_pelicula.gdshader";
+	private const string RutaCaneloso = "res://Assets/Menu/caneloso.png";
 
 	private TextureRect _cono;
 	private TextureRect _brillo;
 	private Panel _foco;
 	private ColorRect _oscuridad;
 	private Control _puerta;
-	private Control _silueta;
+	private Control _figura;
+	private TextureRect _imagenFigura;
+	private Control _lupa;
+	private TextureRect _sombraFigura;
+	private double _tiempo;
 
 	// Pasos pendientes de la animación de luz: (nivel de luz 0..1, duración en ms).
 	private readonly Queue<(float Luz, double Ms)> _pasos = new();
@@ -37,6 +41,12 @@ public partial class FondoMenu : Control
 
 	public override void _Process(double delta)
 	{
+		// Balanceo suave del personaje y de la lupa (como en el diseño)
+		_tiempo += delta;
+		float t = (float)_tiempo;
+		_figura.RotationDegrees = Mathf.Sin(t * 0.7f) * 1.6f;
+		_lupa.RotationDegrees = -12f + Mathf.Sin(t * 1.1f) * 14f + Mathf.Sin(t * 2.3f) * 3f;
+
 		_tiempoRestante -= delta;
 		if (_tiempoRestante > 0.0) return;
 
@@ -64,10 +74,7 @@ public partial class FondoMenu : Control
 		float r = GD.Randf();
 		if (r < apagon)
 		{
-			// Apagón largo: la silueta aparece en un punto aleatorio de la puerta.
-			float x = (float)GD.RandRange(0.3, 0.7);
-			_silueta.AnchorLeft = x - 0.24f;
-			_silueta.AnchorRight = x + 0.24f;
+			// Apagón largo: Caneloso queda a contraluz frente a la puerta
 			Encolar((0.2f, 60), (1.0f, 70), (0.05f, 90), (0.8f, 40), (0.0f, GD.RandRange(1400.0, 2800.0)),
 				(0.6f, 50), (0.0f, 120), (1.0f, 80), (0.3f, 50), (1.0f, 400));
 		}
@@ -95,7 +102,10 @@ public partial class FondoMenu : Control
 		_brillo.Modulate = new Color(_brillo.Modulate, valor);
 		_cono.Modulate = new Color(_cono.Modulate, valor);
 		_oscuridad.Modulate = new Color(_oscuridad.Modulate, (1.0f - valor) * 0.82f);
-		_silueta.Modulate = new Color(_silueta.Modulate, valor < 0.35f ? 0.95f : 0.0f);
+		// Con poca luz es solo una silueta negra; con luz, se le ve (algo más brillante que la imagen)
+		float brillo = valor < 0.35f ? 0.03f : 0.55f + 0.5f * valor;
+		_imagenFigura.Modulate = new Color(brillo, brillo, brillo);
+		_sombraFigura.Modulate = new Color(1, 1, 1, 0.4f + 0.6f * valor);
 		_puerta.Modulate = new Color(_puerta.Modulate, 0.5f + (1.0f - valor) * 0.2f + GD.Randf() * 0.05f);
 	}
 
@@ -145,7 +155,7 @@ public partial class FondoMenu : Control
 		_oscuridad = new ColorRect { Color = new Color("#030405"), Modulate = new Color(1, 1, 1, 0) };
 		Poner(this, _oscuridad, 0, 0, 1, 1);
 
-		// Puerta iluminada con la silueta
+		// Puerta iluminada
 		var grisPuerta = new Color(0.51f, 0.59f, 0.67f);
 		Imagen(this, Gradiente(new[] { new Color(grisPuerta, 0.18f), new Color(grisPuerta, 0.0f) }, new[] { 0.0f, 1.0f }, true, new Vector2(0.5f, 0.5f), new Vector2(1.0f, 0.5f)), 0.68f, 0.16f, 0.93f, 0.88f);
 
@@ -153,58 +163,67 @@ public partial class FondoMenu : Control
 		Poner(this, _puerta, 0.74f, 0.24f, 0.87f, 0.8f);
 		Imagen(_puerta, Gradiente(new[] { new Color("#9fb0c2"), new Color("#6f8193"), new Color("#4b5968") }, new[] { 0.0f, 0.6f, 1.0f }, false, arriba, abajo), 0, 0, 1, 1);
 
-		_silueta = new Control { Modulate = new Color(1, 1, 1, 0) };
-		Poner(_puerta, _silueta, 0.26f, 0.2f, 0.74f, 1.0f);
-		if (TexturaSilueta != null)
-		{
-			var textura = Imagen(_silueta, TexturaSilueta, 0, 0, 1, 1);
-			textura.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
-		}
-		else
-		{
-			_silueta.Draw += DibujarSilueta;
-			_silueta.Resized += _silueta.QueueRedraw;
-		}
-
-		// Reflejo de la puerta en el suelo, viñeta y grano
+		// Reflejo de la puerta en el suelo
 		Imagen(this, Gradiente(new[] { new Color(grisPuerta, 0.16f), new Color(grisPuerta, 0.0f) }, new[] { 0.0f, 1.0f }, false, arriba, abajo), 0.72f, 0.8f, 0.89f, 1.0f);
+
+		ConstruirFigura();
+
+		// Viñeta y grano
 		Imagen(this, Gradiente(new[] { new Color(0, 0, 0, 0), new Color(0, 0, 0, 0), new Color(0, 0, 0, 0.78f) }, new[] { 0.0f, 0.4f, 1.0f }, true, new Vector2(0.55f, 0.45f), new Vector2(0.55f, 1.15f)), 0, 0, 1, 1);
 
 		var grano = new ColorRect { Material = new ShaderMaterial { Shader = GD.Load<Shader>(RutaShaderGrano) } };
 		Poner(this, grano, 0, 0, 1, 1);
 	}
 
-	private void DibujarSilueta()
+	// Caneloso delante de la puerta (medidas del diseño a 1920×1080): 540 px de alto (50vh),
+	// los pies al 15 % del borde inferior y centrado con la puerta.
+	private void ConstruirFigura()
 	{
-		var s = _silueta.Size;
-		_silueta.DrawRect(new Rect2(s.X * 0.30f, s.Y * 0.01f, s.X * 0.40f, s.Y * 0.09f), Sombra); // sombrero
-		DibujarElipse(new Rect2(s.X * 0.12f, s.Y * 0.085f, s.X * 0.76f, s.Y * 0.03f)); // ala
-		DibujarElipse(new Rect2(s.X * 0.33f, s.Y * 0.10f, s.X * 0.34f, s.Y * 0.15f)); // cabeza
+		var textura = TexturaSilueta ?? GD.Load<Texture2D>(RutaCaneloso);
+		float alto = 540f;
+		float ancho = alto * textura.GetWidth() / textura.GetHeight();
+		const float centroPuerta = 0.805f;
 
-		float y0 = s.Y * 0.23f;
-		float alto = s.Y * 0.77f;
-		var cuerpo = new[]
-		{
-			new Vector2(0.32f, 0), new Vector2(0.68f, 0), new Vector2(0.96f, 0.18f),
-			new Vector2(0.92f, 1), new Vector2(0.08f, 1), new Vector2(0.04f, 0.18f),
-		};
-		for (int i = 0; i < cuerpo.Length; i++)
-		{
-			cuerpo[i] = new Vector2(cuerpo[i].X * s.X, y0 + cuerpo[i].Y * alto);
-		}
-		_silueta.DrawColoredPolygon(cuerpo, Sombra);
+		// Sombra elíptica a sus pies
+		var sombra = new Gradient { Offsets = new[] { 0f, 0.7f }, Colors = new[] { new Color(0, 0, 0, 0.75f), new Color(0, 0, 0, 0) } };
+		_sombraFigura = Imagen(this, Gradiente(sombra.Colors, sombra.Offsets, true, new Vector2(0.5f, 0.5f), new Vector2(1f, 0.5f)), centroPuerta, 0.85f, centroPuerta, 0.85f);
+		_sombraFigura.OffsetLeft = -130;
+		_sombraFigura.OffsetRight = 130;
+		_sombraFigura.OffsetTop = -3;
+		_sombraFigura.OffsetBottom = 29;
+
+		_figura = new Control();
+		Poner(this, _figura, centroPuerta, 0.85f, centroPuerta, 0.85f);
+		_figura.OffsetLeft = -ancho / 2f;
+		_figura.OffsetRight = ancho / 2f;
+		_figura.OffsetTop = -alto;
+		_figura.PivotOffset = new Vector2(ancho / 2f, alto); // se balancea desde los pies
+		_imagenFigura = Imagen(_figura, textura, 0, 0, 1, 1);
+
+		// Lupa en la mano derecha, que se balancea desde el mango
+		_lupa = new Control();
+		Poner(_figura, _lupa, 0.83f, 0.26f, 1.09f, 0.58f);
+		_lupa.Resized += () => _lupa.PivotOffset = new Vector2(_lupa.Size.X / 2f, _lupa.Size.Y);
+		_lupa.Draw += DibujarLupa;
 	}
 
-	private void DibujarElipse(Rect2 rect)
+	private void DibujarLupa()
 	{
-		var puntos = new Vector2[24];
-		var centro = rect.GetCenter();
-		for (int i = 0; i < puntos.Length; i++)
-		{
-			float angulo = Mathf.Tau * i / puntos.Length;
-			puntos[i] = centro + new Vector2(Mathf.Cos(angulo) * rect.Size.X / 2, Mathf.Sin(angulo) * rect.Size.Y / 2);
-		}
-		_silueta.DrawColoredPolygon(puntos, Sombra);
+		float ancho = _lupa.Size.X;
+		float radio = ancho / 2f;
+		var centro = new Vector2(radio, radio);
+		// Mango (48 % del alto, abajo)
+		float altoMango = _lupa.Size.Y * 0.48f;
+		var mango = new Rect2(radio - 8f, _lupa.Size.Y - altoMango, 16f, altoMango);
+		_lupa.DrawRect(mango, new Color("#1c130b"));
+		_lupa.DrawRect(mango.Grow(-4f), new Color("#4a3322"));
+		// Cristal con un brillo arriba a la izquierda
+		_lupa.DrawCircle(centro, radio - 6f, new Color(0.63f, 0.75f, 0.84f, 0.12f));
+		_lupa.DrawCircle(centro + new Vector2(-radio * 0.3f, -radio * 0.4f), radio * 0.45f, new Color(1, 1, 1, 0.12f));
+		_lupa.DrawCircle(centro + new Vector2(-radio * 0.3f, -radio * 0.4f), radio * 0.2f, new Color(1, 1, 1, 0.22f));
+		// Aro de madera
+		_lupa.DrawArc(centro, radio - 5f, 0, Mathf.Tau, 48, new Color("#3b2a1b"), 10f, true);
+		_lupa.DrawArc(centro, radio, 0, Mathf.Tau, 48, new Color("#1c130b"), 2.7f, true);
 	}
 
 	// ---------- Utilidades ----------

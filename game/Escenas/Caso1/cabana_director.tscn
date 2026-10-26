@@ -1,4 +1,4 @@
-[gd_scene load_steps=97 format=3]
+[gd_scene load_steps=98 format=3]
 
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-window-large.glb" id="e1"]
 [ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/cabana/cabin-wall.glb" id="e2"]
@@ -35,6 +35,8 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/DetalleOculto.cs" id="hu07_script_detalle"]
 [ext_resource type="Resource" path="res://Datos/Detalles/botas_tony_juncos.tres" id="hu07_det_juncos"]
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/botas_tony/botas_tony.tscn" id="hu07_m_botas"]
+
+[ext_resource type="PackedScene" path="res://Escenas/Investigacion/marcador_coleccionable.tscn" id="coleccionable_tablero"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1"]
 size = Vector3(2.6, 2.6, 0.78)
@@ -778,3 +780,7 @@ shape = SubResource("BoxShape3D_64")
 
 [node name="Modelo" parent="Trasera/Botas" instance=ExtResource("hu07_m_botas")]
 transform = Transform3D(0.98481, 0, 0.17365, 0, 1, 0, -0.17365, 0, 0.98481, 0, 0, 0)
+
+[node name="MarcadorNegro" parent="." instance=ExtResource("coleccionable_tablero")]
+position = Vector3(-26.16, 0.922, -20.74)
+rotation = Vector3(0, -0.31, 0)

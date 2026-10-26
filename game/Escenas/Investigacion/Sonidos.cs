@@ -97,8 +97,8 @@ public static class Sonidos
 		[Tipo.ExamenCerrar] = new(new[] { "Examen/cerrar.ogg" }, -8f),
 		[Tipo.ExamenGirar] = new(new[] { "Examen/girar_1.ogg", "Examen/girar_2.ogg", "Examen/girar_3.ogg" }, -12f),
 		// Zoom: "maximize" y "minimize" de Kenney, graves y suaves (los "scroll" de antes eran clics agudos que saturaban)
-		[Tipo.ExamenAcercar] = new(new[] { "Examen/acercar_1.ogg", "Examen/acercar_2.ogg" }, -20f),
-		[Tipo.ExamenAlejar] = new(new[] { "Examen/alejar_1.ogg", "Examen/alejar_2.ogg" }, -20f),
+		[Tipo.ExamenAcercar] = new(new[] { "Examen/acercar_1.ogg", "Examen/acercar_2.ogg" }, -20f, Variar: false),
+		[Tipo.ExamenAlejar] = new(new[] { "Examen/alejar_1.ogg", "Examen/alejar_2.ogg" }, -20f, Variar: false),
 		[Tipo.ExamenTic] = new(new[] { "Examen/tic.ogg" }, -6f, Variar: false),
 		[Tipo.ExamenDescubrir] = new(new[] { "Examen/descubrir.ogg" }, -2f, Variar: false),
 

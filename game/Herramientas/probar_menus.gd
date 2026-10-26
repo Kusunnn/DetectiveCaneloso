@@ -34,10 +34,10 @@ func probar() -> void:
 	comprobar(menu.Abierto and paused, 'Esc abre la pausa')
 	await tecla(KEY_Q)
 	comprobar(not hud.diario_abierto, 'El diario no se abre bajo la pausa')
-	menu.get_node('%BotonOpciones').pressed.emit()
-	comprobar(menu.get_node('%MenuOpciones').visible and not menu.get_node('%PantallaPrincipal').visible, 'Opciones oculta el menú principal')
+	menu.get_node('%Raiz').get_child(0).find_children('*', 'Button', true, false)[2].pressed.emit()
+	comprobar(menu.get_node('%MenuOpciones').visible and not menu.get_node('%Raiz').get_child(0).visible, 'Opciones oculta el menú principal')
 	await tecla(KEY_ESCAPE)
-	comprobar(menu.Abierto and not menu.get_node('%MenuOpciones').visible and menu.get_node('%PantallaPrincipal').visible, 'Esc vuelve de Opciones sin cerrar la pausa')
+	comprobar(menu.Abierto and not menu.get_node('%MenuOpciones').visible and menu.get_node('%Raiz').get_child(0).visible, 'Esc vuelve de Opciones sin cerrar la pausa')
 	await tecla(KEY_ESCAPE)
 	comprobar(not menu.Abierto and not paused, 'Otro Esc reanuda el juego')
 	paused = true

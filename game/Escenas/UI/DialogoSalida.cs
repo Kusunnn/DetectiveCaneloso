@@ -2,18 +2,14 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 
-// Advertencia al salir de la partida (al menú o del juego), con el estilo del HUD (papel, máquina de escribir, ámbar):
-// [Guardar y salir] [Salir sin guardar] [Cancelar]. Sale siempre que se deja una partida, haya o no cambios.
-// El foco empieza en "Guardar y salir" y Esc (o B en el control) cancela, para que perder progreso nunca sea lo fácil.
+// Advertencia al salir con progreso sin guardar (diseño "02 · Confirmar salida"):
+// [Cancelar] [Salir sin guardar] [Guardar y salir]. El foco empieza en "Guardar y salir"
+// y Esc (o B en el control) cancela, para que perder progreso nunca sea lo fácil.
 public partial class DialogoSalida : Control
 {
 	public enum Respuesta { GuardarYSalir, SalirSinGuardar, Cancelar }
 
-	private static readonly Color Ambar = new Color("efca08");
-	private static readonly Color Tinta = new Color("20272b");
-	private static readonly Color Papel = new Color(0.84f, 0.81f, 0.72f);
-
-	private Label _mensaje, _detalle;
+	private Label _detalle;
 	private Button _guardar, _salir, _cancelar;
 	private TaskCompletionSource<Respuesta> _respuesta;
 
@@ -24,52 +20,49 @@ public partial class DialogoSalida : Control
 		MouseFilter = MouseFilterEnum.Stop;
 		Hide();
 
-		var mono = GD.Load<Font>("res://hud/fonts/IBMPlexMono-Regular.ttf");
-		var titulos = new FontVariation { BaseFont = GD.Load<Font>("res://hud/fonts/BigShouldersDisplay.ttf") };
-		titulos.VariationOpentype = new Godot.Collections.Dictionary { { TextServerManager.GetPrimaryInterface().NameToTag("wght"), 800 } };
-
-		var oscurecer = new ColorRect { Color = new Color(0, 0, 0, 0.55f), MouseFilter = MouseFilterEnum.Stop };
+		var oscurecer = new ColorRect { Color = new Color(0.012f, 0.016f, 0.02f, 0.85f), MouseFilter = MouseFilterEnum.Stop };
 		oscurecer.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 		AddChild(oscurecer);
-		var centro = new CenterContainer();
+		var centro = new CenterContainer { MouseFilter = MouseFilterEnum.Ignore };
 		centro.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 		AddChild(centro);
 
-		var fondo = new StyleBoxFlat { BgColor = Papel, ShadowColor = new Color(0, 0, 0, 0.45f), ShadowSize = 10, ShadowOffset = new Vector2(4, 6) };
-		fondo.SetContentMarginAll(30);
-		var panel = new PanelContainer { CustomMinimumSize = new Vector2(640, 0) };
-		panel.AddThemeStyleboxOverride("panel", fondo);
+		var estilo = new StyleBoxFlat
+		{
+			BgColor = EstiloMenus.FondoPanel,
+			BorderColor = new Color(1, 1, 1, 0.1f),
+			ShadowColor = new Color(0, 0, 0, 0.6f), ShadowSize = 80, ShadowOffset = new Vector2(0, 60),
+			ContentMarginLeft = 88, ContentMarginRight = 88, ContentMarginTop = 80, ContentMarginBottom = 64,
+		};
+		estilo.SetBorderWidthAll(2);
+		var panel = new PanelContainer { CustomMinimumSize = new Vector2(1200, 0) };
+		panel.AddThemeStyleboxOverride("panel", estilo);
 		centro.AddChild(panel);
-		var columna = new VBoxContainer();
-		columna.AddThemeConstantOverride("separation", 14);
+
+		var columna = EstiloMenus.Columna(56);
 		panel.AddChild(columna);
+		columna.AddChild(EstiloMenus.Marca("ATENCIÓN", EstiloMenus.Rojo));
 
-		var titulo = new Label { Text = "¿SALIR SIN GUARDAR?" };
-		titulo.AddThemeFontOverride("font", titulos);
-		titulo.AddThemeFontSizeOverride("font_size", 40);
-		titulo.AddThemeColorOverride("font_color", Tinta);
-		columna.AddChild(titulo);
-		columna.AddChild(new ColorRect { Color = Ambar, CustomMinimumSize = new Vector2(150, 5), SizeFlagsHorizontal = SizeFlags.ShrinkBegin });
+		var textos = EstiloMenus.Columna(20);
+		var titulo = EstiloMenus.Etiqueta("Tienes progreso sin guardar.", EstiloMenus.Display(800, 68, 0.02f), 68, EstiloMenus.TextoClaro);
+		textos.AddChild(titulo);
+		var mensaje = EstiloMenus.Etiqueta("Si sales ahora, se perderá lo que hiciste desde el último guardado.", EstiloMenus.Mono(28), 28, EstiloMenus.GrisClaro);
+		mensaje.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+		mensaje.CustomMinimumSize = new Vector2(1024, 0);
+		textos.AddChild(mensaje);
+		_detalle = EstiloMenus.Etiqueta("", EstiloMenus.Mono(24), 24, EstiloMenus.GrisOscuro);
+		textos.AddChild(_detalle);
+		columna.AddChild(textos);
+		columna.AddChild(EstiloMenus.Raya(0, 2, EstiloMenus.Linea));
 
-		_mensaje = new Label { AutowrapMode = TextServer.AutowrapMode.WordSmart };
-		_mensaje.AddThemeFontOverride("font", mono);
-		_mensaje.AddThemeFontSizeOverride("font_size", 20);
-		_mensaje.AddThemeColorOverride("font_color", Tinta);
-		columna.AddChild(_mensaje);
-		_detalle = new Label();
-		_detalle.AddThemeFontOverride("font", mono);
-		_detalle.AddThemeFontSizeOverride("font_size", 17);
-		_detalle.AddThemeColorOverride("font_color", new Color(Tinta, 0.65f));
-		columna.AddChild(_detalle);
-
-		var botones = new HBoxContainer { Alignment = BoxContainer.AlignmentMode.End };
-		botones.AddThemeConstantOverride("separation", 12);
+		var botones = EstiloMenus.Fila(48);
+		botones.Alignment = BoxContainer.AlignmentMode.End;
 		columna.AddChild(botones);
-		_guardar = Boton("Guardar y salir", mono, principal: true);
-		_salir = Boton("Salir sin guardar", mono, principal: false);
-		_cancelar = Boton("Cancelar", mono, principal: false);
-		botones.AddChild(_salir);
+		_cancelar = EstiloMenus.BotonTexto("CANCELAR", 40);
+		_salir = EstiloMenus.BotonPeligro("SALIR SIN GUARDAR", 40);
+		_guardar = EstiloMenus.BotonPrincipal("GUARDAR Y SALIR", 40);
 		botones.AddChild(_cancelar);
+		botones.AddChild(_salir);
 		botones.AddChild(_guardar);
 		_guardar.Pressed += () => Responder(Respuesta.GuardarYSalir);
 		_salir.Pressed += () => Responder(Respuesta.SalirSinGuardar);
@@ -77,45 +70,17 @@ public partial class DialogoSalida : Control
 		UtilidadesUI.ConectarFocoConRaton(this);
 		UtilidadesUI.EncadenarFoco(new Control[] { _guardar, _cancelar, _salir });
 		// Izquierda/derecha también recorren los botones (control y teclado)
-		_guardar.FocusNeighborLeft = _guardar.GetPathTo(_cancelar);
-		_cancelar.FocusNeighborLeft = _cancelar.GetPathTo(_salir);
-		_cancelar.FocusNeighborRight = _cancelar.GetPathTo(_guardar);
-		_salir.FocusNeighborRight = _salir.GetPathTo(_cancelar);
-	}
-
-	private Button Boton(string texto, Font fuente, bool principal)
-	{
-		var boton = new Button { Text = texto, CustomMinimumSize = new Vector2(0, 46) };
-		boton.AddThemeFontOverride("font", fuente);
-		boton.AddThemeFontSizeOverride("font_size", 18);
-		var normal = new StyleBoxFlat { BgColor = principal ? Tinta : new Color(0, 0, 0, 0), BorderColor = Tinta };
-		normal.SetBorderWidthAll(2);
-		normal.SetContentMarginAll(10);
-		var foco = new StyleBoxFlat { BgColor = Ambar, BorderColor = Tinta };
-		foco.SetBorderWidthAll(3);
-		foco.SetContentMarginAll(10);
-		boton.AddThemeStyleboxOverride("normal", normal);
-		boton.AddThemeStyleboxOverride("hover", foco);
-		boton.AddThemeStyleboxOverride("focus", foco);
-		boton.AddThemeStyleboxOverride("pressed", foco);
-		boton.AddThemeColorOverride("font_color", principal ? Papel : Tinta);
-		boton.AddThemeColorOverride("font_hover_color", Tinta);
-		boton.AddThemeColorOverride("font_focus_color", Tinta);
-		boton.AddThemeColorOverride("font_pressed_color", Tinta);
-		return boton;
+		_guardar.FocusNeighborLeft = _guardar.GetPathTo(_salir);
+		_salir.FocusNeighborLeft = _salir.GetPathTo(_cancelar);
+		_salir.FocusNeighborRight = _salir.GetPathTo(_guardar);
+		_cancelar.FocusNeighborRight = _cancelar.GetPathTo(_salir);
 	}
 
 	// hayCambios: hay progreso desde el último guardado. puedeGuardar: false al repetir un capítulo (no se guarda en las ranuras).
 	public Task<Respuesta> Preguntar(string ultimoGuardado, bool hayCambios = true, bool puedeGuardar = true)
 	{
-		_mensaje.Text = !puedeGuardar
-			? "Estás repitiendo un capítulo: lo que hagas aquí no se guarda en tus ranuras. ¿Salir de todos modos?"
-			: hayCambios
-				? "Tienes progreso sin guardar. Si sales ahora, se perderá lo que hiciste desde el último guardado."
-				: "Vas a salir de la partida sin guardar. Al volver, seguirás desde tu último guardado.";
-		_detalle.Text = puedeGuardar ? ultimoGuardado : "";
-		_detalle.Visible = puedeGuardar;
-		_guardar.Visible = puedeGuardar;
+		_detalle.Text = ultimoGuardado;
+		_detalle.Visible = !string.IsNullOrEmpty(ultimoGuardado);
 		_respuesta = new TaskCompletionSource<Respuesta>();
 		Show();
 		var foco = puedeGuardar ? _guardar : _cancelar;

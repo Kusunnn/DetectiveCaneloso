@@ -305,15 +305,13 @@ public partial class VistaExamen : CanvasLayer
 		// Un sonido por gesto: no vuelve a sonar hasta que pasan 0.25 s, así las copias no se enciman ni saturan.
 		// Acercar y alejar suenan distinto, y el tono ya no sube con el zoom.
 		double ahora = Time.GetTicksMsec() / 1000.0;
-		if (Mathf.Abs(_zoomObjetivo - _ultimoZoomSonado) >= 0.4f && ahora - _ultimoSonidoZoom >= 0.25)
+		if (Mathf.Abs(_zoomObjetivo - anterior) > 0.001f && ahora - _ultimoSonidoZoom >= 0.25)
 		{
-			_ultimoZoomSonado = _zoomObjetivo;
 			_ultimoSonidoZoom = ahora;
 			Sonidos.ReproducirUI(this, paso > 0 ? Sonidos.Tipo.ExamenAcercar : Sonidos.Tipo.ExamenAlejar);
 		}
 	}
-	private float _ultimoZoomSonado = 1f;
-	private double _ultimoSonidoZoom;
+	private double _ultimoSonidoZoom = -1.0;
 
 	private void Desplazar(Vector2 relativo)
 	{
@@ -804,7 +802,7 @@ public partial class VistaExamen : CanvasLayer
 			mando ? ("LT RT", "Acercar") : ("Rueda", "Acercar"),
 		};
 		if (_barraConMover) controles.Add(mando ? ("R", "Mover") : ("Clic der.", "Mover"));
-		controles.Add(mando ? ("Y", "Linterna") : ("F", "Linterna"));
+		controles.Add(mando ? ("Y", "Linterna") : (Teclas.EtiquetaTeclado("linterna"), "Linterna"));
 		controles.Add(mando ? ("X", "Restablecer") : ("R", "Restablecer"));
 		controles.Add(mando ? ("B", "Volver") : ("Esc", "Volver"));
 		foreach (var (tecla, accion) in controles)

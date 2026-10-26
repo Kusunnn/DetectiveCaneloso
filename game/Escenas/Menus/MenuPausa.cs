@@ -1,8 +1,9 @@
 using Godot;
 using System;
 
-// Menú de pausa (CA-02): reanudar, guardar partida, códice de reglas, opciones, volver al menú de inicio
-// y salir del juego. Basta con instanciarlo en cualquier escena de juego. Se abre y cierra con la acción
+// Menú de pausa (CA-02): reanudar, guardar partida, opciones, volver al menú de inicio
+// y salir del juego. Diseño "01 · Pausa": título PAUSA en ámbar y opciones numeradas a la izquierda.
+// Basta con instanciarlo en cualquier escena de juego. Se abre y cierra con la acción
 // "pausa" (Esc / Start) y sigue funcionando con el árbol pausado (process_mode = Always).
 public partial class MenuPausa : CanvasLayer
 {
@@ -10,11 +11,9 @@ public partial class MenuPausa : CanvasLayer
 	private Control _pantallaPrincipal;
 	private Button _botonReanudar;
 	private Button _botonGuardar;
-	private Button _botonCodice;
 	private Button _botonOpciones;
 	private Button _botonMenuInicio;
 	private Button _botonSalirJuego;
-	private PanelMenu _codiceReglas;
 	private PanelMenu _menuOpciones;
 	private PanelRanuras _panelRanuras;
 	private DialogoConfirmacion _dialogoConfirmacion;
@@ -29,16 +28,9 @@ public partial class MenuPausa : CanvasLayer
 	public override void _Ready()
 	{
 		_raiz = GetNode<Control>("%Raiz");
-		_pantallaPrincipal = GetNode<Control>("%PantallaPrincipal");
-		_botonReanudar = GetNode<Button>("%BotonReanudar");
-		_botonGuardar = GetNode<Button>("%BotonGuardar");
-		_botonCodice = GetNode<Button>("%BotonCodice");
-		_botonOpciones = GetNode<Button>("%BotonOpciones");
-		_botonMenuInicio = GetNode<Button>("%BotonMenuInicio");
-		_botonSalirJuego = GetNode<Button>("%BotonSalirJuego");
-		_codiceReglas = GetNode<PanelMenu>("%CodiceReglas");
 		_menuOpciones = GetNode<PanelMenu>("%MenuOpciones");
 		_dialogoConfirmacion = GetNode<DialogoConfirmacion>("%DialogoConfirmacion");
+		ConstruirPantallaPrincipal();
 
 		// Ranuras de guardado: debajo del diálogo de confirmación para que este quede encima
 		_panelRanuras = new PanelRanuras { Confirmar = (mensaje, boton) => _dialogoConfirmacion.Preguntar(mensaje, boton) };
@@ -48,15 +40,53 @@ public partial class MenuPausa : CanvasLayer
 		_raiz.Hide();
 		_botonReanudar.Pressed += Reanudar;
 		_botonGuardar.Pressed += () => AbrirRanuras();
-		_botonCodice.Pressed += () => AbrirPanel(_codiceReglas, _botonCodice);
 		_botonOpciones.Pressed += () => AbrirPanel(_menuOpciones, _botonOpciones);
 		_botonMenuInicio.Pressed += () => _ = GestorPartida.Instancia.VolverAlMenuInicio();
 		_botonSalirJuego.Pressed += () => _ = GestorPartida.Instancia.SalirDelJuego();
-		_codiceReglas.Cerrado += AlCerrarPanel;
 		_menuOpciones.Cerrado += AlCerrarPanel;
 		_panelRanuras.Cerrado += AlCerrarPanel;
 		UtilidadesUI.ConectarFocoConRaton(_raiz);
-		UtilidadesUI.EncadenarFoco(new Control[] { _botonReanudar, _botonGuardar, _botonCodice, _botonOpciones, _botonMenuInicio, _botonSalirJuego });
+		UtilidadesUI.EncadenarFoco(new Control[] { _botonReanudar, _botonGuardar, _botonOpciones, _botonMenuInicio, _botonSalirJuego });
+	}
+
+	private void ConstruirPantallaPrincipal()
+	{
+		_pantallaPrincipal = new Control { MouseFilter = Control.MouseFilterEnum.Stop };
+		_pantallaPrincipal.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.FullRect);
+		_raiz.AddChild(_pantallaPrincipal);
+		_raiz.MoveChild(_pantallaPrincipal, 0);
+		// El juego queda detrás, oscurecido y con viñeta
+		EstiloMenus.Fondo(_pantallaPrincipal, opaco: false, oscurecer: 0.72f);
+
+		var columna = EstiloMenus.Columna(64);
+		columna.AnchorTop = 0f;
+		columna.AnchorBottom = 1f;
+		columna.OffsetLeft = 128;
+		columna.OffsetRight = 1100;
+		columna.Alignment = BoxContainer.AlignmentMode.Center;
+		_pantallaPrincipal.AddChild(columna);
+		columna.AddChild(EstiloMenus.Titulo("PAUSA", 168, 28));
+
+		var lista = EstiloMenus.Columna(8);
+		columna.AddChild(lista);
+		_botonReanudar = new OpcionMenu("01", "REANUDAR");
+		_botonGuardar = new OpcionMenu("02", "GUARDAR PARTIDA");
+		_botonOpciones = new OpcionMenu("03", "OPCIONES");
+		_botonMenuInicio = new OpcionMenu("04", "VOLVER AL MENÚ PRINCIPAL");
+		_botonSalirJuego = new OpcionMenu("05", "SALIR DEL JUEGO");
+		foreach (var opcion in new[] { _botonReanudar, _botonGuardar, _botonOpciones, _botonMenuInicio, _botonSalirJuego })
+		{
+			opcion.SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin;
+			lista.AddChild(opcion);
+		}
+
+		var pista = EstiloMenus.Etiqueta("ESC · REANUDAR", EstiloMenus.Mono(22, 0.2f), 22, EstiloMenus.GrisOscuro);
+		pista.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.BottomRight);
+		pista.GrowHorizontal = Control.GrowDirection.Begin;
+		pista.GrowVertical = Control.GrowDirection.Begin;
+		pista.OffsetRight = -80;
+		pista.OffsetBottom = -56;
+		_pantallaPrincipal.AddChild(pista);
 	}
 
 	// Los paneles y el diálogo de confirmación son hijos, así que reciben Esc antes
@@ -65,7 +95,6 @@ public partial class MenuPausa : CanvasLayer
 	{
 		if (evento.IsEcho()) return;
 		if (_panelRanuras.Visible) return;
-		// Otra pantalla modal (examen o cinemática) ya controla la pausa.
 		if (!_raiz.Visible && GetTree().Paused) return;
 		if (evento.IsActionPressed("pausa") || (_raiz.Visible && evento.IsActionPressed("ui_cancel")))
 		{
@@ -130,6 +159,6 @@ public partial class MenuPausa : CanvasLayer
 	private void AlCerrarPanel()
 	{
 		_pantallaPrincipal.Show();
-		_focoAlVolver.GrabFocus();
+		(_focoAlVolver ?? _botonReanudar).GrabFocus();
 	}
 }
