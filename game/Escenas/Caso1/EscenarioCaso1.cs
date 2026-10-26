@@ -30,6 +30,8 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 	protected readonly HashSet<string> Pistas = new HashSet<string>();
 	private readonly HashSet<string> _zonasVistas = new HashSet<string>();
 	protected Hablante Caneloso;
+	// El guion del caso (HU-27): su estado es el mismo en los tres escenarios
+	protected GuionCaso1 Guion;
 	protected bool EnDialogo;
 	private bool _restaurando;
 	private double _tiempoCaso;
@@ -52,6 +54,10 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 	{
 		Caneloso = Dialogo.HablantePorNombre("Caneloso");
 		Caneloso.TonoVoz = 1f;
+		Guion = new GuionCaso1(Dialogo, Hud, Caneloso, Cambio)
+		{
+			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
+		};
 
 		Hud.Set("caso", "01");
 		Hud.Set("archivo", "La Noche del Ciervo de Luz");
@@ -209,7 +215,7 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 	{
 		{ "caso", "01" },
 		{ "capitulo", Caso1.IdCapitulo },
-		{ "fase", Capitulos.Fase("investigacion")?.Nombre ?? "" },
+		{ "fase", Capitulos.Fase(Guion.FaseActual())?.Nombre ?? "" },
 		{ "zona", ZonaActual() },
 		{ "pistas", PartidaEscenas.PistasEnDiario(Hud) },
 		{ "total_pistas", PartidaEscenas.TotalPistas },
@@ -250,6 +256,8 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 			{ "jugador", Jugador.CapturarEstado() },
 			{ "pistas", pistas },
 			{ "notas", Hud.Get("notas").AsGodotArray().Duplicate() },
+			{ "tablero", Hud.Call("capturar_tablero").AsGodotDictionary() },
+			{ "dialogos", Guion.Capturar() },
 			{ "tiempo", _tiempoCaso },
 			{ "escenas", escenas },
 		};
@@ -286,6 +294,9 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 		}
 		foreach (Variant nota in estado["notas"].AsGodotArray()) Hud.Call("agregar_nota", nota.AsString());
 		Hud.Set("_aviso", 0.0);
+		Hud.Call("restaurar_tablero", estado.TryGetValue("tablero", out Variant tablero)
+			? tablero.AsGodotDictionary() : new Diccionario());
+		Guion.Restaurar(estado);
 
 		var contenedores = propio.TryGetValue("contenedores", out Variant cs) ? cs.AsGodotDictionary() : new Diccionario();
 		foreach (var c in Todos<Contenedor>())

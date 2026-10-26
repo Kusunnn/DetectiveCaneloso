@@ -1,6 +1,6 @@
 extends SceneTree
 ## HU-20.6: prueba el Capítulo 1 repartido en escenarios: Campamento ↔ Lago ↔ sala de interrogatorio con el progreso
-## (pistas, objetos, contenedores, puertas), el cobertizo cerrado que abre el llavero de Porky, guardar y cargar en el
+## (pistas, objetos, contenedores, puertas, el tablero y lo recorrido en los diálogos del guion), el cobertizo cerrado que abre el llavero de Porky, guardar y cargar en el
 ## Lago, y que en el muelle y la orilla no se cae al agua (de pie y agachado).
 ## Uso: --headless --path game --script res://Herramientas/Caso1/probar_escenarios.gd
 ## Respalda en disco (user://respaldo_pruebas/) las ranuras y el progreso, y los devuelve al final.
@@ -34,6 +34,11 @@ func _initialize() -> void:
 	_jugador().DarObjeto("llavero_porky", "")
 	await create_timer(0.5).timeout
 	_revisar(_pistas().has("interruptor_generador"), "la pista del Campamento queda en el diario")
+	var relaciones = current_scene.get_node("HUD").relaciones_pizarron
+	relaciones.desbloquear("notas")
+	relaciones.guardar_nota(&"", "Hipótesis del campamento", Vector2(200, 200))
+	var dialogos_campamento: Dictionary = _estado().dialogos
+	_revisar(dialogos_campamento.get("nodos_completados", {}).has("caso1_introduccion"), "la presentación de Hecdog queda en lo recorrido del guion")
 
 	print("2) Del Campamento al Lago")
 	_gestor.CambiarEscenaDelCapitulo(LAGO, "EntradaDesdeCampamento")
@@ -44,6 +49,9 @@ func _initialize() -> void:
 	_revisar(_jugador().global_position.distance_to(entrada.global_position) < 0.6, "aparece en la entrada del sendero")
 	_revisar(_pistas().has("interruptor_generador"), "trae la pista del Campamento")
 	_revisar(_jugador().TieneObjeto("llavero_porky"), "trae el llavero de Porky")
+	var recorrido: Array = _estado().dialogos.get("nodos_completados", {}).get("caso1_introduccion", [])
+	_revisar(dialogos_campamento.nodos_completados.caso1_introduccion.all(func(n): return n in recorrido), "trae lo recorrido en los diálogos")
+	_revisar(_estado().tablero.tarjetas.size() == 1, "trae la nota del tablero")
 	var puerta = current_scene.get_node("Cobertizo/Edificio/PuertaCobertizo")
 	_revisar(not puerta.Bloqueada, "el llavero abre el cobertizo de botes")
 	var silbato = _buscar_pista("silbato_ts")
@@ -64,6 +72,10 @@ func _initialize() -> void:
 	await _esperar_escena(SALA)
 	await create_timer(1.0).timeout
 	var caso = current_scene.get_node("Caso1Sala")
+	var dialogo = current_scene.get_node("VentanaDialogo")
+	_revisar(dialogo.Abierto, "la primera vez Hecdog recibe al detective en la sala")
+	await _cerrar_dialogos()
+	_revisar(_estado().dialogos.get("nodos_completados", {}).has("caso1_sala"), "la llegada a la sala queda en lo recorrido")
 	_revisar(_pistas().has("silbato_ts") and _pistas().has("interruptor_generador"), "la sala tiene las pistas de los dos escenarios")
 	_revisar(current_scene.get_node("MesaEvidencias/Pruebas").get_child_count() >= 2, "las pruebas están en la mesa auxiliar")
 	_revisar(current_scene.get_node("Corcho/Fotos").get_child_count() >= 7, "el corcho tiene las fotos y el estambre")
@@ -101,6 +113,8 @@ func _initialize() -> void:
 	await _cerrar_dialogos()
 	_revisar(_jugador().global_position.distance_to(donde) < 0.8, "carga en el Lago, donde se guardó")
 	_revisar(_pistas().has("interruptor_generador") and _pistas().has("silbato_ts"), "con las pistas de los dos escenarios")
+	_revisar(_estado().dialogos.get("nodos_completados", {}).has("caso1_sala"), "y con lo recorrido en la sala")
+	_revisar(_estado().tablero.tarjetas.size() == 1, "y con el tablero")
 	_revisar(current_scene.get_node("Orilla/Mochila").EstaAbierto, "y la mochila abierta")
 
 	print("6) Del Lago al Campamento")
@@ -154,6 +168,9 @@ func _esperar_escena(ruta: String, desde_cero := false) -> void:
 		if current_scene and current_scene.scene_file_path == ruta and current_scene.is_node_ready():
 			break
 	await create_timer(0.3).timeout
+
+func _estado() -> Dictionary:
+	return JSON.parse_string(JSON.stringify(get_nodes_in_group("estado_partida")[0].CapturarEstado()))
 
 func _jugador():
 	return current_scene.get_node("Jugador")

@@ -1,15 +1,17 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 // Caso 1 «La Noche del Ciervo de Luz» — Escenario 3: la sala de interrogatorio de la estación (HU-20.6).
 // Solo el escenario y lo que el guion de los interrogatorios va a necesitar: los seis implicados entran uno por uno
 // (TraerImplicado / RetirarImplicado), Hecdog espera junto a la puerta, el corcho con las fotos y el estambre rojo,
-// y la mesa con las pruebas que el detective ya tiene. Los diálogos los escribe otra tarea: aquí solo hay señales.
+// y la mesa con las pruebas que el detective ya tiene. Los diálogos son los del guion (GuionCaso1): Hecdog lleva
+// la sala y la acusación, y cada implicado pasa a la silla cuando le toca su interrogatorio.
 public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 {
-	// Los diálogos se conectan aquí (otra tarea del equipo)
+	// Avisos para quien quiera reaccionar a la sala (los diálogos ya van por GuionCaso1)
 	[Signal] public delegate void HablarConHecdogEventHandler();
 	[Signal] public delegate void HablarConImplicadoEventHandler(string implicado);
 	[Signal] public delegate void ImplicadoSentadoEventHandler(string implicado);
@@ -39,6 +41,13 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		["Tony"] = ("Tony", "global/CaminaTony", "tony"),
 	};
 
+	// Id del implicado en el guion → su nodo en Implicados
+	private static readonly Dictionary<string, string> ClaveDeGuion = new()
+	{
+		["juan_carlos"] = "JuanCarlos", ["aya"] = "Aya", ["miawrio"] = "Miawrio",
+		["eriz"] = "Eriz", ["mimita"] = "Mimita", ["tony"] = "Tony",
+	};
+
 	public string ImplicadoActual { get; private set; }
 	public IEnumerable<string> NombresImplicados => Datos.Keys;
 	private bool _moviendo;
@@ -51,7 +60,11 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	{
 		base._Ready();
 		Salida.Usado += () => Conversar(AlSalir);
-		Hecdog.Usado += () => EmitSignal(SignalName.HablarConHecdog);
+		Hecdog.Usado += () => { EmitSignal(SignalName.HablarConHecdog); Conversar(() => Guion.Sala(IsInsideTree)); };
+		Guion.AntesDeInterrogar = async quien =>
+		{
+			if (ClaveDeGuion.TryGetValue(quien, out string clave)) await TraerImplicado(clave);
+		};
 		foreach (Node hijo in Implicados.GetChildren())
 		{
 			if (hijo is not Node3D implicado) continue;
@@ -60,23 +73,31 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 			if (implicado.GetNodeOrNull<PuntoInteraccion>("Colision") is { } punto)
 			{
 				punto.Habilitar(false, CapaImplicado);
-				punto.Usado += () => EmitSignal(SignalName.HablarConImplicado, clave);
+				string quien = ClaveDeGuion.First(p => p.Value == clave).Key;
+				punto.Usado += () => { EmitSignal(SignalName.HablarConImplicado, clave); Conversar(() => Guion.Interrogar(quien, IsInsideTree)); };
 			}
 		}
 		ArmarCorcho();
 	}
 
-	protected override void AlLlegar(bool desdeOtroEscenario)
+	protected override async void AlLlegar(bool desdeOtroEscenario)
 	{
 		AcomodarPruebas();
 		ActualizarObjetivo();
-		if (!EnDialogo) Jugador.MostrarPensamiento("La sala de interrogatorio de la estación. Aquí van a pasar uno por uno.", 5.0);
+		if (Guion.SalaVista || Guion.Resuelto)
+		{
+			if (!EnDialogo) Jugador.MostrarPensamiento("La sala de interrogatorio de la estación. Aquí van a pasar uno por uno.", 5.0);
+			return;
+		}
+		// La primera vez, Hecdog recibe al detective y presenta a los seis
+		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
+		if (IsInsideTree()) Conversar(() => Guion.Sala(IsInsideTree));
 	}
 
 	protected override void AlRestaurar() => AcomodarPruebas();
 
 	protected override void ActualizarObjetivo() =>
-		Objetivo("Sala de interrogatorio de la estación. Sal por la puerta para volver al lago o al campamento.");
+		Objetivo(Guion.Objetivo() ?? "Sala de interrogatorio de la estación. Habla con Hecdog, o sal por la puerta para volver al lago o al campamento.");
 
 	protected override string PensamientoDeZona(string zona) => null;
 	protected override string NombreZona(string zona) => zona;

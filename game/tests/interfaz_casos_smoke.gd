@@ -27,11 +27,18 @@ func probar() -> void:
 		for paso in range(30):
 			if not dialogo.Abierto: break
 			await tecla(KEY_SPACE)
+			# La presentación de Hecdog (Caso 1) termina eligiendo «Ir al campamento», la tercera opción
+			if datos[1] == 'Caso1': await tecla(KEY_3)
 			await create_timer(0.2).timeout
 		assert(not dialogo.Abierto)
 		var hud = escena.get_node('HUD')
 		var menu = escena.get_node('MenuPausa')
 		var caso = escena.get_node(datos[1])
+		# Hecdog le entrega el expediente al terminar la presentación: se cierra antes de seguir
+		if hud._expediente.abierto:
+			await tecla(KEY_ESCAPE)
+			await create_timer(0.3).timeout
+		assert(not hud._expediente.abierto and not menu.Abierto)
 		await tecla(KEY_R)
 		assert(hud.tablero_abierto and hud.pizarron_espacial.visible)
 		var relaciones = hud.relaciones_pizarron

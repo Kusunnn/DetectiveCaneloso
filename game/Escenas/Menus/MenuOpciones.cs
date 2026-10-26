@@ -338,12 +338,22 @@ public partial class MenuOpciones : PanelMenu
 		CancelarCaptura();
 		Configuracion.Instancia.RestaurarPredeterminados();
 		CargarValores();
-		MostrarAyuda("Se restauraron los valores predeterminados.", EstiloMenus.Ambar);
+		MostrarAyuda("Se restauraron los valores predeterminados: las teclas volvieron a los controles originales.", EstiloMenus.Ambar);
 	}
 
 	// ---------- Cambio de teclas ----------
 
 	private void CancelarCaptura() => _panelTeclas.CancelarCaptura();
+
+	// Avisa si alguna acción se quedó sin tecla; true si falta alguna
+	private bool AvisarTeclasFaltantes()
+	{
+		var faltan = Configuracion.AccionesSinTecla();
+		if (faltan.Count == 0) return false;
+		MostrarPestana("controles");
+		MostrarAyuda($"Falta asignar una tecla a: {string.Join(", ", faltan)}. Selecciónala y pulsa una tecla, o restaura los predeterminados.", EstiloMenus.Coral);
+		return true;
+	}
 
 	// ---------- Abrir y cerrar ----------
 
@@ -351,6 +361,7 @@ public partial class MenuOpciones : PanelMenu
 	{
 		CargarValores();
 		MostrarPestana(_pestanaActual);
+		AvisarTeclasFaltantes();
 		base.Abrir();
 		_pestanas[_pestanaActual].GrabFocus();
 	}
@@ -358,6 +369,8 @@ public partial class MenuOpciones : PanelMenu
 	public override void Cerrar()
 	{
 		CancelarCaptura();
+		// Sin tecla, esa acción no se podría usar en el juego: no se sale hasta asignarla
+		if (AvisarTeclasFaltantes()) return;
 		Configuracion.Instancia.Guardar();
 		base.Cerrar();
 	}

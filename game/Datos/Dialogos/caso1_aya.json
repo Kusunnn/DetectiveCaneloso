@@ -1,0 +1,399 @@
+{
+	"id": "caso1_aya",
+	"personaje": "Aya",
+	"tono_voz": 1.12,
+	"inicio": "entrada",
+	"nodos": {
+		"entrada": {
+			"ir_a": [
+				{
+					"si": {
+						"conclusiones": [
+							"aya_2"
+						]
+					},
+					"destino": "confeso"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"aya_1"
+						]
+					},
+					"destino": "regreso_2"
+				},
+				{
+					"si": {
+						"nodos_completados": [
+							"mentira"
+						]
+					},
+					"destino": "regreso_1"
+				},
+				{
+					"destino": "mentira"
+				}
+			]
+		},
+		"mentira": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Aya, tengo unas preguntas sobre tus fotos."
+				},
+				{
+					"habla": "Aya",
+					"animo": "nerviosa",
+					"texto": "Oh... yo estaba tomando fotos del bosque, detective. La luna, los pinos... bien bonito todo. La neta del planeta, no vi nada raro."
+				}
+			],
+			"siguiente": "prueba_1",
+			"al_completar": {
+				"notas": [
+					"Aya dice que estaba tomando fotos del bosque y que no vio nada raro."
+				]
+			}
+		},
+		"regreso_1": {
+			"variantes": [
+				[
+					{
+						"habla": "Aya",
+						"animo": "nerviosa",
+						"texto": "Oh... ¿otra vez usted, detective? Pues sí, aquí sigo."
+					}
+				],
+				[
+					{
+						"habla": "Aya",
+						"animo": "a la defensiva",
+						"gesto": "Pone las manos en la cadera y ladea la cabeza",
+						"texto": "Chécate, detective: yo nomás tomo fotos. ¿Qué más quiere saber?"
+					}
+				],
+				[
+					{
+						"habla": "Aya",
+						"animo": "nerviosa",
+						"texto": "Oh... hola otra vez. ¿Ahora qué necesita? Pregunte con confianza."
+					}
+				]
+			],
+			"siguiente": "prueba_1"
+		},
+		"regreso_2": {
+			"variantes": [
+				[
+					{
+						"habla": "Aya",
+						"animo": "nerviosa",
+						"texto": "Oh... ¿otra vez usted, detective? Pues sí, aquí sigo."
+					}
+				],
+				[
+					{
+						"habla": "Aya",
+						"animo": "a la defensiva",
+						"gesto": "Pone las manos en la cadera y ladea la cabeza",
+						"texto": "Chécate, detective: yo nomás tomo fotos. ¿Qué más quiere saber?"
+					}
+				],
+				[
+					{
+						"habla": "Aya",
+						"animo": "nerviosa",
+						"texto": "Oh... hola otra vez. ¿Ahora qué necesita? Pregunte con confianza."
+					}
+				]
+			],
+			"siguiente": "prueba_2"
+		},
+		"prueba_1": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "altavoz",
+					"tipo": "MOSTRAR",
+					"texto": "Bocina escondida",
+					"destino": "p1_bocina",
+					"requiere": {
+						"pistas": [
+							"altavoz"
+						]
+					}
+				},
+				{
+					"id": "interruptor_generador",
+					"tipo": "MOSTRAR",
+					"texto": "Interruptor del generador",
+					"destino": "e_interruptor",
+					"requiere": {
+						"pistas": [
+							"interruptor_generador"
+						]
+					}
+				},
+				{
+					"id": "botas_tony",
+					"tipo": "MOSTRAR",
+					"texto": "Botas con lodo",
+					"destino": "e_botas",
+					"requiere": {
+						"pistas": [
+							"botas_tony"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p1_bocina": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Los bramidos salían de una bocina escondida en un árbol. Y tú tenías la cámara lista justo a esa hora."
+				},
+				{
+					"habla": "Aya",
+					"animo": "a la defensiva",
+					"gesto": "Pone las manos en la cadera y ladea la cabeza",
+					"texto": "Oh... pues mucha gente toma fotos de noche, detective. Eso no me hace sospechosa, ¿o sí?"
+				}
+			],
+			"siguiente": "prueba_2",
+			"al_completar": {
+				"conclusiones": [
+					"aya_1"
+				],
+				"notas": [
+					"Aya tenía la cámara lista justo cuando sonaron los bramidos de la bocina."
+				]
+			}
+		},
+		"e_interruptor": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Alguien bajó el interruptor del generador a mano."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_botas": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Las botas de Tony estaban escondidas, llenas de lodo."
+				}
+			],
+			"siguiente": "error"
+		},
+		"prueba_2": {
+			"pregunta": "¿Qué le digo?",
+			"opciones": [
+				{
+					"id": "juan_carlos",
+					"tipo": "CONTAR",
+					"texto": "Lo que confesó Juan Carlos",
+					"destino": "p2_juan_carlos",
+					"requiere": {
+						"conclusiones": [
+							"juan_carlos_3"
+						]
+					}
+				},
+				{
+					"id": "cuaderno_eriz",
+					"tipo": "MOSTRAR",
+					"texto": "Cuaderno de Eriz",
+					"destino": "e_cuaderno",
+					"requiere": {
+						"pistas": [
+							"cuaderno_eriz"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p2_juan_carlos": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Juan Carlos ya me contó: el ciervo era él. Y dice que tú lo estabas grabando."
+				},
+				{
+					"habla": "Aya",
+					"animo": "apenada",
+					"gesto": "Se queda callada un momento",
+					"texto": "...Pues sí. Juan Carlos me pagaba por grabarlo y tomar fotos. ¡Pero no es que no quisiera comentarlo! Quería que el video no se mostrara en público hasta que estuviera ready bomba."
+				},
+				{
+					"habla": "Aya",
+					"animo": "seria",
+					"texto": "Las 23:19. El ciervo está en la colina, tieso. Y al mismo tiempo, en el embarcadero, dos siluetas sin cornamenta; una trae algo largo en las manos. Y en la orilla, junto a la enfermería, hay alguien viendo el lago: creo que es Mimita."
+				},
+				{
+					"habla": "Aya",
+					"animo": "preocupada",
+					"texto": "Oh... y esta otra es de las 23:12. Es Tony, caminando por el sendero del lago, lejos del camino al generador. Plot twist que nadie pidió, la verdad."
+				},
+				{
+					"habla": "Hecdog",
+					"animo": "satisfecho",
+					"texto": "Dos fotos que valen más que mil palabras, Nya. Y que mil ladridos."
+				}
+			],
+			"fin": true,
+			"al_completar": {
+				"conclusiones": [
+					"aya_2",
+					"foto_aya_2319",
+					"foto_aya_2312"
+				],
+				"notas": [
+					"Foto de Aya, 23:19: el ciervo quieto en la colina, dos siluetas en el embarcadero (una con algo largo en las manos) y Mimita en la orilla, junto a la enfermería.",
+					"Foto de Aya, 23:12: Tony camina por el sendero del lago, lejos del camino al generador."
+				]
+			}
+		},
+		"e_cuaderno": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "El cuaderno de Eriz marca algo a las 23:20."
+				}
+			],
+			"siguiente": "error"
+		},
+		"confeso": {
+			"variantes": [
+				[
+					{
+						"habla": "Aya",
+						"animo": "triste",
+						"texto": "Oh... ya tiene mis fotos, detective. Ojalá no las hubiera tomado."
+					}
+				],
+				[
+					{
+						"habla": "Aya",
+						"animo": "triste",
+						"texto": "Pues sí, ya le enseñé todo lo que tenía. Ojalá le sirva para encontrar al que fue."
+					}
+				]
+			],
+			"fin": true
+		},
+		"error": {
+			"ir_a": [
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 0
+						}
+					},
+					"destino": "paciencia"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 1
+						}
+					},
+					"destino": "error_1"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 2
+						}
+					},
+					"destino": "error_2"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 3
+						}
+					},
+					"destino": "error_3"
+				},
+				{
+					"destino": "error_4"
+				}
+			],
+			"al_completar": {
+				"sumar": {
+					"credibilidad": -1
+				}
+			}
+		},
+		"error_4": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Caneloso, eso no tiene nada que ver con lo que dice Aya, Nya. Así no vamos a ningún lado."
+				}
+			]
+		},
+		"error_3": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Otra vez, Caneloso. Eso no tiene nada que ver con lo que dice Aya, Nya. Piénsale tantito."
+				}
+			]
+		},
+		"error_2": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "impaciente",
+					"texto": "Caneloso, se me está acabando la paciencia, Nya. Eso no tiene nada que ver con lo que dice Aya."
+				}
+			]
+		},
+		"error_1": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "harto",
+					"texto": "Última advertencia, Caneloso. Una prueba más así y te mando a acusar a quien sea, Nya."
+				}
+			]
+		},
+		"paciencia": {
+			"fin": true,
+			"salida": "paciencia"
+		},
+		"despedida": {
+			"variantes": [
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Volveré cuando tenga algo mejor que enseñarte, Aya."
+					}
+				],
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Ahorita regreso, Aya. No te vayas lejos."
+					}
+				]
+			]
+		}
+	}
+}

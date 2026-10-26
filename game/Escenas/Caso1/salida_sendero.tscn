@@ -138,36 +138,36 @@ transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 1.1,
 [node name="LlegadaDesdeSala" type="Marker3D" parent="Arco"]
 transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 1.6, 1.1, 3.4)
 
-[node name="CanoaDaniel" type="Node3D" parent="."]
+[node name="CanoaPaco" type="Node3D" parent="."]
 transform = Transform3D(0.9659, 0.0, 0.2588, 0.0, 1.0, 0.0, -0.2588, 0.0, 0.9659, 6.8, 0.0, -27.2)
 
-[node name="Apoyo-9" parent="CanoaDaniel" instance=ExtResource("e6")]
+[node name="Apoyo-9" parent="CanoaPaco" instance=ExtResource("e6")]
 transform = Transform3D(0.0, 0.0, 0.85, 0.0, 0.85, 0.0, -0.85, 0.0, 0.0, 0.0, 0.0, -0.9)
 
-[node name="Apoyo9" parent="CanoaDaniel" instance=ExtResource("e6")]
+[node name="Apoyo9" parent="CanoaPaco" instance=ExtResource("e6")]
 transform = Transform3D(0.0, 0.0, 0.85, 0.0, 0.85, 0.0, -0.85, 0.0, 0.0, 0.0, 0.0, 0.9)
 
-[node name="Modelo" parent="CanoaDaniel" instance=ExtResource("e7")]
+[node name="Modelo" parent="CanoaPaco" instance=ExtResource("e7")]
 transform = Transform3D(-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9958, 0.0)
 
-[node name="Canoa" type="StaticBody3D" parent="CanoaDaniel"]
+[node name="Canoa" type="StaticBody3D" parent="CanoaPaco"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("e8")
 Id = "canoa_daniel"
 Titulo = "Canoa vieja"
-Descripcion = "Una canoa vieja, volteada sobre dos troncos. En el casco alguien grabó con navaja: «DANIEL»."
+Descripcion = "Una canoa vieja, volteada sobre dos troncos. En el casco alguien grabó con navaja: «PACO»."
 EsEvidencia = false
 
-[node name="Forma" type="CollisionShape3D" parent="CanoaDaniel/Canoa"]
+[node name="Forma" type="CollisionShape3D" parent="CanoaPaco/Canoa"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.45, 0.0)
 shape = SubResource("BoxShape3D_2")
 
-[node name="Nombre" type="Node3D" parent="CanoaDaniel"]
+[node name="Nombre" type="Node3D" parent="CanoaPaco"]
 transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 0.47, 0.699, 0.3)
 script = ExtResource("e3")
-Texto = "DANIEL"
+Texto = "PACO"
 Ancho = 0.4
 ColorPapel = Color(0.86, 0.83, 0.72, 1.0)
 ColorTexto = Color(0.2, 0.12, 0.06, 1.0)
@@ -177,12 +177,12 @@ ConFondo = false
 AltoMaximo = 1.2
 TamPixel = 0.0018
 
-[node name="Solido" type="StaticBody3D" parent="CanoaDaniel"]
+[node name="Solido" type="StaticBody3D" parent="CanoaPaco"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.4979, 0.0)
 collision_layer = 2
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="CanoaDaniel/Solido"]
+[node name="Forma" type="CollisionShape3D" parent="CanoaPaco/Solido"]
 shape = SubResource("BoxShape3D_3")
 
 [node name="Canoa1" type="Node3D" parent="."]

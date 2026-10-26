@@ -6,8 +6,8 @@
 script = ExtResource("1_detalle")
 Id = "dedicatoria"
 Titulo = "Dedicatoria detrás de la foto"
-Descripcion = "En el cartón de atrás del marco, a mano: «Cabaña 4, 14 de agosto. Para Daniel, que nunca le tuvo miedo al lago. — A. R.»"
-Pensamiento = "«Para Daniel... A. R.» El mismo día que se ahogó. Quien firmó conocía bien al niño."
+Descripcion = "En el cartón de atrás del marco, a mano: «Lago Espejo, 14 de agosto. Para Paco, que nunca le tuvo miedo al lago. — G. S.»"
+Pensamiento = "«Para Paco... G. S.» El mismo día que se ahogó. Quien firmó conocía bien al niño."
 Normal = Vector3(0, 0, -1)
 Tolerancia = 40.0
 ZoomMinimo = 1.0

@@ -1,0 +1,285 @@
+{
+	"id": "caso1_eriz",
+	"personaje": "Eriz",
+	"tono_voz": 1.15,
+	"inicio": "entrada",
+	"nodos": {
+		"entrada": {
+			"ir_a": [
+				{
+					"si": {
+						"conclusiones": [
+							"eriz_1"
+						]
+					},
+					"destino": "confeso"
+				},
+				{
+					"si": {
+						"nodos_completados": [
+							"mentira"
+						]
+					},
+					"destino": "regreso_1"
+				},
+				{
+					"destino": "mentira"
+				}
+			]
+		},
+		"mentira": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Eriz, tú encontraste el cuerpo. Cuéntamelo otra vez."
+				},
+				{
+					"habla": "Eriz",
+					"animo": "nervioso",
+					"texto": "Mira... yo encontré el cuerpo y ya. Llegué al lago justo antes. Y ya sé lo que van a pensar por mi pasado, pero yo ya no soy ese, simón."
+				}
+			],
+			"siguiente": "prueba_1",
+			"al_completar": {
+				"notas": [
+					"Eriz dice que llegó al lago justo antes de encontrar el cuerpo."
+				]
+			}
+		},
+		"regreso_1": {
+			"variantes": [
+				[
+					{
+						"habla": "Eriz",
+						"animo": "nervioso",
+						"texto": "Mira... ya te dije que yo nomás encontré el cuerpo. Simón."
+					}
+				],
+				[
+					{
+						"habla": "Eriz",
+						"animo": "nervioso",
+						"gesto": "Mueve mucho las manos",
+						"texto": "Mira, si es por lo de mi pasado, de verdad ya no soy ese. ¿Qué más necesitas?"
+					}
+				]
+			],
+			"siguiente": "prueba_1"
+		},
+		"prueba_1": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "cuaderno_eriz",
+					"tipo": "MOSTRAR",
+					"texto": "Cuaderno de Eriz",
+					"destino": "p1_cuaderno",
+					"requiere": {
+						"pistas": [
+							"cuaderno_eriz"
+						]
+					}
+				},
+				{
+					"id": "nota_porky",
+					"tipo": "MOSTRAR",
+					"texto": "Nota de Porky",
+					"destino": "e_nota",
+					"requiere": {
+						"pistas": [
+							"nota_porky"
+						]
+					}
+				},
+				{
+					"id": "huellas_detenidas",
+					"tipo": "MOSTRAR",
+					"texto": "Huellas que se detienen",
+					"destino": "e_huellas",
+					"requiere": {
+						"pistas": [
+							"huellas_detenidas"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p1_cuaderno": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Tu cuaderno estaba en tu mochila, en la orilla. «23:20: perturbación luminosa fuerte junto al embarcadero». Llegaste mucho antes."
+				},
+				{
+					"habla": "Eriz",
+					"animo": "apenado",
+					"gesto": "Mueve las manos y mira hacia arriba",
+					"texto": "Mira... estaba ahí desde las 23:00. Sin permiso, con una cerveza, dibujando. La luna pegando en el agua, los pinos... me sentía inspirado. Si lo decía, con mi pasado, iban a pensar que fui yo. Y la que iba a pagar era la gente del campamento, que me dio chamba."
+				},
+				{
+					"habla": "Eriz",
+					"animo": "sincero",
+					"texto": "A las 23:20 el agua brilló de golpe junto al embarcadero y oí un chapuzón. Pensé que era un pez. Lo apunté por la luz, nomás. Simón, así fue."
+				},
+				{
+					"habla": "Hecdog",
+					"animo": "satisfecho",
+					"texto": "Las 23:20. Ya tenemos la hora, Nya."
+				}
+			],
+			"fin": true,
+			"al_completar": {
+				"conclusiones": [
+					"eriz_1",
+					"eriz_hora_crimen"
+				],
+				"notas": [
+					"Eriz estaba en el lago desde las 23:00. A las 23:20 vio un brillo junto al embarcadero y oyó un chapuzón: la hora del crimen."
+				]
+			}
+		},
+		"e_nota": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "La nota de Porky dice: «Esta noche se lo digo»."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_huellas": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Las huellas se quedan antes del embarcadero."
+				}
+			],
+			"siguiente": "error"
+		},
+		"confeso": {
+			"variantes": [
+				[
+					{
+						"habla": "Eriz",
+						"animo": "cansado",
+						"texto": "Mira, ya te dije la neta. ¿Puedo irme a dibujar a otro lado?"
+					}
+				],
+				[
+					{
+						"habla": "Eriz",
+						"animo": "aliviado",
+						"texto": "Mira... gracias por no juzgarme. Si necesitas algo más, aquí ando, simón."
+					}
+				]
+			],
+			"fin": true
+		},
+		"error": {
+			"ir_a": [
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 0
+						}
+					},
+					"destino": "paciencia"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 1
+						}
+					},
+					"destino": "error_1"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 2
+						}
+					},
+					"destino": "error_2"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 3
+						}
+					},
+					"destino": "error_3"
+				},
+				{
+					"destino": "error_4"
+				}
+			],
+			"al_completar": {
+				"sumar": {
+					"credibilidad": -1
+				}
+			}
+		},
+		"error_4": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Caneloso, eso no tiene nada que ver con lo que dice Eriz, Nya. Así no vamos a ningún lado."
+				}
+			]
+		},
+		"error_3": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Otra vez, Caneloso. Eso no tiene nada que ver con lo que dice Eriz, Nya. Piénsale tantito."
+				}
+			]
+		},
+		"error_2": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "impaciente",
+					"texto": "Caneloso, se me está acabando la paciencia, Nya. Eso no tiene nada que ver con lo que dice Eriz."
+				}
+			]
+		},
+		"error_1": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "harto",
+					"texto": "Última advertencia, Caneloso. Una prueba más así y te mando a acusar a quien sea, Nya."
+				}
+			]
+		},
+		"paciencia": {
+			"fin": true,
+			"salida": "paciencia"
+		},
+		"despedida": {
+			"variantes": [
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Volveré cuando tenga algo mejor que enseñarte, Eriz."
+					}
+				],
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Ahorita regreso, Eriz. No te vayas lejos."
+					}
+				]
+			]
+		}
+	}
+}

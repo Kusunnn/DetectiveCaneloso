@@ -262,13 +262,13 @@ func _doc_quemado_reverso(c: Control) -> void:
 func _doc_quemado_reverso_nombre(c: Control) -> void:
 	_renglones(c, Rect2(60, 140, 1280, 820), 70, Color(0.35, 0.45, 0.65, 0.25))
 	c.draw_set_transform(Vector2(1400, 0), 0, Vector2(-1, 1))
-	_mano(c, ["...de guardia:", "monitor auxiliar Antonio R."], Vector2(300, 420), 70, TINTA_AZUL, 74)
+	_mano(c, ["...de guardia:", "monitor auxiliar..."], Vector2(300, 420), 70, TINTA_AZUL, 74)
 	c.draw_set_transform(Vector2.ZERO)
 
 # Caso 1 · Nota de Porky: letra redonda, doblada a la mitad, tinta corrida
 func _doc_nota_porky_frente(c: Control) -> void:
 	_renglones(c, Rect2(60, 160, 904, 820), 86, Color(0.4, 0.5, 0.7, 0.3), 90)
-	_mano(c, ["Esta noche se lo digo.", "Ya tengo el libro.", "", "Por Daniel."], Vector2(140, 290), 92, TINTA_AZUL, 104, MANO_FIRME, -0.02)
+	_mano(c, ["Esta noche se lo digo.", "Ya tengo el libro.", "", "Por Paco."], Vector2(140, 290), 92, TINTA_AZUL, 104, MANO_FIRME, -0.02)
 	_manchas(c, Vector2(1024, 1024), 2, Color(0.15, 0.2, 0.45, 0.8), Vector2(20, 60))
 	_pliegue(c, Vector2(512, 0), Vector2(512, 1024))
 
@@ -286,11 +286,11 @@ func _doc_foto_arte(c: Control) -> void:
 	c.draw_texture_rect(_foto, rect, false)
 	# Iniciales en el silbato: solo se leen acercándose
 	var silbato := rect.position + Vector2(0.186, 0.513) * rect.size
-	c.draw_string(IMPRESO, silbato + Vector2(-16, 6), "A.R.", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.15, 0.11, 0.07))
+	c.draw_string(IMPRESO, silbato + Vector2(-16, 6), "G.S.", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.15, 0.11, 0.07))
 
 func _doc_foto_reverso(c: Control) -> void:
 	c.draw_rect(Rect2(0, 0, 1536, 1024), Color(0.62, 0.5, 0.36, 0.55))
-	_mano(c, ["Cabaña 4 · 14 de agosto", "", "Para Daniel, que nunca", "le tuvo miedo al lago.", "", "                        — A. R."], Vector2(380, 300), 70, Color(0.14, 0.12, 0.3, 0.9), 76, MANO, -0.03)
+	_mano(c, ["Lago Espejo · 14 de agosto", "", "Para Paco, que nunca", "le tuvo miedo al lago.", "", "                        — G. S."], Vector2(380, 300), 70, Color(0.14, 0.12, 0.3, 0.9), 76, MANO, -0.03)
 
 # Caso 1 · Recorte de periódico amarillento (frente y otra nota al reverso)
 func _doc_recorte_frente(c: Control) -> void:
@@ -298,8 +298,8 @@ func _doc_recorte_frente(c: Control) -> void:
 	c.draw_string(PERIODICO_NEGRITA, Vector2(60, 110), "EL ECO DEL LAGO", HORIZONTAL_ALIGNMENT_LEFT, -1, 52, tinta)
 	c.draw_line(Vector2(60, 140), Vector2(1040, 140), tinta, 3)
 	c.draw_string(PERIODICO, Vector2(60, 172), "Sábado 16 de agosto · Sección Regional", HORIZONTAL_ALIGNMENT_LEFT, -1, 26, tinta)
-	c.draw_multiline_string(PERIODICO_NEGRITA, Vector2(60, 270), "Muere campista de 11 años en el Lago Espejo", HORIZONTAL_ALIGNMENT_LEFT, 980, 70, -1, tinta)
-	c.draw_multiline_string(PERIODICO, Vector2(60, 470), "Daniel M. salió de su cabaña de noche; la guardia no notó su ausencia.", HORIZONTAL_ALIGNMENT_LEFT, 980, 36, -1, tinta)
+	c.draw_multiline_string(PERIODICO_NEGRITA, Vector2(60, 270), "Muere ahogado un campista de 12 años en el Lago Espejo", HORIZONTAL_ALIGNMENT_LEFT, 980, 70, -1, tinta)
+	c.draw_multiline_string(PERIODICO, Vector2(60, 470), "¿Nadie cuidaba el lago? La guardia no notó que Paco salió de su cabaña de noche.", HORIZONTAL_ALIGNMENT_LEFT, 980, 36, -1, tinta)
 	# Foto borrosa del muelle
 	c.draw_rect(Rect2(60, 580, 460, 300), Color(0.32, 0.3, 0.27))
 	c.draw_rect(Rect2(60, 760, 460, 120), Color(0.22, 0.21, 0.2))
@@ -308,9 +308,11 @@ func _doc_recorte_frente(c: Control) -> void:
 	var cuerpo := "El menor fue encontrado la mañana del viernes cerca del muelle. Según los monitores, se había ido a dormir a las 21:30 con el resto de la cabaña 4. Nadie lo vio salir. La dirección del campamento informó que la guardia de esa noche hizo sus rondas con normalidad. La familia pidió que se investigue. Las autoridades no descartan ninguna línea."
 	c.draw_multiline_string(PERIODICO, Vector2(560, 610), cuerpo, HORIZONTAL_ALIGNMENT_LEFT, 480, 25, -1, tinta)
 	c.draw_multiline_string(PERIODICO, Vector2(60, 980), "Es la primera tragedia en los 30 años del campamento. El grupo de la cabaña 4 regresará a casa el lunes.", HORIZONTAL_ALIGNMENT_LEFT, 980, 25, -1, tinta)
-	# «la guardia» subrayado con pluma roja
-	c.draw_line(Vector2(560, 520), Vector2(760, 518), TINTA_ROJA, 5, true)
-	c.draw_line(Vector2(565, 528), Vector2(755, 527), TINTA_ROJA, 3, true)
+	# «La guardia» subrayado con pluma roja
+	var antes := PERIODICO.get_string_size("¿Nadie cuidaba el lago? ", HORIZONTAL_ALIGNMENT_LEFT, -1, 36).x
+	var largo := PERIODICO.get_string_size("La guardia", HORIZONTAL_ALIGNMENT_LEFT, -1, 36).x
+	c.draw_line(Vector2(60 + antes, 484), Vector2(60 + antes + largo, 482), TINTA_ROJA, 5, true)
+	c.draw_line(Vector2(65 + antes, 492), Vector2(55 + antes + largo, 491), TINTA_ROJA, 3, true)
 	_manchas(c, Vector2(1100, 1500), 4, Color(0.55, 0.42, 0.2, 0.7))
 
 func _doc_recorte_reverso(c: Control) -> void:
@@ -327,11 +329,11 @@ func _doc_oferta_frente(c: Control) -> void:
 	c.draw_string(PERIODICO_NEGRITA, Vector2(100, 150), "Desarrollos Valle Alto, S. A.", HORIZONTAL_ALIGNMENT_LEFT, -1, 48, Color(0.12, 0.2, 0.32))
 	c.draw_line(Vector2(100, 180), Vector2(1175, 180), Color(0.12, 0.2, 0.32), 4)
 	_maquina(c, ["OFERTA DE COMPRA"], Vector2(100, 290), 46, 0)
-	_maquina(c, ["Inmueble: Campamento Pino Lunar,", "cabañas, comedor, enfermería, muelle", "y terreno a la orilla del Lago Espejo.", "", "Monto ofrecido: el indicado en el", "anexo A, pagadero en una sola", "exhibición.", "", "La oferta vence en 15 días a partir", "de la firma de este documento."], Vector2(100, 420), 34, 54)
+	_maquina(c, ["Inmueble: Cabaña 4 del Campamento", "Pino Lunar, a la orilla del Lago", "Espejo. Ocupante: Porky.", "", "Monto ofrecido: el indicado en el", "anexo A, a cambio de desocupar la", "cabaña antes de la firma de la", "compraventa del campamento.", "", "La oferta vence en 15 días a partir", "de la firma de este documento."], Vector2(100, 420), 34, 54)
 	_maquina(c, ["Atentamente,"], Vector2(100, 1160), 34, 0)
-	_firma(c, "Juan Carlos", Vector2(160, 1300), 64, TINTA_AZUL)
+	_firma(c, "Miawrio", Vector2(160, 1300), 64, TINTA_AZUL)
 	c.draw_line(Vector2(100, 1330), Vector2(620, 1330), Color(0.1, 0.1, 0.1, 0.7), 2)
-	_maquina(c, ["Juan Carlos · Representante legal"], Vector2(100, 1380), 28, 0)
+	_maquina(c, ["Miawrio · Representante legal"], Vector2(100, 1380), 28, 0)
 
 func _doc_oferta_reverso(c: Control) -> void:
 	c.draw_set_transform(Vector2(1275, 0), 0, Vector2(-1, 1))
@@ -343,19 +345,19 @@ func _doc_registro_enfermeria(c: Control) -> void:
 	for lado in 2:
 		_renglones(c, Rect2(lado * 1024 + 60, 200, 900, 1180), 76, Color(0.4, 0.5, 0.7, 0.35), 100)
 	_mano(c, ["13 de agosto", "09:30 picadura de abeja", "13:10 dolor de estómago", "16:40 raspón en codo", "21:50 todo en calma"], Vector2(180, 182), 62, TINTA_AZUL, 76)
-	_mano(c, ["REGISTRO — 14 de agosto", "22:10 raspón en rodilla", "23:20 ruido en el lago", "00:40 todo en calma"], Vector2(1204, 182), 62, TINTA_AZUL, 76)
-	_tachon(c, Rect2(1196, 300, 640, 70), Color(0.05, 0.06, 0.12, 0.97))
+	_mano(c, ["REGISTRO — 14 de agosto", "22:10 raspón en rodilla", "23:20 se escuchó algo en el lago", "00:40 todo en calma"], Vector2(1204, 182), 62, TINTA_AZUL, 76)
+	_tachon(c, Rect2(1196, 300, 800, 70), Color(0.05, 0.06, 0.12, 0.97))
 	_sombra_lomo(c, 1024, 1434)
 
 # Los surcos que deja la pluma bajo el tachón: solo se ven con la linterna (capa aparte)
 func _doc_registro_surcos(c: Control) -> void:
-	c.draw_string(MANO, Vector2(24, 96), "23:20 ruido en el lago", HORIZONTAL_ALIGNMENT_LEFT, -1, 62, Color(0.96, 0.92, 0.82, 0.92))
+	c.draw_string(MANO, Vector2(24, 96), "23:20 se escuchó algo en el lago", HORIZONTAL_ALIGNMENT_LEFT, -1, 62, Color(0.96, 0.92, 0.82, 0.92))
 
 # Caso 1 · Registro de llamadas: hoja impresa
 func _doc_registro_llamadas(c: Control) -> void:
-	_maquina(c, ["REGISTRO DE LLAMADAS", "Línea: Juan Carlos · 55 1 ••• •• 48", "Periodo: 14 al 15 de agosto", "", "FECHA   HORA   NÚMERO            DURACIÓN", "-----------------------------------------", "14/08   18:05  55 1 204 77 10     00:02:31", "14/08   21:40  55 1 330 12 08     00:00:47", "14/08   23:58  55 1 871 56 23     00:01:12", "15/08   00:12  55 1 871 56 23     00:03:05", "15/08   00:31  55 1 871 56 23     00:00:40"], Vector2(110, 180), 28, 62, Color(0.1, 0.1, 0.12, 0.92), IMPRESO)
-	for y in [676.0, 738.0, 800.0]:
-		c.draw_rect(Rect2(380, y - 34, 330, 46), Color(1, 0.85, 0.1, 0.35))
+	_maquina(c, ["REGISTRO DE LLAMADAS", "Línea: Miawrio · 55 1 ••• •• 48", "Periodo: 14 al 15 de agosto", "", "FECHA   HORA   NÚMERO            DURACIÓN", "-----------------------------------------", "14/08   18:05  55 1 204 77 10     00:02:31", "14/08   21:40  55 1 330 12 08     00:00:47", "14/08   23:00  55 1 871 56 23     00:40:02", "15/08   00:12  55 1 204 77 10     00:03:05", "15/08   00:31  55 1 330 12 08     00:00:40"], Vector2(110, 180), 28, 62, Color(0.1, 0.1, 0.12, 0.92), IMPRESO)
+	# La llamada de las 23:00 a las 23:40: la coartada de Miawrio
+	c.draw_rect(Rect2(110, 676 - 34, 1020, 46), Color(1, 0.85, 0.1, 0.35))
 
 # Caso 1 · Inventario del baúl
 func _doc_inventario(c: Control) -> void:

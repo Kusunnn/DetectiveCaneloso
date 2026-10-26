@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/porky.glb" id="e1"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/AnimacionPersonaje.cs" id="e2"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://Assets/Models/Tony/Tony.tscn" id="e6"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Aya/Ayas.tscn" id="e7"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Miaurio/miaurio.tscn" id="e8"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Npc.cs" id="hu27_npc"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
 radius = 0.32
@@ -72,6 +73,10 @@ AlturaOjos = 1.35
 [node name="Colision" type="StaticBody3D" parent="Eriz" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Eriz"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Eriz/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8419, 0.0)
@@ -91,6 +96,10 @@ AlturaOjos = 1.32
 [node name="Colision" type="StaticBody3D" parent="JuanCarlos" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Juan Carlos"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="JuanCarlos/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.825, 0.0)
@@ -110,6 +119,10 @@ AlturaOjos = 1.2
 [node name="Colision" type="StaticBody3D" parent="Miami" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Mimita"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Miami/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.75, 0.0)
@@ -130,6 +143,10 @@ Animacion = "global/InacTony"
 [node name="Colision" type="StaticBody3D" parent="Tony" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Tony"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Tony/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.9, 0.0)
@@ -150,6 +167,10 @@ Animacion = "Inaya"
 [node name="Colision" type="StaticBody3D" parent="Aya" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Aya"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Aya/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8, 0.0)
@@ -170,6 +191,10 @@ Animacion = "global/Inactivo"
 [node name="Colision" type="StaticBody3D" parent="Miaurio" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("hu27_npc")
+Accion = "Hablar con Miawrio"
+Cuerpo = NodePath("../Modelo")
+Respiracion = 0.0
 
 [node name="Forma" type="CollisionShape3D" parent="Miaurio/Colision"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.85, 0.0)

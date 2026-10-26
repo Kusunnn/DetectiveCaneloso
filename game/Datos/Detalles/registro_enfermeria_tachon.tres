@@ -6,8 +6,8 @@
 script = ExtResource("1_detalle")
 Id = "tachon"
 Titulo = "Lo que había bajo el tachón"
-Descripcion = "Con la luz rasante se leen los surcos de la pluma bajo el tachón: «23:20, ruido en el lago»."
-Pensamiento = "«Ruido en el lago» a las 23:20... y alguien lo tachó después. ¿Quién no quería que se supiera?"
+Descripcion = "Con la luz rasante se leen los surcos de la pluma bajo el tachón: «23:20, se escuchó algo en el lago»."
+Pensamiento = "«Se escuchó algo en el lago» a las 23:20... y alguien lo tachó después. ¿Quién no quería que se supiera?"
 Normal = Vector3(0, 1, 0)
 Tolerancia = 40.0
 ZoomMinimo = 1.4

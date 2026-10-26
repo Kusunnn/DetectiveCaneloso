@@ -85,12 +85,14 @@ public partial class Caso1 : IEstadoPartida
 	{
 		{ "caso", "01" },
 		{ "capitulo", IdCapitulo },
-		{ "fase", Capitulos.Fase(_pistas.Count == 0 ? "introduccion" : "investigacion")?.Nombre ?? "" },
+		{ "fase", Capitulos.Fase(FaseActual())?.Nombre ?? "" },
 		{ "zona", ZonaActual() },
 		{ "pistas", PartidaEscenas.PistasEnDiario(Hud) },
 		{ "total_pistas", PartidaEscenas.TotalPistas },
 		{ "tiempo", _tiempoCaso },
 	};
+
+	private string FaseActual() => _guion.FaseActual();
 
 	public Diccionario CapturarEstado()
 	{
@@ -127,6 +129,7 @@ public partial class Caso1 : IEstadoPartida
 			{ "pistas", pistas },
 			{ "notas", Hud.Get("notas").AsGodotArray().Duplicate() },
 			{ "tablero", Hud.Call("capturar_tablero").AsGodotDictionary() },
+			{ "dialogos", _guion.Capturar() },
 			{ "tiempo", _tiempoCaso },
 			{ "escenas", escenas },
 		};
@@ -184,6 +187,7 @@ public partial class Caso1 : IEstadoPartida
 
 		if (propio.TryGetValue("zonas_vistas", out Variant zs))
 			foreach (Variant zona in zs.AsGodotArray()) _zonasVistas.Add(zona.AsString());
+		_guion.Restaurar(estado);
 		_tiempoCaso = estado["tiempo"].AsDouble();
 		ActualizarObjetivo();
 

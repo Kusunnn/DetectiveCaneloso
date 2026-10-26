@@ -26,6 +26,8 @@ public class OpcionVista
 	public string Texto;
 	public string Etiqueta;   // PREGUNTAR, PRESIONAR, EVIDENCIA...
 	public bool Leida;
+	// HU-27: falta una pista o conclusión; se ve apagada como «???» (sin decir qué falta) y no se puede elegir
+	public bool Bloqueada;
 
 	public OpcionVista(string texto, string etiqueta = "", bool leida = false)
 	{
@@ -213,11 +215,13 @@ public partial class VentanaDialogo : CanvasLayer
 			int indice = i;
 			var o = opciones[i];
 			string etiqueta = string.IsNullOrEmpty(o.Etiqueta) ? "" : "[" + o.Etiqueta + "] ";
-			var boton = CrearBoton((i + 1) + ". " + etiqueta + o.Texto + (o.Leida ? "  ✓" : ""), o.Leida);
+			string texto = o.Bloqueada ? "???" : etiqueta + o.Texto + (o.Leida ? "  ✓" : "");
+			var boton = CrearBoton((i + 1) + ". " + texto, o.Leida);
+			if (o.Bloqueada) Bloquear(boton);
 			boton.Pressed += () => _espera?.TrySetResult(indice);
 			_opciones.AddChild(boton);
 		}
-		if (!AplicarSugerencia(_opciones)) ((Button)_opciones.GetChild(0)).GrabFocus();
+		if (!AplicarSugerencia(_opciones)) PrimeraDisponible()?.GrabFocus();
 
 		int elegida = await _espera.Task;
 		_indiceSalir = -1;
@@ -338,6 +342,23 @@ public partial class VentanaDialogo : CanvasLayer
 		boton.FocusEntered += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Hover);
 		boton.Pressed += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Clic);
 		return boton;
+	}
+
+	// Opción que todavía no se puede elegir: apagada, sin pistas de qué le falta
+	private void Bloquear(Button boton)
+	{
+		boton.Disabled = true;
+		var vacio = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
+		vacio.SetContentMarginAll(4);
+		boton.AddThemeStyleboxOverride("disabled", vacio);
+		boton.AddThemeColorOverride("font_disabled_color", new Color(Tinta, 0.35f));
+	}
+
+	private Button PrimeraDisponible()
+	{
+		foreach (Node n in _opciones.GetChildren())
+			if (n is Button boton && !boton.Disabled) return boton;
+		return null;
 	}
 
 	private void MostrarHablante(Hablante h)
@@ -461,7 +482,7 @@ public partial class VentanaDialogo : CanvasLayer
 		if (_opciones.GetChildCount() > 0 && evento is InputEventKey numero && numero.Pressed && !numero.Echo)
 		{
 			int indice = (int)numero.Keycode - (int)Key.Key1;
-			if (indice >= 0 && indice < _opciones.GetChildCount())
+			if (indice >= 0 && indice < _opciones.GetChildCount() && !((Button)_opciones.GetChild(indice)).Disabled)
 			{
 				GetViewport().SetInputAsHandled();
 				_espera?.TrySetResult(indice);

@@ -1,0 +1,526 @@
+{
+	"id": "caso1_juan_carlos",
+	"personaje": "Juan Carlos",
+	"tono_voz": 0.95,
+	"inicio": "entrada",
+	"nodos": {
+		"entrada": {
+			"ir_a": [
+				{
+					"si": {
+						"conclusiones": [
+							"juan_carlos_3"
+						]
+					},
+					"destino": "confeso"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"juan_carlos_2"
+						]
+					},
+					"destino": "regreso_3"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"juan_carlos_1"
+						]
+					},
+					"destino": "regreso_2"
+				},
+				{
+					"si": {
+						"nodos_completados": [
+							"mentira"
+						]
+					},
+					"destino": "regreso_1"
+				},
+				{
+					"destino": "mentira"
+				}
+			]
+		},
+		"mentira": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Juan Carlos, platícame de anoche."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "nervioso",
+					"gesto": "Truena los dedos",
+					"texto": "Fíjate que fui por leña cuando se fue la luz, bro. Y sí, vi al ciervo, ¿eh? ¿Yo? Ahí estaba en la colina, bien brillante."
+				}
+			],
+			"siguiente": "prueba_1",
+			"al_completar": {
+				"notas": [
+					"Juan Carlos dice que fue por leña cuando se fue la luz y que vio al ciervo en la colina."
+				]
+			}
+		},
+		"regreso_1": {
+			"variantes": [
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "nervioso",
+						"texto": "¿Otra vez tú, Caneloso? Va, pues. Pregúntame lo que quieras, wey."
+					}
+				],
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "nervioso",
+						"gesto": "Juega con sus manos",
+						"texto": "Fíjate que yo no tengo nada que esconder, ¿eh? Nada de nada, bro."
+					}
+				],
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "cansado",
+						"texto": "Fíjate que ya me andaba yendo a dormir, bro... ¿Qué más quieres saber?"
+					}
+				]
+			],
+			"siguiente": "prueba_1"
+		},
+		"regreso_2": {
+			"variantes": [
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "nervioso",
+						"texto": "¿Otra vez tú, Caneloso? Va, pues. Pregúntame lo que quieras, wey."
+					}
+				],
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "nervioso",
+						"gesto": "Juega con sus manos",
+						"texto": "Fíjate que yo no tengo nada que esconder, ¿eh? Nada de nada, bro."
+					}
+				],
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "cansado",
+						"texto": "Fíjate que ya me andaba yendo a dormir, bro... ¿Qué más quieres saber?"
+					}
+				]
+			],
+			"siguiente": "prueba_2"
+		},
+		"regreso_3": {
+			"variantes": [
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "a la defensiva",
+						"texto": "Fíjate bien, Caneloso: yo estaba en la colina, no en el embarcadero."
+					}
+				],
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "nervioso",
+						"texto": "Ya te dije que el ciervo era yo, wey. Pero al lago no bajé, te lo juro."
+					}
+				]
+			],
+			"siguiente": "prueba_3"
+		},
+		"prueba_1": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "lena_intacta",
+					"tipo": "MOSTRAR",
+					"texto": "Montón de leña intacto",
+					"destino": "p1_lena",
+					"requiere": {
+						"pistas": [
+							"lena_intacta"
+						]
+					}
+				},
+				{
+					"id": "oferta_compra",
+					"tipo": "MOSTRAR",
+					"texto": "Oferta de compra rota",
+					"destino": "e_oferta",
+					"requiere": {
+						"pistas": [
+							"oferta_compra"
+						]
+					}
+				},
+				{
+					"id": "taza_delantal",
+					"tipo": "MOSTRAR",
+					"texto": "Taza y delantal",
+					"destino": "e_taza",
+					"requiere": {
+						"pistas": [
+							"taza_delantal"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p1_lena": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Dijiste que fuiste por leña. El montón de la fogata está intacto: anoche nadie trajo nada."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "nervioso",
+					"gesto": "Se mueve de lado a lado",
+					"texto": "No, pues... me entretuve, wey. ¡Está bien culero! El bosque de noche está bien grande, uno sí se pierde."
+				}
+			],
+			"siguiente": "prueba_2",
+			"al_completar": {
+				"conclusiones": [
+					"juan_carlos_1"
+				],
+				"notas": [
+					"Juan Carlos no fue por leña: la leña de la fogata está intacta."
+				]
+			}
+		},
+		"e_oferta": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Esta oferta de compra estaba rota en el bote de basura de Porky."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_taza": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Porky dejó la taza de chocolate a medias. ¿La viste salir?"
+				}
+			],
+			"siguiente": "error"
+		},
+		"prueba_2": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "disfraz_ciervo",
+					"tipo": "MOSTRAR",
+					"texto": "Cornamenta y zancos",
+					"destino": "p2_disfraz",
+					"requiere": {
+						"pistas": [
+							"disfraz_ciervo"
+						]
+					}
+				},
+				{
+					"id": "linterna_porky",
+					"tipo": "MOSTRAR",
+					"texto": "Linterna de Porky",
+					"destino": "e_linterna",
+					"requiere": {
+						"pistas": [
+							"linterna_porky"
+						]
+					}
+				},
+				{
+					"id": "recorte_periodico",
+					"tipo": "MOSTRAR",
+					"texto": "Recorte de periódico",
+					"destino": "e_recorte",
+					"requiere": {
+						"pistas": [
+							"recorte_periodico"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p2_disfraz": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "En un tronco hueco del bosque: una cornamenta pintada de plateado, unos zancos... y pelo café enredado en las correas. Como el tuyo."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "nervioso",
+					"texto": "¡Ya, ya, wey! El ciervo era yo, pues sí. Pero eso no quiere decir que bajé al lago. ¡Yo ni toqué a Porky, te lo juro!"
+				}
+			],
+			"siguiente": "prueba_3",
+			"al_completar": {
+				"conclusiones": [
+					"juan_carlos_2"
+				],
+				"notas": [
+					"Juan Carlos admite que el ciervo era él, pero jura que no bajó al lago."
+				]
+			}
+		},
+		"e_linterna": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "La linterna de Porky estaba en el fondo del lago, prendida."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_recorte": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Este recorte habla de la muerte de Paco."
+				}
+			],
+			"siguiente": "error"
+		},
+		"prueba_3": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "huellas_detenidas",
+					"tipo": "MOSTRAR",
+					"texto": "Huellas que se detienen",
+					"destino": "p3_huellas",
+					"requiere": {
+						"pistas": [
+							"huellas_detenidas"
+						]
+					}
+				},
+				{
+					"id": "remo_sangre",
+					"tipo": "MOSTRAR",
+					"texto": "Remo con sangre",
+					"destino": "e_remo",
+					"requiere": {
+						"pistas": [
+							"remo_sangre"
+						]
+					}
+				},
+				{
+					"id": "silbato_gs",
+					"tipo": "MOSTRAR",
+					"texto": "Silbato «G. S.»",
+					"destino": "e_silbato",
+					"requiere": {
+						"pistas": [
+							"silbato_gs"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p3_huellas": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Te creo. Las huellas de tus zancos se quedan a treinta metros del embarcadero. El ciervo nunca llegó a donde fue el crimen."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "apenado",
+					"gesto": "Suspira",
+					"texto": "Mira, Caneloso, lo armé yo. La bocina, el disfraz, bajarle al generador... Quería un video viral pa' salvar el campamento... Y por mi buen amigo Paco: a él le encantaba esa leyenda."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "sincero",
+					"texto": "Y fíjate: desde la colina vi una linterna en el embarcadero, como a las 23:15. Y antes vi a Tony agarrar el sendero del lago, no el camino de la caseta del generador. Aya andaba tomando fotos; ella te lo puede confirmar, wey."
+				},
+				{
+					"habla": "Hecdog",
+					"animo": "satisfecho",
+					"texto": "Un ciervo de mentiritas y un apagón de a de veras, Nya. Ya lo anoté todo."
+				}
+			],
+			"fin": true,
+			"al_completar": {
+				"conclusiones": [
+					"juan_carlos_3",
+					"jc_vio_tony_sendero",
+					"jc_vio_linterna"
+				],
+				"notas": [
+					"Juan Carlos confiesa el montaje del Ciervo de Luz: la bocina, el disfraz y el apagón. Quería un video viral para salvar el campamento.",
+					"Juan Carlos vio desde la colina una linterna en el embarcadero a las 23:15, y antes vio a Tony tomar el sendero del lago, no el camino al generador."
+				]
+			}
+		},
+		"e_remo": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "El remo con sangre estaba entre los juncos, abajo del embarcadero."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_silbato": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Este silbato estaba atorado en un clavo del embarcadero."
+				}
+			],
+			"siguiente": "error"
+		},
+		"confeso": {
+			"variantes": [
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "cansado",
+						"texto": "Ya te conté todo, wey. Yo era el ciervo, pero a Porky ni la toqué."
+					}
+				],
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "serio",
+						"texto": "Pues sí, wey, ya lo solté todo. Ahora agarra al que fue, ¿va?"
+					}
+				]
+			],
+			"fin": true
+		},
+		"error": {
+			"ir_a": [
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 0
+						}
+					},
+					"destino": "paciencia"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 1
+						}
+					},
+					"destino": "error_1"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 2
+						}
+					},
+					"destino": "error_2"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 3
+						}
+					},
+					"destino": "error_3"
+				},
+				{
+					"destino": "error_4"
+				}
+			],
+			"al_completar": {
+				"sumar": {
+					"credibilidad": -1
+				}
+			}
+		},
+		"error_4": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Caneloso, eso no tiene nada que ver con lo que dice Juan Carlos, Nya. Así no vamos a ningún lado."
+				}
+			]
+		},
+		"error_3": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Otra vez, Caneloso. Eso no tiene nada que ver con lo que dice Juan Carlos, Nya. Piénsale tantito."
+				}
+			]
+		},
+		"error_2": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "impaciente",
+					"texto": "Caneloso, se me está acabando la paciencia, Nya. Eso no tiene nada que ver con lo que dice Juan Carlos."
+				}
+			]
+		},
+		"error_1": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "harto",
+					"texto": "Última advertencia, Caneloso. Una prueba más así y te mando a acusar a quien sea, Nya."
+				}
+			]
+		},
+		"paciencia": {
+			"fin": true,
+			"salida": "paciencia"
+		},
+		"despedida": {
+			"variantes": [
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Volveré cuando tenga algo mejor que enseñarte, Juan Carlos."
+					}
+				],
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Ahorita regreso, Juan Carlos. No te vayas lejos."
+					}
+				]
+			]
+		}
+	}
+}
