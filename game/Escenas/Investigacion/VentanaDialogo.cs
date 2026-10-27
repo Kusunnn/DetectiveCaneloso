@@ -13,6 +13,7 @@ public class Hablante
 	public bool Tiembla = false; // Nervioso: el retrato tiembla un poco
 	public float TonoVoz = 1f;   // Tono de los "blips" de máquina de escribir (personalidad de quien habla)
 	public AudioStream Voz;      // Clip de su voz (Assets/Audio/Voces); si no tiene, suenan los blips genéricos
+	public float TonoBaseVoz = 1f; // Sube o baja el tono de su voz sin cambiar la velocidad
 
 	public Hablante(string nombre, Texture2D retrato = null)
 	{
@@ -72,6 +73,7 @@ public partial class VentanaDialogo : CanvasLayer
 	private float _tonoVoz = 1f;
 	private AudioStream _voz;
 	private bool _vozNerviosa;
+	private float _tonoBaseVoz = 1f;
 	private AudioStreamPlayer _reproductorVoz;
 	private AudioEffectPitchShift _tonoBusVoces;
 	private Tween _apagarVoz;
@@ -79,6 +81,8 @@ public partial class VentanaDialogo : CanvasLayer
 	private Input.MouseModeEnum _ratonAnterior;
 	private readonly Dictionary<string, Texture2D> _retratos = new Dictionary<string, Texture2D>();
 	private readonly Dictionary<string, AudioStream> _voces = new Dictionary<string, AudioStream>();
+	// Voces que se grabaron muy graves: se suben a un tono más neutral
+	private static readonly Dictionary<string, float> TonosBase = new() { ["miawrio"] = 1.6f, ["eriz"] = 1.3f };
 
 	public bool Abierto => _caja.Visible;
 
@@ -315,7 +319,11 @@ public partial class VentanaDialogo : CanvasLayer
 	// Retratos en Assets/Retratos/<nombre>.png (Caneloso, Eriz, Porky, Comisario...)
 	public Hablante HablantePorNombre(string nombre)
 	{
-		return new Hablante(nombre, Retrato(nombre)) { Voz = Voz(nombre) };
+		return new Hablante(nombre, Retrato(nombre))
+		{
+			Voz = Voz(nombre),
+			TonoBaseVoz = TonosBase.TryGetValue(Clave(nombre).Replace(" ", "_"), out float tono) ? tono : 1f,
+		};
 	}
 
 	private static string Clave(string nombre) =>
@@ -397,6 +405,7 @@ public partial class VentanaDialogo : CanvasLayer
 		_tonoVoz = h.TonoVoz;
 		_voz = h.Voz;
 		_vozNerviosa = h.Tiembla;
+		_tonoBaseVoz = h.TonoBaseVoz;
 		_temblor?.Kill();
 		_marcoRetrato.Rotation = 0;
 		if (h.Tiembla)
@@ -454,7 +463,7 @@ public partial class VentanaDialogo : CanvasLayer
 		_apagarVoz?.Kill();
 		_reproductorVoz.VolumeDb = VolumenVozDb + (float)GD.RandRange(-0.6, 0.6);
 		_reproductorVoz.PitchScale = (float)GD.RandRange(0.92, 1.12) * (_vozNerviosa ? 1.15f : 1f);
-		if (_tonoBusVoces != null) _tonoBusVoces.PitchScale = (float)GD.RandRange(0.9, 1.1);
+		if (_tonoBusVoces != null) _tonoBusVoces.PitchScale = _tonoBaseVoz * (float)GD.RandRange(0.9, 1.1);
 		_reproductorVoz.Stream = _voz;
 		_reproductorVoz.Play();
 	}
