@@ -46,7 +46,8 @@ public partial class Caso1Lago : EscenarioCaso1
 	{
 		AbrirSiTieneLlavero(false);
 		ActualizarObjetivo();
-		if (Pistas.Count > 0 || !IsInsideTree()) return;
+		// Lo que piensa al llegar sale una sola vez (antes se repetía cada vez que volvía sin pistas del lago)
+		if (Pistas.Count > 0 || !IsInsideTree() || !PrimeraVez("_llegada")) return;
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
 		if (!IsInsideTree() || EnDialogo) return;
 		EnDialogo = true;

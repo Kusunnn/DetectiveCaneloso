@@ -127,6 +127,15 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 		return cartas;
 	}
 
+	// true solo la primera vez en la partida (se guarda con las zonas vistas de este escenario): para lo que se
+	// dice al llegar, que no debe repetirse al volver (HU-9.5 CA-03)
+	protected bool PrimeraVez(string clave)
+	{
+		if (!_zonasVistas.Add(clave)) return false;
+		Cambio();
+		return true;
+	}
+
 	private void AlEntrarZona(string zona)
 	{
 		if (!_zonasVistas.Add(zona)) return;
