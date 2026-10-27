@@ -321,7 +321,7 @@ public partial class VentanaDialogo : CanvasLayer
 	private static string Clave(string nombre) =>
 		nombre.ToLower().Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u");
 
-	// Voces en Assets/Audio/Voces/<nombre>.wav: el clip completo de ~1 s que grabó cada quien
+	// Voces en Assets/Audio/Voces/<nombre>.wav: el "bop" de cada quien, recortado del clip que grabó
 	public AudioStream Voz(string nombre)
 	{
 		string clave = Clave(nombre).Replace(" ", "_");
@@ -447,8 +447,8 @@ public partial class VentanaDialogo : CanvasLayer
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Texto, 0f, _tonoVoz);
 	}
 
-	// El clip completo, cada vez con otra velocidad y otro tono (por separado), para que no suene a bucle.
-	// Nervioso habla más rápido. Al terminar el clip, si el texto sigue saliendo, vuelve a sonar distinto.
+	// Un bop tras otro mientras sale el texto (bop, bop, bop...), cada uno con otra velocidad y otro tono
+	// (por separado) para que no suene a bucle. Nervioso habla más rápido.
 	private void TocarVoz()
 	{
 		_apagarVoz?.Kill();
