@@ -75,6 +75,6 @@ Están en `Assets/Audio/Cinematica/`, copiados tal cual. La cinemática también
 
 ## Voces de los personajes
 
-Grabadas por el equipo (un clip corto por personaje). Están en `Assets/Audio/Voces/`: `<nombre>.wav` es el clip completo, convertido a mono 44.1 kHz y normalizado a −1 dBFS de pico, y `<nombre>/silaba_1..6.wav` son trozos de 110 ms de las partes con más voz, con fades de 12 ms. `VentanaDialogo.cs` toca una sílaba al azar (±6 % de tono) cada 5 letras mientras se escribe el texto. El comisario del tutorial usa la voz de Hecdog. Los personajes sin carpeta (Caneloso, Cinta, la narración) siguen con los blips de máquina de escribir.
+Grabadas por el equipo con conocidos (un clip de ~1 s por personaje). Están en `Assets/Audio/Voces/<nombre>.wav`, convertidas a mono 44.1 kHz y normalizadas a −1 dBFS de pico. Mientras se escribe el texto, `VentanaDialogo.cs` toca el clip completo y, si el texto sigue, lo repite; cada vez cambia al azar la velocidad (0.92–1.12, más rápido si está nervioso) y, por separado, el tono (0.9–1.1, con un PitchShift en el bus Voces). Al terminar el texto la voz se desvanece. El comisario del tutorial usa la voz de Hecdog. Los personajes sin clip (Caneloso, Cinta, la narración) siguen con los blips de máquina de escribir.
 
 Personajes con voz: Aya, Eriz, Hecdog, Juan Carlos, Miawrio, Mimita, Porky y Tony.
