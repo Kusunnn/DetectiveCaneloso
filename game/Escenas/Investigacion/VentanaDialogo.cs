@@ -12,6 +12,7 @@ public class Hablante
 	public Color ColorAnimo = new Color(0.4f, 0.4f, 0.4f);
 	public bool Tiembla = false; // Nervioso: el retrato tiembla un poco
 	public float TonoVoz = 1f;   // Tono de los "blips" de máquina de escribir (personalidad de quien habla)
+	public AudioStream Voz;      // Sílabas de su voz (Assets/Audio/Voces); si no tiene, suenan los blips genéricos
 
 	public Hablante(string nombre, Texture2D retrato = null)
 	{
@@ -48,6 +49,8 @@ public partial class VentanaDialogo : CanvasLayer
 	private static readonly Color Tinta = new Color("20272b");
 	private static readonly Color Papel = new Color(0.84f, 0.81f, 0.72f);
 	private const float LetrasPorSegundo = 55f;
+	private const int LetrasPorSilaba = 5;     // Con voz propia: una sílaba (~0.11 s) cada 5 letras, como en Undertale
+	private const float VolumenVozDb = -13f;
 
 	private Font _mono;
 	private Font _titulos;
@@ -67,9 +70,12 @@ public partial class VentanaDialogo : CanvasLayer
 	private Tween _escritura;
 	private Tween _temblor;
 	private float _tonoVoz = 1f;
+	private AudioStream _voz;
+	private AudioStreamPlayer _reproductorVoz;
 	private int _letrasSonadas;
 	private Input.MouseModeEnum _ratonAnterior;
 	private readonly Dictionary<string, Texture2D> _retratos = new Dictionary<string, Texture2D>();
+	private readonly Dictionary<string, AudioStream> _voces = new Dictionary<string, AudioStream>();
 
 	public bool Abierto => _caja.Visible;
 
@@ -83,6 +89,9 @@ public partial class VentanaDialogo : CanvasLayer
 		_titulos = display;
 		ConstruirInterfaz();
 		_caja.Hide();
+		// Dos voces a la vez: cada sílaba se funde con la anterior en lugar de cortarla
+		_reproductorVoz = new AudioStreamPlayer { VolumeDb = VolumenVozDb, Bus = Sonidos.BusInterfaz, MaxPolyphony = 2 };
+		AddChild(_reproductorVoz);
 	}
 
 	private void ConstruirInterfaz()
@@ -302,12 +311,35 @@ public partial class VentanaDialogo : CanvasLayer
 	// Retratos en Assets/Retratos/<nombre>.png (Caneloso, Eriz, Porky, Comisario...)
 	public Hablante HablantePorNombre(string nombre)
 	{
-		return new Hablante(nombre, Retrato(nombre));
+		return new Hablante(nombre, Retrato(nombre)) { Voz = Voz(nombre) };
+	}
+
+	private static string Clave(string nombre) =>
+		nombre.ToLower().Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u");
+
+	// Voces en Assets/Audio/Voces/<nombre>/silaba_N.wav (cortadas del clip <nombre>.wav de la misma carpeta).
+	// Cada letra que suena toma una sílaba al azar con ±6 % de tono, para que no se oiga repetida.
+	public AudioStream Voz(string nombre)
+	{
+		string clave = Clave(nombre).Replace(" ", "_");
+		if (_voces.TryGetValue(clave, out var voz)) return voz;
+		AudioStreamRandomizer silabas = null;
+		for (int i = 1; ResourceLoader.Exists($"res://Assets/Audio/Voces/{clave}/silaba_{i}.wav"); i++)
+		{
+			silabas ??= new AudioStreamRandomizer
+			{
+				RandomPitch = 1.06f,
+				RandomVolumeOffsetDb = 0.5f,
+				PlaybackMode = AudioStreamRandomizer.PlaybackModeEnum.RandomNoRepeats,
+			};
+			silabas.AddStream(i - 1, GD.Load<AudioStream>($"res://Assets/Audio/Voces/{clave}/silaba_{i}.wav"));
+		}
+		return _voces[clave] = silabas;
 	}
 
 	public Texture2D Retrato(string nombre)
 	{
-		string clave = nombre.ToLower().Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u");
+		string clave = Clave(nombre);
 		if (!_retratos.TryGetValue(clave, out var textura))
 		{
 			string ruta = "res://Assets/Retratos/" + clave + ".png";
@@ -369,6 +401,7 @@ public partial class VentanaDialogo : CanvasLayer
 		_retrato.Texture = h.Retrato;
 		_marcoRetrato.Visible = h.Retrato != null;
 		_tonoVoz = h.TonoVoz;
+		_voz = h.Voz;
 		_temblor?.Kill();
 		_marcoRetrato.Rotation = 0;
 		if (h.Tiembla)
@@ -398,16 +431,24 @@ public partial class VentanaDialogo : CanvasLayer
 
 	private bool Escribiendo => _escritura != null && _escritura.IsRunning();
 
-	// Blips suaves de máquina de escribir: uno cada 3 letras, con el tono de quien habla
+	// Mientras se escribe el texto: sílabas de la voz de quien habla (estilo Undertale) o, si no tiene voz,
+	// blips suaves de máquina de escribir cada 3 letras con su tono. La voz propia ya marca la personalidad,
+	// así que no se le aplica TonoVoz.
 	public override void _Process(double delta)
 	{
 		if (!Escribiendo) return;
 		int visibles = (int)(_texto.VisibleRatio * _texto.Text.Length);
-		if (visibles - _letrasSonadas < 3) return;
+		if (visibles - _letrasSonadas < (_voz != null ? LetrasPorSilaba : 3)) return;
 		_letrasSonadas = visibles;
 		char letra = _texto.Text[Math.Clamp(visibles - 1, 0, _texto.Text.Length - 1)];
 		if (char.IsWhiteSpace(letra)) return;
-		Sonidos.ReproducirUI(this, Sonidos.Tipo.Texto, 0f, _tonoVoz);
+		if (_voz == null)
+		{
+			Sonidos.ReproducirUI(this, Sonidos.Tipo.Texto, 0f, _tonoVoz);
+			return;
+		}
+		_reproductorVoz.Stream = _voz;
+		_reproductorVoz.Play();
 	}
 
 	// Una conversación completa (varias preguntas seguidas) mantiene la caja abierta sin parpadeos:

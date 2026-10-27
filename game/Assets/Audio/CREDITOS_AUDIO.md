@@ -72,3 +72,9 @@ Están en `Assets/Audio/Cinematica/`, copiados tal cual. La cinemática también
 | Cinematica/musica_moil.mp3 (`ruskerdax_-_moil.mp3`) | OpenGameArt · Moil | Ruskerdax | CC0 1.0 | https://opengameart.org/content/moil |
 | Cinematica/golpe_titulo.ogg (`bad_thing_0.ogg`) | OpenGameArt · Bad thing happen | gonzalfj | CC0 1.0 | https://opengameart.org/content/bad-thing-happen |
 | Cinematica/maquina_1..5.wav (`typewriter1..5.wav`) | OpenGameArt · Typewriter Sounds | Cassie-OrbitGames | CC0 1.0 | https://opengameart.org/content/typewriter-sounds |
+
+## Voces de los personajes
+
+Grabadas por el equipo (un clip corto por personaje). Están en `Assets/Audio/Voces/`: `<nombre>.wav` es el clip completo, convertido a mono 44.1 kHz y normalizado a −1 dBFS de pico, y `<nombre>/silaba_1..6.wav` son trozos de 110 ms de las partes con más voz, con fades de 12 ms. `VentanaDialogo.cs` toca una sílaba al azar (±6 % de tono) cada 5 letras mientras se escribe el texto. Los personajes sin carpeta (Caneloso, el comisario, la narración) siguen con los blips de máquina de escribir.
+
+Personajes con voz: Aya, Eriz, Hecdog, Juan Carlos, Miawrio, Mimita, Porky y Tony.
