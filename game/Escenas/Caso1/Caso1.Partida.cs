@@ -181,6 +181,7 @@ public partial class Caso1 : IEstadoPartida
 		if (propio.TryGetValue("zonas_vistas", out Variant zs))
 			foreach (Variant zona in zs.AsGodotArray()) _zonasVistas.Add(zona.AsString());
 		_tiempoCaso = estado["tiempo"].AsDouble();
+		_avisoSendero = PuedeSalir; // El aviso del sendero ya salió en la partida guardada
 		ActualizarObjetivo();
 
 		_restaurando = false;

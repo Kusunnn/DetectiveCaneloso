@@ -1,4 +1,4 @@
-[gd_scene load_steps=157 format=3]
+[gd_scene load_steps=158 format=3]
 
 [ext_resource type="Shader" path="res://Escenas/Caso1/cielo_noche.gdshader" id="e1"]
 [ext_resource type="Shader" path="res://Escenas/Caso1/suelo_campamento.gdshader" id="e2"]
@@ -63,6 +63,7 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="e61"]
 [ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="e62"]
 [ext_resource type="Script" path="res://Escenas/Caso1/Caso1.cs" id="e63"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/ContornoPistas.cs" id="contorno_pistas"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso1/embarcadero.tscn" id="e64"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
@@ -1574,6 +1575,10 @@ Salida = NodePath("../SalidaSendero/Arco/Salida")
 PistaLlamadas = NodePath("../Estacionamiento/Coche/RegistroLlamadas")
 Musica = NodePath("../MusicaFondo")
 Entorno = NodePath("../Entorno")
-ContenedoresConPista = [NodePath("../Almacen/Baul"), NodePath("../CabanaPorky/Almohada"), NodePath("../CabanaPorky/Papelera"), NodePath("../Enfermeria/Escritorio")]
-PistasDentro = [NodePath("../Almacen/PistaBaul"), NodePath("../CabanaPorky/NotaPorky"), NodePath("../CabanaPorky/Oferta"), NodePath("../Enfermeria/Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro")]
+ContenedoresConPista = [NodePath("../Almacen/Baul"), NodePath("../CabanaPorky/Almohada"), NodePath("../CabanaPorky/Papelera"), NodePath("../Enfermeria/Escritorio"), NodePath("../Estacionamiento/Coche/Guantera")]
+PistasDentro = [NodePath("../Almacen/PistaBaul"), NodePath("../CabanaPorky/NotaPorky"), NodePath("../CabanaPorky/Oferta"), NodePath("../Enfermeria/Escritorio/Modelo/Modelo/desk(Clone)/drawer/Registro"), NodePath("../Estacionamiento/Coche/RegistroLlamadas")]
 Zonas = [NodePath("../ZonaFogata/Fogata"), NodePath("../Almacen/Almacen"), NodePath("../Cocina/Cocina"), NodePath("../CabanaPorky/CabanaPorky"), NodePath("../CabanaDirector/Director"), NodePath("../Enfermeria/Enfermeria"), NodePath("../Caseta/Caseta"), NodePath("../Estacionamiento/Estacionamiento"), NodePath("../SalidaSendero/Sendero")]
+
+[node name="ContornoPistas" type="Node" parent="."]
+script = ExtResource("contorno_pistas")
+DistanciaMaxima = 5.5

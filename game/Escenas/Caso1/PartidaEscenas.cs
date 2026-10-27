@@ -12,8 +12,8 @@ public static class PartidaEscenas
 	public const string Lago = "res://Escenas/Caso1/Lago/escenario_lago.tscn";
 	public const string Sala = "res://Escenas/Caso1/Interrogatorio/sala_interrogatorio_caso1.tscn";
 
-	// Pistas del capítulo: 12 del Campamento (sin el registro de llamadas, pendiente) y 9 del Lago y el Bosque
-	public const int TotalPistas = 21;
+	// Pistas del capítulo: 13 del Campamento (con el registro de llamadas de Miawrio) y 9 del Lago y el Bosque
+	public const int TotalPistas = 22;
 
 	// Pistas del diario sin contar los detalles descubiertos en la vista de examen
 	public static int PistasEnDiario(CanvasLayer hud)

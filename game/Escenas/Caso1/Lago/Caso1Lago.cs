@@ -20,6 +20,19 @@ public partial class Caso1Lago : EscenarioCaso1
 
 	private const string Llavero = "llavero_porky";
 
+	// Pasos en el orden de la historia: el «ciervo» que no era un ciervo, quién estaba en la orilla, el crimen en el
+	// embarcadero y de dónde salió el remo. Se puede recoger todo en cualquier orden; el objetivo propone el primero que falte.
+	private static readonly (string Texto, string[] Pistas)[] Pasos =
+	{
+		("El sendero baja al lago: ¿por dónde caminó el «ciervo»?", new[] { HuellasPezuna, HuellasDetenidas }),
+		("Los bramidos salían del bosque, al oeste del sendero.", new[] { Altavoz, Cornamenta }),
+		("En la orilla oeste alguien pasó un buen rato sentado.", new[] { Cuaderno }),
+		("El embarcadero: ahí terminó todo. El agua aún brilla.", new[] { Silbato, Linterna, RemoSangre }),
+		("¿De dónde salió el remo? El cobertizo de botes, al este del muelle.", new[] { HuecoRemo }),
+	};
+	// Sin estas, el embarcadero queda sin revisar: Hecdog lo recuerda antes de irse a la estación
+	private static readonly string[] PruebasEmbarcadero = { RemoSangre, Silbato, Cuaderno };
+
 	[Export] public Puerta PuertaCobertizo;
 	[Export] public PuntoInteraccion VolverCampamento;
 	[Export] public PuntoInteraccion IrEstacion;
@@ -122,7 +135,14 @@ public partial class Caso1Lago : EscenarioCaso1
 		if (Pistas.Count >= PistasTotales) { Objetivo("Ya revisé el lago. Hecdog espera en la patrulla para ir a la estación."); return; }
 		if (!Jugador.TieneObjeto(Llavero) && !Pistas.Contains(HuecoRemo) && Pistas.Count >= 5)
 		{ Objetivo("El cobertizo está cerrado. Porky tenía las llaves: búscalas en el Campamento." + cuenta); return; }
-		if (Jugador.TieneObjeto(Llavero) && !Pistas.Contains(HuecoRemo)) { Objetivo("Abre el cobertizo de botes con el llavero de Porky." + cuenta); return; }
+		foreach (var (texto, ids) in Pasos)
+		{
+			if (Array.TrueForAll(ids, Pistas.Contains)) continue;
+			// El cobertizo está cerrado: con el llavero se abre; sin él, hay que volver por él
+			if (ids[0] == HuecoRemo && Jugador.TieneObjeto(Llavero)) { Objetivo("Abre el cobertizo de botes con el llavero de Porky." + cuenta); return; }
+			Objetivo(texto + cuenta);
+			return;
+		}
 		Objetivo("Revisa el sendero, el bosque, la colina, la orilla y el embarcadero." + cuenta);
 	}
 
@@ -189,6 +209,8 @@ public partial class Caso1Lago : EscenarioCaso1
 	private async System.Threading.Tasks.Task AlIrEstacion()
 	{
 		var hecdog = Dialogo.HablantePorNombre("Hecdog");
+		if (!Array.TrueForAll(PruebasEmbarcadero, Pistas.Contains))
+			await Dialogo.Decir(hecdog, "Todavía no revisa bien la orilla y el embarcadero, detective. Ahí la encontraron. Nya.");
 		int opcion = await Dialogo.Elegir(hecdog, "¿Nos vamos a la estación, detective? Nya.",
 			new[] { new OpcionVista("Sí, vámonos"), new OpcionVista("Todavía no") }, 1);
 		if (opcion != 0) return;
