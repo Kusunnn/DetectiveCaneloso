@@ -149,12 +149,13 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		// El frente de los modelos es +Z
 		implicado.GlobalRotation = new Vector3(0, Mathf.Atan2(dir.X, dir.Z), 0);
 		var anim = implicado.GetNodeOrNull<AnimacionPersonaje>("Animacion");
+		// Con su animación de caminar si la tiene; si no, el paso por código (así no se desliza con los pies quietos)
 		string caminar = Datos.TryGetValue(clave, out var d) ? d.Caminar : "";
-		if (caminar != "") anim?.Reproducir(caminar);
+		anim?.Caminar(true, caminar);
 		var tween = CreateTween();
 		tween.TweenProperty(implicado, "global_position", destino, dir.Length() / VelocidadCaminar);
 		await ToSignal(tween, Tween.SignalName.Finished);
-		if (caminar != "" && anim != null && anim.Animacion != "") anim.Reproducir(anim.Animacion);
+		anim?.Caminar(false);
 	}
 
 	public string NombreDe(string clave) => Datos.TryGetValue(clave, out var d) ? d.Nombre : clave;

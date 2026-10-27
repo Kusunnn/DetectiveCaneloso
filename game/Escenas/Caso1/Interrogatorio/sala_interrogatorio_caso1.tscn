@@ -880,6 +880,7 @@ script = ExtResource("20_unede")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.28
 Animacion = "Inaya"
+Variantes = PackedStringArray("Tensaya")
 
 [node name="Colision" type="StaticBody3D" parent="Implicados/Aya" unique_id=1144931382 groups=["auditoria_invisible_ok"]]
 collision_layer = 0
@@ -913,6 +914,7 @@ script = ExtResource("20_unede")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.36
 Animacion = "global/Inactivo"
+Variantes = PackedStringArray("global/Tenso")
 
 [node name="Colision" type="StaticBody3D" parent="Implicados/Miawrio" unique_id=2029531322 groups=["auditoria_invisible_ok"]]
 collision_layer = 0
@@ -1010,6 +1012,7 @@ script = ExtResource("20_unede")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.44
 Animacion = "global/InacTony"
+Variantes = PackedStringArray("global/TensoTony")
 
 [node name="Colision" type="StaticBody3D" parent="Implicados/Tony" unique_id=1550547015 groups=["auditoria_invisible_ok"]]
 collision_layer = 0

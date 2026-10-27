@@ -57,12 +57,17 @@ public partial class Npc : PuntoInteraccion
 
 	public void MirarA(Vector3 punto)
 	{
-		Vector3 direccion = punto - GlobalPosition;
+		// Gira el personaje entero: si el Npc es solo su colisión (hermano del modelo, como en el Caso 1),
+		// el que se voltea es el padre de los dos; si no, el propio Npc (HU-9.5 CA-03)
+		Node3D quien = this;
+		if (Cuerpo != null && !IsAncestorOf(Cuerpo) && Cuerpo.GetParent() is Node3D padre) quien = padre;
+		else if (Cuerpo == null && GetParent() is Node3D personaje && personaje.HasNode("Modelo")) quien = personaje;
+		Vector3 direccion = punto - quien.GlobalPosition;
 		direccion.Y = 0;
 		if (direccion.LengthSquared() < 0.01f) return;
 		// El modelo mira hacia su +Z local
 		float destino = Mathf.Atan2(direccion.X, direccion.Z);
-		CreateTween().TweenProperty(this, "global_rotation:y", destino, 0.35)
+		quien.CreateTween().TweenProperty(quien, "global_rotation:y", destino, 0.35)
 			.SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.Out);
 	}
 }
