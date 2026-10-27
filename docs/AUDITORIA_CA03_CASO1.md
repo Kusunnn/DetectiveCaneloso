@@ -44,6 +44,31 @@ Gravedad: **Crítica** (contradice la historia), **Alta** (se nota en una partid
 | N-09 | NPC | Campamento | Nadie tiene actividad ni objeto en la mano, así que no hay actividades sin sentido. Tampoco hay rutas, así que no hay bucles visibles. | — | Cuando se hagan las rutinas de CA-02, cada actividad lleva su objeto (BoneAttachment3D) y las rutas tienen pausas. | OK |
 | N-10 | NPC | Eriz, Juan Carlos, Mimita (bajan los brazos por código) | Si `AnimacionPersonaje` no encuentra los huesos `Arm_1_L/R`, el personaje se queda en pose T. **Por verificar con captura** de los tres en el Campamento y en la sala. | Captura con `capturas_escenario.gd`. | Si alguno sale en pose T, corregir los nombres de los huesos o su `AnguloBrazos`. | Por verificar |
 
+## Resultado de las correcciones (2026-10-27, aprobadas por Takeshi)
+
+| ID | Estado | Commit | Qué se hizo / por qué no |
+|---|---|---|---|
+| C-01 | Corregido | 608c6d4 | `GestorPartida` guarda las cinemáticas vistas (`cinematicas`) en cada ranura. IntroCaso (`intro_casoXX`) y la cinta (`caso0_cinta`) se registran ahí, y la señal `CinematicaReproducida` sirve para las pruebas. Una repetición desde el tablero empieza con su propio registro. |
+| C-02 | Corregido | 608c6d4 | Si IntroCaso ya mostró el expediente, al terminar con Hecdog ya no se abre otra vez: sale el aviso «[TAB] Revisar el expediente cuando quieras». Las líneas del guion no cambiaron. |
+| C-03 | Corregido | 608c6d4 | En el Caso 1, IntroCaso termina sin su aviso (`PresentarCapitulo(avisoExpediente: false)`). El aviso sale después de Hecdog. |
+| C-04 | Corregido | 608c6d4 | Solo puede haber una IntroCaso en la raíz (nodo `IntroCaso`). El expediente y el tablero no ponen otra encima. |
+| C-05 | No corregido | — | Volver a ver la cinta del Caso 0 necesita la Sala 1 con sus actores (la cinemática mueve los objetos reales de la sala), así que no se puede abrir desde el expediente o el diario de otro caso. Queda la presentación, que ya se puede volver a ver sin efectos. |
+| C-06 | Corregido | 608c6d4 | La estación pide 5 de las 9 pistas del Lago (`PartidaEscenas.PistasLagoParaEstacion`), tanto desde el campamento como desde la patrulla del Lago. Si la sala ya se visitó, no se bloquea. |
+| C-10 | Corregido | 608c6d4 | Al volver a la sala ya no se repite el pensamiento: queda el objetivo. |
+| C-11 | Corregido (nuevo) | 57015f8 | Encontrado en las pruebas: lo que Caneloso piensa al llegar al Lago se repetía cada vez que volvía sin pistas de ahí. Ahora sale una vez y se guarda con las zonas vistas. |
+| N-01 | Corregido | 8f2c5dd | Porky ya no está en `personajes_vista_previa.tscn`. Captura: `HU-9.5_CA03_capturas/campamento/donde_estaba_porky.png`. |
+| N-02 | Corregido | 8f2c5dd | El reposo por código cambia de actividad al azar (cargar el peso, mirar hacia un lado, quedarse quieto) con mezcla suave, y cada personaje tiene su propio ritmo (0.9 a 1.1). |
+| N-03 | Corregido | 8f2c5dd | Tony, Aya y Miawrio intercalan su animación «tenso» (`TensoTony`, `Tensaya`, `Tenso`) cada 12 a 26 s, a velocidad distinta cada uno. |
+| N-04 | Corregido | 8f2c5dd | Eriz y Juan Carlos mueven piernas y brazos y suben y bajan al caminar en la sala. Mimita, que no tiene esqueleto, se balancea con cada paso. La prueba confirma que las piernas se mueven. |
+| N-05 | Verificado | — | Las capturas `sala_*/lado.png` muestran que se quedan de pie junto a la silla, sin atravesarla. No hay pose de sentado. |
+| N-06 | Corregido | 8f2c5dd | `Npc.MirarA` gira al personaje entero. Además, `Cuerpo` llegaba vacío en el Caso 1 (falta `node_paths` en las escenas), y ahora tiene un respaldo. |
+| N-07 | Pendiente de CA-02 | — | Todavía no hay reacciones al avance. |
+| N-08 | Pendiente de CA-02 | — | Hecdog sigue sin cuerpo en el Campamento y el Lago. |
+| N-10 | **No corregido: Mimita en pose T** | — | Las capturas confirman que Eriz y Juan Carlos bajan los brazos. **Mimita (`miami.glb`) no tiene esqueleto** y su malla viene en pose T, con los brazos abiertos (`campamento/grupo_eriz_mimita_miawrio.png`). Por código no se le pueden bajar. Hace falta un modelo de Mimita con esqueleto o ya en reposo. |
+
+Pruebas: `Herramientas/Caso1/probar_ca03.gd` (0 fallos), `probar_escenarios.gd` (0 fallos) y `tests/cinematica_cinta_smoke.gd` (0 fallos).
+Rendimiento con los 6 NPC del Campamento en pantalla: CPU de 2.0 a 2.7 ms y GPU de 4.8 a 5.6 ms por cuadro (`campamento/rendimiento.txt`), muy por debajo de los 16.6 ms que pide 60 FPS. La herramienta de capturas marca unos 30 FPS porque la ventana estaba en segundo plano.
+
 ## Prioridad que propongo
 
 1. **N-01** (Porky vivo), **N-04** (pies que patinan) y **C-02** (el expediente tres veces).

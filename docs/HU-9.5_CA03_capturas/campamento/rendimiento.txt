@@ -1,0 +1,5 @@
+grupo_eriz_mimita_miawrio  FPS≈30  cpu=2.35 ms  gpu=5.59 ms
+juan_carlos  FPS≈30  cpu=2.02 ms  gpu=4.90 ms
+tony  FPS≈30  cpu=2.04 ms  gpu=4.75 ms
+aya  FPS≈30  cpu=2.48 ms  gpu=4.78 ms
+donde_estaba_porky  FPS≈30  cpu=2.74 ms  gpu=5.53 ms
