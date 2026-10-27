@@ -107,14 +107,21 @@ public partial class Caso1 : Node
 			await gestor.PresentarCapitulo(extra);
 			return;
 		}
-		// Si se llegó por el flujo de capítulos, muestra la tarjeta de título
-		if (gestor != null) await gestor.PresentarCapitulo();
+		// Si se llegó por el flujo de capítulos, muestra la tarjeta de título (o la cinemática IntroCaso).
+		// Sin el aviso del expediente al final: lo que sigue es Hecdog, que da su propio contexto.
+		if (gestor != null) await gestor.PresentarCapitulo(avisoExpediente: false);
 		// Si el jugador salió al menú durante la presentación, la escena ya no existe
 		if (!IsInstanceValid(this) || !IsInsideTree()) return;
+		bool vioExpediente = gestor?.PresentoConCinematica ?? false;
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
 		await Conversar(_guion.Introduccion);
-		// Hecdog le da el expediente: se abre en cuanto se cierra la conversación
-		if (_guion.AbrirExpediente && IsInsideTree()) Hud.Call("abrir_expediente");
+		// Hecdog le da el expediente. Si la cinemática ya lo mostró hoja por hoja, no se abre otra vez:
+		// basta con recordar la tecla. Si no, se abre en cuanto se cierra la conversación.
+		if (_guion.AbrirExpediente && IsInsideTree())
+		{
+			if (vioExpediente) Jugador.MostrarAviso($"[{Teclas.Etiqueta("expediente")}] Revisar el expediente cuando quieras", 5.0);
+			else Hud.Call("abrir_expediente");
+		}
 		_guion.AbrirExpediente = false;
 	}
 
@@ -207,7 +214,15 @@ public partial class Caso1 : Node
 		await Dialogo.Decir(_caneloso,
 			"El sendero baja al Lago Espejo. Ahí vieron al «ciervo de luz».",
 			"Lo que pasó anoche terminó allá abajo.");
-		// HU-20.6: el sendero lleva al Lago y el Bosque; desde ahí, la patrulla de Hecdog va a la estación
+		// HU-20.6: el sendero lleva al Lago y el Bosque; desde ahí, la patrulla de Hecdog va a la estación.
+		// HU-9.5 CA-03: la estación (Hecdog presenta a los seis) solo después de reunir pruebas en el Lago.
+		int delLago = PartidaEscenas.PistasEnDiario(Hud) - _pistas.Count;
+		if (!_guion.SalaVista && delLago < PartidaEscenas.PistasLagoParaEstacion)
+		{
+			int opcionLago = await Dialogo.Elegir("Caneloso", "¿A dónde voy?", "Bajar al lago", "Quedarme en el campamento");
+			if (opcionLago == 0) GestorPartida.Instancia?.CambiarEscenaDelCapitulo(PartidaEscenas.Lago, "EntradaDesdeCampamento");
+			return;
+		}
 		int opcion = await Dialogo.Elegir("Caneloso", "¿A dónde voy?", "Bajar al lago", "Ir a la estación con Hecdog", "Quedarme en el campamento");
 		if (opcion == 0) GestorPartida.Instancia?.CambiarEscenaDelCapitulo(PartidaEscenas.Lago, "EntradaDesdeCampamento");
 		else if (opcion == 1) GestorPartida.Instancia?.CambiarEscenaDelCapitulo(PartidaEscenas.Sala, "EntradaDesdeCampamento");

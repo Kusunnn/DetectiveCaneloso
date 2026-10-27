@@ -49,11 +49,15 @@ public partial class CinematicaCinta : CanvasLayer
 		Actualizar(true);
 	}
 
+	// Id en el registro de cinemáticas de la partida (GestorPartida)
+	public const string Id = "caso0_cinta";
+
 	public static async Task Reproducir(Node3D sala, Actores actores)
 	{
 		// No se puede disparar dos veces a la vez
 		if (EnCurso) return;
 		EnCurso = true;
+		GestorPartida.Instancia?.RegistrarCinematica(Id);
 		var cinematica = new CinematicaCinta { _a = actores, _sala = sala };
 		sala.AddChild(cinematica);
 		await cinematica.ToSignal(cinematica, SignalName.Terminada);

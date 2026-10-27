@@ -84,11 +84,8 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	{
 		AcomodarPruebas();
 		ActualizarObjetivo();
-		if (Guion.SalaVista || Guion.Resuelto)
-		{
-			if (!EnDialogo) Jugador.MostrarPensamiento("La sala de interrogatorio de la estación. Aquí van a pasar uno por uno.", 5.0);
-			return;
-		}
+		// Al volver ya no se repite la presentación ni el mismo pensamiento: el objetivo dice qué sigue (HU-9.5 CA-03)
+		if (Guion.SalaVista || Guion.Resuelto) return;
 		// La primera vez, Hecdog recibe al detective y presenta a los seis
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
 		if (IsInsideTree()) Conversar(() => Guion.Sala(IsInsideTree));

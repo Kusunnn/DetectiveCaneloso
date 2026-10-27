@@ -160,6 +160,13 @@ public partial class Caso1Lago : EscenarioCaso1
 
 	private async System.Threading.Tasks.Task AlIrEstacion()
 	{
+		// HU-9.5 CA-03: Hecdog presenta a los seis en la estación; antes hay que reunir pruebas aquí
+		if (!Guion.SalaVista && Pistas.Count < PartidaEscenas.PistasLagoParaEstacion)
+		{
+			await Dialogo.Decir(Caneloso, "Todavía no. Antes de sentarlos frente a mí, quiero saber qué pasó en este lago.",
+				$"Me faltan cosas por revisar ({Pistas.Count}/{PistasTotales} pistas del lago).");
+			return;
+		}
 		var hecdog = Dialogo.HablantePorNombre("Hecdog");
 		int opcion = await Dialogo.Elegir(hecdog, "¿Nos vamos a la estación, detective? Nya.",
 			new[] { new OpcionVista("Sí, vámonos"), new OpcionVista("Todavía no") }, 1);
