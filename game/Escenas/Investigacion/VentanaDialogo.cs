@@ -322,6 +322,7 @@ public partial class VentanaDialogo : CanvasLayer
 	public AudioStream Voz(string nombre)
 	{
 		string clave = Clave(nombre).Replace(" ", "_");
+		if (clave == "comisario") clave = "hecdog"; // El comisario del tutorial es Hecdog
 		if (_voces.TryGetValue(clave, out var voz)) return voz;
 		AudioStreamRandomizer silabas = null;
 		for (int i = 1; ResourceLoader.Exists($"res://Assets/Audio/Voces/{clave}/silaba_{i}.wav"); i++)
