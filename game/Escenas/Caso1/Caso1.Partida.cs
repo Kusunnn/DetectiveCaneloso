@@ -189,6 +189,7 @@ public partial class Caso1 : IEstadoPartida
 			foreach (Variant zona in zs.AsGodotArray()) _zonasVistas.Add(zona.AsString());
 		_guion.Restaurar(estado);
 		_tiempoCaso = estado["tiempo"].AsDouble();
+		_avisoSendero = PuedeSalir; // El aviso del sendero ya salió en la partida guardada
 		ActualizarObjetivo();
 
 		_restaurando = false;

@@ -21,6 +21,7 @@ size = Vector3(0.9, 0.06, 2.2)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
 material_override = SubResource("StandardMaterial3D_ypyb3")
 mesh = SubResource("BoxMesh_pap73")
+metadata/sin_resaltado = true
 
 [node name="Huella0" type="Decal" parent="." unique_id=274160312]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.14, 0.06, 0.75)

@@ -24,10 +24,29 @@ public partial class Caso1 : Node
 	private const string RegistroEnfermeria = "registro_enfermeria";
 	private const string BotasTony = "botas_tony";            // ★
 	private const string RegistroLlamadas = "registro_llamadas";
+	// Confirmado en la historia v2: el registro de llamadas es la coartada de Miawrio en su interrogatorio
+	private const bool RegistroLlamadasConfirmado = true;
+	private static int PistasTotales => RegistroLlamadasConfirmado ? 13 : 12;
+	// Cuántas pistas hacen falta para que el sendero del lago "se abra" (además del llavero de Porky)
 	// Pistas del campamento (las 9 del lago están en Caso1Lago)
-	private const int PistasTotales = 13;
+	// private const int PistasTotales = 13;
 	// Cuántas pistas hacen falta para que el sendero del lago "se abra"
 	private const int PistasParaSalir = 8;
+
+	// Pasos de la investigación en el orden en que se entiende la historia: el apagón, el «ciervo», lo que hizo
+	// Porky esa noche y los testigos. Se puede recoger todo en cualquier orden; el objetivo propone el primer
+	// paso que falte.
+	private static readonly (string Texto, string[] Pistas)[] Pasos =
+	{
+		("La fogata del centro: ahí estaban todos cuando se fue la luz.", new[] { LibroQuemado, Lena }),
+		("¿Quién apagó la luz? La caseta del generador, al oeste.", new[] { Interruptor, Candado }),
+		("El «ciervo»: los disfraces se guardan en el almacén de los cuentos, al oeste de la fogata.", new[] { Baul }),
+		("Porky se fue de la fogata antes del apagón. Su cocina, al sur.", new[] { TazaDelantal }),
+		("La cabaña de Porky, al este: ¿qué sabía ella?", new[] { NotaPorky, FotoGrupo, Recorte, Oferta }),
+		("La enfermería mira directo al lago. ¿Alguien vio algo?", new[] { RegistroEnfermeria }),
+		("Tony dice que no bajó al lago. Detrás de la cabaña del director, al noroeste.", new[] { BotasTony }),
+		("Un solo coche en el estacionamiento, junto a la entrada.", new[] { RegistroLlamadas }),
+	};
 
 	private const string Llavero = "llavero_porky";
 
@@ -133,10 +152,19 @@ public partial class Caso1 : Node
 		_pistas.Add(id);
 		Cambio();
 		Autoguardar("Pista: " + id);
-		if (!_guion.ComentarPista(Jugador, id)) Hud.Call("agregar_nota", "Pista: " + id);
-		if (_pistas.Count == PistasParaSalir)
-			Jugador.MostrarAviso("El sendero del lago ya me espera", 4.0);
+		if (!_guion.ComentarPista(Jugador, id))
+			Hud.Call("agregar_nota", "Pista: " + id);
+		AvisarSiPuedeSalir();
 		ActualizarObjetivo();
+	}
+
+	private bool _avisoSendero;
+
+	private void AvisarSiPuedeSalir()
+	{
+		if (_avisoSendero || !PuedeSalir) return;
+		_avisoSendero = true;
+		Jugador.MostrarAviso("El sendero del lago ya me espera", 4.0);
 	}
 
 	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
@@ -153,6 +181,7 @@ public partial class Caso1 : Node
 		if (id != Llavero) return;
 		PuertaPorky.Desbloquear();
 		Jugador.MostrarAviso("Nueva zona disponible: Cabaña de Porky", 4.0);
+		AvisarSiPuedeSalir();
 		ActualizarObjetivo();
 	}
 
@@ -160,12 +189,22 @@ public partial class Caso1 : Node
 	{
 		if (_guion.Objetivo() is string delGuion) { Objetivo(delGuion); return; }
 		string cuenta = $" ({_pistas.Count}/{PistasTotales} pistas)";
-		if (_pistas.Count >= PistasTotales) { Objetivo("Ya revisé todo el campamento. El sendero del lago, al norte."); return; }
-		if (!Jugador.TieneObjeto(Llavero) && _pistas.Contains(TazaDelantal)) { Objetivo("Revisa el delantal de Porky en la cocina." + cuenta); return; }
-		if (Jugador.TieneObjeto(Llavero) && !_pistas.Contains(NotaPorky)) { Objetivo("Abre la cabaña de Porky, al este." + cuenta); return; }
-		if (_pistas.Count >= PistasParaSalir) { Objetivo("Sigue el sendero al Lago Espejo, al norte... o busca lo que falta." + cuenta); return; }
+		if (_pistas.Count >= PistasTotales && Jugador.TieneObjeto(Llavero)) { Objetivo("Ya revisé todo el campamento. El sendero del lago, al norte."); return; }
+		foreach (var (texto, ids) in Pasos)
+		{
+			if (ids.Contains(TazaDelantal) && _pistas.Contains(TazaDelantal) && !Jugador.TieneObjeto(Llavero))
+			{ Objetivo("Revisa el delantal de Porky en la cocina." + cuenta); return; }
+			if (ids.Contains(NotaPorky) && Jugador.TieneObjeto(Llavero) && !_pistas.Contains(NotaPorky))
+			{ Objetivo("Abre la cabaña de Porky, al este." + cuenta); return; }
+			if (ids.All(id => _pistas.Contains(id) || (id == RegistroLlamadas && !RegistroLlamadasConfirmado))) continue;
+			Objetivo(texto + cuenta);
+			return;
+		}
 		Objetivo("Revisa el campamento: fogata, cocina, cabañas, enfermería y caseta." + cuenta);
 	}
+
+	// El llavero de Porky también abre el cobertizo del lago: sin él, allá abajo no se podría seguir
+	private bool PuedeSalir => _pistas.Count >= PistasParaSalir && Jugador.TieneObjeto(Llavero);
 
 	private IList<Carta> Cartas()
 	{
@@ -209,6 +248,11 @@ public partial class Caso1 : Node
 		if (_pistas.Count < PistasParaSalir)
 		{
 			await Dialogo.Decir(_caneloso, "Todavía no. Algo pasó aquí primero.", $"Me faltan cosas por revisar ({_pistas.Count}/{PistasTotales}).");
+			return;
+		}
+		if (!Jugador.TieneObjeto(Llavero))
+		{
+			await Dialogo.Decir(_caneloso, "Porky tenía las llaves de todo el campamento.", "Antes de bajar, quiero ese llavero. Ella nunca lo dejaba lejos de la cocina.");
 			return;
 		}
 		await Dialogo.Decir(_caneloso,
