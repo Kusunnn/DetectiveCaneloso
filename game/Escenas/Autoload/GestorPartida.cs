@@ -58,6 +58,8 @@ public partial class GestorPartida : Node
 
 	// Estado que la escena de juego debe restaurar al cargarse (null = partida nueva)
 	public Godot.Collections.Dictionary EstadoPendiente { get; private set; }
+	// Al pasar a otro escenario del mismo capítulo: nombre del Marker3D donde aparece el jugador (null = donde se guardó)
+	public string PuntoEntrada { get; private set; }
 	// Ranura en la que se guarda con "Guardar y salir" (la última usada)
 	public int RanuraActiva { get; private set; } = RanuraAuto;
 	public double SegundosDesdeUltimoGuardado => _ultimoGuardado < 0 ? -1 : (Time.GetTicksMsec() / 1000.0) - _ultimoGuardado;
@@ -68,6 +70,23 @@ public partial class GestorPartida : Node
 	public bool Rejugando { get; private set; }
 	// Capítulo sin escena todavía: el menú de inicio muestra su tarjeta y avisa que está en preparación
 	public string CapituloEnPreparacion { get; set; }
+
+	// HU-9.5 CA-03: cinemáticas que ya salieron en esta partida (por id). Viaja en cada guardado, así una
+	// cinemática no se repite al cargar ni al volver a un escenario; las repeticiones a propósito no cuentan.
+	private readonly HashSet<string> _cinematicasVistas = new();
+	// Cada vez que una cinemática sale sola (no al volver a verla): para las pruebas de CA-03
+	[Signal] public delegate void CinematicaReproducidaEventHandler(string id);
+	// true si la presentación del capítulo fue la cinemática IntroCaso (la escena no repite el expediente)
+	public bool PresentoConCinematica { get; private set; }
+
+	public bool CinematicaVista(string id) => _cinematicasVistas.Contains(id);
+	public IReadOnlyCollection<string> CinematicasVistas => _cinematicasVistas;
+
+	public void RegistrarCinematica(string id)
+	{
+		_cinematicasVistas.Add(id);
+		EmitSignal(SignalName.CinematicaReproducida, id);
+	}
 
 	// Qué presentar al entrar a la escena del capítulo: tarjeta de título (nuevo) o "Anteriormente..." (cargado)
 	private enum Presentacion { Nada, Inicio, Carga }
@@ -106,6 +125,7 @@ public partial class GestorPartida : Node
 	public void NuevaPartida(bool saltarTutorial = false)
 	{
 		RanuraActiva = RanuraAuto;
+		_cinematicasVistas.Clear();
 		var tutorial = Capitulos.Lista.FirstOrDefault();
 		var siguiente = tutorial != null ? Capitulos.Siguiente(tutorial.Id) : null;
 		if (saltarTutorial && siguiente != null && siguiente.TieneEscena)
@@ -123,8 +143,11 @@ public partial class GestorPartida : Node
 		var capitulo = Capitulos.Obtener(id);
 		if (capitulo == null) return;
 		SaltarTutorial = saltarTutorial;
+		// Una repetición no se guarda: empieza con sus propias cinemáticas
+		if (rejugar) _cinematicasVistas.Clear();
 		Rejugando = rejugar;
 		EstadoPendiente = null;
+		PuntoEntrada = null;
 		HayCambiosSinGuardar = false;
 		_ultimoGuardado = -1;
 		if (!capitulo.TieneEscena)
@@ -141,21 +164,26 @@ public partial class GestorPartida : Node
 
 	// Lo llama la escena del capítulo al empezar: tarjeta de título si es nuevo, "Anteriormente..." si se cargó.
 	// extra: líneas que la escena añade al resumen (lo último que anotó el jugador...).
-	public async Task PresentarCapitulo(IEnumerable<string> extra = null)
+	// avisoExpediente: false si la escena da su propio contexto al terminar (no pone el aviso del expediente encima).
+	public async Task PresentarCapitulo(IEnumerable<string> extra = null, bool avisoExpediente = true)
 	{
 		var modo = _presentacion;
 		_presentacion = Presentacion.Nada;
+		PresentoConCinematica = false;
 		var capitulo = Capitulos.Obtener(CapituloActual);
 		if (capitulo == null || modo == Presentacion.Nada) return;
 		var lineas = capitulo.Anteriormente.ToList();
 		if (modo == Presentacion.Inicio)
 		{
 			// Si el caso tiene expediente, al empezarlo se presenta con la cinemática (ya trae la tarjeta del título).
-			// Sale cada vez que el capítulo empieza en una partida (nunca al cargar); al repetir uno ya resuelto, solo si no se ha visto.
+			// Sale una vez por partida al empezar el capítulo (nunca al cargar); al repetir uno ya resuelto, solo si no se ha visto.
 			string caso = capitulo.Numero.ToString("00");
-			if (IntroCaso.Disponible(caso) && (!Rejugando || !IntroCaso.Vista(caso)))
+			string id = IntroCaso.IdCinematica(caso);
+			if (IntroCaso.Disponible(caso) && !CinematicaVista(id) && (!Rejugando || !IntroCaso.Vista(caso)))
 			{
-				var intro = IntroCaso.Reproducir(this, caso, aviso: true);
+				RegistrarCinematica(id);
+				PresentoConCinematica = true;
+				var intro = IntroCaso.Reproducir(this, caso, aviso: avisoExpediente);
 				await ToSignal(intro, IntroCaso.SignalName.Terminada);
 				return;
 			}
@@ -195,6 +223,9 @@ public partial class GestorPartida : Node
 		if (datos == null) return false;
 		// Partida guardada al cerrar un caso (fase Epílogo): ya no queda nada por hacer ahí, así que sigue el próximo capítulo
 		string guardado = datos.TryGetValue("capitulo", out Variant cap) ? cap.AsString() : "caso0";
+		_cinematicasVistas.Clear();
+		if (datos.TryGetValue("cinematicas", out Variant vistas))
+			foreach (Variant id in vistas.AsGodotArray()) _cinematicasVistas.Add(id.AsString());
 		var siguiente = CapituloTerminado(datos) ? Capitulos.Siguiente(guardado) : null;
 		if (siguiente != null && siguiente.TieneEscena)
 		{
@@ -204,6 +235,7 @@ public partial class GestorPartida : Node
 		}
 		SaltarTutorial = datos.TryGetValue("saltar_tutorial", out Variant saltar) && saltar.AsBool();
 		EstadoPendiente = datos.TryGetValue("estado", out Variant estado) ? estado.AsGodotDictionary() : null;
+		PuntoEntrada = null;
 		RanuraActiva = ranura;
 		HayCambiosSinGuardar = false;
 		Rejugando = false;
@@ -223,7 +255,23 @@ public partial class GestorPartida : Node
 	}
 
 	// La escena de juego lo llama tras restaurar
-	public void EstadoRestaurado() => EstadoPendiente = null;
+	public void EstadoRestaurado()
+	{
+		EstadoPendiente = null;
+		PuntoEntrada = null;
+	}
+
+	// Otro escenario del mismo capítulo (Campamento ↔ Lago ↔ sala): se lleva todo el progreso y el jugador
+	// aparece en el Marker3D «punto» de la escena nueva. No cuenta como cargar: no hay «Anteriormente…».
+	public void CambiarEscenaDelCapitulo(string escena, string punto)
+	{
+		var juego = EscenaDeJuego();
+		if (juego == null || !ResourceLoader.Exists(escena)) return;
+		EstadoPendiente = juego.CapturarEstado();
+		PuntoEntrada = punto;
+		_presentacion = Presentacion.Nada;
+		CambiarEscena(escena);
+	}
 
 	public void IrAlMenuInicio()
 	{
@@ -232,6 +280,12 @@ public partial class GestorPartida : Node
 		Rejugando = false;
 		_presentacion = Presentacion.Nada;
 		CambiarEscena(EscenaMenuInicio);
+	}
+
+	private string EscenaActual()
+	{
+		string ruta = GetTree().CurrentScene?.SceneFilePath;
+		return string.IsNullOrEmpty(ruta) ? null : ruta;
 	}
 
 	private void CambiarEscena(string ruta)
@@ -304,10 +358,12 @@ public partial class GestorPartida : Node
 			{ "fecha", Time.GetDatetimeStringFromSystem(false, true) },
 			{ "ranura", ranura },
 			{ "saltar_tutorial", SaltarTutorial },
-			{ "escena", Capitulos.Obtener(CapituloActual)?.Escena ?? EscenaJuego },
+			// La escena donde está el jugador (un capítulo puede tener varios escenarios)
+			{ "escena", EscenaActual() ?? Capitulos.Obtener(CapituloActual)?.Escena ?? EscenaJuego },
 			{ "capitulo", CapituloActual },
 			{ "resumen", resumen },
 			{ "estado", escena.CapturarEstado() },
+			{ "cinematicas", new Godot.Collections.Array<string>(_cinematicasVistas) },
 		};
 		if (!EscribirArchivo(RutaJson(ranura), datos))
 		{

@@ -79,8 +79,13 @@ func cargar_caso(caso: String) -> void:
 
 
 ## Cinemática de inicio (Escenas/Cinematicas/IntroCaso), encima del expediente y sin el aviso final.
+## Solo una a la vez: si ya hay una (aunque esté en su fundido final), no se pone otra encima.
+## Volver a verla no da pistas ni cambia el objetivo, y no cuenta en el registro de la partida.
 func ver_presentacion() -> void:
+	if get_tree().root.has_node("IntroCaso"):
+		return
 	var intro = load("res://Escenas/Cinematicas/IntroCaso.tscn").instantiate()
+	intro.name = "IntroCaso"
 	intro.Caso = _caso
 	intro.MostrarAviso = false
 	get_tree().root.add_child(intro)

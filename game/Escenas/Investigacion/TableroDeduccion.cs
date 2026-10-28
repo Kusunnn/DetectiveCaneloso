@@ -33,12 +33,14 @@ public partial class TableroDeduccion : CanvasLayer
 			if (HerramientaTablero.Desbloqueada(herramienta)) Hud.Call("desbloquear_herramienta_tablero", herramienta);
 		var pizarron = (Node3D)GD.Load<GDScript>("res://Escenas/Investigacion/pizarron_espacial.gd").New();
 		pizarron.Name = "PizarronInvestigacion";
-		pizarron.Position = new Vector3(3.88f, 2.5f, -1.2f);
-		pizarron.Rotation = new Vector3(0, -Mathf.Pi / 2, 0);
+		pizarron.AddToGroup("auditoria_fuera_ok"); // No es parte del escenario: la auditoría no lo revisa
+		// Lejos de cualquier escenario y oculto: solo aparece mientras el tablero está abierto
+		pizarron.Position = PosicionPizarron;
 		pizarron.Set("hud", Hud);
 		Hud.Set("pizarron_espacial", pizarron);
 		GetParent().CallDeferred(Node.MethodName.AddChild, pizarron);
 	}
+	private static readonly Vector3 PosicionPizarron = new Vector3(0, 400f, 0);
 	private Node Hud => GetParent().GetNode("HUD");
 	public bool Abierto => Hud.Get("tablero_abierto").AsBool();
 	public void Alternar() { if (Abierto) Cerrar(); else Abrir(); }

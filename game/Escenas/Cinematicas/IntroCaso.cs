@@ -15,6 +15,8 @@ public partial class IntroCaso : CanvasLayer
 
 	public const string Escena = "res://Escenas/Cinematicas/IntroCaso.tscn";
 	private const string ArchivoVistas = "user://cinematicas.cfg";
+	// Nombre fijo en la raíz: así el expediente y el tablero saben si ya hay una reproduciéndose
+	public const string NombreNodo = "IntroCaso";
 
 	// Caso a presentar ("01", "02"...)
 	[Export] public string Caso = "01";
@@ -42,10 +44,16 @@ public partial class IntroCaso : CanvasLayer
 		cfg.Save(ArchivoVistas);
 	}
 
-	// La pone encima de todo (en la raíz) y empieza sola
+	// Id en el registro de cinemáticas de la partida (GestorPartida)
+	public static string IdCinematica(string caso) => "intro_caso" + caso;
+
+	// La pone encima de todo (en la raíz) y empieza sola. Solo puede haber una: si ya hay una (aunque esté en su
+	// fundido final), devuelve esa en lugar de poner otra encima.
 	public static IntroCaso Reproducir(Node cualquiera, string caso, bool aviso)
 	{
+		if (cualquiera.GetTree().Root.GetNodeOrNull<IntroCaso>(NombreNodo) is { } yaHay) return yaHay;
 		var intro = GD.Load<PackedScene>(Escena).Instantiate<IntroCaso>();
+		intro.Name = NombreNodo;
 		intro.Caso = caso;
 		intro.MostrarAviso = aviso;
 		cualquiera.GetTree().Root.AddChild(intro);

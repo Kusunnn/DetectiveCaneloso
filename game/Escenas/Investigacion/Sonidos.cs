@@ -55,6 +55,11 @@ public static class Sonidos
 		ExamenAlejar,
 		ExamenTic,
 		ExamenDescubrir,
+		// Exteriores del Lago y el Bosque (Caso 1, HU-20.6). Siempre al final: las escenas guardan el número
+		Ranas,
+		MuelleCrujido,
+		MuellePasos,
+		EstaticaAltavoz,
 	}
 
 	public const string BusMusica = "Musica";
@@ -115,6 +120,10 @@ public static class Sonidos
 		[Tipo.Buho] = new(new[] { "res://Assets/Caso1/Sonidos/buho.ogg" }, -8f, Variar: true),
 		[Tipo.AguaLago] = new(new[] { "res://Assets/Caso1/Sonidos/agua_lago.ogg" }, -10f, false, true),
 		[Tipo.ZumbidoGenerador] = new(new[] { "res://Assets/Caso1/Sonidos/generador.ogg" }, -9f, false, true),
+		[Tipo.Ranas] = new(new[] { "res://Assets/Caso1/Sonidos/ranas.ogg" }, -12f, false, true),
+		[Tipo.MuelleCrujido] = new(new[] { "res://Assets/Caso1/Sonidos/muelle_crujido.ogg" }, -10f),
+		[Tipo.MuellePasos] = new(new[] { "res://Assets/Caso1/Sonidos/muelle_pasos.ogg" }, -12f),
+		[Tipo.EstaticaAltavoz] = new(new[] { "res://Assets/Caso1/Sonidos/altavoz_estatica.ogg" }, -14f, false, true),
 	};
 
 	// Las rutas cortas son relativas a Assets/Audio; las que empiezan con res:// se usan tal cual

@@ -8,6 +8,7 @@
 |---|---|
 | Campamento del Caso 1 (Kenney, KayKit, Quaternius), modelos de las pistas (Poly Haven, ambientCG), cinemática de inicio y embarcadero | [Caso1/CREDITOS_ASSETS.md](Caso1/CREDITOS_ASSETS.md) |
 | Todos los sonidos y la música (Kenney, OpenGameArt, BigSoundBank) | [Audio/CREDITOS_AUDIO.md](Audio/CREDITOS_AUDIO.md) |
+| Animaciones de los personajes y la figura de la cinemática de la cinta (Quaternius, CC0) | [Animaciones/CREDITOS_ANIMACIONES.md](Animaciones/CREDITOS_ANIMACIONES.md) |
 
 ## Fuentes tipográficas
 

@@ -482,7 +482,8 @@ public partial class Jugador : CharacterBody3D
 	// Pensamiento del detective que guía el tutorial: se queda hasta el siguiente
 	public void MostrarIndicacion(string texto)
 	{
-		if (_textoTutorial == null) return;
+		// Nada de pensamientos ni avisos encima de la cinemática de la cinta
+		if (_textoTutorial == null || CinematicaCinta.EnCurso) return;
 		_idAviso++;
 		_textoTutorial.Text = "“" + texto + "”";
 		_textoTutorial.Modulate = ColorPensamiento;
@@ -503,7 +504,7 @@ public partial class Jugador : CharacterBody3D
 
 	private void MostrarTemporal(string texto, Color color, double segundos)
 	{
-		if (_textoTutorial == null) return;
+		if (_textoTutorial == null || CinematicaCinta.EnCurso) return;
 		int id = ++_idAviso;
 		_textoTutorial.Text = texto;
 		_textoTutorial.Modulate = color;

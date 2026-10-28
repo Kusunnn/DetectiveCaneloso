@@ -1,0 +1,267 @@
+{
+	"id": "caso1_sala",
+	"personaje": "Hecdog",
+	"tono_voz": 0.85,
+	"inicio": "entrada",
+	"nodos": {
+		"entrada": {
+			"ir_a": [
+				{
+					"si": {
+						"nodos_completados": [
+							"llegada"
+						]
+					},
+					"destino": "regreso"
+				},
+				{
+					"destino": "llegada"
+				}
+			]
+		},
+		"llegada": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "animado",
+					"texto": "¿Encontraste algo, Nya? Los seis ya te esperan en la sala de interrogatorio. Les traje café... bueno, me lo tomé yo, Nya."
+				},
+				{
+					"habla": "Caneloso",
+					"animo": "serio",
+					"texto": "Seis personas, seis versiones. Todos esconden algo. Me toca averiguar quién esconde lo que importa."
+				}
+			],
+			"siguiente": "sala"
+		},
+		"regreso": {
+			"variantes": [
+				[
+					{
+						"habla": "Hecdog",
+						"animo": "tranquilo",
+						"texto": "¿Ya volviste, Caneloso? Los seis siguen en la sala, Nya. Y yo sigo sin café."
+					}
+				],
+				[
+					{
+						"habla": "Hecdog",
+						"animo": "serio",
+						"texto": "Aquí sigo, cuidando la puerta, Nya. ¿Con quién seguimos?"
+					}
+				],
+				[
+					{
+						"habla": "Hecdog",
+						"animo": "serio",
+						"texto": "¿Encontraste algo nuevo? Échale ganas, Caneloso. Esto no se resuelve solo, Nya."
+					}
+				]
+			],
+			"siguiente": "sala"
+		},
+		"sala": {
+			"pregunta": "¿Con quién hablo?",
+			"opciones": [
+				{
+					"id": "juan_carlos",
+					"texto": "Interrogar a Juan Carlos",
+					"destino": "a_juan_carlos"
+				},
+				{
+					"id": "aya",
+					"texto": "Interrogar a Aya",
+					"destino": "a_aya"
+				},
+				{
+					"id": "miawrio",
+					"texto": "Interrogar a Miawrio",
+					"destino": "a_miawrio"
+				},
+				{
+					"id": "eriz",
+					"texto": "Interrogar a Eriz",
+					"destino": "a_eriz"
+				},
+				{
+					"id": "mimita",
+					"texto": "Interrogar a Mimita",
+					"destino": "a_mimita"
+				},
+				{
+					"id": "tony",
+					"texto": "Interrogar a Tony",
+					"destino": "a_tony",
+					"requiere": {
+						"conclusiones": [
+							"juan_carlos_3",
+							"aya_2",
+							"miawrio_2",
+							"eriz_1",
+							"mimita_2"
+						]
+					},
+					"motivo": "Tony se abre cuando los otros cinco ya confesaron."
+				},
+				{
+					"id": "repasar",
+					"texto": "Repasar el caso con Hecdog",
+					"destino": "repasar"
+				},
+				{
+					"id": "acusar",
+					"texto": "Hacer la acusación",
+					"destino": "acusar"
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"a_juan_carlos": {
+			"fin": true,
+			"salida": "interrogar:juan_carlos"
+		},
+		"a_aya": {
+			"fin": true,
+			"salida": "interrogar:aya"
+		},
+		"a_miawrio": {
+			"fin": true,
+			"salida": "interrogar:miawrio"
+		},
+		"a_eriz": {
+			"fin": true,
+			"salida": "interrogar:eriz"
+		},
+		"a_mimita": {
+			"fin": true,
+			"salida": "interrogar:mimita"
+		},
+		"a_tony": {
+			"fin": true,
+			"salida": "interrogar:tony"
+		},
+		"repasar": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Hecdog, repasemos lo que tenemos."
+				}
+			],
+			"ir_a": [
+				{
+					"si": {
+						"conclusiones": [
+							"juan_carlos_3",
+							"aya_2",
+							"miawrio_2",
+							"eriz_1",
+							"mimita_2"
+						]
+					},
+					"destino": "hipotesis"
+				},
+				{
+					"destino": "falta"
+				}
+			]
+		},
+		"hipotesis": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "serio",
+					"texto": "Todos ya soltaron su secreto... menos el dueño del lugar. El que dice que nomás fue a revisar el generador."
+				}
+			]
+		},
+		"falta": {
+			"variantes": [
+				[
+					{
+						"habla": "Hecdog",
+						"animo": "serio",
+						"texto": "Todavía hay gente que no nos ha dicho la verdad, Nya. Busca la prueba que les tumbe la historia. Yo no esposo a nadie por corazonadas... bueno, casi nunca, Nya."
+					}
+				],
+				[
+					{
+						"habla": "Hecdog",
+						"animo": "serio",
+						"texto": "Todavía no cuadra, Caneloso. Alguien nos está viendo la cara, Nya. Enséñale la prueba que no pueda negar."
+					}
+				]
+			]
+		},
+		"acusar": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Hecdog, creo que ya sé quién fue."
+				},
+				{
+					"habla": "Hecdog",
+					"animo": "serio",
+					"texto": "¿Seguro? Si te equivocas, ya no hay vuelta atrás... Nya."
+				}
+			],
+			"pregunta": "¿Acuso ya?",
+			"opciones": [
+				{
+					"id": "si",
+					"texto": "Sí, acusar",
+					"destino": "acusar_si"
+				},
+				{
+					"id": "no",
+					"texto": "Todavía no",
+					"destino": "acusar_no"
+				}
+			]
+		},
+		"acusar_si": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "seguro",
+					"texto": "Estoy más que seguro."
+				}
+			],
+			"fin": true,
+			"salida": "acusar"
+		},
+		"acusar_no": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Todavía no. Dame chance."
+				}
+			],
+			"volver": "sala"
+		},
+		"paciencia": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "harto",
+					"texto": "Se acabó, Caneloso. Ya perdimos mucho tiempo con pruebas que no llevan a nada, Nya. Dime quién fue. Ahorita."
+				}
+			],
+			"fin": true,
+			"salida": "acusar"
+		},
+		"despedida": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "tranquilo",
+					"texto": "Aquí te espero, Nya. No te tardes."
+				}
+			]
+		}
+	}
+}

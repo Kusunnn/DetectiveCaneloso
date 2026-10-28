@@ -47,10 +47,36 @@ public partial class PanelTeclas : Node
 	public override void _Input(InputEvent evento)
 	{
 		if (_esperando == null || !_menu.IsVisibleInTree()) return;
+		var fila = _esperando;
+		// Solo se aceptan teclas del teclado: el ratón y el control no se pueden asignar (HU-19)
+		if (evento is InputEventMouseButton { Pressed: true } clic)
+		{
+			// El clic izquierdo sigue sirviendo para navegar el menú: cancela la espera y hace su clic normal
+			if (clic.ButtonIndex == MouseButton.Left)
+			{
+				CancelarCaptura();
+				return;
+			}
+			GetViewport().SetInputAsHandled();
+			_mostrarAyuda("Los botones y la rueda del mouse no se pueden asignar. Pulsa una tecla del teclado · ESC cancela", EstiloMenus.Coral);
+			return;
+		}
+		if (evento is InputEventJoypadButton { Pressed: true } boton)
+		{
+			GetViewport().SetInputAsHandled();
+			if (boton.IsAction("ui_cancel"))
+			{
+				CancelarCaptura();
+				_mostrarAyuda("Selecciona un control para cambiar su tecla.", null);
+				fila.GrabFocus();
+				return;
+			}
+			_mostrarAyuda("Los botones del control no se pueden asignar. Pulsa una tecla del teclado · B cancela", EstiloMenus.Coral);
+			return;
+		}
 		if (evento is not InputEventKey tecla || !tecla.Pressed || tecla.Echo) return;
 		GetViewport().SetInputAsHandled();
-		var fila = _esperando;
-		if (tecla.Keycode == Key.Escape)
+		if (tecla.Keycode == Key.Escape || tecla.PhysicalKeycode == Key.Escape)
 		{
 			CancelarCaptura();
 			_mostrarAyuda("Selecciona un control para cambiar su tecla.", null);
@@ -58,13 +84,19 @@ public partial class PanelTeclas : Node
 			return;
 		}
 		Key fisica = tecla.PhysicalKeycode != Key.None ? tecla.PhysicalKeycode : tecla.Keycode;
+		string sistema = Configuracion.ReservadaPorSistema(fisica);
+		if (sistema != null)
+		{
+			_mostrarAyuda($"La tecla {Teclas.NombreTecla(fisica)} está reservada para {sistema}. Elige otra · ESC cancela", EstiloMenus.Coral);
+			return;
+		}
 		string ocupada = Configuracion.Instancia.UsoDeTecla(fisica, fila.Accion);
 		if (ocupada != null)
 		{
 			_mostrarAyuda($"La tecla {Teclas.NombreTecla(fisica)} ya se usa para {ocupada}. Elige otra · ESC cancela", EstiloMenus.Coral);
 			return;
 		}
-		Configuracion.Instancia.AsignarTecla(fila.Accion, fisica);
+		if (!Configuracion.Instancia.AsignarTecla(fila.Accion, fisica)) return;
 		CancelarCaptura();
 		Refrescar();
 		_mostrarAyuda("Selecciona un control para cambiar su tecla.", null);

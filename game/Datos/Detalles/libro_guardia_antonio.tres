@@ -5,9 +5,9 @@
 [resource]
 script = ExtResource("1_detalle")
 Id = "antonio"
-Titulo = "Fragmento: «monitor auxiliar Antonio R.»"
-Descripcion = "En el reverso de una hoja que no terminó de quemarse se lee: «De guardia: monitor auxiliar Antonio R.»"
-Pensamiento = "Antonio R. estaba de guardia aquella noche. Antonio... ¿Tony?"
+Titulo = "Fragmento: «De guardia: monitor auxiliar...»"
+Descripcion = "En el reverso de una hoja que no terminó de quemarse se lee: «De guardia: monitor auxiliar...». El nombre ya es ceniza."
+Pensamiento = "El monitor auxiliar estaba de guardia aquella noche. Y hace diez años, el monitor auxiliar era Tony."
 Normal = Vector3(0, -1, 0)
 Tolerancia = 35.0
 ZoomMinimo = 2.0
