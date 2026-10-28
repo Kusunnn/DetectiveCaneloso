@@ -28,7 +28,6 @@ public partial class Caso1 : IEstadoPartida
 	public override void _Process(double delta)
 	{
 		if (!_restaurando) _tiempoCaso += delta;
-		_ayudasInvestigacion.Avanzar(delta, InvestigacionActiva, AyudasHabilitadas);
 	}
 
 	// Hay algo que se perdería al salir sin guardar

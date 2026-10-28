@@ -1,5 +1,5 @@
 extends SceneTree
-# Prueba la escena real y la entrada H; no guarda partidas ni preferencias.
+# Prueba el cuaderno en la escena real; no guarda partidas ni preferencias.
 var fallos := 0
 
 func comprobar(condicion: bool, mensaje: String) -> void:
@@ -7,22 +7,12 @@ func comprobar(condicion: bool, mensaje: String) -> void:
 		fallos += 1
 		push_error(mensaje)
 
-func pulsar_h() -> void:
-	var evento := InputEventKey.new()
-	evento.keycode = KEY_H
-	evento.physical_keycode = KEY_H
-	evento.pressed = true
-	Input.parse_input_event(evento)
-	await process_frame
-	evento = evento.duplicate()
-	evento.pressed = false
-	Input.parse_input_event(evento)
-	await process_frame
-
 func _initialize() -> void:
 	call_deferred("probar")
 
 func probar() -> void:
+	# Aislar el cuaderno: no ejecutar el autoguardado periódico ni generar miniaturas headless.
+	root.get_node("GestorPartida").set_process(false)
 	var escena = load("res://Escenas/Caso1/escenario_campamento.tscn").instantiate()
 	# Falla antes de ejecutar la escena si falta el componente que muestra la ayuda.
 	var texto: Label = escena.get_node_or_null("CanvasLayer/TextoTutorial")
@@ -38,33 +28,40 @@ func probar() -> void:
 	jugador.set_physics_process(false)
 	var configuracion = root.get_node("Configuracion")
 	configuracion.AyudasInvestigacion = true
-	InputMap.action_erase_events("ayuda")
-	var tecla := InputEventKey.new()
-	tecla.physical_keycode = KEY_H
-	InputMap.action_add_event("ayuda", tecla)
 	await create_timer(1.2).timeout
 	var dialogo = escena.get_node("VentanaDialogo")
-	for i in 12:
+	for i in 80:
 		if not dialogo.Abierto: break
-		var avanzar := InputEventKey.new()
-		avanzar.keycode = KEY_SPACE
+		var avanzar := InputEventMouseButton.new()
+		avanzar.button_index = MOUSE_BUTTON_LEFT
 		avanzar.pressed = true
 		Input.parse_input_event(avanzar)
+		await process_frame
+		var soltar = avanzar.duplicate()
+		soltar.pressed = false
+		Input.parse_input_event(soltar)
+		var elegir := InputEventKey.new()
+		elegir.keycode = KEY_3
+		elegir.pressed = true
+		Input.parse_input_event(elegir)
 		await create_timer(0.25).timeout
 	comprobar(not dialogo.Abierto, "Se cerró la introducción")
-	comprobar(jugador.Investigando, "El jugador puede investigar")
-	texto.hide()
-	await pulsar_h()
-	comprobar(caso.CapturarEstado().ayudas.usos == 0, "Antes del umbral no se consume ayuda")
-	caso.UmbralAyudaSegundos = 1
-	await create_timer(1.1).timeout
-	comprobar(not texto.visible, "No hay orientación automática al cumplir el umbral")
-	await pulsar_h()
-	comprobar(texto.is_visible_in_tree() and "fogata" in texto.text, "H muestra una orientación visible hacia la fogata")
-	comprobar(caso.CapturarEstado().ayudas.usos == 1, "H registra una ayuda realmente mostrada")
-	texto.hide()
+
+	paused = true
+	caso.PedirPista()
+	comprobar(caso.CapturarEstado().ayudas.entradas.size() == 1, "Pedir desde pausa no requiere esperar")
+	if caso.CapturarEstado().ayudas.entradas.is_empty():
+		paused = false
+		quit(1)
+		return
+	comprobar("fogata" in str(caso.CapturarEstado().ayudas.entradas[0].texto), "La orientación apunta a la fogata")
+	caso.PedirPista()
+	comprobar(caso.CapturarEstado().ayudas.usos == 1, "Releer no consume otra ayuda")
+	var estado = caso.CapturarEstado()
+	comprobar(estado.ayudas.entradas.size() == 1, "El historial se incluye en el guardado real")
 	configuracion.AyudasInvestigacion = false
-	await pulsar_h()
-	comprobar(not texto.visible and caso.CapturarEstado().ayudas.usos == 1, "Desactivar bloquea texto y consumo")
+	comprobar("Opciones" in caso.PedirPista() and caso.CapturarEstado().ayudas.usos == 1, "Desactivar impide solicitar, conserva el cuaderno")
+	comprobar("fogata" in str(caso.CapturarEstado().ayudas.entradas[0].texto), "Se puede releer con las ayudas desactivadas")
+	paused = false
 	print("HU-10 campamento: %d fallos" % fallos)
 	quit(0 if fallos == 0 else 1)

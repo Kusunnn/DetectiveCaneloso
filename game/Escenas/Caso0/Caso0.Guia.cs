@@ -165,23 +165,6 @@ public partial class Caso0
 	}
 
 	// Solo el tutorial enseña la acción, una vez por partida y sin adelantar la orientación.
-	private void AyudaGradual()
-	{
-		if (_avisoAyudaDado || !_ayudasInvestigacion.Disponible(AyudasHabilitadas, UmbralAyudaSegundos)) return;
-		_avisoAyudaDado = true;
-		Jugador.MostrarPensamiento($"Si te estancas, pulsa [{Teclas.Etiqueta("ayuda")}] para pedir orientación.", 7.0);
-		Cambio();
-	}
-
-	private void RepetirAyuda()
-	{
-		var (id, texto) = OrientacionInvestigacion();
-		if (!_ayudasInvestigacion.Solicitar(AyudasHabilitadas, UmbralAyudaSegundos, id, texto,
-			t => Jugador.MostrarPensamiento(t, 6.0))) return;
-		Cambio();
-		Sonidos.ReproducirUI(this, Sonidos.Tipo.Pagina);
-	}
-
 	private (string, string) OrientacionInvestigacion()
 	{
 		if (!_pistas.Contains(Grabadora) || !_pistas.Contains(Reloj)) return ("sala", "Todavía hay algo que revisar en la Sala 1.");
@@ -199,7 +182,7 @@ public partial class Caso0
 	private static readonly (string Marca, string Accion)[] MarcasDeTecla =
 	{
 		("[W A S D]", "mover"), ("[E]", "interactuar"), ("[R]", "deducir"), ("[Q]", "libreta"),
-		("[F]", "linterna"), ("[C]", "agacharse"), ("[TAB]", "expediente"), ("[H]", "ayuda"),
+		("[F]", "linterna"), ("[C]", "agacharse"), ("[TAB]", "expediente"),
 	};
 
 	private static string ConTeclas(string texto)

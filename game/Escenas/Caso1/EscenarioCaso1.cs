@@ -8,7 +8,7 @@ using Arreglo = Godot.Collections.Array;
 // Base de los escenarios del Caso 1 que vienen después del Campamento (HU-20.6): el Lago y el Bosque, y la sala de
 // interrogatorio de la estación. Hace lo que todos comparten: HUD del caso, tablero, zonas con su pensamiento,
 // conversaciones, y el guardado repartido por escenarios (PartidaEscenas). Cada escenario pone su guion encima.
-public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
+public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPistas
 {
 	[Export] public Jugador Jugador;
 	[Export] public CanvasLayer Hud;
@@ -106,6 +106,22 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 		}
 		AlLlegar(false);
 	}
+
+	public SistemaAyudas Cuaderno { get; } = new();
+    protected virtual (string Id, string Texto) OrientacionInvestigacion() =>
+        ("estacion_" + Guion.FaseActual(), Guion.Objetivo() ?? "Habla con los implicados y contrasta sus relatos con las pruebas del diario.");
+    public string PedirPista()
+    {
+        if (!(Configuracion.Instancia?.AyudasInvestigacion ?? true))
+            return "Activa las ayudas de investigación en Opciones para pedir una pista.";
+        if (_restaurando || EnDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando || Guion.Resuelto)
+            return "Continúa la investigación antes de pedir otra pista.";
+        var (id, texto) = OrientacionInvestigacion();
+        if (!Cuaderno.Agregar("caso1:" + id, texto))
+            return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
+        Cambio();
+        return "Nueva pista añadida al cuaderno.";
+    }
 
 	// ---------- Pistas y zonas ----------
 
@@ -267,6 +283,7 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 			{ "notas", Hud.Get("notas").AsGodotArray().Duplicate() },
 			{ "tablero", Hud.Call("capturar_tablero").AsGodotDictionary() },
 			{ "dialogos", Guion.Capturar() },
+			{ "ayudas", Cuaderno.Capturar() },
 			{ "tiempo", _tiempoCaso },
 			{ "escenas", escenas },
 		};
@@ -275,6 +292,7 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida
 	public void RestaurarEstado(Diccionario estado)
 	{
 		_restaurando = true;
+		Cuaderno.Restaurar(estado.TryGetValue("ayudas", out var ayudas) ? ayudas.AsGodotDictionary() : new Diccionario());
 		Jugador.RestaurarEstado(estado["jugador"].AsGodotDictionary());
 		PartidaEscenas.ColocarEnEntrada(GetParent(), Jugador);
 		_escenas = PartidaEscenas.Escenas(estado);

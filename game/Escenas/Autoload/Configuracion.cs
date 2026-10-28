@@ -76,7 +76,7 @@ public partial class Configuracion : Node
 		("Correr", "correr"), ("Agacharse", "agacharse"),
 		("Interactuar", "interactuar"), ("Linterna", "linterna"),
 		("Diario", "diario"), ("Expediente", "expediente"),
-		("Tablero de deducción", "deducir"), ("Cambiar cámara", "cambiar_camara"), ("Ayuda", "ayuda"),
+		("Tablero de deducción", "deducir"), ("Cambiar cámara", "cambiar_camara"),
 	};
 
 	// Atajos globales que no se pueden reasignar.
@@ -88,7 +88,7 @@ public partial class Configuracion : Node
 	// Nombre en español de las demás acciones, para avisar de conflictos
 	private static readonly Dictionary<string, string> NombresAcciones = new()
 	{
-		["deducir"] = "Tablero", ["cambiar_camara"] = "Cambiar cámara", ["ayuda"] = "Ayuda",
+		["deducir"] = "Tablero", ["cambiar_camara"] = "Cambiar cámara",
 		["bailar"] = "Bailar", ["morir"] = "Morir", ["pausa"] = "Pausa",
 	};
 
@@ -353,8 +353,6 @@ public partial class Configuracion : Node
 			if (tecla != TeclaOriginal(accion)) archivo.SetValue("teclas", accion, (long)tecla);
 		}
 		archivo.SetValue("controles", "ayudas_investigacion", AyudasInvestigacion);
-		foreach (var (accion, tecla) in _teclas)
-			archivo.SetValue("teclas", accion, (long)tecla);
 
 		Error error = archivo.Save(RutaConfiguracion);
 		if (error != Error.Ok)

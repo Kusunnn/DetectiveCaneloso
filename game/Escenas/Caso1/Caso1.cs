@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 // Hecdog presenta el caso y Caneloso reúne pistas en el campamento (la cabaña de Porky se abre con su llavero).
 // El sendero lleva al Lago y el Bosque (Escenario 2, HU-20.6) o a la sala de la estación, donde se interroga a los seis
 // y se acusa. El guion vive en Datos/Dialogos/caso1_*.json (GuionCaso1); este script solo lo conecta con el escenario.
-public partial class Caso1 : Node
+public partial class Caso1 : Node, ICuadernoPistas
 {
 	// Pistas (★ señalan a Tony)
 	private const string Interruptor = "interruptor_generador";
@@ -38,9 +38,7 @@ public partial class Caso1 : Node
 	private const string RegistroTachon = "registro_enfermeria.tachon";
 	private const string BotasJuncos = "botas_tony.juncos";
 
-	[Export(PropertyHint.Range, "1,600,1,or_greater")] public double UmbralAyudaSegundos = 120;
 	private readonly SistemaAyudas _ayudasInvestigacion = new();
-	private bool InvestigacionActiva => !_restaurando && !_enDialogo && !Dialogo.Abierto && !Tablero.Abierto && Jugador.Investigando;
 	private bool AyudasHabilitadas => Configuracion.Instancia?.AyudasInvestigacion ?? true;
 
 	[Export] public Jugador Jugador;
@@ -142,7 +140,7 @@ public partial class Caso1 : Node
 
 	private void AlRegistrarEvidencia(string id)
 	{
-		if (_pistas.Add(id)) _ayudasInvestigacion.NuevaPista();
+		_pistas.Add(id);
 		Cambio();
 		Autoguardar("Pista: " + id);
 		if (!_guion.ComentarPista(Jugador, id)) Hud.Call("agregar_nota", "Pista: " + id);
@@ -154,7 +152,6 @@ public partial class Caso1 : Node
 	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
 	private void AlDescubrirDetalle(string origen, string id)
 	{
-		_ayudasInvestigacion.NuevaPista();
 		string nota = id switch
 		{
 			LibroAntonio => "Reverso del libro de guardia: «De guardia: monitor auxiliar Antonio R.»",
@@ -297,20 +294,27 @@ public partial class Caso1 : Node
 		if (!_pistas.Contains(RegistroEnfermeria)) return ("enfermeria", "La enfermería es un buen lugar para seguir investigando.");
 		if (!_pistas.Contains(BotasTony)) return ("director", "Conviene recorrer los alrededores de la cabaña del director.");
 		if (!_pistas.Contains(Interruptor) || !_pistas.Contains(Candado)) return ("caseta", "Falta revisar algo en la caseta del generador.");
-		if (RegistroLlamadasConfirmado && !_pistas.Contains(RegistroLlamadas)) return ("coche", "Podría volver al estacionamiento.");
-		return (null, null); // El siguiente escenario aún no está disponible.
+		if (!_pistas.Contains(RegistroLlamadas)) return ("coche", "Podría volver al estacionamiento.");
+		return ("lago", "Ya revisé el campamento. Puedo seguir el sendero al Lago Espejo, al norte.");
+	}
+
+	public SistemaAyudas Cuaderno => _ayudasInvestigacion;
+
+	public string PedirPista()
+	{
+		if (!AyudasHabilitadas) return "Activa las ayudas de investigación en Opciones para pedir una pista.";
+		if (_guion.Resuelto || _restaurando || _enDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando)
+			return "Continúa la investigación antes de pedir otra pista.";
+		var (id, texto) = OrientacionInvestigacion();
+		if (id == null) return "No hay más orientaciones disponibles aquí.";
+		if (!_ayudasInvestigacion.Agregar("caso1:" + id, texto))
+			return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
+		Cambio();
+		return "Nueva pista añadida al cuaderno.";
 	}
 
 	public override void _UnhandledInput(InputEvent evento)
 	{
-		if (evento.IsActionPressed("ayuda") && !evento.IsEcho() && InvestigacionActiva)
-		{
-			GetViewport().SetInputAsHandled();
-			var (id, texto) = OrientacionInvestigacion();
-			if (_ayudasInvestigacion.Solicitar(AyudasHabilitadas, UmbralAyudaSegundos, id, texto,
-				t => Jugador.MostrarPensamiento(t, 6.0))) Cambio();
-			return;
-		}
 		if (evento.IsActionPressed("deducir") && !_enDialogo && !Tablero.Abierto)
 		{
 			GetViewport().SetInputAsHandled();

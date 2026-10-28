@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 //        tablero [R] → se abre la siguiente zona o información.
 // Giro: Porky escondió la cinta por vergüenza, pero la grabadora grababa porque el comisario
 //       la dejó en REC a propósito. Cabo suelto: una voz desconocida en la cinta a las 3:12.
-public partial class Caso0 : Node
+public partial class Caso0 : Node, ICuadernoPistas
 {
 	// Pistas (diario [Q])
 	private const string Grabadora = "grabadora";
@@ -40,9 +40,7 @@ public partial class Caso0 : Node
 	private const string Combinacion = "combinacion_porky";
 	private const uint CapaInteractuable = 1u << 3;
 
-	[Export(PropertyHint.Range, "1,600,1,or_greater")] public double UmbralAyudaSegundos = 120;
 	private readonly SistemaAyudas _ayudasInvestigacion = new();
-	private bool InvestigacionActiva => !_restaurando && !_enDialogo && !Dialogo.Abierto && !Tablero.Abierto && Jugador.Investigando;
 	private bool AyudasHabilitadas => Configuracion.Instancia?.AyudasInvestigacion ?? true;
 
 	[Export] public Jugador Jugador;
@@ -177,7 +175,7 @@ public partial class Caso0 : Node
 
 	private void AlRegistrarEvidencia(string id)
 	{
-		if (_pistas.Add(id)) _ayudasInvestigacion.NuevaPista();
+		_pistas.Add(id);
 		Progreso();
 		Autoguardar("Pista: " + id);
 		switch (id)
@@ -212,7 +210,6 @@ public partial class Caso0 : Node
 	// HU-07: lo que se descubre examinando una evidencia
 	private void AlDescubrirDetalle(string origen, string id)
 	{
-		_ayudasInvestigacion.NuevaPista();
 		Cambio();
 		Autoguardar("Detalle: " + id);
 		if (id == GrabadoraEtiqueta)
@@ -680,9 +677,21 @@ public partial class Caso0 : Node
 		ActualizarGuia(delta);
 		if (_resuelto) return;
 		_tiempoCaso += delta;
-		_ayudasInvestigacion.Avanzar(delta, InvestigacionActiva, AyudasHabilitadas);
-		if (!InvestigacionActiva) return;
-		if (_tutorial) AyudaGradual();
+	}
+
+	public SistemaAyudas Cuaderno => _ayudasInvestigacion;
+
+	public string PedirPista()
+	{
+		if (!AyudasHabilitadas) return "Activa las ayudas de investigación en Opciones para pedir una pista.";
+		if (_resuelto || CinematicaCinta.EnCurso || _restaurando || _enDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando)
+			return "Continúa la investigación antes de pedir otra pista.";
+		var (id, texto) = OrientacionInvestigacion();
+		if (id == null) return "No hay más orientaciones disponibles aquí.";
+		if (!_ayudasInvestigacion.Agregar("caso0:" + id, texto))
+			return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
+		Cambio();
+		return "Nueva pista añadida al cuaderno.";
 	}
 
 	public override void _UnhandledInput(InputEvent evento)
@@ -693,11 +702,7 @@ public partial class Caso0 : Node
 			SugerirEnTablero();
 			Tablero.Abrir();
 		}
-		else if (evento.IsActionPressed("ayuda") && !evento.IsEcho() && InvestigacionActiva && !_resuelto)
-		{
-			GetViewport().SetInputAsHandled();
-			RepetirAyuda();
-		}
+
 	}
 
 	// ---------- Utilidades ----------

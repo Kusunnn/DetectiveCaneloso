@@ -88,6 +88,23 @@ public partial class Caso1Lago : EscenarioCaso1
 		if (avisar) Jugador.MostrarAviso("Nueva zona disponible: Cobertizo de botes", 4.0);
 	}
 
+    protected override (string Id, string Texto) OrientacionInvestigacion()
+    {
+        if (!Pistas.Contains("huellas_pezuna") || !Pistas.Contains("huellas_detenidas"))
+            return ("lago_sendero", "Revisa las huellas del sendero. Agacharte puede ayudarte a distinguirlas.");
+        if (!Pistas.Contains(Altavoz) || !Pistas.Contains("cornamenta_zancos"))
+            return ("lago_bosque", "Los bramidos venían del bosque. Conviene mirar también dentro del tronco hueco.");
+        if (!Pistas.Contains("cuaderno_eriz"))
+            return ("lago_orilla", "En la orilla hay una mochila que merece una mirada.");
+        if (!Pistas.Contains("silbato_ts") || !Pistas.Contains("linterna_porky") || !Pistas.Contains("remo_sangre"))
+            return ("lago_embarcadero", "Revisa el embarcadero y los juncos de alrededor. Algunas pruebas están cerca del suelo.");
+        if (!Pistas.Contains(HuecoRemo))
+            return Jugador.TieneObjeto(Llavero)
+                ? ("lago_cobertizo", "El llavero de Porky también abre el cobertizo de botes. Falta revisar su interior.")
+                : ("lago_llavero", "Para abrir el cobertizo, vuelve a buscar el llavero de Porky en la cocina del campamento.");
+        return ("lago_estacion", "Ya revisé el lago. Hecdog espera en la patrulla para ir a la estación.");
+    }
+
 	protected override void ActualizarObjetivo()
 	{
 		if (Guion.Resuelto) { Objetivo("Caso cerrado."); return; }
