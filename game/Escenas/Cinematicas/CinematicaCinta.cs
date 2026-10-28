@@ -183,12 +183,13 @@ public partial class CinematicaCinta : CanvasLayer
 		_camaraAntes = GetViewport().GetCamera3D();
 
 		// La animación de Blender: personajes, cámara y vacíos de los objetos
-		_momentos = UsarMomentosCongelados;
-		_escena = GD.Load<PackedScene>(_momentos ? AnimacionMomentos : Animacion).Instantiate<Node3D>();
+		_momentos = Version == VersionCinta.Momentos;
+		_pelicula = Version == VersionCinta.Pelicula;
+		_escena = GD.Load<PackedScene>(_pelicula ? AnimacionPelicula : _momentos ? AnimacionMomentos : Animacion).Instantiate<Node3D>();
 		_escena.Name = "CinematicaCintaBlender";
 		_sala.AddChild(_escena);
 		_anim = _escena.FindChildren("*", "AnimationPlayer", true, false).OfType<AnimationPlayer>().First();
-		_anim.Play(_momentos ? "Momentos" : "Cinta");
+		_anim.Play(_momentos || _pelicula ? "Momentos" : "Cinta");
 		_anim.Pause();
 		_porky = _escena.GetNode<Node3D>("Porky");
 		_figura = _escena.GetNode<Node3D>("Figura");
@@ -197,7 +198,8 @@ public partial class CinematicaCinta : CanvasLayer
 		_animPuerta = _escena.GetNode<Node3D>("Anim_Puerta");
 		_animSilla = _escena.GetNode<Node3D>("Anim_Silla");
 		_animCinta = _escena.GetNode<Node3D>("Anim_Cinta");
-		if (_momentos) PrepararMomentos();
+		if (_pelicula) { _camara = new Camera3D { Name = "Camara" }; _escena.AddChild(_camara); }
+		else if (_momentos) PrepararMomentos();
 		else _camara = _escena.GetNode<Camera3D>("Camara");
 		_enfoque = new CameraAttributesPractical { DofBlurAmount = 0.06f, DofBlurFarTransition = 0.5f };
 		_camara.Near = 0.02f;
@@ -278,6 +280,8 @@ public partial class CinematicaCinta : CanvasLayer
 		if (_pizarron != null) { _pizarronVisible = _pizarron.Visible; _pizarron.Visible = false; }
 
 		if (_a.Musica != null) _intensidadMusica = _a.Musica.Intensidad;
+
+		if (_pelicula) PrepararPelicula();
 
 		// Los contornos de ayuda de las pistas no van en un recuerdo
 		if (Configuracion.Instancia != null)
@@ -361,7 +365,7 @@ public partial class CinematicaCinta : CanvasLayer
 		if (Manual) { Actualizar(true); return; }
 		_t += delta;
 		Actualizar(false);
-		if (!_momentos) Pasos(delta);
+		if (!_momentos && !_pelicula) Pasos(delta);
 		if (_t >= FinActual) Terminar();
 	}
 
@@ -374,7 +378,8 @@ public partial class CinematicaCinta : CanvasLayer
 			if (!silencio) _eventos[_siguienteEvento].Accion();
 			_siguienteEvento++;
 		}
-		if (_momentos) ActualizarMomentos();
+		if (_pelicula) ActualizarPelicula();
+		else if (_momentos) ActualizarMomentos();
 		else
 		{
 			_anim.Seek(Math.Min(_t, _anim.CurrentAnimationLength), true);
@@ -382,7 +387,8 @@ public partial class CinematicaCinta : CanvasLayer
 			Camara();
 		}
 		Interfaz();
-		if (_momentos) SonidosMomentos();
+		if (_pelicula) SonidosPelicula();
+		else if (_momentos) SonidosMomentos();
 		else SonidosContinuos();
 	}
 
@@ -550,8 +556,8 @@ public partial class CinematicaCinta : CanvasLayer
 		Anclar(_interfaz, 0, 0, 1, 1);
 
 		// Recuerdo: frío y deslavado (salvo el rojo de REC), con viñeta y grano de película
-		Capa(GD.Load<Shader>("res://Escenas/Cinematicas/recuerdo.gdshader"));
-		Capa(GD.Load<Shader>("res://Escenas/Cinematicas/vineta.gdshader"));
+		_recuerdo = (ShaderMaterial)Capa(GD.Load<Shader>("res://Escenas/Cinematicas/recuerdo.gdshader")).Material;
+		_vineta = (ShaderMaterial)Capa(GD.Load<Shader>("res://Escenas/Cinematicas/vineta.gdshader")).Material;
 		var grano = Capa(GD.Load<Shader>("res://Escenas/Menus/Fondo/grano_pelicula.gdshader"));
 		((ShaderMaterial)grano.Material).SetShaderParameter("intensidad", 0.1f);
 
@@ -567,6 +573,7 @@ public partial class CinematicaCinta : CanvasLayer
 		_interfaz.AddChild(_negro);
 		Anclar(_negro, 0, 0, 1, 1);
 		if (_momentos) CrearDestello();
+		if (_pelicula) CrearInterfazPelicula();
 
 		// Las horas: a máquina, arriba a la izquierda, en el papel del HUD
 		_hora = NuevaEtiqueta(Fuente("SpecialElite-Regular.ttf", 4), 30 * e, new Color(0.86f, 0.84f, 0.78f), HorizontalAlignment.Left);
@@ -598,7 +605,8 @@ public partial class CinematicaCinta : CanvasLayer
 	private void Interfaz()
 	{
 		// Negro con la cinta sonando; fundido a la sala; fundido a negro al final
-		if (_momentos) InterfazMomentos();
+		if (_pelicula) InterfazPelicula();
+		else if (_momentos) InterfazMomentos();
 		else _negro.Color = new Color(0, 0, 0, Mathf.Max(1 - Rampa(_t, TImagen, TImagen + 1.0), Rampa(_t, TFin - 1.4, TFin)));
 
 		// La hora, a máquina
@@ -710,6 +718,12 @@ public partial class CinematicaCinta : CanvasLayer
 
 	private void CrearEventos()
 	{
+		if (_pelicula)
+		{
+			CrearEventosPelicula();
+			_eventos.Sort((a, b) => a.T.CompareTo(b.T));
+			return;
+		}
 		if (_momentos)
 		{
 			CrearEventosMomentos();

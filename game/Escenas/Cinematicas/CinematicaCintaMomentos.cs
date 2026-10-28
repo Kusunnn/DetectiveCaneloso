@@ -10,8 +10,13 @@ using System.Linq;
 // y el clic de la cinta, como si la grabación saltara. Todo depende de t, igual que la versión animada.
 public partial class CinematicaCinta
 {
-	// Interruptor para comparar: true = momentos congelados, false = la versión animada (cinta_caso0.glb)
-	public static bool UsarMomentosCongelados { get; set; } = true;
+	// Compatibilidad con el interruptor anterior: true = momentos congelados, false = la versión animada.
+	// Ahora manda Version (CinematicaCintaPelicula.cs), que también tiene la versión película.
+	public static bool UsarMomentosCongelados
+	{
+		get => Version == VersionCinta.Momentos;
+		set => Version = value ? VersionCinta.Momentos : VersionCinta.Animada;
+	}
 
 	public const string AnimacionMomentos = "res://Assets/Cinematicas/Caso0/cinta_momentos.glb";
 
@@ -69,18 +74,21 @@ public partial class CinematicaCinta
 		{ 12, (new Color(1f, 0.82f, 0.6f), 14f, 34f) },      // las botas en primer plano
 	};
 
-	private readonly Camera3D[] _camIni = new Camera3D[13], _camFin = new Camera3D[13];
-	private readonly Node3D[] _foco = new Node3D[13], _luz = new Node3D[13];
+	private readonly Camera3D[] _camIni = new Camera3D[32], _camFin = new Camera3D[32];
+	private readonly Node3D[] _foco = new Node3D[32], _luz = new Node3D[32];
 	private readonly List<(int Cuadro, Node3D Nodo)> _soloEn = new();
 	private SpotLight3D _acento;
 	private OmniLight3D _recCara;
 	private ColorRect _destello;
 	private Node3D _animPluma;
 
-	private double FinActual => _momentos ? MFin : TFin;
-	private double[] ParadasActuales => _momentos ? MInicio.Skip(1).Append(MFin).ToArray() : Paradas;
-	private (double T, string Texto)[] HorasActuales => _momentos ? MHoras : Horas;
-	private (double Inicio, double Fin, int Linea)[] SubtitulosActuales => _momentos ? MSubtitulos : Subtitulos;
+	private double FinActual => _pelicula ? _finPelicula : _momentos ? MFin : TFin;
+	private double[] ParadasActuales => _pelicula ? _cuadros.Skip(1).Select(c => c.Inicio).Append(_finPelicula - DuracionTitulo).Append(_finPelicula).ToArray()
+		: _momentos ? MInicio.Skip(1).Append(MFin).ToArray() : Paradas;
+	private (double T, string Texto)[] HorasActuales => _pelicula ? _horasPelicula ??= HorasPelicula() : _momentos ? MHoras : Horas;
+	private (double Inicio, double Fin, int Linea)[] SubtitulosActuales => _pelicula ? _subtitulosPelicula ??= SubtitulosPelicula() : _momentos ? MSubtitulos : Subtitulos;
+	private (double T, string Texto)[] _horasPelicula;
+	private (double Inicio, double Fin, int Linea)[] _subtitulosPelicula;
 
 	// ---------- Montaje ----------
 

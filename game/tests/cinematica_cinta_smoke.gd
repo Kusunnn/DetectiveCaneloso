@@ -86,7 +86,7 @@ func probar() -> void:
 	prueba3.Empezar(sala, false)
 	await cuadros(2)
 	var cine = prueba3.Cinematica
-	cine.IrA(22.0)
+	cine.IrA(32.0)
 	await cuadros(2)
 	var tictac_antes := false
 	for n in cine.get_children():
