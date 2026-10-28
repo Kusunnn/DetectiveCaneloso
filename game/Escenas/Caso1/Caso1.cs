@@ -152,28 +152,21 @@ public partial class Caso1 : Node
 		_pistas.Add(id);
 		Cambio();
 		Autoguardar("Pista: " + id);
-private void AlRegistrarEvidencia(string id)
-{
-    _pistas.Add(id);
-    Cambio();
-    Autoguardar("Pista: " + id);
+		if (!_guion.ComentarPista(Jugador, id))
+			Hud.Call("agregar_nota", "Pista: " + id);
+		AvisarSiPuedeSalir();
+		ActualizarObjetivo();
+	}
 
-    if (!_guion.ComentarPista(Jugador, id))
-        Hud.Call("agregar_nota", "Pista: " + id);
+	private bool _avisoSendero;
 
-    AvisarSiPuedeSalir();
-    ActualizarObjetivo();
-}
+	private void AvisarSiPuedeSalir()
+	{
+		if (_avisoSendero || !PuedeSalir) return;
+		_avisoSendero = true;
+		Jugador.MostrarAviso("El sendero del lago ya me espera", 4.0);
+	}
 
-private bool _avisoSendero;
-
-private void AvisarSiPuedeSalir()
-{
-    if (_avisoSendero || !PuedeSalir) return;
-
-    _avisoSendero = true;
-    Jugador.MostrarAviso("El sendero del lago ya me espera", 4.0);
-}
 	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
 	private void AlDescubrirDetalle(string origen, string id)
 	{
@@ -196,12 +189,13 @@ private void AvisarSiPuedeSalir()
 	{
 		if (_guion.Objetivo() is string delGuion) { Objetivo(delGuion); return; }
 		string cuenta = $" ({_pistas.Count}/{PistasTotales} pistas)";
-		if (_pistas.Count >= PistasTotales) { Objetivo("Ya revisé todo el campamento. El sendero del lago, al norte."); return; }
-		if (!Jugador.TieneObjeto(Llavero) && _pistas.Contains(TazaDelantal)) { Objetivo("Revisa el delantal de Porky en la cocina." + cuenta); return; }
-		if (Jugador.TieneObjeto(Llavero) && !_pistas.Contains(NotaPorky)) { Objetivo("Abre la cabaña de Porky, al este." + cuenta); return; }
-		if (PuedeSalir) { Objetivo("Sigue el sendero al Lago Espejo, al norte... o busca lo que falta." + cuenta); return; }
+		if (_pistas.Count >= PistasTotales && Jugador.TieneObjeto(Llavero)) { Objetivo("Ya revisé todo el campamento. El sendero del lago, al norte."); return; }
 		foreach (var (texto, ids) in Pasos)
 		{
+			if (ids.Contains(TazaDelantal) && _pistas.Contains(TazaDelantal) && !Jugador.TieneObjeto(Llavero))
+			{ Objetivo("Revisa el delantal de Porky en la cocina." + cuenta); return; }
+			if (ids.Contains(NotaPorky) && Jugador.TieneObjeto(Llavero) && !_pistas.Contains(NotaPorky))
+			{ Objetivo("Abre la cabaña de Porky, al este." + cuenta); return; }
 			if (ids.All(id => _pistas.Contains(id) || (id == RegistroLlamadas && !RegistroLlamadasConfirmado))) continue;
 			Objetivo(texto + cuenta);
 			return;

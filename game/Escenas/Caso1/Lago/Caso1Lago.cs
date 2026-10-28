@@ -7,6 +7,13 @@ using System;
 // Es el único script que conoce la historia de este escenario; los sistemas siguen siendo genéricos.
 public partial class Caso1Lago : EscenarioCaso1
 {
+	private const string HuellasPezuna = "huellas_pezuna";
+	private const string HuellasDetenidas = "huellas_detenidas";
+	private const string Cornamenta = "cornamenta_zancos";
+	private const string Cuaderno = "cuaderno_eriz";
+	private const string Silbato = "silbato_ts";
+	private const string Linterna = "linterna_porky";
+	private const string RemoSangre = "remo_sangre";
 	private const string Altavoz = "altavoz";
 	private const string HuecoRemo = "hueco_remo";
 	private const int PistasTotales = 9;
@@ -24,7 +31,7 @@ public partial class Caso1Lago : EscenarioCaso1
 		("¿De dónde salió el remo? El cobertizo de botes, al este del muelle.", new[] { HuecoRemo }),
 	};
 	// Sin estas, el embarcadero queda sin revisar: Hecdog lo recuerda antes de irse a la estación
-	private static readonly string[] PruebasEmbarcadero = { RemoSangre, Silbato, Cuaderno };
+	private static readonly string[] PruebasEmbarcadero = { RemoSangre, Silbato, Linterna, Cuaderno };
 
 	[Export] public Puerta PuertaCobertizo;
 	[Export] public PuntoInteraccion VolverCampamento;
@@ -181,6 +188,9 @@ public partial class Caso1Lago : EscenarioCaso1
 
 	private async System.Threading.Tasks.Task AlIrEstacion()
 	{
+		var hecdog = Dialogo.HablantePorNombre("Hecdog");
+		if (!Array.TrueForAll(PruebasEmbarcadero, Pistas.Contains))
+			await Dialogo.Decir(hecdog, "Todavía no revisa bien la orilla y el embarcadero, detective. Ahí la encontraron. Nya.");
 		// HU-9.5 CA-03: Hecdog presenta a los seis en la estación; antes hay que reunir pruebas aquí
 		if (!Guion.SalaVista && Pistas.Count < PartidaEscenas.PistasLagoParaEstacion)
 		{
@@ -188,9 +198,6 @@ public partial class Caso1Lago : EscenarioCaso1
 				$"Me faltan cosas por revisar ({Pistas.Count}/{PistasTotales} pistas del lago).");
 			return;
 		}
-		var hecdog = Dialogo.HablantePorNombre("Hecdog");
-		if (!Array.TrueForAll(PruebasEmbarcadero, Pistas.Contains))
-			await Dialogo.Decir(hecdog, "Todavía no revisa bien la orilla y el embarcadero, detective. Ahí la encontraron. Nya.");
 		int opcion = await Dialogo.Elegir(hecdog, "¿Nos vamos a la estación, detective? Nya.",
 			new[] { new OpcionVista("Sí, vámonos"), new OpcionVista("Todavía no") }, 1);
 		if (opcion != 0) return;
