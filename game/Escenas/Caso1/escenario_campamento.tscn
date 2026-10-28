@@ -1581,7 +1581,7 @@ mouse_filter = 2
 texture = SubResource("GradientTexture2D_93")
 expand_mode = 1
 
-[node name="Caso1" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "Tablero", "PuertaPorky", "Salida", "PistaLlamadas", "Musica", "Entorno", "ContenedoresConPista", "PistasDentro", "Zonas")]
+[node name="Caso1" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "Tablero", "PuertaPorky", "Salida", "Musica", "Entorno", "ContenedoresConPista", "PistasDentro", "Zonas")]
 script = ExtResource("e63")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
@@ -1589,7 +1589,6 @@ Dialogo = NodePath("../VentanaDialogo")
 Tablero = NodePath("../TableroDeduccion")
 PuertaPorky = NodePath("../CabanaPorky/Edificio/PuertaPorky")
 Salida = NodePath("../SalidaSendero/Arco/Salida")
-PistaLlamadas = NodePath("../Estacionamiento/Coche/RegistroLlamadas")
 Musica = NodePath("../MusicaFondo")
 Entorno = NodePath("../Entorno")
 ContenedoresConPista = [NodePath("../Almacen/Baul"), NodePath("../CabanaPorky/Almohada"), NodePath("../CabanaPorky/Papelera"), NodePath("../Enfermeria/Escritorio")]

@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_tierra_color.jpg" id="1_l3lwj"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Texturas/suelo_tierra_normal.jpg" id="2_4unwr"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Lago/Texturas/huella_pezuna.png" id="3_d45x4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t6gw6"]
+albedo_texture = ExtResource("1_l3lwj")
+roughness = 0.95
+normal_enabled = true
+normal_texture = ExtResource("2_4unwr")
+uv1_scale = Vector3(0.6, 0.6, 0.6)
+uv1_triplanar = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_61k7f"]
+size = Vector3(0.9, 0.06, 2.6)
+
+[node name="HuellasPezuna" type="Node3D" unique_id=1403799956]
+
+[node name="Lodo" type="MeshInstance3D" parent="." unique_id=1458049692]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+material_override = SubResource("StandardMaterial3D_t6gw6")
+mesh = SubResource("BoxMesh_61k7f")
+
+[node name="Huella0" type="Decal" parent="." unique_id=1693336171]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.14, 0.06, 0.95)
+size = Vector3(0.24, 0.2, 0.3)
+texture_albedo = ExtResource("3_d45x4")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Huella1" type="Decal" parent="." unique_id=1987654266]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.14, 0.06, 0.345)
+size = Vector3(0.24, 0.2, 0.3)
+texture_albedo = ExtResource("3_d45x4")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Huella2" type="Decal" parent="." unique_id=405239890]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.14, 0.06, -0.26)
+size = Vector3(0.24, 0.2, 0.3)
+texture_albedo = ExtResource("3_d45x4")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Huella3" type="Decal" parent="." unique_id=25732437]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.14, 0.06, -0.865)
+size = Vector3(0.24, 0.2, 0.3)
+texture_albedo = ExtResource("3_d45x4")
+upper_fade = 0.2
+lower_fade = 0.2

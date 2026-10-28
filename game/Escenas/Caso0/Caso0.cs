@@ -62,6 +62,9 @@ public partial class Caso0 : Node
 	[Export] public Contenedor CasilleroPorky;
 	[Export] public Area3D ZonaAndamio;
 	[Export] public MusicaFondo Musica;
+	// HU-9.5: la cinemática final mueve el reloj y pone la cinta en la grabadora
+	[Export] public Node3D RelojSala;
+	[Export] public Node3D GrabadoraSala;
 
 	// ---------- Estado ----------
 
@@ -345,6 +348,7 @@ public partial class Caso0 : Node
 				if (!await evidencia(p, id))
 				{
 					CambiarAnimo(p, -1);
+					p.Npc?.Gesto("Idle_No");
 					Sonidos.ReproducirUI(this, Sonidos.Tipo.Error);
 					await Habla(p, "¿Y eso qué tiene que ver conmigo?");
 					await Piensa("(No. Necesito una prueba que contradiga lo que me dijo.)");
@@ -404,6 +408,7 @@ public partial class Caso0 : Node
 				if (p.Confeso) { await Habla(p, "Sí, lo del sándwich. Ya se lo conté."); return true; }
 				p.Confeso = true;
 				CambiarAnimo(p, 3);
+				p.Npc?.Gesto("Yes");
 				_confrontaciones.Add("eriz_envoltorio");
 				await Habla(p, "...Está bien. Volví a las tres a llevarle un sándwich a Tito.",
 					"Si el comisario se entera, me corre. Pero no toqué la grabadora.");
@@ -457,6 +462,7 @@ public partial class Caso0 : Node
 			_confrontaciones.Add("porky_deduccion");
 			bool coopera = p.Animo >= -1;
 			CambiarAnimo(p, 2);
+			p.Npc?.Gesto("Yes");
 			await Habla(p, "...Está bien. Me quedé dormido en la Sala 1.",
 				"Desperté con la luz de REC prendida y escondí la cinta en mi casillero.");
 			AñadirTestimonio(TPorky, "Porky: se durmió", "Porky se durmió en la Sala 1, vio la grabadora en REC y escondió la cinta en su casillero.");
@@ -551,6 +557,7 @@ public partial class Caso0 : Node
 				p.Confeso = true;
 				_confrontaciones.Add("comisario_nota");
 				CambiarAnimo(p, 1);
+				p.Npc?.Gesto("Yes");
 				await Habla(p, "...Sí. La dejé grabando para cachar al que se duerme en la guardia.",
 					"No pensé que se llevaría la cinta. Que esto no salga de aquí.");
 				AñadirTestimonio(TComisario, "Comisario: la trampa", "El comisario dejó la grabadora en REC a propósito para cachar al que se duerme en la guardia.");
@@ -611,10 +618,20 @@ public partial class Caso0 : Node
 		SillaAcusacion.Habilitar(false, CapaInteractuable);
 		await Habla(_porky, "Perdón, detective. La próxima guardia la hago de pie.");
 		await Habla(_comisario, "Se acabaron mis trampas. El juicio sigue. Buen trabajo, Caneloso.");
-		await Dialogo.Decir(Dialogo.HablantePorNombre("Cinta"),
+		string[] cinta =
+		{
 			"[Tito Garras] «...sí, yo me robé la cartera del alcalde.»",
-			"[03:12 · Ronquidos. Un ruido metálico junto al micrófono]",
-			"«La Garra no olvida, Caneloso.»");
+			"[Ronquidos. Ruido metálico en el techo]",
+			"«La Garra no olvida, Caneloso.»",
+		};
+		// Mientras suena la cinta se ve lo que pasó en la Sala 1 a las 3:12
+		if (RelojSala != null && GrabadoraSala != null && GetParent() is Node3D sala)
+			await CinematicaCinta.Reproducir(sala, new CinematicaCinta.Actores
+			{
+				Porky = Porky, Eriz = Eriz, Jugador = Jugador, Reloj = RelojSala, Grabadora = GrabadoraSala, Musica = Musica, Lineas = cinta,
+			});
+		else
+			await Dialogo.Decir(Dialogo.HablantePorNombre("Cinta"), cinta);
 		await Piensa(_pistas.Contains(Pluma)
 			? "Alguien más estuvo aquí a las 3:12... y entró por la rejilla de la pluma negra."
 			: "Alguien más estuvo aquí a las 3:12. ¿Por dónde entró?");
@@ -658,6 +675,8 @@ public partial class Caso0 : Node
 
 	public override void _Process(double delta)
 	{
+		// Durante la cinemática de la cinta no corre la guía ni ninguna ayuda
+		if (CinematicaCinta.EnCurso) return;
 		ActualizarGuia(delta);
 		if (_resuelto) return;
 		_tiempoCaso += delta;
@@ -699,7 +718,13 @@ public partial class Caso0 : Node
 		p.Npc?.FijarAnimo(p.Animo);
 	}
 
-	private Task Habla(Personaje p, params string[] lineas) => Dialogo.Decir(p.Hablante, lineas);
+	// Mientras habla, gesticula (Porky, Eriz y el comisario tienen animaciones)
+	private async Task Habla(Personaje p, params string[] lineas)
+	{
+		p.Npc?.Hablar(true);
+		try { await Dialogo.Decir(p.Hablante, lineas); }
+		finally { if (IsInstanceValid(p.Npc)) p.Npc.Hablar(false); }
+	}
 
 	private Task Piensa(params string[] lineas) => Dialogo.Decir(_caneloso, lineas.Select(ConTeclas).ToArray());
 

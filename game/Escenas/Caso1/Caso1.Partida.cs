@@ -13,10 +13,13 @@ public partial class Caso1 : IEstadoPartida
 
 	private bool _restaurando;
 	private double _tiempoCaso;
+	// Lo guardado de los otros escenarios del capítulo (Lago, sala): se conserva tal cual al guardar aquí
+	private Diccionario _escenas = new();
 
 	private void PrepararPartida()
 	{
 		AddToGroup("estado_partida");
+		Hud.Connect("tablero_modificado", Callable.From(Cambio));
 		// Abrir un contenedor o una puerta también es progreso
 		foreach (var contenedor in Todos<Contenedor>()) contenedor.Abierto += Cambio;
 		foreach (var puerta in Todos<Puerta>()) puerta.Abierta += Cambio;
@@ -83,12 +86,14 @@ public partial class Caso1 : IEstadoPartida
 	{
 		{ "caso", "01" },
 		{ "capitulo", IdCapitulo },
-		{ "fase", Capitulos.Fase(_pistas.Count == 0 ? "introduccion" : "investigacion")?.Nombre ?? "" },
+		{ "fase", Capitulos.Fase(FaseActual())?.Nombre ?? "" },
 		{ "zona", ZonaActual() },
-		{ "pistas", _pistas.Count },
-		{ "total_pistas", PistasTotales },
+		{ "pistas", PartidaEscenas.PistasEnDiario(Hud) },
+		{ "total_pistas", PartidaEscenas.TotalPistas },
 		{ "tiempo", _tiempoCaso },
 	};
+
+	private string FaseActual() => _guion.FaseActual();
 
 	public Diccionario CapturarEstado()
 	{
@@ -112,16 +117,23 @@ public partial class Caso1 : IEstadoPartida
 		foreach (var p in Todos<Puerta>())
 			puertas[Ruta(p)] = new Diccionario { { "bloqueada", p.Bloqueada }, { "abierta", p.EstaAbierta } };
 
+		var escenas = _escenas.Duplicate(true);
+		escenas[PartidaEscenas.Campamento] = new Diccionario
+		{
+			{ "contenedores", contenedores },
+			{ "puertas", puertas },
+			{ "zonas_vistas", new Arreglo(_zonasVistas.Select(z => Variant.From(z))) },
+		};
 		return new Diccionario
 		{
 			{ "ayudas", _ayudasInvestigacion.Capturar() },
 			{ "jugador", Jugador.CapturarEstado() },
 			{ "pistas", pistas },
 			{ "notas", Hud.Get("notas").AsGodotArray().Duplicate() },
-			{ "contenedores", contenedores },
-			{ "puertas", puertas },
-			{ "zonas_vistas", new Arreglo(_zonasVistas.Select(z => Variant.From(z))) },
+			{ "tablero", Hud.Call("capturar_tablero").AsGodotDictionary() },
+			{ "dialogos", _guion.Capturar() },
 			{ "tiempo", _tiempoCaso },
+			{ "escenas", escenas },
 		};
 	}
 
@@ -129,6 +141,10 @@ public partial class Caso1 : IEstadoPartida
 	{
 		_restaurando = true;
 		Jugador.RestaurarEstado(estado["jugador"].AsGodotDictionary());
+		// Llegando desde el Lago o la sala: aparece en la entrada del sendero, no donde estaba allá
+		PartidaEscenas.ColocarEnEntrada(GetParent(), Jugador);
+		_escenas = PartidaEscenas.Escenas(estado);
+		var propio = PartidaEscenas.DeEscena(estado, PartidaEscenas.Campamento) ?? new Diccionario();
 
 		// Pistas: vuelven al expediente en el mismo orden y su objeto queda examinado (o recogido)
 		var objetos = Todos<ObjetoPista>().GroupBy(o => o.IdPista).ToDictionary(g => g.Key, g => g.First());
@@ -142,24 +158,27 @@ public partial class Caso1 : IEstadoPartida
 				Jugador.RestaurarDetalle(id, pista["titulo"].AsString(), pista["descripcion"].AsString(), origen);
 				continue;
 			}
-			_pistas.Add(id);
 			bool examinada = pista.TryGetValue("examinada", out Variant e) && e.AsBool();
 			if (objetos.TryGetValue(id, out var objeto))
 			{
+				// Solo cuentan para el Campamento sus propias pistas; las del Lago van al diario igual
+				_pistas.Add(id);
 				objeto.MarcarEncontrada();
 				Jugador.RestaurarEvidencia(objeto, pista["titulo"].AsString(), pista["descripcion"].AsString(), examinada);
 			}
-			else Jugador.RestaurarEvidencia(id, pista["titulo"].AsString(), pista["descripcion"].AsString());
+			else PartidaEscenas.RestaurarPistaDeOtroEscenario(Jugador, Hud, id, pista["titulo"].AsString(), pista["descripcion"].AsString());
 		}
 		foreach (Variant nota in estado["notas"].AsGodotArray()) Hud.Call("agregar_nota", nota.AsString());
 		Hud.Set("_aviso", 0.0);
+		Hud.Call("restaurar_tablero", estado.TryGetValue("tablero", out Variant tableroGuardado)
+			? tableroGuardado.AsGodotDictionary() : new Diccionario());
 
 		// Escenario: contenedores y puertas (la cabaña de Porky queda abierta si ya se tenía el llavero)
-		var contenedores = estado["contenedores"].AsGodotDictionary();
+		var contenedores = propio.TryGetValue("contenedores", out Variant cs) ? cs.AsGodotDictionary() : new Diccionario();
 		foreach (var c in Todos<Contenedor>())
 			if (contenedores.TryGetValue(Ruta(c), out Variant d))
 				c.RestaurarEstado(d.AsGodotDictionary()["abierto"].AsBool(), d.AsGodotDictionary()["revisado"].AsBool());
-		var puertas = estado["puertas"].AsGodotDictionary();
+		var puertas = propio.TryGetValue("puertas", out Variant ps) ? ps.AsGodotDictionary() : new Diccionario();
 		foreach (var p in Todos<Puerta>())
 			if (puertas.TryGetValue(Ruta(p), out Variant d))
 				p.RestaurarEstado(d.AsGodotDictionary()["bloqueada"].AsBool(), d.AsGodotDictionary()["abierta"].AsBool());
@@ -168,7 +187,9 @@ public partial class Caso1 : IEstadoPartida
 			if (ContenedoresConPista[i].EstaAbierto && !PistasDentro[i].Encontrada)
 				PistasDentro[i].CollisionLayer = CapaInteractuable;
 
-		foreach (Variant zona in estado["zonas_vistas"].AsGodotArray()) _zonasVistas.Add(zona.AsString());
+		if (propio.TryGetValue("zonas_vistas", out Variant zs))
+			foreach (Variant zona in zs.AsGodotArray()) _zonasVistas.Add(zona.AsString());
+		_guion.Restaurar(estado);
 		_tiempoCaso = estado["tiempo"].AsDouble();
 		ActualizarObjetivo();
 

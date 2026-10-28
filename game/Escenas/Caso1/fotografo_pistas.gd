@@ -4,6 +4,7 @@ extends SceneTree
 # Uso (con ventana, porque hay que renderizar):
 #   Godot_v4.7.2-stable_mono_win64_console.exe --path game --script res://Escenas/Caso1/fotografo_pistas.gd
 #   ... fotografo_pistas.gd -- caso0
+#   ... fotografo_pistas.gd -- lago      (Escenario 2 del Caso 1, HU-20.6)
 # Para rehacer solo algunas: ... fotografo_pistas.gd -- foto_grupo botas_tony   (o -- caso0 cinta reloj)
 
 const ESCENA := "res://Escenas/Caso1/escenario_campamento.tscn"
@@ -39,22 +40,39 @@ const TOMAS := {
 }
 const ABRIR := ["Almacen/Baul", "CabanaPorky/Almohada", "CabanaPorky/Papelera", "Enfermeria/Escritorio"]
 
+# Escenario 2 (Lago y Bosque). id: [ruta, dirección, distancia, altura sobre el modelo (solo la linterna), fuerza del foco]
+const ESCENA_LAGO := "res://Escenas/Caso1/Lago/escenario_lago.tscn"
+const TOMAS_LAGO := {
+	"huellas_pezuna": ["Sendero/HuellasPezuna", Vector3(0.35, 1, 0.45), 2.4, 0.05, 3.2],
+	"huellas_detenidas": ["Sendero/HuellasDetenidas", Vector3(0.35, 1, 0.45), 2.2, 0.05, 3.2],
+	"altavoz": ["Bosque/Altavoz", Vector3(0.75, 0.25, 0.6), 0.85, 0.09, 1.8],
+	"cornamenta_zancos": ["Bosque/Cornamenta", Vector3(0.35, 1, 0.45), 1.8, 0.1, 2.2],
+	"hueco_remo": ["Cobertizo/SoporteRemos", Vector3(-1, 0.25, 0.25), 2.1, 0.7, 2.0],
+	"remo_sangre": ["Orilla/Remo", Vector3(0.3, 1, 0.5), 1.6, 0.05, 2.6],
+	"silbato_ts": ["Embarcadero/Silbato", Vector3(1, 0.35, 0.15), 0.24, 0.0, 2.6],
+	"linterna_porky": ["Embarcadero/Linterna", Vector3(-0.35, 1, 0.3), 1.1, 0.06, 1.2],
+	"cuaderno_eriz": ["Orilla/Cuaderno", Vector3(0.15, 1, 0.35), 0.75, 0.02, 1.6],
+}
+const ABRIR_LAGO := ["Orilla/Mochila", "Bosque/TroncoHueco"]
+
 func _init() -> void:
 	await process_frame
 	root.size = Vector2i(512, 512)
 	var solo := OS.get_cmdline_user_args()
 	var caso0 := solo.has("caso0")
+	var lago := solo.has("lago")
 	solo.erase("caso0")
-	var tomas: Dictionary = TOMAS_CASO0 if caso0 else TOMAS
+	solo.erase("lago")
+	var tomas: Dictionary = TOMAS_CASO0 if caso0 else (TOMAS_LAGO if lago else TOMAS)
 	var carpeta: String = CARPETA_CASO0 if caso0 else CARPETA
-	var esc: Node = load(ESCENA_CASO0 if caso0 else ESCENA).instantiate()
+	var esc: Node = load(ESCENA_CASO0 if caso0 else (ESCENA_LAGO if lago else ESCENA)).instantiate()
 	root.add_child(esc)
 	current_scene = esc
 	for i in 10:
 		await process_frame
 	for capa in esc.find_children("*", "CanvasLayer", true, false):
 		capa.visible = false
-	var caso := esc.get_node("Caso0" if caso0 else "Caso1")
+	var caso := esc.get_node("Caso0" if caso0 else ("Caso1Lago" if lago else "Caso1"))
 	caso.set_process(false)
 	var jugador := esc.get_node("Jugador")
 	jugador.set_process(false)
@@ -65,6 +83,10 @@ func _init() -> void:
 		for c in esc.find_children("*", "", true, false):
 			if c.has_signal("Abierto") and c.has_method("RestaurarEstado"):
 				c.RestaurarEstado(true, true)
+	elif lago:
+		for ruta in ABRIR_LAGO:
+			esc.get_node(ruta).Interactuar(jugador)
+		esc.get_node("Bosque/Altavoz/Estatica").stop()
 	else:
 		for ruta in ABRIR:
 			esc.get_node(ruta).Interactuar(jugador)
@@ -96,6 +118,9 @@ func _init() -> void:
 		for hijo in nodo.get_children():
 			if hijo is CollisionShape3D:
 				centro = hijo.global_position
+		# La caja de la linterna llega desde el fondo del agua hasta el muelle: se mira el modelo
+		if lago and id == "linterna_porky":
+			centro = (nodo.get_node("Modelo") as Node3D).global_position + Vector3.UP * float(toma[3])
 		cam.global_position = centro + (toma[1] as Vector3).normalized() * float(toma[2])
 		cam.look_at(centro, Vector3.UP if absf((toma[1] as Vector3).normalized().y) < 0.95 else Vector3.FORWARD)
 		# El registro de llamadas va dentro del coche: para la foto se esconde la carrocería
@@ -103,7 +128,7 @@ func _init() -> void:
 		if coche:
 			coche.visible = id != "registro_llamadas"
 		# Un cuarto valor en la toma cambia la fuerza del foco (para los papeles claros)
-		foco.light_energy = float(toma[3]) if toma.size() > 3 else (1.0 if caso0 else 2.2)
+		foco.light_energy = float(toma[4]) if lago else (float(toma[3]) if toma.size() > 3 else (1.0 if caso0 else 2.2))
 		for i in 20:
 			await process_frame
 		var imagen := root.get_texture().get_image()

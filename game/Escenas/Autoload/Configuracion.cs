@@ -61,6 +61,11 @@ public partial class Configuracion : Node
 
 	// Ayudas visuales del tutorial (íconos de tecla, foco, flecha al objetivo). Se pueden apagar en Opciones.
 	public bool AyudasVisuales { get; set; } = true;
+
+	// Tamaño del texto del HUD, diario, expediente y diálogos.
+	public static readonly (float Escala, string Nombre)[] EscalasTexto = { (1f, "Normal"), (1.15f, "Grande"), (1.3f, "Muy grande") };
+	private float _escalaTexto = 1f;
+	public float EscalaTexto { get => _escalaTexto; set => _escalaTexto = Mathf.Clamp(value, 1f, 1.3f); }
 	public bool AyudasInvestigacion { get; set; } = true;
 
 	// Teclas que el jugador puede cambiar en Opciones > Controles (nombre visible, acción del InputMap)
@@ -70,12 +75,14 @@ public partial class Configuracion : Node
 		("Izquierda", "mover_izquierda"), ("Derecha", "mover_derecha"),
 		("Correr", "correr"), ("Agacharse", "agacharse"),
 		("Interactuar", "interactuar"), ("Linterna", "linterna"),
+		("Diario", "diario"), ("Expediente", "expediente"),
+		("Tablero de deducción", "deducir"), ("Cambiar cámara", "cambiar_camara"), ("Ayuda", "ayuda"),
 	};
 
-	// Teclas que el HUD lee directamente o que el juego reserva: no se pueden asignar a otra acción
+	// Atajos globales que no se pueden reasignar.
 	private static readonly Dictionary<Key, string> TeclasReservadas = new()
 	{
-		[Key.Escape] = "Pausa", [Key.Tab] = "Expediente", [Key.Q] = "Libreta", [Key.F11] = "Pantalla completa", [Key.F3] = "Contador de FPS",
+		[Key.Escape] = "Pausa", [Key.F11] = "Pantalla completa", [Key.F3] = "Contador de FPS",
 	};
 
 	// Nombre en español de las demás acciones, para avisar de conflictos
@@ -85,13 +92,53 @@ public partial class Configuracion : Node
 		["bailar"] = "Bailar", ["morir"] = "Morir", ["pausa"] = "Pausa",
 	};
 
-	// Teclas cambiadas por el jugador: acción → tecla física. Las demás siguen como en project.godot.
-	private readonly Dictionary<string, Key> _teclas = new();
-
-	public void AsignarTecla(string accion, Key fisica)
+	// Teclas que Windows, macOS o el propio teclado se reservan (HU-19): el juego no las recibe bien
+	// o, al pulsarlas, el sistema hace otra cosa (cambiar de ventana, cerrar el juego, captura de pantalla...)
+	private static readonly Dictionary<Key, string> TeclasSistema = new()
 	{
-		_teclas[accion] = fisica;
+		[Key.Alt] = "combinaciones del sistema como Alt + Tab, Alt + F4 y Ctrl + Alt + Supr",
+		[Key.Meta] = "el sistema (tecla Windows / Cmd)",
+		[Key.Print] = "la captura de pantalla del sistema",
+		[Key.Sysreq] = "el sistema (PetSis)",
+		[Key.Pause] = "el sistema (Pausa / Inter)",
+		[Key.Scrolllock] = "el sistema (Bloq Despl)",
+	};
+
+	// Motivo por el que el sistema se reserva la tecla, o null si el juego puede usarla
+	public static string ReservadaPorSistema(Key fisica)
+	{
+		if (TeclasSistema.TryGetValue(fisica, out string motivo)) return motivo;
+		// Menú contextual, ayuda, multimedia (volumen, reproducir...) y teclas de abrir aplicaciones
+		if ((fisica >= Key.Menu && fisica <= Key.JisKana) || fisica == Key.Unknown || fisica == Key.None)
+			return "funciones especiales del teclado";
+		return null;
+	}
+
+	// Asigna la tecla si es válida: no reservada y sin repetir. Se guarda al momento para que el
+	// cambio no se pierda aunque el jugador cierre el juego sin pasar por «Guardar y volver».
+	public bool AsignarTecla(string accion, Key fisica)
+	{
+		if (ReservadaPorSistema(fisica) != null || UsoDeTecla(fisica, accion) != null) return false;
 		AplicarTecla(accion, fisica);
+		Guardar();
+		return true;
+	}
+
+	public static Key TeclaDe(string accion)
+	{
+		if (!InputMap.HasAction(accion)) return Key.None;
+		foreach (InputEvent evento in InputMap.ActionGetEvents(accion))
+			if (evento is InputEventKey tecla) return tecla.PhysicalKeycode != Key.None ? tecla.PhysicalKeycode : tecla.Keycode;
+		return Key.None;
+	}
+
+	private static Key TeclaOriginal(string accion)
+	{
+		if (!ProjectSettings.HasSetting("input/" + accion)) return Key.None;
+		var datos = ProjectSettings.GetSetting("input/" + accion).AsGodotDictionary();
+		foreach (Variant evento in datos["events"].AsGodotArray())
+			if (evento.As<InputEvent>() is InputEventKey tecla) return tecla.PhysicalKeycode != Key.None ? tecla.PhysicalKeycode : tecla.Keycode;
+		return Key.None;
 	}
 
 	// Sustituye las teclas de la acción (los botones del control se conservan)
@@ -105,14 +152,54 @@ public partial class Configuracion : Node
 
 	public void RestaurarTeclas()
 	{
-		_teclas.Clear();
-		foreach (var (_, accion) in TeclasConfigurables)
+		foreach (var (_, accion) in TeclasConfigurables) RestaurarAccion(accion);
+	}
+
+	// Vuelve una acción a las teclas y botones de project.godot
+	private static void RestaurarAccion(string accion)
+	{
+		if (!InputMap.HasAction(accion) || !ProjectSettings.HasSetting("input/" + accion)) return;
+		var definicion = ProjectSettings.GetSetting("input/" + accion).AsGodotDictionary();
+		InputMap.ActionEraseEvents(accion);
+		foreach (InputEvent evento in definicion["events"].AsGodotArray<InputEvent>())
+			InputMap.ActionAddEvent(accion, evento);
+	}
+
+	// Acciones configurables que se quedaron sin ninguna tecla del teclado (nombres visibles)
+	public static List<string> AccionesSinTecla()
+	{
+		var faltan = new List<string>();
+		foreach (var (nombre, accion) in TeclasConfigurables)
 		{
-			if (!InputMap.HasAction(accion) || !ProjectSettings.HasSetting("input/" + accion)) continue;
-			var definicion = ProjectSettings.GetSetting("input/" + accion).AsGodotDictionary();
-			InputMap.ActionEraseEvents(accion);
-			foreach (InputEvent evento in definicion["events"].AsGodotArray<InputEvent>())
-				InputMap.ActionAddEvent(accion, evento);
+			if (!InputMap.HasAction(accion)) continue;
+			bool tieneTecla = false;
+			foreach (InputEvent evento in InputMap.ActionGetEvents(accion))
+				if (evento is InputEventKey) tieneTecla = true;
+			if (!tieneTecla) faltan.Add(nombre);
+		}
+		return faltan;
+	}
+
+	// Teclas guardadas en el archivo: se aplican todas y después se revisan, para que un archivo editado
+	// a mano o de otra versión no deje teclas reservadas ni repetidas (esas vuelven a la predeterminada)
+	private void CargarTeclas(ConfigFile archivo)
+	{
+		if (!archivo.HasSection("teclas")) return;
+		var configurables = new HashSet<string>();
+		foreach (var (_, accion) in TeclasConfigurables) configurables.Add(accion);
+		var cargadas = new List<string>();
+		foreach (string accion in archivo.GetSectionKeys("teclas"))
+		{
+			var tecla = (Key)archivo.GetValue("teclas", accion, 0).AsInt64();
+			if (!configurables.Contains(accion) || !InputMap.HasAction(accion) || ReservadaPorSistema(tecla) != null) continue;
+			AplicarTecla(accion, tecla);
+			cargadas.Add(accion);
+		}
+		foreach (string accion in cargadas)
+		{
+			if (UsoDeTecla(TeclaDe(accion), accion) == null) continue;
+			GD.PushWarning($"Configuracion: la tecla guardada para {accion} se repetía; vuelve a la predeterminada.");
+			RestaurarAccion(accion);
 		}
 	}
 
@@ -148,8 +235,10 @@ public partial class Configuracion : Node
 		AgacharseAlternar = false;
 		SensibilidadRaton = 1f;
 		AyudasVisuales = true;
+		EscalaTexto = 1f;
 		AyudasInvestigacion = true;
 		RestaurarTeclas();
+		Guardar();
 	}
 
 	// true si lo último que tocó el jugador fue un control; las ayudas muestran sus botones
@@ -186,14 +275,8 @@ public partial class Configuracion : Node
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
 		AyudasInvestigacion = archivo.GetValue("controles", "ayudas_investigacion", true).AsBool();
 		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
-		if (archivo.HasSection("teclas"))
-		{
-			foreach (string accion in archivo.GetSectionKeys("teclas"))
-			{
-				var tecla = (Key)archivo.GetValue("teclas", accion, 0).AsInt64();
-				if (tecla != Key.None && InputMap.HasAction(accion)) AsignarTecla(accion, tecla);
-			}
-		}
+		EscalaTexto = archivo.GetValue("accesibilidad", "escala_texto", EscalaTexto).AsSingle();
+		CargarTeclas(archivo);
 	}
 
 	private void CrearContadorFps()
@@ -242,6 +325,12 @@ public partial class Configuracion : Node
 		}
 	}
 
+	// Si el jugador cierra la ventana con un menú abierto, lo que cambió se guarda igual
+	public override void _Notification(int what)
+	{
+		if (what == NotificationWMCloseRequest) Guardar();
+	}
+
 	public override void _Process(double delta)
 	{
 		_contadorFps.Text = Engine.GetFramesPerSecond() + " FPS";
@@ -257,6 +346,12 @@ public partial class Configuracion : Node
 		archivo.SetValue("controles", "agacharse_alternar", AgacharseAlternar);
 		archivo.SetValue("controles", "sensibilidad_raton", SensibilidadRaton);
 		archivo.SetValue("controles", "ayudas_visuales", AyudasVisuales);
+		archivo.SetValue("accesibilidad", "escala_texto", EscalaTexto);
+		foreach (var (_, accion) in TeclasConfigurables)
+		{
+			Key tecla = TeclaDe(accion);
+			if (tecla != TeclaOriginal(accion)) archivo.SetValue("teclas", accion, (long)tecla);
+		}
 		archivo.SetValue("controles", "ayudas_investigacion", AyudasInvestigacion);
 		foreach (var (accion, tecla) in _teclas)
 			archivo.SetValue("teclas", accion, (long)tecla);

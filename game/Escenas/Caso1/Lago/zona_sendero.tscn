@@ -1,0 +1,299 @@
+[gd_scene load_steps=28 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/poste_madera.tscn" id="e1"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/naturaleza/log.glb" id="e2"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e3"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/PuntoInteraccion.cs" id="e4"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/coche.tscn" id="e5"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Lago/Texturas/colormap_patrulla.png" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/letrero_poste.tscn" id="e7"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/huellas_pezuna.png" id="e8"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e9"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/huellas_pezuna/huellas_pezuna.tscn" id="e10"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/huellas_detenidas.png" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/huellas_detenidas/huellas_detenidas.tscn" id="e12"]
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Lago/Texturas/huella_pezuna.png" id="e13"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1"]
+radius = 0.3
+height = 4.8
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_2"]
+radius = 0.3
+height = 4.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3"]
+size = Vector3(4.2, 3.0, 0.4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4"]
+albedo_texture = ExtResource("e6")
+roughness = 0.45
+metallic = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5"]
+albedo_color = Color(0.06, 0.12, 0.36, 1.0)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6"]
+albedo_color = Color(0.45, 0.05, 0.04, 1.0)
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7"]
+albedo_color = Color(0.1, 0.1, 0.1, 1.0)
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_8"]
+size = Vector3(1.2, 0.06, 0.28)
+material = SubResource("StandardMaterial3D_7")
+
+[sub_resource type="BoxMesh" id="BoxMesh_9"]
+size = Vector3(0.56, 0.1, 0.24)
+material = SubResource("StandardMaterial3D_5")
+
+[sub_resource type="BoxMesh" id="BoxMesh_10"]
+size = Vector3(0.56, 0.1, 0.24)
+material = SubResource("StandardMaterial3D_6")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_11"]
+size = Vector3(0.3, 1.0, 1.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_12"]
+size = Vector3(0.95, 0.25, 2.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_13"]
+size = Vector3(0.95, 0.25, 2.3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_14"]
+size = Vector3(14.0, 4.0, 30.0)
+
+[node name="Sendero" type="Node3D"]
+
+[node name="Arco" type="Node3D" parent="." groups=["auditoria_estructura"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 60.5)
+
+[node name="Poste-2" parent="Arco" instance=ExtResource("e1")]
+transform = Transform3D(1.2, 0.0, 0.0, 0.0, 1.6, 0.0, 0.0, 0.0, 1.2, -2.3, 0.0, 0.0)
+
+[node name="ColPoste-2" type="StaticBody3D" parent="Arco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.3, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Arco/ColPoste-2"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.4, 0.0)
+shape = SubResource("CylinderShape3D_1")
+
+[node name="Poste2" parent="Arco" instance=ExtResource("e1")]
+transform = Transform3D(1.2, 0.0, 0.0, 0.0, 1.6, 0.0, 0.0, 0.0, 1.2, 2.3, 0.0, 0.0)
+
+[node name="ColPoste2" type="StaticBody3D" parent="Arco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 2.3, 0.0, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="Arco/ColPoste2"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.4, 0.0)
+shape = SubResource("CylinderShape3D_2")
+
+[node name="Travesano" parent="Arco" instance=ExtResource("e2")]
+transform = Transform3D(0.0, 0.0, 7.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 0.0, 4.75, 0.0)
+
+[node name="Letrero" type="Node3D" parent="Arco"]
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 4.1, -0.25)
+script = ExtResource("e3")
+Texto = "CAMPAMENTO PINO LUNAR"
+Ancho = 3.6
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 64
+TamMinimo = 24
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.004
+
+[node name="Salida" type="StaticBody3D" parent="Arco" groups=["auditoria_invisible_ok"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.4)
+collision_layer = 40
+collision_mask = 0
+script = ExtResource("e4")
+Accion = "Volver al campamento"
+
+[node name="Forma" type="CollisionShape3D" parent="Arco/Salida"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.5, 0.0)
+shape = SubResource("BoxShape3D_3")
+
+[node name="EntradaDesdeCampamento" type="Marker3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.1, 58.0)
+
+[node name="Patrulla" type="Node3D" parent="." groups=["auditoria_estructura"]]
+transform = Transform3D(0.9903, 0.0, 0.1392, 0.0, 1.0, 0.0, -0.1392, 0.0, 0.9903, -5.2, 0.0, 55.5)
+
+[node name="Modelo" parent="Patrulla" instance=ExtResource("e5")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="body" parent="Patrulla/Modelo/Modelo"]
+material_override = SubResource("StandardMaterial3D_4")
+
+[node name="Torreta" type="Node3D" parent="Patrulla"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.2231, -0.2)
+
+[node name="Base" type="MeshInstance3D" parent="Patrulla/Torreta"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.03, 0.0)
+mesh = SubResource("BoxMesh_8")
+
+[node name="Azul" type="MeshInstance3D" parent="Patrulla/Torreta"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.3, 0.1, 0.0)
+mesh = SubResource("BoxMesh_9")
+
+[node name="Roja" type="MeshInstance3D" parent="Patrulla/Torreta"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.3, 0.1, 0.0)
+mesh = SubResource("BoxMesh_10")
+
+[node name="PoliciaI" type="Node3D" parent="Patrulla"]
+transform = Transform3D(0.0, 0.0, -1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, -1.2741, 0.95, 0.15)
+script = ExtResource("e3")
+Texto = "POLICÍA"
+Ancho = 1.3
+ColorPapel = Color(0.06, 0.12, 0.36, 1.0)
+ColorTexto = Color(0.95, 0.95, 0.95, 1.0)
+TamFuente = 60
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.003
+AltoFijo = 0.3
+
+[node name="PoliciaD" type="Node3D" parent="Patrulla"]
+transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, 1.2741, 0.95, 0.15)
+script = ExtResource("e3")
+Texto = "POLICÍA"
+Ancho = 1.3
+ColorPapel = Color(0.06, 0.12, 0.36, 1.0)
+ColorTexto = Color(0.95, 0.95, 0.95, 1.0)
+TamFuente = 60
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.003
+AltoFijo = 0.3
+
+[node name="IrEstacion" type="StaticBody3D" parent="Patrulla" groups=["auditoria_invisible_ok"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 1.3941, 1.0, 0.4)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e4")
+Accion = "Ir a la estación"
+
+[node name="Forma" type="CollisionShape3D" parent="Patrulla/IrEstacion"]
+shape = SubResource("BoxShape3D_11")
+
+[node name="EntradaDesdeSala" type="Marker3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -2.8, 1.1, 53.5)
+
+[node name="Indicador" parent="." instance=ExtResource("e7")]
+transform = Transform3D(-0.9397, 0.0, -0.342, 0.0, 1.0, 0.0, 0.342, 0.0, -0.9397, 1.8, 0.0002, 30.0)
+
+[node name="IndicadorTexto" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(-0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, -0.9397, 1.6859431, 0.9502, 29.68665)
+script = ExtResource("e3")
+Texto = "↑ LAGO ESPEJO
+← BOSQUE   COLINA →"
+Ancho = 0.66
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 28
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="HuellasPezuna" type="StaticBody3D" parent="."]
+transform = Transform3D(0.0698, 0.0, -0.9976, 0.0, 1.0, 0.0, 0.9976, 0.0, 0.0698, -8.0, -0.03, 31.6)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e9")
+Id = "huellas_pezuna"
+Titulo = "Huellas de pezuña"
+Descripcion = "Huellas de pezuña muy hondas en el lodo del sendero, con un paso demasiado largo para un venado. Vienen del bosque."
+EsEvidencia = true
+ComentarioAlMirar = "¿Pezuñas? Demasiado hondas... y demasiado separadas."
+SoloAgachado = true
+Imagen = ExtResource("e8")
+
+[node name="Forma" type="CollisionShape3D" parent="HuellasPezuna"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.1, 0.0)
+shape = SubResource("BoxShape3D_12")
+
+[node name="Modelo" parent="HuellasPezuna" instance=ExtResource("e10")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="HuellasDetenidas" type="StaticBody3D" parent="."]
+transform = Transform3D(0.9806, 0.0, -0.1961, 0.0, 1.0, 0.0, 0.1961, 0.0, 0.9806, 4.3, -0.0285, 18.6)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e9")
+Id = "huellas_detenidas"
+Titulo = "Las huellas se detienen"
+Descripcion = "Las huellas de pezuña terminan de golpe a unos 30 metros del embarcadero. Después, nada: ni una más."
+EsEvidencia = true
+ComentarioAlMirar = "Aquí terminan. Como si el ciervo se hubiera esfumado."
+SoloAgachado = true
+Imagen = ExtResource("e11")
+
+[node name="Forma" type="CollisionShape3D" parent="HuellasDetenidas"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.1, 0.0)
+shape = SubResource("BoxShape3D_13")
+
+[node name="Modelo" parent="HuellasDetenidas" instance=ExtResource("e12")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="Rastro0" type="Decal" parent="."]
+transform = Transform3D(-0.0698, 0.0, 0.9976, 0.0, 1.0, 0.0, -0.9976, 0.0, -0.0698, -4.5, 0.0, 31.4)
+size = Vector3(0.24, 0.3, 0.3)
+texture_albedo = ExtResource("e13")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Rastro1" type="Decal" parent="."]
+transform = Transform3D(-0.1736, 0.0, 0.9848, 0.0, 1.0, 0.0, -0.9848, 0.0, -0.1736, -2.2, 0.0, 31.2)
+size = Vector3(0.24, 0.3, 0.3)
+texture_albedo = ExtResource("e13")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Rastro2" type="Decal" parent="."]
+transform = Transform3D(-0.766, 0.0, 0.6428, 0.0, 1.0, 0.0, -0.6428, 0.0, -0.766, 0.4, 0.0001, 29.4)
+size = Vector3(0.24, 0.3, 0.3)
+texture_albedo = ExtResource("e13")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Rastro3" type="Decal" parent="."]
+transform = Transform3D(-0.9063, 0.0, 0.4226, 0.0, 1.0, 0.0, -0.4226, 0.0, -0.9063, 1.6, 0.0002, 26.8)
+size = Vector3(0.24, 0.3, 0.3)
+texture_albedo = ExtResource("e13")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Rastro4" type="Decal" parent="."]
+transform = Transform3D(-0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, -0.9397, 2.6, 0.0005, 24.2)
+size = Vector3(0.24, 0.3, 0.3)
+texture_albedo = ExtResource("e13")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Rastro5" type="Decal" parent="."]
+transform = Transform3D(-0.9703, 0.0, 0.2419, 0.0, 1.0, 0.0, -0.2419, 0.0, -0.9703, 3.4, 0.001, 21.6)
+size = Vector3(0.24, 0.3, 0.3)
+texture_albedo = ExtResource("e13")
+upper_fade = 0.2
+lower_fade = 0.2
+
+[node name="Sendero" type="Area3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.5, 45.0)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="Forma" type="CollisionShape3D" parent="Sendero"]
+shape = SubResource("BoxShape3D_14")

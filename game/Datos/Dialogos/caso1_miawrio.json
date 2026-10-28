@@ -1,0 +1,396 @@
+{
+	"id": "caso1_miawrio",
+	"personaje": "Miawrio",
+	"tono_voz": 0.92,
+	"inicio": "entrada",
+	"nodos": {
+		"entrada": {
+			"ir_a": [
+				{
+					"si": {
+						"conclusiones": [
+							"miawrio_2"
+						]
+					},
+					"destino": "confeso"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"miawrio_1"
+						]
+					},
+					"destino": "regreso_2"
+				},
+				{
+					"si": {
+						"nodos_completados": [
+							"mentira"
+						]
+					},
+					"destino": "regreso_1"
+				},
+				{
+					"destino": "mentira"
+				}
+			]
+		},
+		"mentira": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Miawrio, siéntate, por favor."
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "impaciente",
+					"gesto": "Mira su reloj",
+					"texto": "Eh... estuve en mi carro, haciendo llamadas. Cerrando pendientes. A la cocinera casi no la conocía."
+				}
+			],
+			"siguiente": "prueba_1",
+			"al_completar": {
+				"notas": [
+					"Miawrio dice que estuvo en su carro haciendo llamadas y que casi no conocía a Porky."
+				]
+			}
+		},
+		"regreso_1": {
+			"variantes": [
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "impaciente",
+						"gesto": "Mira su reloj",
+						"texto": "Eh... ¿otra vez? Tengo una llamada en diez minutos, ¿sabes cómo?"
+					}
+				],
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "serio",
+						"texto": "Eh... adelante, Caneloso. Pero vamos al grano."
+					}
+				],
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "serio",
+						"gesto": "Te mira a los ojos",
+						"texto": "Eh... aquí sigo. Pregunta lo que necesites."
+					}
+				]
+			],
+			"siguiente": "prueba_1"
+		},
+		"regreso_2": {
+			"variantes": [
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "impaciente",
+						"gesto": "Mira su reloj",
+						"texto": "Eh... ¿otra vez? Tengo una llamada en diez minutos, ¿sabes cómo?"
+					}
+				],
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "serio",
+						"texto": "Eh... adelante, Caneloso. Pero vamos al grano."
+					}
+				],
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "serio",
+						"gesto": "Te mira a los ojos",
+						"texto": "Eh... aquí sigo. Pregunta lo que necesites."
+					}
+				]
+			],
+			"siguiente": "prueba_2"
+		},
+		"prueba_1": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "oferta_compra",
+					"tipo": "MOSTRAR",
+					"texto": "Oferta de compra rota",
+					"destino": "p1_oferta",
+					"requiere": {
+						"pistas": [
+							"oferta_compra"
+						]
+					}
+				},
+				{
+					"id": "baul_disfraces",
+					"tipo": "MOSTRAR",
+					"texto": "Baúl de disfraces",
+					"destino": "e_baul",
+					"requiere": {
+						"pistas": [
+							"baul_disfraces"
+						]
+					}
+				},
+				{
+					"id": "huellas_pezuna",
+					"tipo": "MOSTRAR",
+					"texto": "Huellas de pezuña",
+					"destino": "e_huellas",
+					"requiere": {
+						"pistas": [
+							"huellas_pezuna"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p1_oferta": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Casi no la conocías? Tu firma está en esta oferta de compra. Porky la rompió y la tiró a la basura."
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "incómodo",
+					"texto": "Eh... está bien. Le ofrecí una compensación para que desalojara su cabaña antes de la firma. Me dijo: «Sobre mi cadáver venderán esto». Le dije que la iba a quitar del camino... por la vía legal, con una demanda. Negocios, ¿sabes cómo?"
+				}
+			],
+			"siguiente": "prueba_2",
+			"al_completar": {
+				"conclusiones": [
+					"miawrio_1"
+				],
+				"notas": [
+					"Miawrio le ofreció dinero a Porky para que dejara su cabaña. Ella se negó. Lo de «quitarla del camino» era con una demanda."
+				]
+			}
+		},
+		"e_baul": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Del baúl de disfraces falta la cornamenta."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_huellas": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Las huellas del sendero son demasiado hondas para un ciervo."
+				}
+			],
+			"siguiente": "error"
+		},
+		"prueba_2": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "registro_llamadas",
+					"tipo": "MOSTRAR",
+					"texto": "Registro de llamadas",
+					"destino": "p2_llamadas",
+					"requiere": {
+						"pistas": [
+							"registro_llamadas"
+						]
+					}
+				},
+				{
+					"id": "libro_guardia_quemado",
+					"tipo": "MOSTRAR",
+					"texto": "Libro de guardia quemado",
+					"destino": "e_libro",
+					"requiere": {
+						"pistas": [
+							"libro_guardia_quemado"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p2_llamadas": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Tu registro de llamadas. Vamos a ver si de verdad estuviste en el carro."
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "serio",
+					"texto": "Eh... llamadas de 23:00 a 23:40, sin cortes. No me moví del carro. Pero hay algo más: a las 18:00 estaba esperando a Tony y oí a Porky decirle: «Esta noche, en el embarcadero. Tú y yo»."
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "serio",
+					"gesto": "Se pone serio",
+					"texto": "Tony necesitaba la venta más que nadie. Yo le ofrecí un pago aparte para cerrar rápido. Este lugar también fue mío de niño, ¿sabes cómo? Quería quedarme con algo de él. Haz con eso lo que quieras."
+				},
+				{
+					"habla": "Hecdog",
+					"animo": "satisfecho",
+					"texto": "Una cita en el embarcadero la misma noche del crimen, Nya. Ahí hay tela de dónde cortar."
+				}
+			],
+			"fin": true,
+			"al_completar": {
+				"conclusiones": [
+					"miawrio_2",
+					"miawrio_coartada",
+					"miawrio_oyo_cita"
+				],
+				"notas": [
+					"Miawrio estuvo en llamadas de 23:00 a 23:40, sin cortes: tiene coartada.",
+					"A las 18:00, Miawrio oyó a Porky decirle a Tony: «Esta noche, en el embarcadero. Tú y yo»."
+				]
+			}
+		},
+		"e_libro": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Alguien quemó el libro de guardia en la fogata."
+				}
+			],
+			"siguiente": "error"
+		},
+		"confeso": {
+			"variantes": [
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "impaciente",
+						"texto": "Eh... ya te dije todo lo que sé. Mi tiempo vale, ¿sabes cómo?"
+					}
+				],
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "serio",
+						"texto": "Eh... ya está todo dicho. Lo que siga, que lo vean los abogados, ¿sabes cómo?"
+					}
+				]
+			],
+			"fin": true
+		},
+		"error": {
+			"ir_a": [
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 0
+						}
+					},
+					"destino": "paciencia"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 1
+						}
+					},
+					"destino": "error_1"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 2
+						}
+					},
+					"destino": "error_2"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 3
+						}
+					},
+					"destino": "error_3"
+				},
+				{
+					"destino": "error_4"
+				}
+			],
+			"al_completar": {
+				"sumar": {
+					"credibilidad": -1
+				}
+			}
+		},
+		"error_4": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Caneloso, eso no tiene nada que ver con lo que dice Miawrio, Nya. Así no vamos a ningún lado."
+				}
+			]
+		},
+		"error_3": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Otra vez, Caneloso. Eso no tiene nada que ver con lo que dice Miawrio, Nya. Piénsale tantito."
+				}
+			]
+		},
+		"error_2": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "impaciente",
+					"texto": "Caneloso, se me está acabando la paciencia, Nya. Eso no tiene nada que ver con lo que dice Miawrio."
+				}
+			]
+		},
+		"error_1": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "harto",
+					"texto": "Última advertencia, Caneloso. Una prueba más así y te mando a acusar a quien sea, Nya."
+				}
+			]
+		},
+		"paciencia": {
+			"fin": true,
+			"salida": "paciencia"
+		},
+		"despedida": {
+			"variantes": [
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Volveré cuando tenga algo mejor que enseñarte, Miawrio."
+					}
+				],
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Ahorita regreso, Miawrio. No te vayas lejos."
+					}
+				]
+			]
+		}
+	}
+}

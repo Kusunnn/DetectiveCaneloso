@@ -36,7 +36,8 @@ public partial class MenuOpciones : PanelMenu
 	private FilaInterruptor _ayudas;
 	private FilaInterruptor _ayudasInvestigacion;
 	private readonly List<FilaTecla> _filasTecla = new();
-	private FilaTecla _esperando;
+	private PanelTeclas _panelTeclas;
+	private OptionButton _tamanoTexto;
 
 	private Label _ayuda;
 	private Button _botonRestaurar;
@@ -47,6 +48,9 @@ public partial class MenuOpciones : PanelMenu
 	{
 		SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 		MouseFilter = MouseFilterEnum.Stop;
+		_panelTeclas = new PanelTeclas { Name = "PanelTeclas" };
+		_panelTeclas.Vincular(this, MostrarAyuda);
+		AddChild(_panelTeclas);
 		Construir();
 		base._Ready();
 		RehacerFoco();
@@ -158,7 +162,7 @@ public partial class MenuOpciones : PanelMenu
 		foreach (var (texto, accion) in Configuracion.TeclasConfigurables)
 		{
 			var fila = new FilaTecla(texto, accion) { SizeFlagsHorizontal = SizeFlags.ExpandFill };
-			fila.Pressed += () => EmpezarCaptura(fila);
+			_panelTeclas.Registrar(fila);
 			_filasTecla.Add(fila);
 			lista.AddChild(fila);
 			enfocables.Add(fila);
@@ -181,6 +185,18 @@ public partial class MenuOpciones : PanelMenu
 		_ayudas.Cambiado += activado => Configuracion.Instancia.AyudasVisuales = activado;
 		lista.AddChild(_pantallaCompleta);
 		lista.AddChild(_ayudas);
+		var filaTexto = EstiloMenus.Fila(40);
+		var tituloTexto = EstiloMenus.Etiqueta("Tamaño del texto", EstiloMenus.Display(800, 42, 0.02f), 42, EstiloMenus.Texto);
+		tituloTexto.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+		filaTexto.AddChild(tituloTexto);
+		_tamanoTexto = new OptionButton { Name = "TamanoTexto", CustomMinimumSize = new Vector2(300, 64) };
+		_tamanoTexto.AddThemeFontOverride("font", EstiloMenus.Mono(26));
+		_tamanoTexto.AddThemeFontSizeOverride("font_size", 26);
+		foreach (var (_, nombre) in Configuracion.EscalasTexto) _tamanoTexto.AddItem(nombre);
+		_tamanoTexto.ItemSelected += indice => Configuracion.Instancia.EscalaTexto = Configuracion.EscalasTexto[indice].Escala;
+		filaTexto.AddChild(_tamanoTexto);
+		lista.AddChild(filaTexto);
+		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas, _tamanoTexto };
 		_ayudasInvestigacion = new FilaInterruptor("Ayudas de investigación", "Permite solicitar orientación si te estancas");
 		_ayudasInvestigacion.Cambiado += activado => Configuracion.Instancia.AyudasInvestigacion = activado;
 		lista.AddChild(_ayudasInvestigacion);
@@ -317,6 +333,9 @@ public partial class MenuOpciones : PanelMenu
 		_agacharse.Fijar(config.AgacharseAlternar);
 		_pantallaCompleta.Fijar(config.PantallaCompleta);
 		_ayudas.Fijar(config.AyudasVisuales);
+		int escala = Array.FindIndex(Configuracion.EscalasTexto, e => Mathf.IsEqualApprox(e.Escala, config.EscalaTexto));
+		_tamanoTexto.Select(Math.Max(escala, 0));
+		_panelTeclas.Refrescar();
 		_ayudasInvestigacion.Fijar(config.AyudasInvestigacion);
 		foreach (var fila in _filasTecla) fila.MostrarTecla(Teclas.EtiquetaTeclado(fila.Accion));
 	}
@@ -326,60 +345,21 @@ public partial class MenuOpciones : PanelMenu
 		CancelarCaptura();
 		Configuracion.Instancia.RestaurarPredeterminados();
 		CargarValores();
-		MostrarAyuda("Se restauraron los valores predeterminados.", EstiloMenus.Ambar);
+		MostrarAyuda("Se restauraron los valores predeterminados: las teclas volvieron a los controles originales.", EstiloMenus.Ambar);
 	}
 
 	// ---------- Cambio de teclas ----------
 
-	private void EmpezarCaptura(FilaTecla fila)
-	{
-		CancelarCaptura();
-		_esperando = fila;
-		fila.Esperando = true;
-		MostrarAyuda($"Pulsa una tecla para {Configuracion.NombreAccion(fila.Accion).ToLower()} · ESC cancela", EstiloMenus.Ambar);
-	}
+	private void CancelarCaptura() => _panelTeclas.CancelarCaptura();
 
-	private void CancelarCaptura()
+	// Avisa si alguna acción se quedó sin tecla; true si falta alguna
+	private bool AvisarTeclasFaltantes()
 	{
-		if (_esperando == null) return;
-		_esperando.Esperando = false;
-		_esperando.MostrarTecla(Teclas.EtiquetaTeclado(_esperando.Accion));
-		_esperando = null;
-		if (_ayuda != null) MostrarAyuda(Ayudas[_pestanaActual]);
-	}
-
-	// Mientras se espera una tecla, esa pulsación no llega al resto del juego ni cierra el menú
-	public override void _Input(InputEvent evento)
-	{
-		if (_esperando == null || !Visible) return;
-		if (evento is InputEventMouseButton { Pressed: true } clic && clic.ButtonIndex != MouseButton.Left)
-		{
-			GetViewport().SetInputAsHandled();
-			return;
-		}
-		if (evento is not InputEventKey tecla || !tecla.Pressed || tecla.Echo) return;
-		GetViewport().SetInputAsHandled();
-
-		var fila = _esperando;
-		if (tecla.Keycode == Key.Escape)
-		{
-			CancelarCaptura();
-			fila.GrabFocus();
-			return;
-		}
-		Key fisica = tecla.PhysicalKeycode != Key.None ? tecla.PhysicalKeycode : tecla.Keycode;
-		string ocupada = Configuracion.Instancia.UsoDeTecla(fisica, fila.Accion);
-		if (ocupada != null)
-		{
-			MostrarAyuda($"La tecla {Teclas.NombreTecla(fisica)} ya se usa para {ocupada}. Elige otra · ESC cancela", EstiloMenus.Coral);
-			return;
-		}
-		Configuracion.Instancia.AsignarTecla(fila.Accion, fisica);
-		_esperando = null;
-		fila.Esperando = false;
-		fila.MostrarTecla(Teclas.EtiquetaTeclado(fila.Accion));
-		MostrarAyuda(Ayudas[_pestanaActual]);
-		fila.GrabFocus();
+		var faltan = Configuracion.AccionesSinTecla();
+		if (faltan.Count == 0) return false;
+		MostrarPestana("controles");
+		MostrarAyuda($"Falta asignar una tecla a: {string.Join(", ", faltan)}. Selecciónala y pulsa una tecla, o restaura los predeterminados.", EstiloMenus.Coral);
+		return true;
 	}
 
 	// ---------- Abrir y cerrar ----------
@@ -388,6 +368,7 @@ public partial class MenuOpciones : PanelMenu
 	{
 		CargarValores();
 		MostrarPestana(_pestanaActual);
+		AvisarTeclasFaltantes();
 		base.Abrir();
 		_pestanas[_pestanaActual].GrabFocus();
 	}
@@ -395,6 +376,8 @@ public partial class MenuOpciones : PanelMenu
 	public override void Cerrar()
 	{
 		CancelarCaptura();
+		// Sin tecla, esa acción no se podría usar en el juego: no se sale hasta asignarla
+		if (AvisarTeclasFaltantes()) return;
 		Configuracion.Instancia.Guardar();
 		base.Cerrar();
 	}
