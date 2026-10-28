@@ -1,0 +1,1404 @@
+[
+ {
+  "k": 1,
+  "nombre": "Caneloso pone PLAY",
+  "dur": 3.6,
+  "epoca": "presente",
+  "entrada": "negro",
+  "hora": "SALA 1 · 06:58",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     0.6,
+     1.4,
+     -1.35
+    ],
+    "color": [
+     1.0,
+     0.82,
+     0.6
+    ],
+    "energia": 2.0,
+    "angulo": 40,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -0.4,
+     2.2,
+     -0.3
+    ],
+    "mira": [
+     0.6,
+     1.5,
+     -1.3
+    ],
+    "color": [
+     1.0,
+     0.9,
+     0.8
+    ],
+    "energia": 2.0,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     1.2,
+     2.2,
+     -0.6
+    ],
+    "color": [
+     1.0,
+     0.86,
+     0.7
+    ],
+    "energia": 0.7,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 2.6,
+    "archivo": "Cinta/cinta_play.wav",
+    "vol": -4,
+    "limpio": true
+   }
+  ],
+  "musica": 0.0,
+  "ducto": false,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 2,
+  "nombre": "Los carretes giran",
+  "dur": 3.4,
+  "epoca": "presente",
+  "entrada": "corte",
+  "mueve": "carretes",
+  "exposicion": 0.45,
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.45,
+     1.75,
+     -1.45
+    ],
+    "mira": [
+     0.4,
+     1.33,
+     -1.68
+    ],
+    "color": [
+     1.0,
+     0.82,
+     0.6
+    ],
+    "energia": 0.45,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     1.2,
+     2.2,
+     -0.6
+    ],
+    "color": [
+     1.0,
+     0.86,
+     0.7
+    ],
+    "energia": 0.7,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.0,
+    "archivo": "Cinta/siseo_cinta.wav",
+    "vol": -10,
+    "limpio": true
+   }
+  ],
+  "subtitulo": {
+   "linea": 0,
+   "desde": 0.2,
+   "hasta": 3.4
+  },
+  "musica": 0.0,
+  "ducto": false,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 3,
+  "nombre": "El reloj marca las 3:09",
+  "dur": 2.6,
+  "epoca": "cinta",
+  "entrada": "match",
+  "hora": "SALA 1 · 03:09",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.5,
+     2.4,
+     -4.2
+    ],
+    "mira": [
+     0.0,
+     1.9,
+     -4.95
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 0.6,
+    "angulo": 35,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "musica": 0.15,
+  "ducto": false,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 4,
+  "nombre": "Plano de situación",
+  "dur": 3.6,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     -0.3,
+     1.3,
+     -2.3
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 2.2,
+    "angulo": 50,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.3,
+     -1.0
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.6,
+    "rango": 10
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.0,
+    "archivo": "Cinta/ronquido.wav",
+    "vol": -10
+   }
+  ],
+  "musica": 0.2,
+  "ducto": false,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 5,
+  "nombre": "REC",
+  "dur": 3.0,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.7,
+     1.9,
+     -1.2
+    ],
+    "mira": [
+     0.4,
+     1.32,
+     -1.7
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 2,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "musica": 0.22,
+  "ducto": false,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 6,
+  "nombre": "Porky dormido",
+  "dur": 3.0,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     -0.45,
+     1.6,
+     -2.6
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 2.2,
+    "angulo": 38,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -1.7,
+     2.3,
+     -3.7
+    ],
+    "mira": [
+     -0.45,
+     1.6,
+     -2.6
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 3,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": -0.3,
+    "archivo": "Cinta/ronquido.wav",
+    "vol": -6
+   }
+  ],
+  "musica": 0.28,
+  "ducto": false,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 7,
+  "nombre": "La rejilla se abre",
+  "dur": 3.6,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "hora": "SALA 1 · 03:12",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     -2.2,
+     3.4,
+     1.0
+    ],
+    "mira": [
+     -2.2,
+     2.0,
+     1.0
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 10,
+    "angulo": 34,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -1.0,
+     1.4,
+     1.9
+    ],
+    "mira": [
+     -2.1,
+     3.4,
+     0.9
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 3,
+    "angulo": 25,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": -0.4,
+    "archivo": "Cinta/rejilla_metal.wav",
+    "vol": -3
+   }
+  ],
+  "subtitulo": {
+   "linea": 1,
+   "desde": 0.1,
+   "hasta": 3.0
+  },
+  "musica": 0.4,
+  "ducto": true,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 8,
+  "nombre": "La figura baja por la cuerda",
+  "dur": 3.6,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     -2.2,
+     3.4,
+     1.0
+    ],
+    "mira": [
+     -2.2,
+     1.6,
+     1.0
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 14,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -2.2,
+     2.6,
+     2.6
+    ],
+    "mira": [
+     -2.2,
+     2.2,
+     1.0
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 8,
+    "angulo": 25,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     -0.45,
+     1.6,
+     -2.6
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 1.5,
+    "angulo": 35,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.0,
+    "archivo": "Cinta/ronquido.wav",
+    "vol": -14
+   }
+  ],
+  "musica": 0.5,
+  "ducto": true,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 9,
+  "nombre": "El susurro",
+  "dur": 4.4,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     0.45,
+     1.4,
+     -1.5
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 2.2,
+    "angulo": 35,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     1.1,
+     2.3,
+     -0.4
+    ],
+    "mira": [
+     0.5,
+     1.5,
+     -1.2
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 6,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.6,
+    "archivo": "Cinta/susurro.wav",
+    "vol": -2.5
+   }
+  ],
+  "subtitulo": {
+   "linea": 2,
+   "desde": 0.6,
+   "hasta": 3.6
+  },
+  "musica": 0.55,
+  "ducto": true,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 10,
+  "nombre": "El reloj en sus manos",
+  "dur": 3.0,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     0.0,
+     1.8,
+     -4.4
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 2.5,
+    "angulo": 35,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -1.4,
+     2.6,
+     -4.2
+    ],
+    "mira": [
+     0.0,
+     1.6,
+     -4.5
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 6,
+    "angulo": 28,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.0,
+    "archivo": "Ambiente/reloj_pared.wav",
+    "vol": 0
+   }
+  ],
+  "musica": 0.7,
+  "ducto": true,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 11,
+  "nombre": "El reloj cae",
+  "dur": 4.4,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "mueve": "caida",
+  "golpe": 3.0,
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.4,
+     2.7,
+     -3.7
+    ],
+    "mira": [
+     0.1,
+     1.0,
+     -4.4
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 2.5,
+    "angulo": 38,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -1.4,
+     2.6,
+     -4.2
+    ],
+    "mira": [
+     0.0,
+     1.4,
+     -4.5
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 5,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 3.0,
+    "archivo": "Cinta/reloj_golpe.wav",
+    "vol": 5
+   },
+   {
+    "t": 3.13,
+    "archivo": "Cinta/reloj_rebote.wav",
+    "vol": -10
+   }
+  ],
+  "musica": 1.0,
+  "ducto": true,
+  "pluma": false,
+  "huellas": false
+ },
+ {
+  "k": 12,
+  "nombre": "La carátula y la pluma",
+  "dur": 4.4,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.32,
+     2.2,
+     -4.15
+    ],
+    "mira": [
+     0.32,
+     0.52,
+     -4.3
+    ],
+    "color": [
+     0.85,
+     0.9,
+     1.0
+    ],
+    "energia": 2.5,
+    "angulo": 16,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -1.85,
+     2.3,
+     0.45
+    ],
+    "mira": [
+     -2.165,
+     3.48,
+     1.0
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 7,
+    "angulo": 16,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "musica": 0.0,
+  "silencio": true,
+  "ducto": false,
+  "pluma": true,
+  "huellas": false
+ },
+ {
+  "k": 13,
+  "nombre": "Porky despierta",
+  "dur": 3.0,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "hora": "SALA 1 · 03:15",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.9,
+     2.4,
+     -3.6
+    ],
+    "mira": [
+     -0.45,
+     1.7,
+     -2.8
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 2.2,
+    "angulo": 32,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     -0.45,
+     1.6,
+     -2.6
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 1.2,
+    "angulo": 40,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": -0.3,
+    "archivo": "Cinta/sobresalto.wav",
+    "vol": -2
+   }
+  ],
+  "musica": 0.35,
+  "ducto": false,
+  "pluma": true,
+  "huellas": false
+ },
+ {
+  "k": 14,
+  "nombre": "Porky cuelga el reloj",
+  "dur": 3.0,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.8,
+     -3.4
+    ],
+    "mira": [
+     0.0,
+     1.8,
+     -4.7
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 3,
+    "angulo": 38,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -1.6,
+     2.2,
+     -3.9
+    ],
+    "mira": [
+     0.0,
+     1.6,
+     -4.6
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 4,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.8,
+    "archivo": "Cinta/reloj_rebote.wav",
+    "vol": -12
+   }
+  ],
+  "musica": 0.35,
+  "ducto": false,
+  "pluma": true,
+  "huellas": false
+ },
+ {
+  "k": 15,
+  "nombre": "Porky saca la cinta",
+  "dur": 4.4,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "omni",
+    "desde": [
+     0.42,
+     1.42,
+     -1.62
+    ],
+    "color": [
+     1.0,
+     0.08,
+     0.05
+    ],
+    "energia": 2.6,
+    "rango": 1.4
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.4,
+    "archivo": "Cinta/cinta_stop.wav",
+    "vol": -3
+   },
+   {
+    "t": 0.9,
+    "archivo": "Cinta/cinta_rebobinar.wav",
+    "vol": -3
+   },
+   {
+    "t": 3.5,
+    "archivo": "Cinta/cinta_expulsar.wav",
+    "vol": -2
+   }
+  ],
+  "mueve": "rebobina",
+  "musica": 0.4,
+  "ducto": false,
+  "pluma": true,
+  "huellas": false
+ },
+ {
+  "k": 16,
+  "nombre": "Porky se va",
+  "dur": 3.6,
+  "epoca": "cinta",
+  "entrada": "corte",
+  "hora": "SALA 1 · 03:16",
+  "luces": [
+   {
+    "tipo": "omni",
+    "desde": [
+     2.5,
+     2.0,
+     4.3
+    ],
+    "color": [
+     0.95,
+     0.88,
+     0.75
+    ],
+    "energia": 6,
+    "rango": 6
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     2.2,
+     1.3,
+     1.0
+    ],
+    "mira": [
+     2.45,
+     0.55,
+     2.4
+    ],
+    "color": [
+     0.62,
+     0.74,
+     1.0
+    ],
+    "energia": 2.0,
+    "angulo": 32,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     0.0,
+     2.4,
+     -1.6
+    ],
+    "color": [
+     0.7,
+     0.8,
+     1.0
+    ],
+    "energia": 1.1,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.2,
+    "archivo": "Cinta/puerta_abrir.wav",
+    "vol": -4
+   },
+   {
+    "t": 0.8,
+    "archivo": "Efectos/paso_1.wav",
+    "vol": -13
+   },
+   {
+    "t": 1.3,
+    "archivo": "Efectos/paso_3.wav",
+    "vol": -13
+   },
+   {
+    "t": 1.8,
+    "archivo": "Efectos/paso_2.wav",
+    "vol": -15
+   }
+  ],
+  "musica": 0.3,
+  "ducto": false,
+  "pluma": true,
+  "huellas": true
+ },
+ {
+  "k": 17,
+  "nombre": "Caneloso, la mano en el botón",
+  "dur": 3.4,
+  "epoca": "presente",
+  "entrada": "seco",
+  "hora": "SALA 1 · 07:01",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     0.6,
+     1.4,
+     -1.35
+    ],
+    "color": [
+     1.0,
+     0.82,
+     0.6
+    ],
+    "energia": 2.0,
+    "angulo": 40,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -0.4,
+     2.2,
+     -0.3
+    ],
+    "mira": [
+     0.6,
+     1.5,
+     -1.3
+    ],
+    "color": [
+     1.0,
+     0.9,
+     0.8
+    ],
+    "energia": 2.0,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     1.2,
+     2.2,
+     -0.6
+    ],
+    "color": [
+     1.0,
+     0.86,
+     0.7
+    ],
+    "energia": 0.7,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.3,
+    "archivo": "Cinta/susurro.wav",
+    "vol": -6
+   }
+  ],
+  "subtitulo": {
+   "linea": 2,
+   "desde": 0.3,
+   "hasta": 3.1
+  },
+  "musica": 0.15,
+  "ducto": false,
+  "pluma": false,
+  "huellas": true
+ },
+ {
+  "k": 18,
+  "nombre": "Rebobina y la vuelve a oír",
+  "dur": 3.8,
+  "epoca": "presente",
+  "entrada": "corte",
+  "mueve": "rebobina",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.45,
+     1.85,
+     -1.4
+    ],
+    "mira": [
+     0.38,
+     1.33,
+     -1.66
+    ],
+    "color": [
+     1.0,
+     0.82,
+     0.6
+    ],
+    "energia": 0.8,
+    "angulo": 30,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     1.2,
+     2.2,
+     -0.6
+    ],
+    "color": [
+     1.0,
+     0.86,
+     0.7
+    ],
+    "energia": 0.7,
+    "rango": 9
+   }
+  ],
+  "sonidos": [
+   {
+    "t": 0.2,
+    "archivo": "Cinta/cinta_rebobinar.wav",
+    "vol": -6,
+    "limpio": true
+   },
+   {
+    "t": 1.9,
+    "archivo": "Cinta/cinta_play.wav",
+    "vol": -6,
+    "limpio": true
+   },
+   {
+    "t": 2.3,
+    "archivo": "Cinta/susurro.wav",
+    "vol": 0,
+    "limpio": true
+   }
+  ],
+  "subtitulo": {
+   "linea": 2,
+   "desde": 2.3,
+   "hasta": 3.8
+  },
+  "musica": 0.3,
+  "ducto": false,
+  "pluma": false,
+  "huellas": true
+ },
+ {
+  "k": 19,
+  "nombre": "Caneloso mira la rejilla",
+  "dur": 3.2,
+  "epoca": "presente",
+  "entrada": "corte",
+  "luces": [
+   {
+    "tipo": "spot",
+    "desde": [
+     0.0,
+     2.55,
+     -2.0
+    ],
+    "mira": [
+     0.6,
+     1.4,
+     -1.35
+    ],
+    "color": [
+     1.0,
+     0.82,
+     0.6
+    ],
+    "energia": 2.0,
+    "angulo": 40,
+    "rango": 8
+   },
+   {
+    "tipo": "spot",
+    "desde": [
+     -1.85,
+     2.3,
+     0.45
+    ],
+    "mira": [
+     -2.165,
+     3.48,
+     1.0
+    ],
+    "color": [
+     0.8,
+     0.85,
+     1.0
+    ],
+    "energia": 6,
+    "angulo": 16,
+    "rango": 8
+   },
+   {
+    "tipo": "omni",
+    "desde": [
+     1.2,
+     2.2,
+     -0.6
+    ],
+    "color": [
+     1.0,
+     0.86,
+     0.7
+    ],
+    "energia": 0.7,
+    "rango": 9
+   }
+  ],
+  "musica": 0.6,
+  "titulo": "¿Quién es La Garra?",
+  "ducto": false,
+  "pluma": true,
+  "huellas": true
+ }
+]
