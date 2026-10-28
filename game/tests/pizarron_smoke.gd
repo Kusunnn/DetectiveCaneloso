@@ -10,6 +10,7 @@ func _initialize() -> void:
 func tecla(codigo: Key, control: bool = false) -> void:
 	var evento := InputEventKey.new()
 	evento.keycode = codigo
+	evento.physical_keycode = codigo
 	evento.ctrl_pressed = control
 	evento.pressed = true
 	hud._input(evento)

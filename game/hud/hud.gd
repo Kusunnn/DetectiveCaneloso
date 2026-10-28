@@ -108,7 +108,7 @@ var _expediente: ExpedienteCaso
 const ZONA_CARPETA := Rect2(48, 36, 300, 96)
 ## Guía de teclas de la esquina inferior izquierda; se desvanece mientras el detective camina.
 ## [tecla por defecto, texto, acción]: si la acción existe se muestra la tecla que eligió el jugador.
-const TECLAS := [["Q", "Libreta", ""], ["F", "Linterna", "linterna"], ["R", "Tablero", "deducir"], ["TAB", "Expediente", ""]]
+const TECLAS := [["diario", "Libreta"], ["linterna", "Linterna"], ["deducir", "Tablero"], ["expediente", "Expediente"]]
 const ROJO_AVISO := Color("e0463c")
 var linterna_encendida: bool = false
 ## Diario del caso (Q): pistas, deducciones, testimonios y personas.
@@ -213,6 +213,11 @@ func _ready() -> void:
 	_expediente.expediente_abierto.connect(_al_abrir_expediente)
 	_expediente.expediente_cerrado.connect(func() -> void: panel_cambiado.emit(false, true))
 	_expediente.cargar_caso(caso)
+
+## Abre el expediente del caso (por ejemplo, cuando alguien se lo entrega al detective en un diálogo).
+func abrir_expediente() -> void:
+	if _expediente and not _expediente.abierto:
+		_expediente.abrir()
 
 func _al_abrir_expediente() -> void:
 	diario_abierto = false
@@ -346,6 +351,8 @@ func _process(delta: float) -> void:
 	_lienzo.queue_redraw()
 
 func _input(event: InputEvent) -> void:
+	if not visible or get_tree().paused:
+		return
 	if tablero_abierto:
 		if relaciones_pizarron.editor_abierto(): return
 		_input_tablero(event)
@@ -354,9 +361,9 @@ func _input(event: InputEvent) -> void:
 	# Con el expediente abierto solo cuentan sus teclas; la rueda llega al informe para desplazarlo.
 	if _expediente and _expediente.abierto:
 		if event is InputEventKey and event.pressed and not event.echo:
+			if event.is_action_pressed("expediente") or event.keycode == KEY_ESCAPE:
+				_expediente.cerrar()
 			match event.keycode:
-				KEY_TAB, KEY_ESCAPE:
-					_expediente.cerrar()
 				KEY_SPACE:
 					_expediente.bajar(event.shift_pressed)
 			get_viewport().set_input_as_handled()
@@ -398,12 +405,6 @@ func _input(event: InputEvent) -> void:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP or event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			cambiar_pista(-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1)
 			get_viewport().set_input_as_handled()
-	# Linterna: acción configurable en Opciones (F por defecto; RB en el control)
-	if event.is_action_pressed("linterna") and not event.is_echo():
-		linterna_encendida = not linterna_encendida
-		linterna_cambiada.emit(linterna_encendida)
-		get_viewport().set_input_as_handled()
-		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode in [KEY_UP, KEY_LEFT, KEY_DOWN, KEY_RIGHT]:
 			if diario_abierto:
@@ -413,7 +414,18 @@ func _input(event: InputEvent) -> void:
 				cambiar_pista(-1 if event.keycode in [KEY_UP, KEY_LEFT] else 1)
 				get_viewport().set_input_as_handled()
 			return
-		match event.keycode:
+		# Diario, expediente y linterna se pueden cambiar de tecla en Opciones (acciones del InputMap):
+		# la tecla que el jugador eligió cuenta como Q, TAB o F, y esas ya no cuentan si las cambió.
+		var tecla: int = event.keycode
+		if event.is_action_pressed("expediente"):
+			tecla = KEY_TAB
+		elif event.is_action_pressed("diario"):
+			tecla = KEY_Q
+		elif event.is_action_pressed("linterna"):
+			tecla = KEY_F
+		elif tecla in [KEY_TAB, KEY_Q, KEY_F]:
+			tecla = KEY_NONE
+		match tecla:
 			KEY_TAB:
 				# Cierra el diario si estaba abierto; el expediente avisa al jugador con su señal
 				diario_abierto = false
@@ -432,28 +444,41 @@ func _input(event: InputEvent) -> void:
 				diario_abierto = not diario_abierto
 				if diario_abierto:
 					_giro = 1.0
+			KEY_F:
+				linterna_encendida = not linterna_encendida
+				linterna_cambiada.emit(linterna_encendida)
 			KEY_ESCAPE:
 				if not diario_abierto:
 					return
 				diario_abierto = false
 			_:
 				return
-		panel_cambiado.emit(diario_abierto, false)
+		if tecla != KEY_F:
+			panel_cambiado.emit(diario_abierto, false)
 		get_viewport().set_input_as_handled()
 
+## Tamaño del texto elegido en Opciones (Configuracion.EscalaTexto); si con él no cabe en el ancho, se reduce hasta caber.
+func _tam(tam: int) -> int:
+	var configuracion := get_node_or_null("/root/Configuracion")
+	return int(round(tam * (float(configuracion.get("EscalaTexto")) if configuracion else 1.0)))
+
 func _texto(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float = -1) -> void:
-	_lienzo.draw_string(fuente, p, texto, HORIZONTAL_ALIGNMENT_LEFT, ancho, tam, color)
+	var t := _tam(tam)
+	if ancho > 0:
+		while t > tam and fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x > ancho:
+			t -= 1
+	_lienzo.draw_string(fuente, p, texto, HORIZONTAL_ALIGNMENT_LEFT, ancho, t, color)
 
 ## Como _texto, pero si no cabe en el ancho baja la fuente (mínimo 60 %) en lugar de cortar el texto.
 func _texto_ajustado(texto: String, p: Vector2, fuente: Font, tam: int, color: Color, ancho: float) -> void:
-	var t := tam
+	var t := _tam(tam)
 	while t > int(tam * 0.6) and fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x > ancho:
 		t -= 1
-	_texto(texto, p, fuente, t, color, ancho)
+	_lienzo.draw_string(fuente, p, texto, HORIZONTAL_ALIGNMENT_LEFT, ancho, t, color)
 
 func _parrafo(texto: String, p: Vector2, ancho: float, tam: int, color: Color, max_lineas: int = 4) -> void:
 	var parrafo := TextParagraph.new()
-	parrafo.add_string(texto, MONO, tam)
+	parrafo.add_string(texto, MONO, _tam(tam))
 	parrafo.width = ancho
 	parrafo.max_lines_visible = max_lineas
 	parrafo.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -599,30 +624,27 @@ func _dibujar() -> void:
 		_dibujar_libro(w, h)
 
 ## Guía de teclas: visible mientras el detective está quieto, igual que el resto de la ayuda.
+func nombre_tecla(accion: String) -> String:
+	for evento in InputMap.action_get_events(accion):
+		if evento is InputEventKey:
+			var codigo: int = evento.physical_keycode if evento.physical_keycode != KEY_NONE else evento.keycode
+			var visible := codigo if DisplayServer.get_name() == "headless" else DisplayServer.keyboard_get_keycode_from_physical(codigo)
+			if visible == KEY_NONE:
+				visible = codigo
+			return "TAB" if visible == KEY_TAB else OS.get_keycode_string(visible)
+	return accion.to_upper()
+
 func _dibujar_teclas(h: float) -> void:
 	if _ayuda_alpha <= 0.0:
 		return
 	var y := h - 44.0 - TECLAS.size() * 40.0
 	for par in TECLAS:
-		var tecla := _tecla_de(par[2], par[0])
-		var ancho := maxf(30.0, MONO.get_string_size(tecla, HORIZONTAL_ALIGNMENT_LEFT, -1, 13).x + 16.0)
+		var tecla := nombre_tecla(par[0])
+		var ancho := maxf(30.0, MONO.get_string_size(tecla, HORIZONTAL_ALIGNMENT_LEFT, -1, _tam(13)).x + 16.0)
 		_lienzo.draw_rect(Rect2(53, y, ancho, 28), Color(BLANCO, 0.85 * _ayuda_alpha), false, 1.5)
 		_texto(tecla, Vector2(53 + 8, y + 19), MONO, 13, Color(BLANCO, _ayuda_alpha))
 		_texto(par[1], Vector2(53 + ancho + 14, y + 20), MONO, 15, Color(BLANCO, 0.9 * _ayuda_alpha))
 		y += 40.0
-
-## Primera tecla del teclado asignada a la acción (o la tecla por defecto si no hay acción)
-func _tecla_de(accion: String, por_defecto: String) -> String:
-	if accion.is_empty() or not InputMap.has_action(accion):
-		return por_defecto
-	for evento in InputMap.action_get_events(accion):
-		if evento is InputEventKey:
-			var codigo: Key = evento.keycode
-			if evento.physical_keycode != KEY_NONE:
-				# Sin ventana (pruebas automáticas) no hay distribución de teclado que consultar
-				codigo = evento.physical_keycode if DisplayServer.get_name() == "headless" else DisplayServer.keyboard_get_keycode_from_physical(evento.physical_keycode)
-			return OS.get_keycode_string(codigo).to_upper()
-	return por_defecto
 
 func _boton_libro(texto: String, rect: Rect2, destino: int, activo: bool = true) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
@@ -681,7 +703,7 @@ func _dibujar_libro(w: float, h: float) -> void:
 		if activa:
 			_lienzo.draw_rect(Rect2(rect.position + Vector2(16, 36), Vector2(30, 3)), TINTA if seccion == "PISTAS" else Color("fff5e8"))
 		_zonas_libro.append({"rect": rect, "seccion": seccion})
-	_boton_libro("CERRAR [Q]", Rect2(origen + Vector2(1000, -60), Vector2(160, 42)), -1)
+	_boton_libro("CERRAR [%s]" % nombre_tecla("diario"), Rect2(origen + Vector2(1000, -60), Vector2(160, 42)), -1)
 	_boton_libro("← ANTERIOR", Rect2(origen + Vector2(0, 686), Vector2(174, 42)), _hoja - 1, _hoja > 0)
 	_texto("%s  ·  %02d / %02d  ·  ← / →" % [_seccion, _hoja + 1, ceili(paginas.size() / 2.0)], origen + Vector2(310, 714), MONO, 14, BLANCO)
 	_boton_libro("SIGUIENTE →", Rect2(origen + Vector2(976, 686), Vector2(184, 42)), _hoja + 1, (_hoja + 1) * 2 < paginas.size())
@@ -820,6 +842,7 @@ func _dibujar_postit_pista(p: Vector2, indice: int, alfa: float = 1.0) -> void:
 		var pista := pistas[indice]
 		var ancho := 210.0 if pista.imagen else 311.0
 		_texto_ajustado(pista.titulo, p + Vector2(22, 93), _bold, 30, Color(TINTA, alfa), ancho)
+		_parrafo(pista.descripcion, p + Vector2(22, 102), ancho, 11, Color(TINTA, alfa), 2)
 		_lupa(p + Vector2(32, 160), _estado_pista(pista), alfa, 0.7)
 		if pista.imagen:
 			_lienzo.draw_rect(Rect2(p + Vector2(248, 57), Vector2(88, 83)), Color(BLANCO, alfa))

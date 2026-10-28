@@ -7,15 +7,8 @@ using System;
 // Es el único script que conoce la historia de este escenario; los sistemas siguen siendo genéricos.
 public partial class Caso1Lago : EscenarioCaso1
 {
-	private const string HuellasPezuna = "huellas_pezuna";
-	private const string HuellasDetenidas = "huellas_detenidas";
 	private const string Altavoz = "altavoz";
-	private const string Cornamenta = "cornamenta_zancos";
 	private const string HuecoRemo = "hueco_remo";
-	private const string RemoSangre = "remo_sangre";
-	private const string Silbato = "silbato_ts";
-	private const string Linterna = "linterna_porky";
-	private const string Cuaderno = "cuaderno_eriz";
 	private const int PistasTotales = 9;
 
 	private const string Llavero = "llavero_porky";
@@ -66,7 +59,8 @@ public partial class Caso1Lago : EscenarioCaso1
 	{
 		AbrirSiTieneLlavero(false);
 		ActualizarObjetivo();
-		if (Pistas.Count > 0 || !IsInsideTree()) return;
+		// Lo que piensa al llegar sale una sola vez (antes se repetía cada vez que volvía sin pistas del lago)
+		if (Pistas.Count > 0 || !IsInsideTree() || !PrimeraVez("_llegada")) return;
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
 		if (!IsInsideTree() || EnDialogo) return;
 		EnDialogo = true;
@@ -81,38 +75,16 @@ public partial class Caso1Lago : EscenarioCaso1
 
 	protected override void AlRegistrarEvidencia(string id)
 	{
-		string pensamiento = id switch
-		{
-			HuellasPezuna => "Muy hondas y con un paso larguísimo. Ningún venado camina así.",
-			HuellasDetenidas => "Se acaban de golpe, a unos treinta metros del muelle. El «ciervo» se bajó de algo.",
-			Altavoz => "De aquí salían los «bramidos». Alguien preparó el espectáculo.",
-			Cornamenta => "El disfraz del ciervo... y unos zancos con pezuñas. Ahí están las huellas.",
-			HuecoRemo => "Falta un remo. Y este cobertizo solo lo abren dos llaves.",
-			RemoSangre => "Sangre en la pala. Lo tiraron aquí con prisa.",
-			Silbato => "«T. S.». El cordón se rompió en el clavo... alguien retrocedió de golpe.",
-			Linterna => "La linterna de Porky, encendida en el fondo. Ella estuvo en este muelle.",
-			Cuaderno => "«23:20: perturbación luminosa fuerte junto al embarcadero.» Eso fija la hora.",
-			_ => null,
-		};
 		if (id == Altavoz && Estatica != null) Estatica.Stop();
-		if (pensamiento != null) Jugador.MostrarPensamiento(pensamiento, 6.0);
-		Hud.Call("agregar_nota", NotaDe(id));
+		// Lo que piensa Caneloso y lo que anota viene del guion (Datos/Dialogos/caso1_pistas.json)
+		if (!Guion.ComentarPista(Jugador, id)) Hud.Call("agregar_nota", "Pista: " + id);
 		ActualizarObjetivo();
 	}
 
-	private static string NotaDe(string id) => id switch
+	protected override void AlDescubrirDetalle(string origen, string id)
 	{
-		HuellasPezuna => "Sendero del lago: huellas de pezuña muy hondas y con un paso demasiado largo.",
-		HuellasDetenidas => "Las huellas de pezuña se detienen a unos 30 m del embarcadero.",
-		Altavoz => "Bosque: un altavoz escondido en un pino. De ahí salían los bramidos.",
-		Cornamenta => "Tronco hueco: cornamenta plateada y zancos con pezuñas. Tienen pelos de gato a rayas.",
-		HuecoRemo => "Cobertizo de botes: falta un remo en el soporte. Solo Tony y Porky tienen llave.",
-		RemoSangre => "Entre los juncos, junto al embarcadero: un remo con sangre.",
-		Silbato => "Embarcadero: silbato con las iniciales «T. S.», enganchado en un clavo, con el cordón roto.",
-		Linterna => "La linterna de Porky, encendida, en el fondo del agua junto al embarcadero.",
-		Cuaderno => "Cuaderno de Eriz: «23:20: perturbación luminosa fuerte junto al embarcadero».",
-		_ => "Pista: " + id,
-	};
+		if (Guion.NotaDeDetalle(id) is string nota) Hud.Call("agregar_nota", nota);
+	}
 
 	protected override void AlObtenerObjeto(string id)
 	{
@@ -131,6 +103,7 @@ public partial class Caso1Lago : EscenarioCaso1
 
 	protected override void ActualizarObjetivo()
 	{
+		if (Guion.Resuelto) { Objetivo("Caso cerrado."); return; }
 		string cuenta = $" ({Pistas.Count}/{PistasTotales} pistas del lago)";
 		if (Pistas.Count >= PistasTotales) { Objetivo("Ya revisé el lago. Hecdog espera en la patrulla para ir a la estación."); return; }
 		if (!Jugador.TieneObjeto(Llavero) && !Pistas.Contains(HuecoRemo) && Pistas.Count >= 5)
@@ -208,6 +181,13 @@ public partial class Caso1Lago : EscenarioCaso1
 
 	private async System.Threading.Tasks.Task AlIrEstacion()
 	{
+		// HU-9.5 CA-03: Hecdog presenta a los seis en la estación; antes hay que reunir pruebas aquí
+		if (!Guion.SalaVista && Pistas.Count < PartidaEscenas.PistasLagoParaEstacion)
+		{
+			await Dialogo.Decir(Caneloso, "Todavía no. Antes de sentarlos frente a mí, quiero saber qué pasó en este lago.",
+				$"Me faltan cosas por revisar ({Pistas.Count}/{PistasTotales} pistas del lago).");
+			return;
+		}
 		var hecdog = Dialogo.HablantePorNombre("Hecdog");
 		if (!Array.TrueForAll(PruebasEmbarcadero, Pistas.Contains))
 			await Dialogo.Decir(hecdog, "Todavía no revisa bien la orilla y el embarcadero, detective. Ahí la encontraron. Nya.");

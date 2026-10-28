@@ -72,7 +72,8 @@ Están en `Assets/Audio/Examen/`. Son los OGG originales de Kenney copiados tal 
 | Examen/abrir.ogg (`handleSmallLeather`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
 | Examen/cerrar.ogg (`dropLeather`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
 | Examen/girar_1..3.ogg (`beltHandle1`, `beltHandle2`, `handleSmallLeather2`) | Kenney · RPG Audio | Kenney | CC0 1.0 | https://kenney.nl/assets/rpg-audio |
-| Examen/acercar_1..3.ogg (`scroll_001`..`scroll_003`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
+| Examen/acercar_1..2.ogg (`maximize_008`, `maximize_006`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
+| Examen/alejar_1..2.ogg (`minimize_008`, `minimize_006`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
 | Examen/tic.ogg (`glass_001`) | Kenney · Interface Sounds | Kenney | CC0 1.0 | https://kenney.nl/assets/interface-sounds |
 | Examen/descubrir.ogg (`jingles_PIZZI04`) | Kenney · Music Jingles | Kenney | CC0 1.0 | https://kenney.nl/assets/music-jingles |
 
@@ -85,3 +86,27 @@ Están en `Assets/Audio/Cinematica/`, copiados tal cual. La cinemática también
 | Cinematica/musica_moil.mp3 (`ruskerdax_-_moil.mp3`) | OpenGameArt · Moil | Ruskerdax | CC0 1.0 | https://opengameart.org/content/moil |
 | Cinematica/golpe_titulo.ogg (`bad_thing_0.ogg`) | OpenGameArt · Bad thing happen | gonzalfj | CC0 1.0 | https://opengameart.org/content/bad-thing-happen |
 | Cinematica/maquina_1..5.wav (`typewriter1..5.wav`) | OpenGameArt · Typewriter Sounds | Cassie-OrbitGames | CC0 1.0 | https://opengameart.org/content/typewriter-sounds |
+
+## Cinemática de la cinta (Caso 0)
+
+Están en `Assets/Audio/Cinematica/Cinta/`. Son recortes de grabaciones reales de BigSoundBank: mono a 44.1 kHz, con fades de 3 ms al entrar y 15 ms al salir (80 ms al salir en el susurro), y normalizados a −18 dBFS RMS con un recorte suave para que el pico no pase de −1 dBFS. El ronquido y el siseo son bucles (el final se funde con el inicio). El golpe del reloj mezcla el golpe de madera con 0.4 s de vidrio roto. En el juego todo pasa por el bus `Cinta` (paso alto 160 Hz, paso bajo 4.8 kHz, un poco de saturación y wow con un coro de una voz), porque lo que se oye viene de la cinta.
+
+La voz de Tito no está: no hay una grabación libre con esa frase. Si alguien la graba, basta con dejarla en `Cinta/voz_tito.ogg` y sonará sobre negro con el subtítulo. El susurro es una respiración susurrada sin palabras; la frase va en el subtítulo.
+
+| Archivo | Fuente (tramo usado) | Autor | Licencia | Enlace |
+|---|---|---|---|---|
+| Cinta/ronquido.wav | BigSoundBank · Man Snoring (#0170, 8.45–20.85 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/man-snoring-s0170.html |
+| Cinta/siseo_cinta.wav | BigSoundBank · Cassette Player: Play (#0565, 1.0–11.2 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/cassette-player-play-s0565.html |
+| Cinta/cinta_play.wav | BigSoundBank · Cassette Player: Play (#0565, 0–0.7 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/cassette-player-play-s0565.html |
+| Cinta/cinta_stop.wav | BigSoundBank · Cassette Player: Play (#0565, 11.5–12.3 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/cassette-player-play-s0565.html |
+| Cinta/cinta_rebobinar.wav | BigSoundBank · Cassette Player: Rewind and Stop (#0566, 0–3.1 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/cassette-player-rewind-and-stop-s0566.html |
+| Cinta/cinta_expulsar.wav | BigSoundBank · Cassette Player: Cassette (#0571, 3.3–5.0 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/cassette-player-cassette-s0571.html |
+| Cinta/reloj_golpe.wav | BigSoundBank · Gavel, 1 blow (#1588) + Broken glass (#0771, 0.12–0.5 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/gavel-1-blow-s1588.html · https://bigsoundbank.com/broken-glass-s0771.html |
+| Cinta/reloj_rebote.wav | BigSoundBank · Gavel, 1 blow (#1588) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/gavel-1-blow-s1588.html |
+| Cinta/rejilla_metal.wav | BigSoundBank · Creaking metallic door (#0616, 12.25–13.3 s) + Tin can (#0246, 0–0.85 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/creaking-metallic-door-s0616.html · https://bigsoundbank.com/tin-1-s0246.html |
+| Cinta/sobresalto.wav | BigSoundBank · Breathless Man (#1103, 8.3–9.05 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/breathless-man-s1103.html |
+| Cinta/susurro.wav | BigSoundBank · Whisper (#3255, 8.2–10.95 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/whisper-1-s3255.html |
+| Cinta/puerta_abrir.wav | BigSoundBank · Apartment Door, Opening (#1702, 0–1.45 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/apartment-door-opening-1-s1702.html |
+| Cinta/puerta_cerrar.wav | BigSoundBank · Apartment door, closing (#1704, 2.45–3.7 s) | Joseph Sardin | CC0 1.0 | https://bigsoundbank.com/apartment-door-closing-1-s1704.html |
+
+También usa `Ambiente/reloj_pared.wav` (tic-tac), `Ambiente/zumbido_sala.ogg`, `Efectos/paso_1..4.wav` (las botas de Porky, sus pasos al subir y bajar de la silla y los de la figura), `Efectos/cajon_1.wav` y `cajon_3.wav` (la silla de Porky al arrastrarla) y `Cinematica/maquina_2/4/5.wav` (las horas). Desde la animación en Blender, `reloj_rebote.wav` también es la tapa de la rejilla, el aterrizaje de la figura y el reloj al colgarlo. Ya no usa `golpe_titulo.ogg` (dura 20 s y sonaba como si regresara la música), `error_suave.wav` ni `cajon_2.wav`.

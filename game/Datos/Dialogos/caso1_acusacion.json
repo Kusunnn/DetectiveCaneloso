@@ -1,0 +1,203 @@
+{
+	"id": "caso1_acusacion",
+	"personaje": "Hecdog",
+	"tono_voz": 0.85,
+	"inicio": "pregunta",
+	"nodos": {
+		"pregunta": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "serio",
+					"texto": "Muy bien, Caneloso. ¿A quién le pongo las esposas, Nya?"
+				}
+			],
+			"siguiente": "elegir"
+		},
+		"elegir": {
+			"pregunta": "¿A quién acuso?",
+			"opciones": [
+				{
+					"id": "juan_carlos",
+					"texto": "Acusar a Juan Carlos",
+					"destino": "a_juan_carlos"
+				},
+				{
+					"id": "eriz",
+					"texto": "Acusar a Eriz",
+					"destino": "a_eriz"
+				},
+				{
+					"id": "miawrio",
+					"texto": "Acusar a Miawrio",
+					"destino": "a_miawrio"
+				},
+				{
+					"id": "tony",
+					"texto": "Acusar a Tony",
+					"destino": "a_tony",
+					"requiere": {
+						"pistas": [
+							"cuaderno_eriz",
+							"remo_sangre",
+							"recorte_periodico"
+						],
+						"conclusiones": [
+							"tony_5"
+						]
+					},
+					"si_no_cumple": "ocultar",
+					"motivo": "Las cinco excusas de Tony desmontadas, más oportunidad (cuaderno de Eriz), medio (remo) y motivo (recorte)."
+				}
+			]
+		},
+		"a_juan_carlos": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "seguro",
+					"texto": "Juan Carlos. Armó el ciervo, apagó la luz y desapareció justo cuando murió Porky."
+				}
+			],
+			"siguiente": "equivocado",
+			"al_completar": {
+				"eventos": [
+					"acusado:juan_carlos"
+				]
+			}
+		},
+		"a_eriz": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "seguro",
+					"texto": "Eriz. Estaba en el lago a las 23:20 y mintió sobre la hora."
+				}
+			],
+			"siguiente": "equivocado",
+			"al_completar": {
+				"eventos": [
+					"acusado:eriz"
+				]
+			}
+		},
+		"a_miawrio": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "seguro",
+					"texto": "Miawrio. Porky se negó a vender y él amenazó con quitarla del camino."
+				}
+			],
+			"siguiente": "equivocado",
+			"al_completar": {
+				"eventos": [
+					"acusado:miawrio"
+				]
+			}
+		},
+		"equivocado": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "serio",
+					"texto": "Entendido. Me lo llevo a la patrulla, Nya."
+				}
+			],
+			"siguiente": "final_b"
+		},
+		"final_b": {
+			"lineas": [
+				{
+					"habla": "Narración",
+					"texto": "El caso se da por resuelto apresuradamente. Las patrullas se alejan por el camino de tierra con el acusado equivocado. Mientras todos se conmocionan, Tony observa en silencio desde el porche de la casona, luciendo su nuevo silbato, con una mirada fría, vacía e impenetrable."
+				},
+				{
+					"habla": "Narración",
+					"texto": "Semanas después, la venta del terreno se concreta sin un solo obstáculo legal. Entran las excavadoras y la maquinaria pesada. Comienzan las obras de drenado para vaciar el lago y cimentar el hotel."
+				},
+				{
+					"habla": "Narración",
+					"texto": "Las bombas rugen y el lago baja. Sobre el agua, que aún brilla, flota un periódico: «¿Atrapan por fin asesino de hace 10 años? Campamento cierra sus puertas para ser vendido después de una racha de muertes». Debajo, Miawrio y Tony se dan la mano; Tony sonríe a la cámara, sin rastro de duelo. La hoja se empapa y se hunde. El brillo de las algas se apaga."
+				}
+			],
+			"fin": true,
+			"salida": "B",
+			"al_completar": {
+				"eventos": [
+					"final:B"
+				]
+			}
+		},
+		"a_tony": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "firme",
+					"texto": "Tony Spínola."
+				},
+				{
+					"habla": "Caneloso",
+					"animo": "firme",
+					"texto": "Oportunidad. A las 23:20, según el cuaderno de Eriz, el lago se iluminó con una caída. Usted no estaba en el generador: el sendero, la foto de Aya y sus botas lo ponen en la orilla."
+				},
+				{
+					"habla": "Caneloso",
+					"animo": "firme",
+					"texto": "Medio. El remo con sangre salió de un cobertizo que solo se abre con dos llaves: la de Porky y la suya."
+				},
+				{
+					"habla": "Caneloso",
+					"animo": "firme",
+					"texto": "Motivo. Porky encontró el libro de guardia de hace diez años. Lo citó en el embarcadero para decírselo. Usted quemó el libro en la fogata. Todo empezó con Paco."
+				}
+			],
+			"siguiente": "final_a",
+			"al_completar": {
+				"eventos": [
+					"acusado:tony"
+				]
+			}
+		},
+		"final_a": {
+			"lineas": [
+				{
+					"habla": "Narración",
+					"texto": "Acorralado, el rostro de «director desconsolado» de Tony se desmorona. Se apoya con ambas manos en la mesa, temblando, y se deja caer en una silla con la mirada perdida en el suelo."
+				},
+				{
+					"habla": "Tony",
+					"animo": "quebrado",
+					"gesto": "Con la voz quebrada y una risa amarga",
+					"texto": "Tenía veintiún años... No podía con la maldita presión de llevar el apellido Spínola. Me emborraché esa noche. Por una sola noche de estupidez... llevo diez años pagándola."
+				},
+				{
+					"habla": "Tony",
+					"animo": "quebrado",
+					"texto": "No quise matar a Paco. Vi una sombra entre la niebla del muelle y creí que era una broma o una alucinación por el mezcal. Quise asustarlo, forcejeamos y cayó al agua. Estaba borracho, las redes lo atraparon... mis manos no reaccionaban. Cuando logré sacarlo, ya no respiraba."
+				},
+				{
+					"habla": "Tony",
+					"animo": "quebrado",
+					"texto": "Tuve pánico. Pánico de ir a la cárcel, de destruir a mi abuelo Guille. Escondí el libro de guardia, dije que se había perdido y mentí. Y cuando Porky vino hoy con esa maldita prueba en la mano... no vi a Porky. Vi la misma sombra de hace diez años volviendo para arrastrarme al fondo con Paco."
+				},
+				{
+					"habla": "Hecdog",
+					"animo": "firme",
+					"texto": "Tony Spínola, queda detenido por la muerte de Porky. Y por la de Paco, Nya."
+				},
+				{
+					"habla": "Narración",
+					"texto": "Tony es conducido esposado hacia la patrulla bajo la lluvia del atardecer. Travelling lento hacia atrás, hasta el embarcadero. Las algas del lago vuelven a brillar con un resplandor azulino sobre el agua serena. El lago, libre al fin del secreto, descansa en silencio sobre el muelle vacío."
+				}
+			],
+			"fin": true,
+			"salida": "A",
+			"al_completar": {
+				"eventos": [
+					"final:A"
+				]
+			}
+		}
+	}
+}

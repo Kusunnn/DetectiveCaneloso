@@ -229,7 +229,7 @@ size = Vector3(0.62, 0.55, 0.45)
 size = Vector3(0.3, 0.9, 0.3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_37"]
-size = Vector3(1.02, 0.5, 0.46)
+size = Vector3(2.5, 0.8, 1.1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_38"]
 albedo_texture = ExtResource("e23")
 albedo_color = Color(0.6, 0.48, 0.4, 1.0)
@@ -336,13 +336,13 @@ collision_mask = 0
 script = ExtResource("e5")
 Id = "libro_guardia_quemado"
 Titulo = "Libro de guardia quemado"
-Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... olor a alcohol...». Lo demás está hecho ceniza."
+Descripcion = "Hojas quemadas del libro de guardia del campamento. Se alcanza a leer: «Guardia nocturna, 14 de agosto... monitor auxiliar... olor a alcohol...». Lo demás está hecho ceniza."
 EsEvidencia = true
 ComentarioAlMirar = "Entre las cenizas hay hojas que no terminaron de quemarse."
 RequiereLinterna = true
 SoloAgachado = true
 Imagen = ExtResource("e4")
-DescripcionAmpliada = "Tres hojas del libro de guardia del campamento, chamuscadas por las orillas. Al frente se alcanza a leer «Guardia nocturna, 14 de agosto...» y «...olor a alcohol...». Lo demás se deshace con solo tocarlo."
+DescripcionAmpliada = "Tres hojas del libro de guardia del campamento, chamuscadas por las orillas. Al frente se alcanza a leer «Guardia nocturna, 14 de agosto...», «...monitor auxiliar...» y «...olor a alcohol...». Lo demás se deshace con solo tocarlo."
 Lugar = "Fogata · entre las cenizas"
 Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_libro")])
 
@@ -488,7 +488,7 @@ DescripcionAmpliada = "La pila de leña sigue igual de ordenada, con el hacha a 
 Lugar = "Fogata · junto a la leñera"
 
 [node name="Forma" type="CollisionShape3D" parent="Lena"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.22, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.03, 0.4, 0)
 shape = SubResource("BoxShape3D_37")
 
 [node name="Guirnaldas" type="Node3D" parent="."]
@@ -718,7 +718,7 @@ monitorable = false
 shape = SubResource("BoxShape3D_44")
 
 [node name="Modelo" parent="Lena" instance=ExtResource("hu07_m_lena")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(2.6, 0, 0, 0, 2.6, 0, 0, 0, 2.6, 0, 0, 0)
 
 [node name="Modelo" parent="Fuego/LibroQuemado" instance=ExtResource("hu07_m_quemado")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)

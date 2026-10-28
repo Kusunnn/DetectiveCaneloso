@@ -1,0 +1,93 @@
+{
+	"id": "caso1_introduccion",
+	"personaje": "Hecdog",
+	"tono_voz": 0.85,
+	"inicio": "llegada",
+	"nodos": {
+		"llegada": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "animado",
+					"texto": "¡Hola, Caneloso! Qué bueno que llegaste tan rápido, amigo. La víctima es Porky, la cocinera del campamento. La encontraron flotando junto al embarcadero a las 23:47, Nya."
+				},
+				{
+					"habla": "Caneloso",
+					"animo": "triste",
+					"texto": "Porky... la conocía de la comisaría. Hacía guardias los fines de semana en la noche. Era de las que no se echan para atrás... Daba lo mejor de ella."
+				},
+				{
+					"habla": "Hecdog",
+					"animo": "serio",
+					"texto": "Aquí está el expediente. Siete amigos de toda la vida, un apagón y un ciervo que nadie sabe explicar, Nya. Yo vine a esposar a alguien; tú nomás dime a quién."
+				}
+			],
+			"siguiente": "preguntas",
+			"al_completar": {
+				"eventos": [
+					"abrir_expediente"
+				]
+			}
+		},
+		"preguntas": {
+			"pregunta": "¿Qué le pregunto?",
+			"opciones": [
+				{
+					"id": "paco",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Qué pasó hace diez años?",
+					"destino": "paco"
+				},
+				{
+					"id": "presentes",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Y quiénes estaban aquí anoche?",
+					"destino": "presentes"
+				},
+				{
+					"id": "ir",
+					"texto": "Ir al campamento",
+					"destino": "ir",
+					"fin": true
+				}
+			]
+		},
+		"paco": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "serio",
+					"texto": "Paco, el hermanito de Porky. Tenía 12 años. Se ahogó en este mismo lago y el caso se cerró como accidente, Nya."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Hace 10 años, Paco, el hermano de Porky, de 12 años, se ahogó en el Lago Espejo. Se cerró como accidente."
+				]
+			}
+		},
+		"presentes": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "tranquilo",
+					"texto": "Seis. Todos pasaron aquel verano aquí. Ponle que es más como una reunión de despedida: Miawrio está aquí para cerrar el trato y los demás están aquí para despedirse del lugar."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Anoche estaban seis: Tony, Juan Carlos, Miawrio, Eriz, Aya y Mimita. Miawrio vino a cerrar la compra del campamento."
+				]
+			}
+		},
+		"ir": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "serio",
+					"texto": "Un ciervo no le da un golpe en la nuca a nadie. Vamos a empezar por el campamento."
+				}
+			]
+		}
+	}
+}

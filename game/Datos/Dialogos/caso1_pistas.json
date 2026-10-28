@@ -1,0 +1,166 @@
+{
+	"_ayuda": "Caso 1, capa 3.P del guion: lo que piensa Caneloso al recoger cada pista y lo que anota en la libreta. Las de «Lago y bosque» ya tienen texto: funcionan en cuanto exista en la escena un objeto con ese id de pista.",
+	"pistas": {
+		"interruptor_generador": {
+			"titulo": "Interruptor del generador",
+			"escenario": "Campamento",
+			"donde": "Caseta del generador",
+			"comentario": "Lo bajaron a mano... El generador está perfecto: el apagón no fue una falla, alguien lo provocó.",
+			"nota": "Caseta del generador: el interruptor se bajó a mano. El apagón fue provocado."
+		},
+		"candado_caseta": {
+			"titulo": "Candado sin forzar",
+			"escenario": "Campamento",
+			"donde": "Caseta del generador",
+			"comentario": "Está intacto. Quien abrió la caseta traía llave: el director o un monitor.",
+			"nota": "El candado de la caseta no está forzado: lo abrió alguien con llave, el director o un monitor."
+		},
+		"baul_disfraces": {
+			"titulo": "Baúl de disfraces",
+			"escenario": "Campamento",
+			"donde": "Almacén, junto al escenario",
+			"comentario": "Falta la cornamenta del disfraz. Alguien se vistió de Ciervo de Luz... y las leyendas no dejan baúles abiertos.",
+			"nota": "Del baúl de disfraces falta la cornamenta del ciervo."
+		},
+		"lena_intacta": {
+			"titulo": "Montón de leña intacto",
+			"escenario": "Campamento",
+			"donde": "Junto a la fogata",
+			"comentario": "La leña sigue apilada. Juan Carlos dijo que iba por leña y no trajo ni una rama. ¿A dónde fue, entonces?",
+			"nota": "La leña junto a la fogata está intacta: nadie trajo leña anoche."
+		},
+		"libro_guardia_quemado": {
+			"titulo": "Libro de guardia quemado",
+			"escenario": "Campamento",
+			"donde": "Cenizas de la fogata",
+			"comentario": "«Guardia nocturna, 14 de agosto... monitor auxiliar... olor a alcohol...». No quemaron una hoja: quemaron el libro completo. Alguien quería borrar esa noche.",
+			"nota": "Restos del libro de guardia en la fogata: «Guardia nocturna, 14 de agosto... monitor auxiliar... olor a alcohol...»."
+		},
+		"nota_porky": {
+			"titulo": "Nota de Porky",
+			"escenario": "Campamento",
+			"donde": "Cabaña de Porky, bajo la almohada",
+			"comentario": "«Esta noche se lo digo. Ya tengo el libro. Por Paco.» Porky le iba a decir algo a alguien. Y ese alguien no quería oírlo.",
+			"nota": "Nota de Porky: «Esta noche se lo digo. Ya tengo el libro. Por Paco.»"
+		},
+		"foto_grupo": {
+			"titulo": "Foto del grupo",
+			"escenario": "Campamento",
+			"donde": "Pared de la cabaña de Porky",
+			"comentario": "Los ocho junto al lago, hace diez años. Paco en el centro. Atrás, Tony de monitor, con un silbato colgado al cuello.",
+			"nota": "Foto de hace 10 años en la cabaña de Porky: los ocho junto al lago, Paco en el centro y, atrás, Tony de monitor con un silbato al cuello."
+		},
+		"recorte_periodico": {
+			"titulo": "Recorte de periódico",
+			"escenario": "Campamento",
+			"donde": "Cabaña de Porky",
+			"comentario": "«Muere ahogado un campista de 12 años en el Lago Espejo. ¿Nadie cuidaba el lago?». Paco. Diez años después, Porky seguía teniendo a su hermanito a la vista.",
+			"nota": "Recorte: hace 10 años, Paco, de 12 años, murió ahogado en el Lago Espejo. «¿Nadie cuidaba el lago?»"
+		},
+		"oferta_compra": {
+			"titulo": "Oferta de compra rota",
+			"escenario": "Campamento",
+			"donde": "Papelera de la cabaña de Porky",
+			"comentario": "Una oferta de compra firmada por Miawrio, hecha pedazos. Porky no pensaba dejar su cabaña. Ni por dinero.",
+			"nota": "Oferta de compra firmada por Miawrio, rota en la papelera de Porky: ella no quería dejar su cabaña."
+		},
+		"taza_delantal": {
+			"titulo": "Taza y delantal",
+			"escenario": "Campamento",
+			"donde": "Cocina",
+			"comentario": "El chocolate a medias y el delantal colgado. Porky se fue con prisa, antes del apagón. Tenía urgencia de verse con alguien.",
+			"nota": "Cocina: chocolate a medias y el delantal de Porky colgado. Salió con prisa, antes del apagón."
+		},
+		"registro_enfermeria": {
+			"titulo": "Registro de la enfermería",
+			"escenario": "Campamento",
+			"donde": "Enfermería",
+			"comentario": "«23:20, se escuchó algo en el lago». Y luego lo tacharon con fuerza. Mimita oyó algo y no quiere que se sepa.",
+			"nota": "Enfermería: alguien tachó la línea de las 23:20 del registro de guardia."
+		},
+		"botas_tony": {
+			"titulo": "Botas con lodo",
+			"escenario": "Campamento",
+			"donde": "Atrás de la cabaña del director",
+			"comentario": "Lodo fresco y juncos de la orilla. Escondidas atrás de la cabaña del director, que dice que no se acercó al lago.",
+			"nota": "Botas de Tony con lodo fresco, escondidas atrás de la cabaña del director."
+		},
+		"registro_llamadas": {
+			"titulo": "Registro de llamadas",
+			"escenario": "Campamento",
+			"donde": "Estacionamiento, carro de Miawrio",
+			"comentario": "El registro de llamadas de Miawrio. Si de verdad estuvo en su carro, aquí se va a ver.",
+			"nota": "Registro de llamadas de Miawrio: de 23:00 a 23:40 estuvo en una llamada, sin cortes."
+		},
+		"huellas_pezuna": {
+			"titulo": "Huellas de pezuña",
+			"escenario": "Lago y bosque",
+			"donde": "Sendero",
+			"comentario": "Demasiado hondas y con un paso demasiado largo. Ningún ciervo camina así. Alguien andaba en zancos.",
+			"nota": "Sendero: huellas de pezuña demasiado hondas y con el paso demasiado largo. Alguien andaba en zancos."
+		},
+		"huellas_detenidas": {
+			"titulo": "Huellas que se detienen",
+			"escenario": "Lago y bosque",
+			"donde": "Sendero",
+			"comentario": "Las huellas se quedan a treinta metros del embarcadero. El ciervo nunca llegó a donde fue el crimen.",
+			"nota": "Las huellas de pezuña se detienen a 30 metros del embarcadero."
+		},
+		"altavoz": {
+			"titulo": "Bocina escondida",
+			"escenario": "Lago y bosque",
+			"donde": "En un árbol del bosque",
+			"comentario": "Una bocina amarrada a la rama. Los bramidos eran una grabación. Este ciervo traía hasta técnico de sonido.",
+			"nota": "Bocina escondida en un árbol: los bramidos eran una grabación."
+		},
+		"disfraz_ciervo": {
+			"titulo": "Cornamenta y zancos",
+			"escenario": "Lago y bosque",
+			"donde": "Tronco hueco en el bosque",
+			"comentario": "La cornamenta y los zancos, metidos en un tronco hueco. Pintura plateada... y pelo café enredado en las correas.",
+			"nota": "En un tronco hueco: la cornamenta y unos zancos, con pintura plateada y pelo café en las correas."
+		},
+		"soporte_remos": {
+			"titulo": "Soporte de remos vacío",
+			"escenario": "Lago y bosque",
+			"donde": "Cobertizo de botes",
+			"comentario": "Falta un remo en el soporte. Y este cobertizo solo se abre con dos llaves: alguien que trabaja en el campamento.",
+			"nota": "Cobertizo de botes: falta un remo. Solo hay dos llaves: la de Porky y la de Tony."
+		},
+		"remo_sangre": {
+			"titulo": "Remo con sangre",
+			"escenario": "Lago y bosque",
+			"donde": "Entre los juncos, abajo del embarcadero",
+			"comentario": "Entre los juncos, abajo del embarcadero: un remo lleno de sangre. Un objeto largo y duro. El arma.",
+			"nota": "Remo con sangre entre los juncos, abajo del embarcadero: el arma."
+		},
+		"silbato_gs": {
+			"titulo": "Silbato «G. S.»",
+			"escenario": "Lago y bosque",
+			"donde": "Clavo del embarcadero",
+			"comentario": "Atorado en un clavo, con el cordón roto. Trae grabadas dos iniciales: «G. S.». ¿De quién será?",
+			"nota": "Silbato con las iniciales «G. S.» y el cordón roto, atorado en un clavo del embarcadero."
+		},
+		"linterna_porky": {
+			"titulo": "Linterna de Porky",
+			"escenario": "Lago y bosque",
+			"donde": "Fondo del agua, junto al embarcadero",
+			"comentario": "La linterna de Porky, todavía prendida en el fondo. Estaba esperando a alguien aquí, a oscuras.",
+			"nota": "La linterna de Porky, prendida en el fondo del lago, junto al embarcadero."
+		},
+		"cuaderno_eriz": {
+			"titulo": "Cuaderno de Eriz",
+			"escenario": "Lago y bosque",
+			"donde": "Mochila de Eriz, en la orilla",
+			"comentario": "«23:20: perturbación luminosa fuerte junto al embarcadero». Eriz no llegó justo antes: ya estaba aquí. Y esta línea marca la hora del crimen.",
+			"nota": "Cuaderno de Eriz: «23:20: perturbación luminosa fuerte junto al embarcadero»."
+		}
+	},
+	"detalles": {
+		"libro_guardia_quemado.antonio": "Reverso del libro de guardia: «De guardia: monitor auxiliar...». El nombre se quemó.",
+		"foto_grupo.dedicatoria": "Detrás de la foto: «Lago Espejo, 14 de agosto. Para Paco, que nunca le tuvo miedo al lago. — G. S.»",
+		"foto_grupo.silbato": "En la foto, Tony de monitor lleva al cuello un silbato con las iniciales «G. S.».",
+		"registro_enfermeria.tachon": "Bajo el tachón del registro de la enfermería: «23:20, se escuchó algo en el lago».",
+		"botas_tony.juncos": "En la suela de las botas hay juncos del lago: quien las usó bajó a la orilla."
+	}
+}

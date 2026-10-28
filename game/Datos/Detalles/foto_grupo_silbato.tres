@@ -6,8 +6,8 @@
 script = ExtResource("1_detalle")
 Id = "silbato"
 Titulo = "El silbato del monitor"
-Descripcion = "De cerca: el monitor del fondo lleva al cuello un silbato con las iniciales «A. R.» grabadas, igual al que Tony usa para llamar a los campistas."
-Pensamiento = "A. R. en el silbato. El monitor de la foto es Antonio R... es Tony."
+Descripcion = "De cerca: Tony, el monitor del fondo, lleva al cuello un silbato con las iniciales «G. S.» grabadas. No son sus iniciales."
+Pensamiento = "«G. S.» en el silbato de Tony. ¿De quién eran esas iniciales?"
 Normal = Vector3(0, 0, 1)
 Tolerancia = 30.0
 ZoomMinimo = 2.4

@@ -19,6 +19,7 @@ public partial class Caso1 : IEstadoPartida
 	private void PrepararPartida()
 	{
 		AddToGroup("estado_partida");
+		Hud.Connect("tablero_modificado", Callable.From(Cambio));
 		// Abrir un contenedor o una puerta también es progreso
 		foreach (var contenedor in Todos<Contenedor>()) contenedor.Abierto += Cambio;
 		foreach (var puerta in Todos<Puerta>()) puerta.Abierta += Cambio;
@@ -84,12 +85,14 @@ public partial class Caso1 : IEstadoPartida
 	{
 		{ "caso", "01" },
 		{ "capitulo", IdCapitulo },
-		{ "fase", Capitulos.Fase(_pistas.Count == 0 ? "introduccion" : "investigacion")?.Nombre ?? "" },
+		{ "fase", Capitulos.Fase(FaseActual())?.Nombre ?? "" },
 		{ "zona", ZonaActual() },
 		{ "pistas", PartidaEscenas.PistasEnDiario(Hud) },
 		{ "total_pistas", PartidaEscenas.TotalPistas },
 		{ "tiempo", _tiempoCaso },
 	};
+
+	private string FaseActual() => _guion.FaseActual();
 
 	public Diccionario CapturarEstado()
 	{
@@ -125,6 +128,8 @@ public partial class Caso1 : IEstadoPartida
 			{ "jugador", Jugador.CapturarEstado() },
 			{ "pistas", pistas },
 			{ "notas", Hud.Get("notas").AsGodotArray().Duplicate() },
+			{ "tablero", Hud.Call("capturar_tablero").AsGodotDictionary() },
+			{ "dialogos", _guion.Capturar() },
 			{ "tiempo", _tiempoCaso },
 			{ "escenas", escenas },
 		};
@@ -163,6 +168,8 @@ public partial class Caso1 : IEstadoPartida
 		}
 		foreach (Variant nota in estado["notas"].AsGodotArray()) Hud.Call("agregar_nota", nota.AsString());
 		Hud.Set("_aviso", 0.0);
+		Hud.Call("restaurar_tablero", estado.TryGetValue("tablero", out Variant tableroGuardado)
+			? tableroGuardado.AsGodotDictionary() : new Diccionario());
 
 		// Escenario: contenedores y puertas (la cabaña de Porky queda abierta si ya se tenía el llavero)
 		var contenedores = propio.TryGetValue("contenedores", out Variant cs) ? cs.AsGodotDictionary() : new Diccionario();
@@ -180,6 +187,7 @@ public partial class Caso1 : IEstadoPartida
 
 		if (propio.TryGetValue("zonas_vistas", out Variant zs))
 			foreach (Variant zona in zs.AsGodotArray()) _zonasVistas.Add(zona.AsString());
+		_guion.Restaurar(estado);
 		_tiempoCaso = estado["tiempo"].AsDouble();
 		_avisoSendero = PuedeSalir; // El aviso del sendero ya salió en la partida guardada
 		ActualizarObjetivo();

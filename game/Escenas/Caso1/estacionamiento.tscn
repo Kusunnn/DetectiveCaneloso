@@ -90,7 +90,7 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("e2")
 Nombre = "Guantera"
-MensajeAlAbrir = "Mapas de carretera, un cargador de celular y tarjetas de una inmobiliaria: «Juan Carlos, asesor»."
+MensajeAlAbrir = "Mapas de carretera, un cargador de celular y tarjetas de presentación: «Miawrio · Inversiones y desarrollos»."
 SonidoAbrir = 1
 
 [node name="Forma" type="CollisionShape3D" parent="Coche/Guantera"]
@@ -116,13 +116,13 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("e4")
 Id = "registro_llamadas"
-Titulo = "Registro de llamadas de Juan Carlos"
-Descripcion = "Una hoja impresa con las llamadas del celular de Juan Carlos. Varias a medianoche al mismo número."
+Titulo = "Registro de llamadas de Miawrio"
+Descripcion = "Una hoja impresa con las llamadas del celular de Miawrio. Una de anoche duró cuarenta minutos."
 EsEvidencia = true
 ComentarioAlMirar = "Una hoja impresa en el asiento del copiloto."
 Imagen = ExtResource("e3")
-DescripcionAmpliada = "Una hoja impresa con el registro de llamadas del celular de Juan Carlos: tres llamadas al mismo número a las 23:58, 00:12 y 00:31."
-Lugar = "Estacionamiento · coche de Juan Carlos"
+DescripcionAmpliada = "Una hoja impresa con el registro de llamadas del celular de Miawrio: una llamada de las 23:00 a las 23:40, sin cortes."
+Lugar = "Estacionamiento · carro de Miawrio"
 ModeloExamen = ExtResource("hu07_x_llamadas")
 
 [node name="Forma" type="CollisionShape3D" parent="Coche/RegistroLlamadas"]

@@ -1,0 +1,378 @@
+{
+	"id": "caso1_mimita",
+	"personaje": "Mimita",
+	"tono_voz": 1.08,
+	"inicio": "entrada",
+	"nodos": {
+		"entrada": {
+			"ir_a": [
+				{
+					"si": {
+						"conclusiones": [
+							"mimita_2"
+						]
+					},
+					"destino": "confeso"
+				},
+				{
+					"si": {
+						"conclusiones": [
+							"mimita_1"
+						]
+					},
+					"destino": "regreso_2"
+				},
+				{
+					"si": {
+						"nodos_completados": [
+							"mentira"
+						]
+					},
+					"destino": "regreso_1"
+				},
+				{
+					"destino": "mentira"
+				}
+			]
+		},
+		"mentira": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Mimita, ¿qué se alcanza a ver desde la enfermería?"
+				},
+				{
+					"habla": "Mimita",
+					"animo": "nerviosa",
+					"texto": "Mmm... estuve toda la noche en la enfermería. Tenía que estar al pendiente de los campistas, y además estaba acomodando el botiquín, y ni señal había, literal modo avión... No vi nada. ¿Sí?"
+				}
+			],
+			"siguiente": "prueba_1",
+			"al_completar": {
+				"notas": [
+					"Mimita dice que estuvo toda la noche en la enfermería y que no vio nada."
+				]
+			}
+		},
+		"regreso_1": {
+			"variantes": [
+				[
+					{
+						"habla": "Mimita",
+						"animo": "nerviosa",
+						"texto": "Mmm... ¿otra vez? Literal no he salido de la enfermería en toda la noche. ¿Sí?"
+					}
+				],
+				[
+					{
+						"habla": "Mimita",
+						"animo": "nerviosa",
+						"gesto": "Se mueve de un lado a otro",
+						"texto": "Mmm... ¿qué pasó? Ando acomodando el botiquín, ¿sí? Rapidito."
+					}
+				]
+			],
+			"siguiente": "prueba_1"
+		},
+		"regreso_2": {
+			"variantes": [
+				[
+					{
+						"habla": "Mimita",
+						"animo": "nerviosa",
+						"texto": "Mmm... ¿otra vez? Literal no he salido de la enfermería en toda la noche. ¿Sí?"
+					}
+				],
+				[
+					{
+						"habla": "Mimita",
+						"animo": "nerviosa",
+						"gesto": "Se mueve de un lado a otro",
+						"texto": "Mmm... ¿qué pasó? Ando acomodando el botiquín, ¿sí? Rapidito."
+					}
+				]
+			],
+			"siguiente": "prueba_2"
+		},
+		"prueba_1": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "registro_enfermeria",
+					"tipo": "MOSTRAR",
+					"texto": "Registro de la enfermería",
+					"destino": "p1_registro",
+					"requiere": {
+						"pistas": [
+							"registro_enfermeria"
+						]
+					}
+				},
+				{
+					"id": "huellas_pezuna",
+					"tipo": "MOSTRAR",
+					"texto": "Huellas de pezuña",
+					"destino": "e_huellas",
+					"requiere": {
+						"pistas": [
+							"huellas_pezuna"
+						]
+					}
+				},
+				{
+					"id": "taza_delantal",
+					"tipo": "MOSTRAR",
+					"texto": "Taza y delantal",
+					"destino": "e_taza",
+					"requiere": {
+						"pistas": [
+							"taza_delantal"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p1_registro": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "En tu registro de guardia dice «23:20, se escuchó algo en el lago». Y luego lo tachaste."
+				},
+				{
+					"habla": "Mimita",
+					"animo": "nerviosa",
+					"gesto": "Se mueve de un lado a otro",
+					"texto": "Mmm... me equivoqué al anotar, por eso lo taché. Sería un animal, un mapache, qué sé yo. No salí. ¿Sí?"
+				}
+			],
+			"siguiente": "prueba_2",
+			"al_completar": {
+				"conclusiones": [
+					"mimita_1"
+				],
+				"notas": [
+					"Mimita dice que tachó la línea de las 23:20 porque se equivocó al anotar."
+				]
+			}
+		},
+		"e_huellas": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "En el sendero hay huellas de pezuña enormes."
+				}
+			],
+			"siguiente": "error"
+		},
+		"e_taza": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Porky salió de la cocina con prisa: dejó el chocolate a medias."
+				}
+			],
+			"siguiente": "error"
+		},
+		"prueba_2": {
+			"pregunta": "¿Qué le enseño?",
+			"opciones": [
+				{
+					"id": "foto_aya_2319",
+					"tipo": "MOSTRAR",
+					"texto": "Foto de Aya de las 23:19",
+					"destino": "p2_foto",
+					"requiere": {
+						"conclusiones": [
+							"foto_aya_2319"
+						]
+					}
+				},
+				{
+					"id": "candado_caseta",
+					"tipo": "MOSTRAR",
+					"texto": "Candado sin forzar",
+					"destino": "e_candado",
+					"requiere": {
+						"pistas": [
+							"candado_caseta"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
+			]
+		},
+		"p2_foto": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Esta foto de Aya es de las 23:19. Mírate: estás en la orilla, junto a la enfermería, viendo el lago."
+				},
+				{
+					"habla": "Mimita",
+					"animo": "asustada",
+					"gesto": "Habla rápido",
+					"texto": "...Ok, ok, sí salí. El ciervo estaba quieto en la colina, como muñeco, nada que ver con la leyenda. Y luego oí en el embarcadero un silbido cortito."
+				},
+				{
+					"habla": "Mimita",
+					"animo": "triste",
+					"texto": "Era igualito al que usaba Tony de monitor cuando éramos niños. Luego, el ruido del agua. No quiero creer que haya sido él. Nel. No puede ser él."
+				},
+				{
+					"habla": "Hecdog",
+					"animo": "serio",
+					"texto": "Un silbido a las 23:20, Nya. Esto se está poniendo color de hormiga."
+				}
+			],
+			"fin": true,
+			"al_completar": {
+				"conclusiones": [
+					"mimita_2",
+					"mimita_oyo_silbido"
+				],
+				"notas": [
+					"Mimita sí salió a la orilla. Oyó en el embarcadero un silbido cortito, igual al que usaba Tony de monitor, y luego el ruido del agua."
+				]
+			}
+		},
+		"e_candado": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "El candado de la caseta no estaba forzado."
+				}
+			],
+			"siguiente": "error"
+		},
+		"confeso": {
+			"variantes": [
+				[
+					{
+						"habla": "Mimita",
+						"animo": "dolida",
+						"texto": "Mmm... ya te lo dije. No me hagas repetirlo, porfa. ¿Sí?"
+					}
+				],
+				[
+					{
+						"habla": "Mimita",
+						"animo": "triste",
+						"texto": "Mmm... sigo sin creérmelo, la neta. Ya te dije todo lo que oí. ¿Sí?"
+					}
+				]
+			],
+			"fin": true
+		},
+		"error": {
+			"ir_a": [
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 0
+						}
+					},
+					"destino": "paciencia"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 1
+						}
+					},
+					"destino": "error_1"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 2
+						}
+					},
+					"destino": "error_2"
+				},
+				{
+					"si": {
+						"maximo": {
+							"credibilidad": 3
+						}
+					},
+					"destino": "error_3"
+				},
+				{
+					"destino": "error_4"
+				}
+			],
+			"al_completar": {
+				"sumar": {
+					"credibilidad": -1
+				}
+			}
+		},
+		"error_4": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Caneloso, eso no tiene nada que ver con lo que dice Mimita, Nya. Así no vamos a ningún lado."
+				}
+			]
+		},
+		"error_3": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "molesto",
+					"texto": "Otra vez, Caneloso. Eso no tiene nada que ver con lo que dice Mimita, Nya. Piénsale tantito."
+				}
+			]
+		},
+		"error_2": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "impaciente",
+					"texto": "Caneloso, se me está acabando la paciencia, Nya. Eso no tiene nada que ver con lo que dice Mimita."
+				}
+			]
+		},
+		"error_1": {
+			"lineas": [
+				{
+					"habla": "Hecdog",
+					"animo": "harto",
+					"texto": "Última advertencia, Caneloso. Una prueba más así y te mando a acusar a quien sea, Nya."
+				}
+			]
+		},
+		"paciencia": {
+			"fin": true,
+			"salida": "paciencia"
+		},
+		"despedida": {
+			"variantes": [
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Volveré cuando tenga algo mejor que enseñarte, Mimita."
+					}
+				],
+				[
+					{
+						"habla": "Caneloso",
+						"texto": "Ahorita regreso, Mimita. No te vayas lejos."
+					}
+				]
+			]
+		}
+	}
+}

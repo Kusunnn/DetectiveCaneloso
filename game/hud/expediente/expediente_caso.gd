@@ -51,6 +51,7 @@ var tween: Tween
 var tween_scroll: Tween
 
 var _fuentes := {}
+var _escala_construida := 1.0
 
 
 func _ready() -> void:
@@ -78,14 +79,39 @@ func cargar_caso(caso: String) -> void:
 
 
 ## Cinemática de inicio (Escenas/Cinematicas/IntroCaso), encima del expediente y sin el aviso final.
+## Solo una a la vez: si ya hay una (aunque esté en su fundido final), no se pone otra encima.
+## Volver a verla no da pistas ni cambia el objetivo, y no cuenta en el registro de la partida.
 func ver_presentacion() -> void:
+	if get_tree().root.has_node("IntroCaso"):
+		return
 	var intro = load("res://Escenas/Cinematicas/IntroCaso.tscn").instantiate()
+	intro.name = "IntroCaso"
 	intro.Caso = _caso
 	intro.MostrarAviso = false
 	get_tree().root.add_child(intro)
 
 
-func abrir() -> void: _aplicar(true)
+func abrir() -> void:
+	# Si cambió el tamaño del texto en Opciones, se vuelve a armar con el nuevo
+	if overlay and not is_equal_approx(_escala_construida, _escala_texto()):
+		overlay.queue_free()
+		overlay = null
+		_construir_expediente()
+		_aplicar(false, false)
+	_aplicar(true)
+
+
+## Tecla asignada al expediente (se puede cambiar en Opciones)
+func _nombre_tecla_expediente() -> String:
+	var hud := get_parent()
+	while hud and not hud.has_method("nombre_tecla"):
+		hud = hud.get_parent()
+	return hud.nombre_tecla("expediente") if hud else "TAB"
+
+
+func _escala_texto() -> float:
+	var configuracion := get_node_or_null("/root/Configuracion")
+	return float(configuracion.get("EscalaTexto")) if configuracion else 1.0
 func cerrar() -> void: _aplicar(false)
 func alternar() -> void: _aplicar(not abierto)
 
@@ -161,7 +187,7 @@ func _label(t: String, f: Font, tam: int, c: Color, envolver := false) -> Label:
 	var l := Label.new()
 	l.text = t
 	l.add_theme_font_override("font", f)
-	l.add_theme_font_size_override("font_size", tam)
+	l.add_theme_font_size_override("font_size", int(round(tam * _escala_construida)))
 	l.add_theme_color_override("font_color", c)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if envolver:
@@ -227,6 +253,7 @@ func _tecla(texto: String, color: Color, tam := 11) -> PanelContainer:
 # ---------- Expediente ----------
 
 func _construir_expediente() -> void:
+	_escala_construida = _escala_texto()
 	overlay = Control.new()
 	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(overlay)
@@ -337,7 +364,7 @@ func _barra_lateral() -> Control:
 	# El tutorial (caso 00) no tiene presentación por ahora (IntroCaso.CasoSinPresentacion)
 	if informe and _caso != "00":
 		pie.add_child(_boton_atajo("VER", "PRESENTACIÓN DEL CASO", ver_presentacion)[0])
-	pie.add_child(_boton_atajo("TAB", "CERRAR", cerrar)[0])
+	pie.add_child(_boton_atajo(_nombre_tecla_expediente(), "CERRAR", cerrar)[0])
 	v.add_child(pie)
 	return m
 

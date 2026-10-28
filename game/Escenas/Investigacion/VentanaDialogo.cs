@@ -26,6 +26,8 @@ public class OpcionVista
 	public string Texto;
 	public string Etiqueta;   // PREGUNTAR, PRESIONAR, EVIDENCIA...
 	public bool Leida;
+	// HU-27: falta una pista o conclusión; se ve apagada como «???» (sin decir qué falta) y no se puede elegir
+	public bool Bloqueada;
 
 	public OpcionVista(string texto, string etiqueta = "", bool leida = false)
 	{
@@ -73,7 +75,7 @@ public partial class VentanaDialogo : CanvasLayer
 
 	public override void _Ready()
 	{
-		Layer = 10; // Por encima del HUD
+		Layer = 20; // Por encima del HUD y debajo del menú de pausa
 		_mono = GD.Load<Font>("res://hud/fonts/IBMPlexMono-Regular.ttf");
 		var display = new FontVariation { BaseFont = GD.Load<Font>("res://hud/fonts/BigShouldersDisplay.ttf") };
 		display.VariationOpentype = new Godot.Collections.Dictionary { { TextServerManager.GetPrimaryInterface().NameToTag("wght"), 800 } };
@@ -213,11 +215,13 @@ public partial class VentanaDialogo : CanvasLayer
 			int indice = i;
 			var o = opciones[i];
 			string etiqueta = string.IsNullOrEmpty(o.Etiqueta) ? "" : "[" + o.Etiqueta + "] ";
-			var boton = CrearBoton((i + 1) + ". " + etiqueta + o.Texto + (o.Leida ? "  ✓" : ""), o.Leida);
+			string texto = o.Bloqueada ? "???" : etiqueta + o.Texto + (o.Leida ? "  ✓" : "");
+			var boton = CrearBoton((i + 1) + ". " + texto, o.Leida);
+			if (o.Bloqueada) Bloquear(boton);
 			boton.Pressed += () => _espera?.TrySetResult(indice);
 			_opciones.AddChild(boton);
 		}
-		if (!AplicarSugerencia(_opciones)) ((Button)_opciones.GetChild(0)).GrabFocus();
+		if (!AplicarSugerencia(_opciones)) PrimeraDisponible()?.GrabFocus();
 
 		int elegida = await _espera.Task;
 		_indiceSalir = -1;
@@ -319,7 +323,7 @@ public partial class VentanaDialogo : CanvasLayer
 	{
 		var boton = new Button { Text = texto, Alignment = HorizontalAlignment.Left, Flat = false };
 		boton.AddThemeFontOverride("font", _mono);
-		boton.AddThemeFontSizeOverride("font_size", 21);
+		boton.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(21 * (Configuracion.Instancia?.EscalaTexto ?? 1f)));
 		var normal = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
 		normal.SetContentMarginAll(4);
 		var foco = new StyleBoxFlat { BgColor = new Color(Ambar, 0.35f), BorderColor = Ambar };
@@ -338,6 +342,23 @@ public partial class VentanaDialogo : CanvasLayer
 		boton.FocusEntered += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Hover);
 		boton.Pressed += () => Sonidos.ReproducirUI(this, Sonidos.Tipo.Clic);
 		return boton;
+	}
+
+	// Opción que todavía no se puede elegir: apagada, sin pistas de qué le falta
+	private void Bloquear(Button boton)
+	{
+		boton.Disabled = true;
+		var vacio = new StyleBoxFlat { BgColor = new Color(0, 0, 0, 0) };
+		vacio.SetContentMarginAll(4);
+		boton.AddThemeStyleboxOverride("disabled", vacio);
+		boton.AddThemeColorOverride("font_disabled_color", new Color(Tinta, 0.35f));
+	}
+
+	private Button PrimeraDisponible()
+	{
+		foreach (Node n in _opciones.GetChildren())
+			if (n is Button boton && !boton.Disabled) return boton;
+		return null;
 	}
 
 	private void MostrarHablante(Hablante h)
@@ -398,10 +419,21 @@ public partial class VentanaDialogo : CanvasLayer
 	private void Abrir()
 	{
 		_abiertoEn = Time.GetTicksMsec();
+		AplicarTamanoTexto();
 		_ayuda.Text = "Clic o [E] para continuar";
 		if (_nivel++ > 0) return;
 		_caja.Show();
 		JugadorActual()?.Bloquear(true);
+	}
+
+	// Tamaño del texto elegido en Opciones (se aplica cada vez que se abre la caja)
+	private void AplicarTamanoTexto()
+	{
+		float e = Configuracion.Instancia?.EscalaTexto ?? 1f;
+		_nombre.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(40 * e));
+		_animo.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(18 * e));
+		_texto.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(25 * e));
+		_ayuda.AddThemeFontSizeOverride("font_size", Mathf.RoundToInt(16 * e));
 	}
 
 	private void Cerrar()
@@ -450,7 +482,7 @@ public partial class VentanaDialogo : CanvasLayer
 		if (_opciones.GetChildCount() > 0 && evento is InputEventKey numero && numero.Pressed && !numero.Echo)
 		{
 			int indice = (int)numero.Keycode - (int)Key.Key1;
-			if (indice >= 0 && indice < _opciones.GetChildCount())
+			if (indice >= 0 && indice < _opciones.GetChildCount() && !((Button)_opciones.GetChild(indice)).Disabled)
 			{
 				GetViewport().SetInputAsHandled();
 				_espera?.TrySetResult(indice);
