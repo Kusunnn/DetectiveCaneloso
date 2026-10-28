@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 // de la sala copian a sus vacíos. Todo depende de t (también luces y sonidos continuos), así que IrA, adelantar
 // con clic o Enter y Movie Maker dan siempre lo mismo. Mantener [Espacio], [Esc] o B/Start la salta.
 // Todo lo que se oye viene de la cinta: va por un bus con filtro de cinta. Al terminar deja la sala como estaba.
+// Con UsarMomentosCongelados (por defecto) se ve la versión de momentos congelados (CinematicaCintaMomentos.cs).
 public partial class CinematicaCinta : CanvasLayer
 {
 	[Signal] public delegate void TerminadaEventHandler();
@@ -182,11 +183,12 @@ public partial class CinematicaCinta : CanvasLayer
 		_camaraAntes = GetViewport().GetCamera3D();
 
 		// La animación de Blender: personajes, cámara y vacíos de los objetos
-		_escena = GD.Load<PackedScene>(Animacion).Instantiate<Node3D>();
+		_momentos = UsarMomentosCongelados;
+		_escena = GD.Load<PackedScene>(_momentos ? AnimacionMomentos : Animacion).Instantiate<Node3D>();
 		_escena.Name = "CinematicaCintaBlender";
 		_sala.AddChild(_escena);
 		_anim = _escena.FindChildren("*", "AnimationPlayer", true, false).OfType<AnimationPlayer>().First();
-		_anim.Play("Cinta");
+		_anim.Play(_momentos ? "Momentos" : "Cinta");
 		_anim.Pause();
 		_porky = _escena.GetNode<Node3D>("Porky");
 		_figura = _escena.GetNode<Node3D>("Figura");
@@ -195,7 +197,8 @@ public partial class CinematicaCinta : CanvasLayer
 		_animPuerta = _escena.GetNode<Node3D>("Anim_Puerta");
 		_animSilla = _escena.GetNode<Node3D>("Anim_Silla");
 		_animCinta = _escena.GetNode<Node3D>("Anim_Cinta");
-		_camara = _escena.GetNode<Camera3D>("Camara");
+		if (_momentos) PrepararMomentos();
+		else _camara = _escena.GetNode<Camera3D>("Camara");
 		_enfoque = new CameraAttributesPractical { DofBlurAmount = 0.06f, DofBlurFarTransition = 0.5f };
 		_camara.Near = 0.02f;
 		_camara.Attributes = _enfoque;
@@ -358,8 +361,8 @@ public partial class CinematicaCinta : CanvasLayer
 		if (Manual) { Actualizar(true); return; }
 		_t += delta;
 		Actualizar(false);
-		Pasos(delta);
-		if (_t >= TFin) Terminar();
+		if (!_momentos) Pasos(delta);
+		if (_t >= FinActual) Terminar();
 	}
 
 	// Pone todo como va en el segundo _t. Los sonidos de un solo golpe solo suenan al pasar por ellos
@@ -371,11 +374,16 @@ public partial class CinematicaCinta : CanvasLayer
 			if (!silencio) _eventos[_siguienteEvento].Accion();
 			_siguienteEvento++;
 		}
-		_anim.Seek(Math.Min(_t, _anim.CurrentAnimationLength), true);
-		Objetos();
-		Camara();
+		if (_momentos) ActualizarMomentos();
+		else
+		{
+			_anim.Seek(Math.Min(_t, _anim.CurrentAnimationLength), true);
+			Objetos();
+			Camara();
+		}
 		Interfaz();
-		SonidosContinuos();
+		if (_momentos) SonidosMomentos();
+		else SonidosContinuos();
 	}
 
 	private void Terminar()
@@ -487,8 +495,8 @@ public partial class CinematicaCinta : CanvasLayer
 	// Clic o Enter: pasa a la siguiente toma
 	private void Avanzar()
 	{
-		_t = Paradas.FirstOrDefault(p => p > _t + 0.05, TFin);
-		if (_t >= TFin) { Terminar(); return; }
+		_t = ParadasActuales.FirstOrDefault(p => p > _t + 0.05, FinActual);
+		if (_t >= FinActual) { Terminar(); return; }
 		Actualizar(true);
 	}
 
@@ -558,6 +566,7 @@ public partial class CinematicaCinta : CanvasLayer
 		_negro = new ColorRect { Color = Colors.Black, MouseFilter = Control.MouseFilterEnum.Ignore };
 		_interfaz.AddChild(_negro);
 		Anclar(_negro, 0, 0, 1, 1);
+		if (_momentos) CrearDestello();
 
 		// Las horas: a máquina, arriba a la izquierda, en el papel del HUD
 		_hora = NuevaEtiqueta(Fuente("SpecialElite-Regular.ttf", 4), 30 * e, new Color(0.86f, 0.84f, 0.78f), HorizontalAlignment.Left);
@@ -580,18 +589,20 @@ public partial class CinematicaCinta : CanvasLayer
 
 	private int SubtituloActual()
 	{
-		for (int i = 0; i < Subtitulos.Length; i++)
-			if (_t >= Subtitulos[i].Inicio && _t < Subtitulos[i].Fin) return i;
+		var subtitulos = SubtitulosActuales;
+		for (int i = 0; i < subtitulos.Length; i++)
+			if (_t >= subtitulos[i].Inicio && _t < subtitulos[i].Fin) return i;
 		return -1;
 	}
 
 	private void Interfaz()
 	{
 		// Negro con la cinta sonando; fundido a la sala; fundido a negro al final
-		_negro.Color = new Color(0, 0, 0, Mathf.Max(1 - Rampa(_t, TImagen, TImagen + 1.0), Rampa(_t, TFin - 1.4, TFin)));
+		if (_momentos) InterfazMomentos();
+		else _negro.Color = new Color(0, 0, 0, Mathf.Max(1 - Rampa(_t, TImagen, TImagen + 1.0), Rampa(_t, TFin - 1.4, TFin)));
 
 		// La hora, a máquina
-		var hora = Horas.LastOrDefault(h => h.T <= _t);
+		var hora = HorasActuales.LastOrDefault(h => h.T <= _t);
 		_hora.Visible = hora.Texto != null;
 		if (hora.Texto != null)
 		{
@@ -601,10 +612,10 @@ public partial class CinematicaCinta : CanvasLayer
 
 		// Subtítulo de la cinta: aparece entero con su sonido y se desvanece
 		int s = SubtituloActual();
-		_subtitulo.Visible = s >= 0 && _a.Lineas != null && Subtitulos[s].Linea < _a.Lineas.Length;
+		_subtitulo.Visible = s >= 0 && _a.Lineas != null && SubtitulosActuales[s].Linea < _a.Lineas.Length;
 		if (_subtitulo.Visible)
 		{
-			var (inicio, fin, linea) = Subtitulos[s];
+			var (inicio, fin, linea) = SubtitulosActuales[s];
 			_subtitulo.Text = "▶ " + _a.Lineas[linea];
 			_subtitulo.Modulate = new Color(1, 1, 1, Rampa(_t, inicio, inicio + 0.15) * (1 - Rampa(_t, fin - 0.35, fin)));
 		}
@@ -699,6 +710,12 @@ public partial class CinematicaCinta : CanvasLayer
 
 	private void CrearEventos()
 	{
+		if (_momentos)
+		{
+			CrearEventosMomentos();
+			_eventos.Sort((a, b) => a.T.CompareTo(b.T));
+			return;
+		}
 		const string maquina = "res://Assets/Audio/Cinematica/";
 		const string paso = "res://Assets/Audio/Efectos/paso_";
 		_eventos.AddRange(new (double, Action)[]

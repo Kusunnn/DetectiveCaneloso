@@ -1,6 +1,8 @@
 extends Node
 # Para ver la cinemática final del Caso 0 sin jugar el caso: abre ver_cinematica_cinta.tscn y dale F6.
 # Al terminar se puede repetir con [R].
+# Argumentos (después de --): "animada" muestra la versión animada en lugar de los momentos congelados;
+# "salir" cierra al terminar (para grabarla con Movie Maker: --write-movie <archivo.avi>).
 
 var sala: Node3D
 var prueba
@@ -19,7 +21,15 @@ func ver() -> void:
 	if prueba != null: prueba.queue_free()
 	prueba = load("res://tests/CinematicaCintaPrueba.cs").new()
 	add_child(prueba)
+	var args := OS.get_cmdline_user_args()
+	prueba.Momentos = not args.has("animada")
 	prueba.Empezar(sala, false)
+	if args.has("salir"):
+		while not prueba.Terminada:
+			await get_tree().process_frame
+		for i in 15:
+			await get_tree().process_frame
+		get_tree().quit()
 
 func _unhandled_input(evento: InputEvent) -> void:
 	if evento is InputEventKey and evento.pressed and evento.keycode == KEY_R and prueba != null and prueba.Terminada:

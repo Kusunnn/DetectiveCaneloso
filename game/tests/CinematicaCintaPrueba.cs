@@ -7,6 +7,9 @@ public partial class CinematicaCintaPrueba : Node
 	public CinematicaCinta Cinematica { get; private set; }
 	public bool Terminada { get; private set; }
 
+	// Para comparar: true = momentos congelados, false = la versión animada
+	public bool Momentos { get => CinematicaCinta.UsarMomentosCongelados; set => CinematicaCinta.UsarMomentosCongelados = value; }
+
 	public async void Empezar(Node3D sala, bool manual)
 	{
 		var caso = sala.GetNode<Caso0>("Caso0");
