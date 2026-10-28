@@ -62,3 +62,20 @@ blender -b --python game/Assets/Cinematicas/Blender/scripts/construir_momentos.p
 - **Poses.** No hay animaciones de Quaternius ni keyframes calculados: cada hueso tiene su giro escrito a mano y el IK solo lleva la mano o el pie al punto que toca. Después, los «contactos» corrigen un parámetro de la pose paso a paso (subir, bajar, acercar, levantar la cabeza) hasta que lo que se apoya queda tocando sin meterse.
 - **Choques.** Se revisan con árboles BVH de las mallas deformadas: triángulos del personaje contra la mesa, las sillas, las paredes, el piso, el techo (salvo el hueco de la rejilla), el reloj, la grabadora, la puerta, la cuerda y el otro personaje.
 - **Exportación.** Una animación «Momentos» con un fotograma por cuadro e interpolación constante (Porky, la figura y los vacíos `Anim_*`), y sin animar `Cam_k_Ini`, `Cam_k_Fin`, `Foco_k`, `Luz_k`, `Polvo_k` y `Cuerda_k`. `CinematicaCintaMomentos.cs` hace el resto.
+
+## Versión película (presente → cinta → presente)
+
+La misma herramienta arma la versión película con otros datos: `scripts/pelicula.py` (19 cuadros; toma las poses del pasado de `momentos.py` y agrega a Caneloso en el presente). Lo que Godot necesita y no va en el .glb (duración, época, transición, hora, luces, sonidos, subtítulos y música) sale en `Caso0/cinta_pelicula.json`.
+
+```
+# Caneloso: su modelo del juego a glTF (el .fbx de Mixamo entra a Blender con escalas rotas)
+Godot --headless --path game --script res://Herramientas/exportar_modelo_blender.gd -- res://Assets/Models/Caneloso/Archivo/player.tscn <ruta absoluta>/game/Assets/Cinematicas/Blender/caneloso.glb
+
+# Armar, revisar choques y exportar cinta_pelicula.glb + cinta_pelicula.json
+blender -b --python game/Assets/Cinematicas/Blender/scripts/construir_momentos.py -- --datos pelicula
+
+# Renders rápidos
+blender -b --python game/Assets/Cinematicas/Blender/scripts/construir_momentos.py -- --datos pelicula --vista <carpeta> 1,7,11 --libre
+```
+
+Archivos: `caso0_pelicula.blend`, `caneloso.glb`, `reporte_choques_pelicula.json`. En Godot la reproduce `CinematicaCintaPelicula.cs` (`CinematicaCinta.Version = Pelicula`).

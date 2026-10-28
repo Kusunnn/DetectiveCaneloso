@@ -15,6 +15,11 @@ MAPAS = {
     "animal": ["Skl_Root", "Spine_1", "Spine_2", "Spine_3", "Neck", "Head",
                "Clavicle_L", "Arm_1_L", "Arm_2_L", "Hand_L", "Clavicle_R", "Arm_1_R", "Arm_2_R", "Hand_R",
                "Leg_1_L", "Leg_2_L", "Ankle_L", "Toe_L", "Leg_1_R", "Leg_2_R", "Ankle_R", "Toe_R"],
+    "mixamo": ["mixamorig_Hips", "mixamorig_Spine", "mixamorig_Spine1", "mixamorig_Spine2", "mixamorig_Neck", "mixamorig_Head",
+               "mixamorig_LeftShoulder", "mixamorig_LeftArm", "mixamorig_LeftForeArm", "mixamorig_LeftHand",
+               "mixamorig_RightShoulder", "mixamorig_RightArm", "mixamorig_RightForeArm", "mixamorig_RightHand",
+               "mixamorig_LeftUpLeg", "mixamorig_LeftLeg", "mixamorig_LeftFoot", "mixamorig_LeftToeBase",
+               "mixamorig_RightUpLeg", "mixamorig_RightLeg", "mixamorig_RightFoot", "mixamorig_RightToeBase"],
 }
 
 
@@ -22,6 +27,7 @@ def tipo(arm):
     nombres = arm.data.bones
     if "DEF-hips" in nombres: return "ual1"
     if "pelvis" in nombres: return "ual2"
+    if "mixamorig_Hips" in nombres: return "mixamo"
     return "animal"
 
 

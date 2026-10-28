@@ -20,17 +20,21 @@ from mathutils import Vector, Matrix, Quaternion
 from mathutils.bvhtree import BVHTree
 from comun import BASE, GAME, g2b
 import retarget as rt
-import momentos as M
+import importlib
 
 ARGS = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
+# Qué versión se arma: "momentos" (12 cuadros) o "pelicula" (presente → cinta → presente)
+DATOS = ARGS[ARGS.index("--datos") + 1] if "--datos" in ARGS else "momentos"
+M = importlib.import_module(DATOS)
 VISTA = ARGS[ARGS.index("--vista") + 1] if "--vista" in ARGS else None
 LIBRE = "--libre" in ARGS
 SOLO = None
 for a in ARGS:
     if a.replace(",", "").isdigit(): SOLO = [int(x) for x in a.split(",")]
 ENTRADA = os.path.join(BASE, "caso0_cinta.blend")
-SALIDA_BLEND = os.path.join(BASE, "caso0_momentos.blend")
-SALIDA_GLB = os.path.join(GAME, "Assets", "Cinematicas", "Caso0", "cinta_momentos.glb")
+SALIDA_BLEND = os.path.join(BASE, f"caso0_{DATOS}.blend")
+SALIDA_GLB = os.path.join(GAME, "Assets", "Cinematicas", "Caso0", f"cinta_{DATOS}.glb")
+SALIDA_JSON = os.path.join(GAME, "Assets", "Cinematicas", "Caso0", f"cinta_{DATOS}.json")
 FPS = 30
 PISO = M.PISO
 
@@ -63,7 +67,31 @@ for o in list(bpy.data.objects):
 if esc.rigidbody_world: bpy.ops.rigidbody.world_remove()
 for c in list(bpy.data.cameras):
     if c.users == 0: bpy.data.cameras.remove(c)
-for arm in (AP, AF):
+ARMADURAS = [AP, AF]
+# Caneloso (la versión película lo usa en el presente): su modelo exportado desde Godot (exportar_modelo_blender.gd)
+if getattr(M, "CANELOSO", False):
+    antes = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=os.path.join(BASE, "caneloso.glb"))
+    nuevos = [o.name for o in bpy.data.objects if o not in antes]
+    AC = next(bpy.data.objects[n] for n in nuevos if bpy.data.objects[n].type == 'ARMATURE')
+    mw = AC.matrix_world.copy()
+    AC.parent = None
+    AC.matrix_world = mw
+    AC.name = "Caneloso"
+    # Fuera la esfera de los huesos y los vacíos de la escena de Godot
+    for n in nuevos:
+        o = bpy.data.objects.get(n)
+        if o is not None and o != AC and o.parent != AC: bpy.data.objects.remove(o)
+    col = bpy.data.collections.new("Caneloso"); esc.collection.children.link(col)
+    for o in [AC] + [o for o in bpy.data.objects if o.parent == AC]:
+        for c in list(o.users_collection): c.objects.unlink(o)
+        col.objects.link(o)
+    AC.rotation_mode = 'QUATERNION'
+    # En reposo mira a +Z de Godot, igual que Porky
+    GIRO_IMPORT["Caneloso"] = AC.matrix_world.to_quaternion()
+    AC.scale = AC.matrix_world.to_scale()
+    ARMADURAS.append(AC)
+for arm in ARMADURAS:
     arm.rotation_mode = 'QUATERNION'
     for pb in arm.pose.bones:
         pb.rotation_mode = 'QUATERNION'
@@ -73,6 +101,10 @@ bpy.context.view_layer.update()
 PK, FG = rt.Esqueleto(AP), rt.Esqueleto(AF)
 ESQ = {"Porky": PK, "Figura": FG}
 ARM = {"Porky": AP, "Figura": AF}
+if len(ARMADURAS) > 2:
+    ESQ["Caneloso"] = rt.Esqueleto(ARMADURAS[2])
+    ARM["Caneloso"] = ARMADURAS[2]
+PERSONAJES = list(ARM)
 
 OBJ = bpy.data.objects
 GRABADORA = OBJ["GrabadoraPista"]
@@ -177,6 +209,10 @@ CADENAS = {
               "PieI": ("Leg_1_L", "Leg_2_L", "Ankle_L"), "PieD": ("Leg_1_R", "Leg_2_R", "Ankle_R")},
     "Figura": {"ManoI": ("DEF-upper_arm.L", "DEF-forearm.L", "DEF-hand.L"), "ManoD": ("DEF-upper_arm.R", "DEF-forearm.R", "DEF-hand.R"),
                "PieI": ("DEF-thigh.L", "DEF-shin.L", "DEF-foot.L"), "PieD": ("DEF-thigh.R", "DEF-shin.R", "DEF-foot.R")},
+    "Caneloso": {"ManoI": ("mixamorig_LeftArm", "mixamorig_LeftForeArm", "mixamorig_LeftHand"),
+                 "ManoD": ("mixamorig_RightArm", "mixamorig_RightForeArm", "mixamorig_RightHand"),
+                 "PieI": ("mixamorig_LeftUpLeg", "mixamorig_LeftLeg", "mixamorig_LeftFoot"),
+                 "PieD": ("mixamorig_RightUpLeg", "mixamorig_RightLeg", "mixamorig_RightFoot")},
 }
 
 
@@ -398,6 +434,49 @@ def cuerda(nombre, arriba, abajo):
     return o
 
 
+def carrete(nombre, centro, radio, normal_hacia):
+    "Carrete de la cinta: un disco blanco con seis dientes, para que se vea girar"
+    bm = bmesh.new()
+    bmesh.ops.create_circle(bm, cap_ends=True, segments=24, radius=radio)
+    for i in range(6):
+        a = i * math.pi / 3
+        geo = bmesh.ops.create_cube(bm, size=1)
+        bmesh.ops.scale(bm, vec=(radio * 0.28, radio * 0.12, radio * 0.25), verts=geo["verts"])
+        bmesh.ops.rotate(bm, verts=geo["verts"], cent=(0, 0, 0), matrix=Matrix.Rotation(a, 3, 'Z'))
+        bmesh.ops.translate(bm, verts=geo["verts"], vec=(math.cos(a) * radio * 0.55, math.sin(a) * radio * 0.55, radio * 0.06))
+    hueco = bmesh.ops.create_circle(bm, cap_ends=True, segments=12, radius=radio * 0.3)
+    bmesh.ops.translate(bm, verts=hueco["verts"], vec=(0, 0, radio * 0.08))
+    me = bpy.data.meshes.new(nombre)
+    bm.to_mesh(me); bm.free()
+    me.materials.append(material_simple("Carrete", (0.5, 0.48, 0.44)))
+    o = nuevo(nombre, me)
+    o.location = gv(centro)
+    o.rotation_quaternion = (gv(normal_hacia) - gv(centro)).to_track_quat('Z', 'Y')
+    return o
+
+
+def astillas(nombre, centro, radio, cuantos, semilla):
+    "Astillas de cristal suspendidas en el instante del golpe"
+    import random
+    random.seed(semilla)
+    bm = bmesh.new()
+    for _ in range(cuantos):
+        a = random.uniform(0, 2 * math.pi)
+        r = radio * random.random() ** 0.5
+        p = Vector((math.cos(a) * r, math.sin(a) * r, random.uniform(0.01, radio * 0.9)))
+        tam = random.uniform(0.006, 0.02)
+        v = [bm.verts.new(p + Vector((random.uniform(-1, 1), random.uniform(-1, 1), random.uniform(-0.3, 0.3))) * tam) for _ in range(3)]
+        bm.faces.new(v)
+    me = bpy.data.meshes.new(nombre)
+    bm.to_mesh(me); bm.free()
+    mat = material_simple("Astilla", (0.85, 0.9, 0.95))
+    principled(mat).inputs["Roughness"].default_value = 0.05
+    me.materials.append(mat)
+    o = nuevo(nombre, me)
+    o.location = gv(centro)
+    return o
+
+
 # ======================================================================
 # 6. Revisión de choques (BVH: triángulos que se cruzan)
 # ======================================================================
@@ -474,13 +553,13 @@ def altura_minima(arm, dentro=None):
 # ======================================================================
 FUERA = {"pos": (0, -20, 0), "giro": 0}          # quien no sale en el cuadro se esconde bajo el piso
 REPORTE = {"cuadros": {}}
-for arm in (AP, AF):
+for arm in ARMADURAS:
     for o in mallas(arm): o.hide_render = False
 
 
 def guardar_clave(k):
     f = cuadro_de(k)
-    for arm in (AP, AF):
+    for arm in ARMADURAS:
         arm.keyframe_insert("location", frame=f); arm.keyframe_insert("rotation_quaternion", frame=f)
         for pb in arm.pose.bones:
             pb.keyframe_insert("location", frame=f); pb.keyframe_insert("rotation_quaternion", frame=f)
@@ -502,7 +581,7 @@ for c in cuadros:
         poner_objeto(nombre, matriz_objeto(nombre, c.get("objetos", {}).get(nombre)))
     bpy.context.view_layer.update()
     presentes = []
-    for nombre in ("Porky", "Figura"):
+    for nombre in PERSONAJES:
         spec = c.get(nombre.lower())
         posar(nombre, spec or FUERA, k)
         if spec: presentes.append(nombre)
@@ -529,8 +608,10 @@ for c in cuadros:
             bpy.context.view_layer.update()
     # Cámara de inicio y de fin, enfoque y luz de acento
     cam = c["camara"]
-    ini = camara(f"Cam_{k:02d}_Ini", cam["desde"][0], cam["mira"][0], cam["lente"], cam.get("alabeo", 0))
-    fin = camara(f"Cam_{k:02d}_Fin", cam["desde"][1], cam["mira"][1], cam["lente"], cam.get("alabeo", 0))
+    # La lente puede cambiar del inicio al fin del cuadro (un zoom lento)
+    lentes = cam["lente"] if isinstance(cam["lente"], (list, tuple)) else (cam["lente"], cam["lente"])
+    ini = camara(f"Cam_{k:02d}_Ini", cam["desde"][0], cam["mira"][0], lentes[0], cam.get("alabeo", 0))
+    fin = camara(f"Cam_{k:02d}_Fin", cam["desde"][1], cam["mira"][1], lentes[1], cam.get("alabeo", 0))
     vacio(f"Foco_{k:02d}", cam["foco"])
     if "luz" in c: vacio(f"Luz_{k:02d}", c["luz"]["desde"], c["luz"]["mira"])
     extras = []
@@ -538,6 +619,14 @@ for c in cuadros:
         extras.append(polvo(f"Polvo_{k:02d}", c["polvo"]["centro"], c["polvo"]["radio"], c["polvo"]["cuantos"], k))
     if "cuerda" in c:
         extras.append(cuerda(f"Cuerda_{k:02d}", c["cuerda"][0], c["cuerda"][1]))
+    for i, cr in enumerate(c.get("carretes", [])):
+        extras.append(carrete(f"Carrete_{k:02d}_{i}", cr[0], cr[1], cr[2]))
+    if "astillas" in c:
+        extras.append(astillas(f"Astillas_{k:02d}", c["astillas"]["centro"], c["astillas"]["radio"], c["astillas"]["cuantos"], k))
+    # Vacíos con una posición exacta de un objeto (inicio y fin de la caída del reloj)
+    for nombre_v, spec_v in c.get("vacios", {}).items():
+        e = nuevo(nombre_v)
+        e.matrix_world = matriz_objeto(spec_v["de"], spec_v)
     bpy.context.view_layer.update()
     choques = revisar_choques(k, presentes)
     REPORTE["cuadros"][k] = {"nombre": c["nombre"], "choques": choques, "intersecciones": sum(choques.values())}
@@ -554,7 +643,7 @@ for c in cuadros:
         esc.render.resolution_x, esc.render.resolution_y = 960, 540
         esc.frame_set(cuadro_de(k))
         for o in COL_MOMENTOS.objects:
-            if o.name.startswith(("Polvo_", "Cuerda_")): o.hide_render = o not in extras
+            if o.name.startswith(("Polvo_", "Cuerda_", "Carrete_", "Astillas_")): o.hide_render = o not in extras
         esc.camera = fin
         esc.render.filepath = os.path.join(VISTA, f"cuadro_{k:02d}.png")
         bpy.ops.render.render(write_still=True)
@@ -572,7 +661,7 @@ print("IK a más de 1 cm:", REPORTE["ik_lejos"])
 print("TOTAL INTERSECCIONES:", REPORTE["total_intersecciones"])
 
 # Interpolación constante: entre cuadros no hay movimiento
-for idb in [AP, AF] + list(VACIOS.values()):
+for idb in ARMADURAS + list(VACIOS.values()):
     ad = idb.animation_data
     if ad and ad.action:
         for capa in ad.action.layers:
@@ -582,7 +671,10 @@ for idb in [AP, AF] + list(VACIOS.values()):
                         for kp in fc.keyframe_points: kp.interpolation = 'CONSTANT'
 
 if SOLO is None and not VISTA:
-    with open(os.path.join(BASE, "reporte_choques_momentos.json"), "w", encoding="utf-8") as fh:
+    # Lo que Godot necesita y no va en el .glb: duración, época, transición, hora, luces y sonidos de cada cuadro
+    with open(SALIDA_JSON, "w", encoding="utf-8") as fh:
+        json.dump([dict(k=c["k"], nombre=c["nombre"], **c.get("godot", {})) for c in M.CUADROS], fh, ensure_ascii=False, indent=1)
+    with open(os.path.join(BASE, f"reporte_choques_{DATOS}.json"), "w", encoding="utf-8") as fh:
         json.dump(REPORTE, fh, ensure_ascii=False, indent=1)
     esc.frame_start, esc.frame_end = 1, cuadro_de(len(M.CUADROS))
     esc.frame_set(cuadro_de(1))
@@ -591,10 +683,10 @@ if SOLO is None and not VISTA:
     print("guardado:", SALIDA_BLEND)
     # Exportar: personajes, vacíos animados y todo lo de la colección Momentos
     bpy.ops.object.select_all(action='DESELECT')
-    exportar = [AP, AF] + list(COL_MOMENTOS.objects)
-    exportar += [o for o in OBJ if o.parent in (AP, AF) and o.type == 'MESH']
+    exportar = ARMADURAS + list(COL_MOMENTOS.objects)
+    exportar += [o for o in OBJ if o.parent in ARMADURAS and o.type == 'MESH']
     for o in exportar: o.hide_set(False); o.select_set(True)
-    for idb in [AP, AF] + list(VACIOS.values()):
+    for idb in ARMADURAS + list(VACIOS.values()):
         ad = idb.animation_data
         if ad is None or ad.action is None: continue
         pista = ad.nla_tracks.new(); pista.name = "Momentos"
