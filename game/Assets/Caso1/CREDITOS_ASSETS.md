@@ -110,3 +110,5 @@ No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La c
 | La sala | La Sala 1 del juego exportada a glTF (`sala1.glb`), solo como referencia en Blender | la de sus modelos |
 
 No se usaron animaciones de Mixamo ni capturas de Rokoko: Mixamo pide iniciar sesión con una cuenta de Adobe y Rokoko Vision necesita grabar a alguien con la webcam.
+
+**Momentos congelados** (`Assets/Cinematicas/Caso0/cinta_momentos.glb`, de `Blender/scripts/construir_momentos.py` y `momentos.py`): los mismos modelos (Porky, la figura con gabardina y capucha). No usa animaciones de Quaternius: cada pose está escrita a mano, hueso por hueso. Lo único nuevo son el polvo suspendido (pequeños icosaedros generados en Blender) y la cuerda (un cilindro de Blender), los dos propios.
