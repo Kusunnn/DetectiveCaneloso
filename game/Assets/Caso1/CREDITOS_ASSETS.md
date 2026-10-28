@@ -112,3 +112,5 @@ No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La c
 No se usaron animaciones de Mixamo ni capturas de Rokoko: Mixamo pide iniciar sesión con una cuenta de Adobe y Rokoko Vision necesita grabar a alguien con la webcam.
 
 **Momentos congelados** (`Assets/Cinematicas/Caso0/cinta_momentos.glb`, de `Blender/scripts/construir_momentos.py` y `momentos.py`): los mismos modelos (Porky, la figura con gabardina y capucha). No usa animaciones de Quaternius: cada pose está escrita a mano, hueso por hueso. Lo único nuevo son el polvo suspendido (pequeños icosaedros generados en Blender) y la cuerda (un cilindro de Blender), los dos propios.
+
+**Versión película** (`cinta_pelicula.glb`, de `scripts/pelicula.py`): suma a Caneloso, que es el mismo modelo del juego (`Assets/Models/Caneloso/Archivo/player.tscn`), exportado a `Blender/caneloso.glb` con `Herramientas/exportar_modelo_blender.gd`. Los carretes de la cinta y las astillas del reloj están hechos en Blender y son propios.
