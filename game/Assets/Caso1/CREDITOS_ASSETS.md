@@ -114,3 +114,6 @@ No se usaron animaciones de Mixamo ni capturas de Rokoko: Mixamo pide iniciar se
 **Momentos congelados** (`Assets/Cinematicas/Caso0/cinta_momentos.glb`, de `Blender/scripts/construir_momentos.py` y `momentos.py`): los mismos modelos (Porky, la figura con gabardina y capucha). No usa animaciones de Quaternius: cada pose está escrita a mano, hueso por hueso. Lo único nuevo son el polvo suspendido (pequeños icosaedros generados en Blender) y la cuerda (un cilindro de Blender), los dos propios.
 
 **Versión película** (`cinta_pelicula.glb`, de `scripts/pelicula.py`): suma a Caneloso, que es el mismo modelo del juego (`Assets/Models/Caneloso/Archivo/player.tscn`), exportado a `Blender/caneloso.glb` con `Herramientas/exportar_modelo_blender.gd`. Los carretes de la cinta y las astillas del reloj están hechos en Blender y son propios.
+
+## Menú de inicio: Caneloso animado
+No trae assets externos nuevos. Las capas de `Assets/Menu/Caneloso/` (y `Assets/Menu/caneloso.png` y `Assets/Retratos/caneloso.png`) son renders en Blender 5.2 (Cycles) del modelo de Caneloso del juego con la lupa **Poly Haven · Magnifying Glass 01** (ya listada arriba, CC0). La escena y el script que las generan están en `Assets/Menu/Blender/` (`caneloso_menu.py`). Los ojos, las cejas y la boca del render son trazos propios hechos en ese script.
