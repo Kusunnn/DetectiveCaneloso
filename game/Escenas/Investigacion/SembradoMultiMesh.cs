@@ -25,6 +25,16 @@ public partial class SembradoMultiMesh : Node3D
 	[Export] public float AltoTronco = 3f;
 	[Export] public Rect2 ZonaColision = new Rect2(0, 0, 0, 0);
 	[Export(PropertyHint.Layers3DPhysics)] public uint CapaColision = 1;
+	// Huecos redondos: x, z (local) y radio en z del Vector3 → (x, z, radio)
+	[Export] public Godot.Collections.Array<Vector3> HuecosRedondos = new();
+	// Terreno con relieve (HU-20.6, Lago): cada copia se apoya en la altura del HeightMapShape3D. Origen = dónde está
+	// el centro de la forma (en local). Las copias que caerían más abajo de AlturaMinima (agua, orilla) no se siembran.
+	[Export] public HeightMapShape3D Alturas;
+	[Export] public Vector3 OrigenAlturas = Vector3.Zero;
+	[Export] public float AlturaMinima = -1000f;
+	[Export] public float AlturaMaxima = 1000f;
+	// Material para todas las copias (por ejemplo, juncos que se mecen con el viento)
+	[Export] public Material MaterialCopias;
 
 	public override void _Ready() => Sembrar();
 
@@ -47,10 +57,12 @@ public partial class SembradoMultiMesh : Node3D
 			intentos++;
 			var p = new Vector2(azar.RandfRange(Area.Position.X, Area.End.X), azar.RandfRange(Area.Position.Y, Area.End.Y));
 			if (EnHueco(p)) continue;
+			float y = AlturaEn(p);
+			if (y < AlturaMinima || y > AlturaMaxima) continue;
 			float s = azar.RandfRange(Escala.X, Escala.Y);
 			var basis = new Basis(Vector3.Up, azar.RandfRange(0, Mathf.Tau)).Scaled(new Vector3(s, s * azar.RandfRange(1f, EstiramientoAlto), s));
 			int modelo = azar.RandiRange(0, Modelos.Length - 1);
-			var pos = new Vector3(p.X, 0, p.Y);
+			var pos = new Vector3(p.X, y, p.Y);
 			posiciones[modelo].Add(new Transform3D(basis, pos));
 			if (RadioTronco > 0 && ZonaColision.HasPoint(p)) troncos.Add((pos, s));
 			colocados++;
@@ -69,6 +81,7 @@ public partial class SembradoMultiMesh : Node3D
 			{
 				Multimesh = mm,
 				CastShadow = ProyectarSombras ? GeometryInstance3D.ShadowCastingSetting.On : GeometryInstance3D.ShadowCastingSetting.Off,
+				MaterialOverride = MaterialCopias,
 			};
 			instancia.SetMeta("sembrado", true);
 			AddChild(instancia);
@@ -78,6 +91,8 @@ public partial class SembradoMultiMesh : Node3D
 		{
 			var cuerpo = new StaticBody3D { CollisionLayer = CapaColision, CollisionMask = 0 };
 			cuerpo.SetMeta("sembrado", true);
+			// Los troncos se dibujan con el MultiMesh: la auditoría no debe tomarlos por colisiones invisibles
+			cuerpo.AddToGroup("auditoria_invisible_ok");
 			AddChild(cuerpo);
 			foreach (var (pos, _) in troncos)
 			{
@@ -95,7 +110,24 @@ public partial class SembradoMultiMesh : Node3D
 	{
 		foreach (var hueco in Huecos)
 			if (hueco.HasPoint(p)) return true;
+		foreach (var h in HuecosRedondos)
+			if (p.DistanceSquaredTo(new Vector2(h.X, h.Y)) < h.Z * h.Z) return true;
 		return false;
+	}
+
+	// Altura del terreno en un punto (interpolada entre las cuatro esquinas de su celda de 1 m); 0 sin terreno
+	private float AlturaEn(Vector2 p)
+	{
+		if (Alturas == null) return 0f;
+		int ancho = Alturas.MapWidth, fondo = Alturas.MapDepth;
+		var datos = Alturas.MapData;
+		float fx = p.X - OrigenAlturas.X + (ancho - 1) / 2f;
+		float fz = p.Y - OrigenAlturas.Z + (fondo - 1) / 2f;
+		int i = Mathf.Clamp((int)Mathf.Floor(fx), 0, ancho - 2), j = Mathf.Clamp((int)Mathf.Floor(fz), 0, fondo - 2);
+		float tx = Mathf.Clamp(fx - i, 0f, 1f), tz = Mathf.Clamp(fz - j, 0f, 1f);
+		float a = Mathf.Lerp(datos[j * ancho + i], datos[j * ancho + i + 1], tx);
+		float b = Mathf.Lerp(datos[(j + 1) * ancho + i], datos[(j + 1) * ancho + i + 1], tx);
+		return Mathf.Lerp(a, b, tz) + OrigenAlturas.Y;
 	}
 
 	// La primera malla del modelo importado y su posición dentro de él

@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Caso1/Lago/Texturas/sangre.png" id="1_wu58i"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qfl7v"]
+albedo_color = Color(0.5, 0.35, 0.19, 1)
+roughness = 0.75
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_kc6x5"]
+top_radius = 0.018
+bottom_radius = 0.018
+height = 1.0
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_aymmc"]
+size = Vector3(0.16, 0.42, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rps56"]
+size = Vector3(0.09, 0.03, 0.03)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bh0k5"]
+transparency = 1
+albedo_texture = ExtResource("1_wu58i")
+roughness = 0.4
+
+[sub_resource type="QuadMesh" id="QuadMesh_8fd0x"]
+size = Vector2(0.17, 0.2)
+
+[node name="RemoSangre" type="Node3D" unique_id=1367372591]
+
+[node name="Remo" type="Node3D" parent="." unique_id=1928814605]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.025, 0)
+
+[node name="Mango" type="MeshInstance3D" parent="Remo" unique_id=80246054]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+material_override = SubResource("StandardMaterial3D_qfl7v")
+mesh = SubResource("CylinderMesh_kc6x5")
+
+[node name="Pala" type="MeshInstance3D" parent="Remo" unique_id=1906553788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+material_override = SubResource("StandardMaterial3D_qfl7v")
+mesh = SubResource("BoxMesh_aymmc")
+
+[node name="Puno" type="MeshInstance3D" parent="Remo" unique_id=717235112]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26, 0)
+material_override = SubResource("StandardMaterial3D_qfl7v")
+mesh = SubResource("BoxMesh_rps56")
+
+[node name="SangreA" type="MeshInstance3D" parent="Remo" unique_id=909995373]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33, 0.0105)
+material_override = SubResource("StandardMaterial3D_bh0k5")
+mesh = SubResource("QuadMesh_8fd0x")
+
+[node name="SangreB" type="MeshInstance3D" parent="Remo" unique_id=1724833497]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.33, -0.0105)
+material_override = SubResource("StandardMaterial3D_bh0k5")
+mesh = SubResource("QuadMesh_8fd0x")
+
+[node name="Detalle_sangre" type="Marker3D" parent="." unique_id=1543484504]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.05, -0.33)

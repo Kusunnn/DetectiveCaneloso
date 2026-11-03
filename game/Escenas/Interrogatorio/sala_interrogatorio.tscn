@@ -510,7 +510,7 @@ autowrap_mode = 3
 environment = SubResource("Environment_je0k8")
 
 [node name="GrabadoraPista" type="StaticBody3D" parent="." unique_id=409678302]
-transform = Transform3D(0.9396926, 0, -0.34202015, 0, 1, 0, 0.34202015, 0, 0.9396926, 0.4, 1.28, -1.85)
+transform = Transform3D(0.9396926, 0, -0.34202015, 0, 1, 0, 0.34202015, 0, 0.9396926, 0.4, 1.28, -1.7)
 collision_layer = 8
 script = ExtResource("5_pista")
 Id = "grabadora"
@@ -704,7 +704,7 @@ transform = Transform3D(0.939, 0, -0.343, 0, 1, 0, 0.343, 0, 0.939, 1.1, 0.5, -3
 [node name="VentanaDialogo" type="CanvasLayer" parent="."]
 script = ExtResource("12_dialogo")
 
-[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio", "Tablero", "Musica", "Guia")]
+[node name="Caso0" type="Node" parent="." node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "PuertaVestuario", "Eriz", "Porky", "Comisario", "SillaAcusacion", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario", "PuntoErizFinal", "PuntoPorkyFinal", "CasilleroPorky", "ZonaAndamio", "Tablero", "Musica", "Guia", "RelojSala", "GrabadoraSala")]
 script = ExtResource("13_caso")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
@@ -724,6 +724,8 @@ ZonaAndamio = NodePath("../ZonaPasillo/AreaAndamio")
 Tablero = NodePath("../TableroDeduccion")
 Musica = NodePath("../MusicaFondo")
 Guia = NodePath("../GuiaTutorial")
+RelojSala = NodePath("../RelojPista")
+GrabadoraSala = NodePath("../GrabadoraPista")
 [node name="PuertaSalaColision" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.97, 1.55, 2.5)
 collision_layer = 2
@@ -733,7 +735,7 @@ collision_mask = 0
 shape = SubResource("Forma_puerta_sala")
 
 [node name="RelojPista" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, -4.95)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, -4.95)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("5_pista")
@@ -783,7 +785,7 @@ shape = SubResource("Forma_espejo")
 script = ExtResource("18_tablero")
 
 [node name="FocoReloj" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.77147, 0.63626, 0, -0.63626, 0.77147, 0, 3.35, -4)
+transform = Transform3D(1, 0, 0, 0, 0.54743, 0.83686, 0, -0.83686, 0.54743, 0, 3.35, -4)
 light_color = Color(1, 0.86, 0.62, 1)
 light_energy = 1.4
 light_volumetric_fog_energy = 0.4

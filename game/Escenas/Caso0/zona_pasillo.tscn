@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e6"]
 [ext_resource type="PackedScene" path="res://Escenas/Caso0/casillero.tscn" id="e7"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/eriz.glb" id="e8"]
-[ext_resource type="Script" path="res://Escenas/Investigacion/AnimacionPersonaje.cs" id="anim"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/AnimadorPersonaje.cs" id="anim"]
 [ext_resource type="Texture2D" path="res://Escenas/Caso0/ruido_superficie.tres" id="ruido"]
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/huellas/huella.tscn" id="hu07_m_huella"]
 [ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/huellas/huellas_molde.tscn" id="hu07_x_huellas"]
@@ -1051,8 +1051,6 @@ transform = Transform3D(4.77, 0, 0, 0, 4.77, 0, 0, 0, 4.77, 0, 0, 0)
 [node name="Animacion" type="Node" parent="Eriz" node_paths=PackedStringArray("Modelo")]
 script = ExtResource("anim")
 Modelo = NodePath("../Modelo")
-AlturaOjos = 1.34
-AnguloBrazoDerecho = 26.0
 
 [node name="PaloFregona" type="MeshInstance3D" parent="Eriz"]
 transform = Transform3D(0.9848, -0.1736, 0, 0.1736, 0.9848, 0, 0, 0, 1, -0.5, 0.75, 0.25)

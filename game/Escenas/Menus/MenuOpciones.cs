@@ -35,7 +35,8 @@ public partial class MenuOpciones : PanelMenu
 	private FilaInterruptor _pantallaCompleta;
 	private FilaInterruptor _ayudas;
 	private readonly List<FilaTecla> _filasTecla = new();
-	private FilaTecla _esperando;
+	private PanelTeclas _panelTeclas;
+	private OptionButton _tamanoTexto;
 
 	private Label _ayuda;
 	private Button _botonRestaurar;
@@ -46,6 +47,9 @@ public partial class MenuOpciones : PanelMenu
 	{
 		SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 		MouseFilter = MouseFilterEnum.Stop;
+		_panelTeclas = new PanelTeclas { Name = "PanelTeclas" };
+		_panelTeclas.Vincular(this, MostrarAyuda);
+		AddChild(_panelTeclas);
 		Construir();
 		base._Ready();
 		RehacerFoco();
@@ -157,7 +161,7 @@ public partial class MenuOpciones : PanelMenu
 		foreach (var (texto, accion) in Configuracion.TeclasConfigurables)
 		{
 			var fila = new FilaTecla(texto, accion) { SizeFlagsHorizontal = SizeFlags.ExpandFill };
-			fila.Pressed += () => EmpezarCaptura(fila);
+			_panelTeclas.Registrar(fila);
 			_filasTecla.Add(fila);
 			lista.AddChild(fila);
 			enfocables.Add(fila);
@@ -180,7 +184,18 @@ public partial class MenuOpciones : PanelMenu
 		_ayudas.Cambiado += activado => Configuracion.Instancia.AyudasVisuales = activado;
 		lista.AddChild(_pantallaCompleta);
 		lista.AddChild(_ayudas);
-		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas };
+		var filaTexto = EstiloMenus.Fila(40);
+		var tituloTexto = EstiloMenus.Etiqueta("Tamaño del texto", EstiloMenus.Display(800, 42, 0.02f), 42, EstiloMenus.Texto);
+		tituloTexto.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+		filaTexto.AddChild(tituloTexto);
+		_tamanoTexto = new OptionButton { Name = "TamanoTexto", CustomMinimumSize = new Vector2(300, 64) };
+		_tamanoTexto.AddThemeFontOverride("font", EstiloMenus.Mono(26));
+		_tamanoTexto.AddThemeFontSizeOverride("font_size", 26);
+		foreach (var (_, nombre) in Configuracion.EscalasTexto) _tamanoTexto.AddItem(nombre);
+		_tamanoTexto.ItemSelected += indice => Configuracion.Instancia.EscalaTexto = Configuracion.EscalasTexto[indice].Escala;
+		filaTexto.AddChild(_tamanoTexto);
+		lista.AddChild(filaTexto);
+		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas, _tamanoTexto };
 		var contenedor = new Control { MouseFilter = MouseFilterEnum.Ignore };
 		contenedor.AddChild(lista);
 		return contenedor;
@@ -313,7 +328,9 @@ public partial class MenuOpciones : PanelMenu
 		_agacharse.Fijar(config.AgacharseAlternar);
 		_pantallaCompleta.Fijar(config.PantallaCompleta);
 		_ayudas.Fijar(config.AyudasVisuales);
-		foreach (var fila in _filasTecla) fila.MostrarTecla(Teclas.EtiquetaTeclado(fila.Accion));
+		int escala = Array.FindIndex(Configuracion.EscalasTexto, e => Mathf.IsEqualApprox(e.Escala, config.EscalaTexto));
+		_tamanoTexto.Select(Math.Max(escala, 0));
+		_panelTeclas.Refrescar();
 	}
 
 	private void Restaurar()
@@ -326,83 +343,7 @@ public partial class MenuOpciones : PanelMenu
 
 	// ---------- Cambio de teclas ----------
 
-	private void EmpezarCaptura(FilaTecla fila)
-	{
-		CancelarCaptura();
-		_esperando = fila;
-		fila.Esperando = true;
-		MostrarAyuda($"Pulsa una tecla para {Configuracion.NombreAccion(fila.Accion).ToLower()} · ESC cancela", EstiloMenus.Ambar);
-	}
-
-	private void CancelarCaptura()
-	{
-		if (_esperando == null) return;
-		_esperando.Esperando = false;
-		_esperando.MostrarTecla(Teclas.EtiquetaTeclado(_esperando.Accion));
-		_esperando = null;
-		if (_ayuda != null) MostrarAyuda(Ayudas[_pestanaActual]);
-	}
-
-	// Mientras se espera una tecla, esa pulsación no llega al resto del juego ni cierra el menú.
-	// Solo se aceptan teclas del teclado: el ratón y el control no se pueden asignar (HU-19).
-	public override void _Input(InputEvent evento)
-	{
-		if (_esperando == null || !Visible) return;
-		var fila = _esperando;
-		if (evento is InputEventMouseButton { Pressed: true } clic)
-		{
-			// El clic izquierdo sigue sirviendo para navegar el menú: cancela la espera y hace su clic normal
-			if (clic.ButtonIndex == MouseButton.Left)
-			{
-				CancelarCaptura();
-				return;
-			}
-			GetViewport().SetInputAsHandled();
-			MostrarAyuda("Los botones y la rueda del mouse no se pueden asignar. Pulsa una tecla del teclado · ESC cancela", EstiloMenus.Coral);
-			return;
-		}
-		if (evento is InputEventJoypadButton { Pressed: true } boton)
-		{
-			GetViewport().SetInputAsHandled();
-			if (boton.IsAction("ui_cancel"))
-			{
-				CancelarCaptura();
-				fila.GrabFocus();
-				return;
-			}
-			MostrarAyuda("Los botones del control no se pueden asignar. Pulsa una tecla del teclado · B cancela", EstiloMenus.Coral);
-			return;
-		}
-		if (evento is not InputEventKey tecla || !tecla.Pressed || tecla.Echo) return;
-		GetViewport().SetInputAsHandled();
-
-		// ESC queda reservada para pausar y cancelar: nunca se asigna a una acción del juego
-		if (tecla.Keycode == Key.Escape || tecla.PhysicalKeycode == Key.Escape)
-		{
-			CancelarCaptura();
-			fila.GrabFocus();
-			return;
-		}
-		Key fisica = tecla.PhysicalKeycode != Key.None ? tecla.PhysicalKeycode : tecla.Keycode;
-		string sistema = Configuracion.ReservadaPorSistema(fisica);
-		if (sistema != null)
-		{
-			MostrarAyuda($"La tecla {Teclas.NombreTecla(fisica)} está reservada para {sistema}. Elige otra · ESC cancela", EstiloMenus.Coral);
-			return;
-		}
-		string ocupada = Configuracion.Instancia.UsoDeTecla(fisica, fila.Accion);
-		if (ocupada != null)
-		{
-			MostrarAyuda($"La tecla {Teclas.NombreTecla(fisica)} ya está asignada a {ocupada}. Elige otra · ESC cancela", EstiloMenus.Coral);
-			return;
-		}
-		if (!Configuracion.Instancia.AsignarTecla(fila.Accion, fisica)) return;
-		_esperando = null;
-		fila.Esperando = false;
-		fila.MostrarTecla(Teclas.EtiquetaTeclado(fila.Accion));
-		MostrarAyuda($"{Configuracion.NombreAccion(fila.Accion)} ahora usa {Teclas.NombreTecla(fisica)}. Cambio guardado.", EstiloMenus.Ambar);
-		fila.GrabFocus();
-	}
+	private void CancelarCaptura() => _panelTeclas.CancelarCaptura();
 
 	// Avisa si alguna acción se quedó sin tecla; true si falta alguna
 	private bool AvisarTeclasFaltantes()

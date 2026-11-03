@@ -1,0 +1,2 @@
+silla  FPS≈30  cpu=1.73 ms  gpu=3.74 ms
+lado  FPS≈30  cpu=2.38 ms  gpu=3.90 ms

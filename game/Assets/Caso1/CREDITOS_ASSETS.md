@@ -71,3 +71,42 @@ El escritorio está en `Escenas/Cinematicas/escritorio_noir.tscn` y los modelos 
 | papel de la carpeta y las hojas | Pistas/Modelos/texturas/Paper005 | ambientCG · Paper 005 | ambientCG (Lennart Demes) | CC0 1.0 | https://ambientcg.com/view?id=Paper005 |
 | foto del expediente del Caso 1 | hud/expediente/fotos/caso_01_embarcadero.png | Captura del campamento con `Herramientas/foto_expediente.gd` | Equipo Detective Caneloso | Del proyecto | — |
 | embarcadero del lago | Escenas/Caso1/embarcadero.tscn | Hecho para el proyecto | Equipo Detective Caneloso | Del proyecto | — |
+
+## Caso 1 · Escenario 2 (Lago y Bosque, HU-20.6)
+
+El escenario reusa los modelos del Campamento (Kenney, KayKit, Quaternius, `_prefabs/`) y las texturas de suelo. Lo nuevo está en `Assets/Caso1/Lago/`. Los modelos de Poly Haven se usan en glTF con texturas de 1K.
+
+| Archivo | Uso | Fuente | Autor | Licencia | Enlace |
+|---|---|---|---|---|---|
+| Lago/Modelos/polyhaven/boombox/ | pista altavoz | Poly Haven · Boombox | Thomas Paul Mouilleron | CC0 1.0 | https://polyhaven.com/a/boombox |
+| Lago/Modelos/polyhaven/vintage_flashlight/ | pista linterna_porky | Poly Haven · Vintage Flashlight | Omar M. El-Safy | CC0 1.0 | https://polyhaven.com/a/vintage_flashlight |
+| Lago/Modelos/polyhaven/tree_stump_01/ | tocones del bosque y la colina | Poly Haven · Tree Stump 01 | Rob Tuytel | CC0 1.0 | https://polyhaven.com/a/tree_stump_01 |
+| Lago/Modelos/polyhaven/tree_stump_02/ | tocones del bosque y la colina | Poly Haven · Tree Stump 02 | Rob Tuytel | CC0 1.0 | https://polyhaven.com/a/tree_stump_02 |
+| Lago/Modelos/polyhaven/lifebuoy/ | salvavidas del muelle y del cobertizo | Poly Haven · Lifebuoy | Hank Kaamura | CC0 1.0 | https://polyhaven.com/a/lifebuoy |
+| Lago/Modelos/polyhaven/wooden_crate_01/ | cajas del cobertizo | Poly Haven · Wooden Crate 01 | James Ray Cock | CC0 1.0 | https://polyhaven.com/a/wooden_crate_01 |
+| Lago/Modelos/polyhaven/rock_moss_set_01/ | rocas con musgo del bosque | Poly Haven · Rock Moss Set 01 | Kless Gyzen | CC0 1.0 | https://polyhaven.com/a/rock_moss_set_01 |
+| Lago/Texturas/huella_pezuna.png, sangre.png, red_pesca.png | huellas, sangre del remo, redes rotas | Hechas para el proyecto con `Herramientas/Caso1/texturas_lago.gd` | Equipo Detective Caneloso | Del proyecto | — |
+| Lago/Texturas/colormap_patrulla.png | patrulla de Hecdog (paleta del sedán de Kenney con la carrocería en azul) | Kenney · Car Kit, recoloreada con `texturas_lago.gd` | Kenney / Equipo Detective Caneloso | CC0 1.0 | https://kenney.nl/assets/car-kit |
+| Escenas/Caso1/Lago/terreno_lago.res, terreno_lago_forma.res | terreno y su colisión | Hechos para el proyecto con `_generador_caso1/lago_mapa.py` y `Herramientas/Caso1/terreno_lago.gd` | Equipo Detective Caneloso | Del proyecto | — |
+| Escenas/Caso1/Lago/*.gdshader | suelo, agua con algas y juncos con viento | Hechos para el proyecto | Equipo Detective Caneloso | Del proyecto | — |
+| ../Pistas/Modelos/<pista>/ de las 9 pistas del lago | silbato, cornamenta y zancos, soporte de remos, remo, cuaderno, huellas (mallas propias); altavoz y linterna (Poly Haven ajustados) | Hechos con `Herramientas/Caso1/modelos_pistas_lago.gd` | Equipo Detective Caneloso | Del proyecto | — |
+| ../Retratos/tony.png, aya.png, miawrio.png, juan carlos.png, mimita.png, hecdog.png | retratos de diálogo | Capturas de los modelos del equipo con `Herramientas/Caso1/retratos_caso1.gd` | Equipo Detective Caneloso | Del proyecto | — |
+| Fuentes/Caveat-Variable.ttf | letra de Eriz en su cuaderno | Google Fonts · Caveat | Impallari Type | SIL OFL 1.1 | https://fonts.google.com/specimen/Caveat |
+
+## Caso 1 · Escenario 3 (sala de interrogatorio del Capítulo 1, HU-20.6)
+
+`Escenas/Caso1/Interrogatorio/sala_interrogatorio_caso1.tscn` se arma con `Herramientas/Caso1/sala_caso1.gd` a partir de la sala del Caso 0 (mismos materiales y muebles). El corcho, la mesa de pruebas y la puerta cerrada son mallas simples hechas para el proyecto. Los personajes son los modelos del equipo (`Assets/Models/`).
+
+## Cinemática de la cinta (Caso 0)
+
+No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La cinta que se ve en la grabadora y en la mano de Porky es el casete que trae el modelo **Poly Haven · Cassette Player** (`cassette_player_tape`, el mismo de la grabadora de arriba). La animación está hecha en Blender 5.2 (`Assets/Cinematicas/Blender/`, ver su `LEEME.md`) y se exporta a `Assets/Cinematicas/Caso0/cinta_caso0.glb`. Ese .glb solo reúne modelos que ya estaban en el juego:
+
+| Pieza | De dónde sale | Licencia |
+|---|---|---|
+| Porky | `Assets/Models/Personajes/porky.glb`, el mismo del juego | el del modelo original (ver `Assets/CREDITOS.md`) |
+| La figura | El maniquí de **Quaternius · Universal Animation Library** (`UAL1_Standard.glb`) con gabardina y capucha modeladas en Blender (un cono con pesos automáticos y dos esferas) | CC0 1.0 |
+| Animaciones base de Porky y la figura | **Quaternius · Universal Animation Library 1 y 2** (Sitting_Idle, Sitting_Exit, Idle, Walk, Crouch_Idle, Crouch_Fwd, Jog_Fwd, Hit_Chest, NinjaJump_Land, Jump_Loop), ajustadas con IK y la coreografía | CC0 1.0 |
+| La cuerda | Un cilindro de Blender | propio |
+| La sala | La Sala 1 del juego exportada a glTF (`sala1.glb`), solo como referencia en Blender | la de sus modelos |
+
+No se usaron animaciones de Mixamo ni capturas de Rokoko: Mixamo pide iniciar sesión con una cuenta de Adobe y Rokoko Vision necesita grabar a alguien con la webcam.

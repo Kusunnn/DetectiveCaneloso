@@ -25,7 +25,6 @@ public partial class FondoMenu : Control
 	private Control _puerta;
 	private Control _figura;
 	private TextureRect _imagenFigura;
-	private Control _lupa;
 	private TextureRect _sombraFigura;
 	private double _tiempo;
 
@@ -41,11 +40,10 @@ public partial class FondoMenu : Control
 
 	public override void _Process(double delta)
 	{
-		// Balanceo suave del personaje y de la lupa (como en el diseño)
+		// Balanceo suave del personaje (como en el diseño)
 		_tiempo += delta;
 		float t = (float)_tiempo;
 		_figura.RotationDegrees = Mathf.Sin(t * 0.7f) * 1.6f;
-		_lupa.RotationDegrees = -12f + Mathf.Sin(t * 1.1f) * 14f + Mathf.Sin(t * 2.3f) * 3f;
 
 		_tiempoRestante -= delta;
 		if (_tiempoRestante > 0.0) return;
@@ -176,7 +174,8 @@ public partial class FondoMenu : Control
 	}
 
 	// Caneloso delante de la puerta (medidas del diseño a 1920×1080): 540 px de alto (50vh),
-	// los pies al 15 % del borde inferior y centrado con la puerta.
+	// los pies al 15 % del borde inferior y centrado con la puerta. La lupa ya viene en la imagen,
+	// en su mano (la hace Herramientas/retratos.gd con el nombre "menu").
 	private void ConstruirFigura()
 	{
 		var textura = TexturaSilueta ?? GD.Load<Texture2D>(RutaCaneloso);
@@ -199,31 +198,6 @@ public partial class FondoMenu : Control
 		_figura.OffsetTop = -alto;
 		_figura.PivotOffset = new Vector2(ancho / 2f, alto); // se balancea desde los pies
 		_imagenFigura = Imagen(_figura, textura, 0, 0, 1, 1);
-
-		// Lupa en la mano derecha, que se balancea desde el mango
-		_lupa = new Control();
-		Poner(_figura, _lupa, 0.83f, 0.26f, 1.09f, 0.58f);
-		_lupa.Resized += () => _lupa.PivotOffset = new Vector2(_lupa.Size.X / 2f, _lupa.Size.Y);
-		_lupa.Draw += DibujarLupa;
-	}
-
-	private void DibujarLupa()
-	{
-		float ancho = _lupa.Size.X;
-		float radio = ancho / 2f;
-		var centro = new Vector2(radio, radio);
-		// Mango (48 % del alto, abajo)
-		float altoMango = _lupa.Size.Y * 0.48f;
-		var mango = new Rect2(radio - 8f, _lupa.Size.Y - altoMango, 16f, altoMango);
-		_lupa.DrawRect(mango, new Color("#1c130b"));
-		_lupa.DrawRect(mango.Grow(-4f), new Color("#4a3322"));
-		// Cristal con un brillo arriba a la izquierda
-		_lupa.DrawCircle(centro, radio - 6f, new Color(0.63f, 0.75f, 0.84f, 0.12f));
-		_lupa.DrawCircle(centro + new Vector2(-radio * 0.3f, -radio * 0.4f), radio * 0.45f, new Color(1, 1, 1, 0.12f));
-		_lupa.DrawCircle(centro + new Vector2(-radio * 0.3f, -radio * 0.4f), radio * 0.2f, new Color(1, 1, 1, 0.22f));
-		// Aro de madera
-		_lupa.DrawArc(centro, radio - 5f, 0, Mathf.Tau, 48, new Color("#3b2a1b"), 10f, true);
-		_lupa.DrawArc(centro, radio, 0, Mathf.Tau, 48, new Color("#1c130b"), 2.7f, true);
 	}
 
 	// ---------- Utilidades ----------

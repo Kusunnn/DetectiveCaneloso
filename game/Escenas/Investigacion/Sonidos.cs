@@ -52,8 +52,14 @@ public static class Sonidos
 		ExamenCerrar,
 		ExamenGirar,
 		ExamenAcercar,
+		ExamenAlejar,
 		ExamenTic,
 		ExamenDescubrir,
+		// Exteriores del Lago y el Bosque (Caso 1, HU-20.6). Siempre al final: las escenas guardan el número
+		Ranas,
+		MuelleCrujido,
+		MuellePasos,
+		EstaticaAltavoz,
 	}
 
 	public const string BusMusica = "Musica";
@@ -95,7 +101,9 @@ public static class Sonidos
 		[Tipo.ExamenAbrir] = new(new[] { "Examen/abrir.ogg" }, -6f),
 		[Tipo.ExamenCerrar] = new(new[] { "Examen/cerrar.ogg" }, -8f),
 		[Tipo.ExamenGirar] = new(new[] { "Examen/girar_1.ogg", "Examen/girar_2.ogg", "Examen/girar_3.ogg" }, -12f),
-		[Tipo.ExamenAcercar] = new(new[] { "Examen/acercar_1.ogg", "Examen/acercar_2.ogg", "Examen/acercar_3.ogg" }, -12f),
+		// Zoom: "maximize" y "minimize" de Kenney, graves y suaves (los "scroll" de antes eran clics agudos que saturaban)
+		[Tipo.ExamenAcercar] = new(new[] { "Examen/acercar_1.ogg", "Examen/acercar_2.ogg" }, -20f, Variar: false),
+		[Tipo.ExamenAlejar] = new(new[] { "Examen/alejar_1.ogg", "Examen/alejar_2.ogg" }, -20f, Variar: false),
 		[Tipo.ExamenTic] = new(new[] { "Examen/tic.ogg" }, -6f, Variar: false),
 		[Tipo.ExamenDescubrir] = new(new[] { "Examen/descubrir.ogg" }, -2f, Variar: false),
 
@@ -112,6 +120,10 @@ public static class Sonidos
 		[Tipo.Buho] = new(new[] { "res://Assets/Caso1/Sonidos/buho.ogg" }, -8f, Variar: true),
 		[Tipo.AguaLago] = new(new[] { "res://Assets/Caso1/Sonidos/agua_lago.ogg" }, -10f, false, true),
 		[Tipo.ZumbidoGenerador] = new(new[] { "res://Assets/Caso1/Sonidos/generador.ogg" }, -9f, false, true),
+		[Tipo.Ranas] = new(new[] { "res://Assets/Caso1/Sonidos/ranas.ogg" }, -12f, false, true),
+		[Tipo.MuelleCrujido] = new(new[] { "res://Assets/Caso1/Sonidos/muelle_crujido.ogg" }, -10f),
+		[Tipo.MuellePasos] = new(new[] { "res://Assets/Caso1/Sonidos/muelle_pasos.ogg" }, -12f),
+		[Tipo.EstaticaAltavoz] = new(new[] { "res://Assets/Caso1/Sonidos/altavoz_estatica.ogg" }, -14f, false, true),
 	};
 
 	// Las rutas cortas son relativas a Assets/Audio; las que empiezan con res:// se usan tal cual
@@ -182,9 +194,14 @@ public static class Sonidos
 			Bus = BusInterfaz,
 			ProcessMode = Node.ProcessModeEnum.Always,
 		};
-		arbol.Root.AddChild(reproductor);
 		reproductor.Finished += reproductor.QueueFree;
-		reproductor.Play();
+		// El foco inicial puede sonar durante _Ready, mientras Root agrega la escena.
+		Callable.From(() =>
+		{
+			if (!GodotObject.IsInstanceValid(arbol.Root)) { reproductor.Free(); return; }
+			arbol.Root.AddChild(reproductor);
+			reproductor.Play();
+		}).CallDeferred();
 	}
 
 	private static AudioStream ComoBucle(AudioStream sonido)

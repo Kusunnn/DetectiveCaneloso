@@ -1,0 +1,83 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/banca_parque.tscn" id="e1"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Lago/Modelos/polyhaven/tree_stump_02/tree_stump_02_1k.gltf" id="e2"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Lago/Modelos/polyhaven/tree_stump_01/tree_stump_01_1k.gltf" id="e3"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/letrero_poste.tscn" id="e4"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/CartelPared.cs" id="e5"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/arbusto.tscn" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/arbusto_chico.tscn" id="e7"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1"]
+radius = 0.45
+height = 0.45
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_2"]
+radius = 0.45
+height = 0.45
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3"]
+size = Vector3(12.0, 4.0, 12.0)
+
+[node name="Colina" type="Node3D"]
+
+[node name="Banca" parent="." instance=ExtResource("e1")]
+transform = Transform3D(0.8962, 0.0, 0.4436, 0.0, 1.0, 0.0, -0.4436, 0.0, 0.8962, 27.8, 3.7228, 20.0)
+
+[node name="Tocon0" parent="." instance=ExtResource("e2")]
+transform = Transform3D(0.75, 0.0, 0.0, 0.0, 0.75, 0.0, 0.0, 0.0, 0.75, 32.5, 3.9994, 23.0)
+
+[node name="ColTocon0" type="StaticBody3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 32.5, 3.8547, 23.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColTocon0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.225, 0.0)
+shape = SubResource("CylinderShape3D_1")
+
+[node name="Tocon1" parent="." instance=ExtResource("e3")]
+transform = Transform3D(0.0, 0.0, 0.75, 0.0, 0.75, 0.0, -0.75, 0.0, 0.0, 25.5, 3.0858, 25.0)
+
+[node name="ColTocon1" type="StaticBody3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 25.5, 2.9711, 25.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColTocon1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.225, 0.0)
+shape = SubResource("CylinderShape3D_2")
+
+[node name="Letrero" parent="." instance=ExtResource("e4")]
+transform = Transform3D(-0.342, 0.0, -0.9397, 0.0, 1.0, 0.0, 0.9397, 0.0, -0.342, 23.5, 2.4675, 23.0)
+
+[node name="Mirador" type="Node3D" parent="." groups=["apoyar_pared"]]
+transform = Transform3D(-0.342, 0, -0.9397, 0, 1, 0, 0.9397, 0, -0.342, 23.18665, 3.4675, 22.885944)
+script = ExtResource("e5")
+Texto = "MIRADOR DEL CIERVO"
+Ancho = 0.66
+ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
+ColorTexto = Color(0.93, 0.86, 0.68, 1.0)
+TamFuente = 30
+TamMinimo = 14
+ConFondo = true
+AltoMaximo = 1.2
+TamPixel = 0.0025
+
+[node name="Arbusto0" parent="." instance=ExtResource("e6")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 31.2, 3.5318, 18.5)
+
+[node name="Arbusto1" parent="." instance=ExtResource("e7")]
+transform = Transform3D(0.6428, 0.0, 0.766, 0.0, 1.0, 0.0, -0.766, 0.0, 0.6428, 28.5, 3.2791, 26.2)
+
+[node name="Arbusto2" parent="." instance=ExtResource("e6")]
+transform = Transform3D(-0.1736, 0.0, 0.9848, 0.0, 1.0, 0.0, -0.9848, 0.0, -0.1736, 34.2, 3.3286, 21.0)
+
+[node name="Colina" type="Area3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 30.0, 5.7, 22.0)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="Forma" type="CollisionShape3D" parent="Colina"]
+shape = SubResource("BoxShape3D_3")

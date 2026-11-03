@@ -1,0 +1,253 @@
+[gd_scene load_steps=29 format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/pino_tallb.tscn" id="e1"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/altavoz.png" id="e2"]
+[ext_resource type="Script" path="res://Escenas/Interrogatorio/ObjetoPista.cs" id="e3"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/altavoz/altavoz.tscn" id="e4"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/SonidoAmbiente.cs" id="e5"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/Contenedor.cs" id="e6"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tronco_grande.tscn" id="e7"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/caso1/cornamenta_zancos.png" id="e8"]
+[ext_resource type="PackedScene" path="res://Assets/Pistas/Modelos/cornamenta_zancos/cornamenta_zancos.tscn" id="e9"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/tronco.tscn" id="e10"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Lago/Modelos/polyhaven/rock_moss_set_01/rock_moss_set_01_1k.gltf" id="e11"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Lago/Modelos/polyhaven/tree_stump_01/tree_stump_01_1k.gltf" id="e12"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Lago/Modelos/polyhaven/tree_stump_02/tree_stump_02_1k.gltf" id="e13"]
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Modelos/_prefabs/hongos.tscn" id="e14"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1"]
+radius = 0.42
+height = 4.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2"]
+size = Vector3(0.42, 0.32, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3"]
+albedo_color = Color(0.03, 0.03, 0.03, 1.0)
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4"]
+top_radius = 0.006
+bottom_radius = 0.006
+height = 2.1
+radial_segments = 6
+material = SubResource("StandardMaterial3D_3")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5"]
+size = Vector3(3.1, 1.25, 1.7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_6"]
+size = Vector3(2.9, 1.15, 1.45)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7"]
+size = Vector3(1.3, 0.35, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8"]
+size = Vector3(2.2, 1.4, 2.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_9"]
+size = Vector3(2.2, 1.4, 2.8)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_10"]
+radius = 0.45
+height = 0.45
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_11"]
+radius = 0.45
+height = 0.45
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_12"]
+radius = 0.45
+height = 0.45
+
+[sub_resource type="FogMaterial" id="FogMaterial_13"]
+density = 0.35
+albedo = Color(0.6, 0.66, 0.8, 1.0)
+height_falloff = 2.2
+edge_fade = 0.4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_14"]
+size = Vector3(22.0, 5.0, 22.0)
+
+[node name="Bosque" type="Node3D"]
+
+[node name="PinoAltavoz" parent="." instance=ExtResource("e1") groups=["auditoria_vegetacion"]]
+transform = Transform3D(0.766, 0.0, 0.6428, 0.0, 1.0, 0.0, -0.6428, 0.0, 0.766, -26.0, -0.03, 27.0)
+
+[node name="TroncoAltavoz" type="StaticBody3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -26.0, -0.1, 27.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="TroncoAltavoz"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.0, 0.0)
+shape = SubResource("CylinderShape3D_1")
+
+[node name="Altavoz" type="StaticBody3D" parent="." groups=["auditoria_colgado"]]
+transform = Transform3D(0.7071, 0.0, 0.7071, 0.0, 1.0, 0.0, -0.7071, 0.0, 0.7071, -25.6464, 2.25, 27.3536)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e3")
+Id = "altavoz"
+Titulo = "Altavoz escondido"
+Descripcion = "Una bocina portátil amarrada con cinta al tronco de un pino. El cable baja entre las raíces. De aquí salían los «bramidos»."
+EsEvidencia = true
+ComentarioAlMirar = "Ese chisporroteo no es un grillo... viene del árbol."
+Imagen = ExtResource("e2")
+
+[node name="Forma" type="CollisionShape3D" parent="Altavoz"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.1, 0.0)
+shape = SubResource("BoxShape3D_2")
+
+[node name="Modelo" parent="Altavoz" instance=ExtResource("e4")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="Estatica" type="AudioStreamPlayer3D" parent="Altavoz"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.1, 0.0)
+volume_db = -4.0
+unit_size = 2.5
+max_distance = 20.0
+script = ExtResource("e5")
+Tipo = 42
+
+[node name="Cable" type="MeshInstance3D" parent="." groups=["auditoria_colgado"]]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -25.6889, 1.05, 27.3111)
+mesh = SubResource("CylinderMesh_4")
+cast_shadow = 0
+
+[node name="TroncoHueco" type="StaticBody3D" parent="."]
+transform = Transform3D(0.309, 0.0, 0.9511, 0.0, 1.0, 0.0, -0.9511, 0.0, 0.309, -16.5, -0.02, 39.8)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e6")
+Nombre = "Tronco hueco"
+MensajeAlAbrir = "Hay algo metido en el hueco del tronco... Lo saco."
+SonidoAbrir = 1
+SoloAgachado = true
+
+[node name="Forma" type="CollisionShape3D" parent="TroncoHueco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.62, 0.0)
+shape = SubResource("BoxShape3D_5")
+
+[node name="Solido" type="StaticBody3D" parent="TroncoHueco"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.6, 0.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="TroncoHueco/Solido"]
+shape = SubResource("BoxShape3D_6")
+
+[node name="Modelo" parent="TroncoHueco" instance=ExtResource("e7")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="Cornamenta" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.9511, 0.0, 0.309, 0.0, 1.0, 0.0, -0.309, 0.0, -0.9511, -15.6276, 0.0, 38.0857)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("e3")
+Id = "cornamenta_zancos"
+Titulo = "Cornamenta y zancos"
+Descripcion = "El disfraz del «ciervo»: una cornamenta pintada de plateado y dos zancos con pezuñas en la punta. Tiene pelos de gato a rayas atorados."
+EsEvidencia = true
+ComentarioAlMirar = "Pintura plateada... y pelos a rayas."
+Imagen = ExtResource("e8")
+
+[node name="Forma" type="CollisionShape3D" parent="Cornamenta"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -0.05, 0.12, -0.05)
+shape = SubResource("BoxShape3D_7")
+
+[node name="Modelo" parent="Cornamenta" instance=ExtResource("e9")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0)
+
+[node name="Caido0" parent="." instance=ExtResource("e7")]
+transform = Transform3D(0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, 0.9397, -15.5, -0.02, 27.5)
+
+[node name="Caido1" parent="." instance=ExtResource("e7")]
+transform = Transform3D(0.8192, 0.0, -0.5736, 0.0, 1.0, 0.0, 0.5736, 0.0, 0.8192, -30.0, -0.02, 35.0)
+
+[node name="Caido2" parent="." instance=ExtResource("e10")]
+transform = Transform3D(-0.1736, 0.0, 0.9848, 0.0, 1.0, 0.0, -0.9848, 0.0, -0.1736, -20.5, -0.02, 23.0)
+
+[node name="RocasMusgo0" parent="." instance=ExtResource("e11")]
+transform = Transform3D(0.7361, 0.0, 0.425, 0.0, 0.85, 0.0, -0.425, 0.0, 0.7361, -23.5, 0.5319, 41.0)
+
+[node name="ColRocas0" type="StaticBody3D" parent="."]
+transform = Transform3D(0.866, 0.0, 0.5, 0.0, 1.0, 0.0, -0.5, 0.0, 0.866, -23.5, 0.6, 41.0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColRocas0"]
+shape = SubResource("BoxShape3D_8")
+
+[node name="RocasMusgo1" parent="." instance=ExtResource("e11")]
+transform = Transform3D(-0.2907, 0.0, 0.7987, 0.0, 0.85, 0.0, -0.7987, 0.0, -0.2907, -13.0, 0.5319, 34.5)
+
+[node name="ColRocas1" type="StaticBody3D" parent="."]
+transform = Transform3D(-0.342, 0.0, 0.9397, 0.0, 1.0, 0.0, -0.9397, 0.0, -0.342, -13.0, 0.6, 34.5)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColRocas1"]
+shape = SubResource("BoxShape3D_9")
+
+[node name="Tocon0" parent="." instance=ExtResource("e12")]
+transform = Transform3D(0.75, 0.0, 0.0, 0.0, 0.75, 0.0, 0.0, 0.0, 0.75, -19.0, 0.1148, 36.0)
+
+[node name="ColTocon0" type="StaticBody3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -19.0, 0.0, 36.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColTocon0"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.225, 0.0)
+shape = SubResource("CylinderShape3D_10")
+
+[node name="Tocon1" parent="." instance=ExtResource("e13")]
+transform = Transform3D(-0.5745, 0.0, 0.4821, 0.0, 0.75, 0.0, -0.4821, 0.0, -0.5745, -27.5, 0.1448, 31.0)
+
+[node name="ColTocon1" type="StaticBody3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -27.5, 0.0, 31.0)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColTocon1"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.225, 0.0)
+shape = SubResource("CylinderShape3D_11")
+
+[node name="Tocon2" parent="." instance=ExtResource("e12")]
+transform = Transform3D(0.375, 0.0, 0.6495, 0.0, 0.75, 0.0, -0.6495, 0.0, 0.375, -12.5, 0.1148, 29.5)
+
+[node name="ColTocon2" type="StaticBody3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -12.5, 0.0, 29.5)
+collision_layer = 2
+collision_mask = 0
+
+[node name="Forma" type="CollisionShape3D" parent="ColTocon2"]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.225, 0.0)
+shape = SubResource("CylinderShape3D_12")
+
+[node name="Hongos0" parent="." instance=ExtResource("e14")]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -23.0, 0.0, 24.8)
+
+[node name="Hongos1" parent="." instance=ExtResource("e14")]
+transform = Transform3D(0.225, 0.0, 0.9744, 0.0, 1.0, 0.0, -0.9744, 0.0, 0.225, -17.8, 0.0, 38.0)
+
+[node name="Hongos2" parent="." instance=ExtResource("e14")]
+transform = Transform3D(-0.8988, 0.0, 0.4384, 0.0, 1.0, 0.0, -0.4384, 0.0, -0.8988, -29.0, 0.0, 33.8)
+
+[node name="Hongos3" parent="." instance=ExtResource("e14")]
+transform = Transform3D(-0.6293, 0.0, -0.7771, 0.0, 1.0, 0.0, 0.7771, 0.0, -0.6293, -14.5, 0.0, 31.0)
+
+[node name="NieblaClaro" type="FogVolume" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -21.0, 0.6, 32.0)
+size = Vector3(26.0, 1.6, 24.0)
+material = SubResource("FogMaterial_13")
+
+[node name="Bosque" type="Area3D" parent="."]
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -21.0, 2.0, 32.0)
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="Forma" type="CollisionShape3D" parent="Bosque"]
+shape = SubResource("BoxShape3D_14")

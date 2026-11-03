@@ -1,6 +1,5 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=15 format=3]
 
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/porky.glb" id="e1"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/AnimacionPersonaje.cs" id="e2"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/eriz.glb" id="e3"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/lala.glb" id="e4"]
@@ -9,10 +8,6 @@
 [ext_resource type="PackedScene" path="res://Assets/Models/Aya/Ayas.tscn" id="e7"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Miaurio/miaurio.tscn" id="e8"]
 [ext_resource type="Script" path="res://Escenas/Investigacion/Npc.cs" id="hu27_npc"]
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
-radius = 0.32
-height = 1.7275
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2"]
 radius = 0.32
@@ -39,25 +34,6 @@ radius = 0.32
 height = 1.7
 
 [node name="Personajes" type="Node3D"]
-
-[node name="Porky" type="Node3D" parent="." groups=["auditoria_personaje"]]
-transform = Transform3D(-0.9929, 0.0, -0.1191, 0.0, 1.0, 0.0, 0.1191, 0.0, -0.9929, 1.8, 0.0, 11.0)
-
-[node name="Modelo" parent="Porky" instance=ExtResource("e1")]
-transform = Transform3D(6.67, 0.0, 0.0, 0.0, 6.67, 0.0, 0.0, 0.0, 6.67, 0.0, 0.0, 0.05)
-
-[node name="Animacion" type="Node" parent="Porky" node_paths=PackedStringArray("Modelo")]
-script = ExtResource("e2")
-Modelo = NodePath("../Modelo")
-AlturaOjos = 1.38
-
-[node name="Colision" type="StaticBody3D" parent="Porky" groups=["auditoria_invisible_ok"]]
-collision_layer = 16
-collision_mask = 0
-
-[node name="Forma" type="CollisionShape3D" parent="Porky/Colision"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.8638, 0.0)
-shape = SubResource("CapsuleShape3D_1")
 
 [node name="Eriz" type="Node3D" parent="." groups=["auditoria_personaje"]]
 transform = Transform3D(-0.907, 0.0, 0.4211, 0.0, 1.0, 0.0, -0.4211, 0.0, -0.907, -2.6, 0.0, 1.6)
@@ -139,6 +115,7 @@ script = ExtResource("e2")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.44
 Animacion = "global/InacTony"
+Variantes = PackedStringArray("global/TensoTony")
 
 [node name="Colision" type="StaticBody3D" parent="Tony" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
@@ -163,6 +140,7 @@ script = ExtResource("e2")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.28
 Animacion = "Inaya"
+Variantes = PackedStringArray("Tensaya")
 
 [node name="Colision" type="StaticBody3D" parent="Aya" groups=["auditoria_invisible_ok"]]
 collision_layer = 16
@@ -187,6 +165,7 @@ script = ExtResource("e2")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.36
 Animacion = "global/Inactivo"
+Variantes = PackedStringArray("global/Tenso")
 
 [node name="Colision" type="StaticBody3D" parent="Miaurio" groups=["auditoria_invisible_ok"]]
 collision_layer = 16

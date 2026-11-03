@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://Assets/Caso1/Lago/Modelos/polyhaven/vintage_flashlight/vintage_flashlight_1k.gltf" id="1_igx61"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_50xpk"]
+albedo_color = Color(1, 0.9, 0.7, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.55, 1)
+emission_energy_multiplier = 6.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cyfm3"]
+top_radius = 0.041
+bottom_radius = 0.041
+height = 0.004
+radial_segments = 20
+rings = 1
+
+[node name="LinternaPorky" type="Node3D" unique_id=809186816]
+
+[node name="Linterna" type="Node3D" parent="." unique_id=166840139 instance=ExtResource("1_igx61")]
+
+[node name="Lente" type="MeshInstance3D" parent="." unique_id=662005807]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.096, 0.155)
+material_override = SubResource("StandardMaterial3D_50xpk")
+mesh = SubResource("CylinderMesh_cyfm3")

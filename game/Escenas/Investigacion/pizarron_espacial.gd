@@ -1,5 +1,6 @@
 extends Node3D
-## Superficie real del escenario. La cámara se desplaza sin girar ni mover al detective.
+## Pizarrón del tablero [R]. No forma parte del escenario: vive lejos de todo, oculto, y solo se ve mientras el
+## tablero está abierto (con su propia luz). La cámara se desplaza sin girar ni mover al detective.
 const MEDIDA := Vector2(4.4, 2.475)
 const RESOLUCION := Vector2(1600, 900)
 var hud: Node
@@ -15,6 +16,7 @@ var _cursor := Vector2.ZERO
 var _viewport: SubViewport
 
 func _ready() -> void:
+	visible = false
 	_viewport = SubViewport.new()
 	_viewport.size = Vector2i(RESOLUCION * 2)
 	_viewport.disable_3d = true
@@ -49,6 +51,13 @@ func _ready() -> void:
 	camara.position = Vector3(0, 0, 1.9)
 	camara.near = 0.05
 	add_child(camara)
+	# Luz propia: lejos del escenario no le llega ninguna otra
+	var luz := OmniLight3D.new()
+	luz.position = Vector3(0, 0.6, 2.2)
+	luz.omni_range = 6.0
+	luz.light_energy = 1.2
+	luz.light_color = Color(1.0, 0.93, 0.82)
+	add_child(luz)
 
 func abrir() -> void:
 	camara_anterior = get_viewport().get_camera_3d()
@@ -57,12 +66,14 @@ func abrir() -> void:
 	camara.rotation = Vector3.ZERO
 	_cursor = get_viewport().get_visible_rect().size / 2
 	abierto = true
+	visible = true
 	_ajustar_encuadre()
 	_actualizar_vista(1.0)
 	camara.make_current()
 
 func cerrar() -> void:
 	abierto = false
+	visible = false
 	moviendo_vista = false
 	if is_instance_valid(camara_anterior): camara_anterior.make_current()
 	else: camara.clear_current()

@@ -29,8 +29,26 @@ public partial class AnimacionPersonaje : Node
 	[Export] public Node3D ObjetoEnMano;
 	// Animación del modelo que se repite (p. ej. "global/Inactivo"); vacío = animación por código
 	[Export] public string Animacion = "";
+	// HU-9.5 CA-03: otras animaciones del modelo que se intercalan de vez en cuando con la de reposo (una vuelta
+	// cada una), para que no repita el mismo ciclo para siempre. Cada cuánto, en segundos.
+	[Export] public string[] Variantes = System.Array.Empty<string>();
+	[Export] public Vector2 IntervaloVariante = new(12f, 26f);
+
+	// Mientras camina (lo pone quien lo mueve): con animaciones del modelo usa la de caminar; por código mueve
+	// piernas y brazos y sube y baja el cuerpo, así los pies no se deslizan quietos por el piso.
+	public bool Caminando { get; private set; }
 
 	private Node3D _personaje;
+	private AnimationPlayer _reproductor;
+	private float _velocidad = 1f;
+	private double _siguienteVariante;
+	private double _finVariante = -1;
+	// Actividad de reposo por código: 0 quieto, 1 cambia el peso de pie, 2 mira hacia un lado, 3 se queda quieto
+	private int _actividad, _ultimaActividad = 1;
+	private float _finActividad, _pesoActividad, _ladoActividad = 1f;
+	private float _paso, _pesoPaso;
+	private bool _modeloMovido;
+	private int _piernaI = -1, _piernaD = -1;
 	private Skeleton3D _esqueleto;
 	private Node3D _jugador;
 	private float _tiempo;
@@ -57,7 +75,16 @@ public partial class AnimacionPersonaje : Node
 		Modelo ??= _personaje.GetNodeOrNull<Node3D>("Modelo");
 		if (Modelo == null) { SetProcess(false); return; }
 		_fase = (float)GD.RandRange(0.0, Mathf.Tau);
-		if (Animacion != "" && Reproducir(Animacion)) { SetProcess(false); return; }
+		// Cada copia a su ritmo: nadie se mueve al mismo cuadro ni a la misma velocidad
+		_velocidad = (float)GD.RandRange(0.9, 1.1);
+		_finActividad = (float)GD.RandRange(4.0, 12.0);
+		if (Animacion != "" && Reproducir(Animacion))
+		{
+			_siguienteVariante = GD.RandRange(IntervaloVariante.X, IntervaloVariante.Y);
+			// Solo hace falta seguir procesando si tiene variantes que intercalar
+			SetProcess(Variantes.Length > 0);
+			return;
+		}
 		_respiraModelo = _personaje is not Npc;
 		_baseModelo = Modelo.Transform;
 		_esqueleto = BuscarEsqueleto(Modelo);
@@ -74,6 +101,9 @@ public partial class AnimacionPersonaje : Node
 			animacion.LoopMode = Animation.LoopModeEnum.Linear;
 			reproductor.Play(nombre);
 			reproductor.Seek(GD.RandRange(0.0, animacion.Length), true);
+			reproductor.SpeedScale = _velocidad;
+			_reproductor = reproductor;
+			_finVariante = -1;
 			return true;
 		}
 		GD.PushWarning($"AnimacionPersonaje: {_personaje.Name} no tiene la animación «{nombre}».");
@@ -102,6 +132,7 @@ public partial class AnimacionPersonaje : Node
 		_espalda = _esqueleto.FindBone("Spine_2"); _pecho = _esqueleto.FindBone("Spine_3");
 		_cuello = _esqueleto.FindBone("Neck"); _cabeza = _esqueleto.FindBone("Head");
 		_orejaI = _esqueleto.FindBone("Ear_1_L"); _orejaD = _esqueleto.FindBone("Ear_1_R");
+		_piernaI = _esqueleto.FindBone("Leg_1_L"); _piernaD = _esqueleto.FindBone("Leg_1_R");
 		_cola = _esqueleto.FindBone("Tail_1");
 		if (_cola < 0) _cola = _esqueleto.FindBone("S_Tail_1");
 
@@ -142,13 +173,67 @@ public partial class AnimacionPersonaje : Node
 	private Transform3D GlobalHueso(int hueso) => _esqueleto.GlobalTransform * _esqueleto.GetBoneGlobalPose(hueso);
 	private Vector3 PosicionHueso(int hueso) => GlobalHueso(hueso).Origin;
 
+	// Empieza o deja de caminar. animacionCaminar: la del modelo, si la tiene (vacío = paso por código).
+	public void Caminar(bool caminando, string animacionCaminar = "")
+	{
+		Caminando = caminando;
+		if (_reproductor != null && Animacion != "")
+		{
+			if (caminando && animacionCaminar != "") Reproducir(animacionCaminar);
+			else if (!caminando) Reproducir(Animacion);
+			return;
+		}
+		SetProcess(true);
+	}
+
 	public override void _Process(double delta)
 	{
 		float dt = (float)delta;
 		_tiempo += dt;
-		_fase += dt * VelocidadRespiracion * (Somnoliento && !JugadorCerca(out _) ? 0.6f : 1f);
+		if (_reproductor != null && Animacion != "") { IntercalarVariantes(); return; }
+		_fase += dt * VelocidadRespiracion * _velocidad * (Somnoliento && !JugadorCerca(out _) ? 0.6f : 1f);
+		_pesoPaso = Mathf.MoveToward(_pesoPaso, Caminando ? 1f : 0f, dt * 5f);
+		if (_pesoPaso > 0f) _paso += dt * 7.5f;
+		ElegirActividad(dt);
 		if (_esqueleto != null) AnimarEsqueleto(dt);
 		else AnimarModelo();
+	}
+
+	// Animaciones del modelo: de vez en cuando una vuelta de una variante y de regreso al reposo, con mezcla
+	private void IntercalarVariantes()
+	{
+		if (Caminando || Variantes.Length == 0) return;
+		if (_finVariante >= 0)
+		{
+			if (_tiempo < _finVariante) return;
+			_finVariante = -1;
+			_reproductor.Play(Animacion, 0.5);
+			_siguienteVariante = _tiempo + GD.RandRange(IntervaloVariante.X, IntervaloVariante.Y);
+			return;
+		}
+		if (_tiempo < _siguienteVariante) return;
+		string variante = Variantes[GD.RandRange(0, Variantes.Length - 1)];
+		if (!_reproductor.HasAnimation(variante)) { _siguienteVariante = _tiempo + IntervaloVariante.Y; return; }
+		_reproductor.Play(variante, 0.5);
+		_finVariante = _tiempo + _reproductor.GetAnimation(variante).Length / Mathf.Max(0.1f, _velocidad);
+	}
+
+	// Reposo por código: cada tantos segundos cambia de actividad (cambiar el peso, mirar a un lado, quedarse
+	// quieto) con una mezcla suave, así nunca repite el mismo ciclo. Con el detective cerca, solo lo mira.
+	private void ElegirActividad(float dt)
+	{
+		_finActividad -= dt;
+		if (_finActividad <= 0f)
+		{
+			_actividad = _actividad != 0 ? 0 : GD.RandRange(1, 3);
+			if (_actividad != 0)
+			{
+				_ultimaActividad = _actividad;
+				_ladoActividad = GD.Randf() < 0.5f ? -1f : 1f;
+			}
+			_finActividad = _actividad == 0 ? (float)GD.RandRange(5.0, 12.0) : (float)GD.RandRange(2.5, 5.0);
+		}
+		_pesoActividad = Mathf.MoveToward(_pesoActividad, _actividad != 0 && !Caminando ? 1f : 0f, dt * 0.8f);
 	}
 
 	private bool JugadorCerca(out Vector3 punto)
@@ -165,15 +250,31 @@ public partial class AnimacionPersonaje : Node
 		Vector3 lado = EjeEsqueleto(Vector3.Right);
 		float respira = Mathf.Sin(_fase);
 		_giros.Clear();
+		// Actividad de reposo (ver ElegirActividad): 1 = carga el peso en una pierna, 2 = mira hacia un lado
+		float peso = _ultimaActividad == 1 ? _pesoActividad * _ladoActividad : 0f;
+		float mirarLado = _ultimaActividad == 2 ? _pesoActividad * _ladoActividad : 0f;
+		float quieto = _ultimaActividad == 3 ? _pesoActividad : 0f;
 
-		// Espalda: respira inclinándose apenas y se mece de lado muy lento
-		Agregar(_espalda, new Quaternion(lado, Mathf.DegToRad(1.2f * respira)) * new Quaternion(frente, Mathf.DegToRad(1.5f * Mathf.Sin(_tiempo * 0.45f + _fase))));
+		// Espalda: respira inclinándose apenas y se mece de lado muy lento (al cargar el peso, se ladea más)
+		float meceLado = 1.5f * Mathf.Sin(_tiempo * 0.45f + _fase) * (1f - quieto * 0.7f) + 4f * peso;
+		Agregar(_espalda, new Quaternion(lado, Mathf.DegToRad(1.2f * respira)) * new Quaternion(frente, Mathf.DegToRad(meceLado)));
 		Agregar(_pecho, new Quaternion(lado, Mathf.DegToRad(0.8f * respira)));
 
-		// Brazos abajo, con un vaivén que sigue la respiración
-		float vaiven = Mathf.DegToRad(3f * Mathf.Sin(_fase * 0.5f));
+		// Caminar por código: las piernas van y vienen y los brazos al revés (no hay animación de caminar)
+		float zancada = Mathf.Sin(_paso) * _pesoPaso;
+		Agregar(_piernaI, new Quaternion(lado, Mathf.DegToRad(22f * zancada)));
+		Agregar(_piernaD, new Quaternion(lado, Mathf.DegToRad(-22f * zancada)));
+		// Sube y baja con cada paso (solo mientras camina; al parar, el modelo vuelve a su lugar)
+		if (_pesoPaso > 0f || _modeloMovido)
+		{
+			Modelo.Transform = new Transform3D(_baseModelo.Basis, _baseModelo.Origin + Vector3.Up * 0.035f * Mathf.Abs(Mathf.Cos(_paso)) * _pesoPaso);
+			_modeloMovido = _pesoPaso > 0f;
+		}
+
+		// Brazos abajo, con un vaivén que sigue la respiración (o los pasos)
+		float vaiven = Mathf.DegToRad(3f * Mathf.Sin(_fase * 0.5f) * (1f - quieto) - 16f * zancada);
 		Agregar(_brazoI, new Quaternion(lado, vaiven) * _bajarBrazoI);
-		Agregar(_brazoD, new Quaternion(lado, -vaiven * 0.7f) * _bajarBrazoD);
+		Agregar(_brazoD, new Quaternion(lado, -vaiven * (_pesoPaso > 0f ? 1f : 0.7f)) * _bajarBrazoD);
 		Agregar(_codoI, new Quaternion(lado, Mathf.DegToRad(-8f)));
 		Agregar(_codoD, new Quaternion(lado, Mathf.DegToRad(-8f)));
 
@@ -193,8 +294,9 @@ public partial class AnimacionPersonaje : Node
 		}
 		else
 		{
-			yawObjetivo = Mathf.DegToRad(18f * Mathf.Sin(_tiempo * 0.23f + _fase) + 6f * Mathf.Sin(_tiempo * 0.61f));
-			pitchObjetivo = Mathf.DegToRad(3f * Mathf.Sin(_tiempo * 0.37f));
+			// Mira alrededor despacio; a veces se queda mirando hacia un lado (actividad 2)
+			yawObjetivo = Mathf.DegToRad(18f * Mathf.Sin(_tiempo * 0.23f + _fase) * (1f - Mathf.Abs(mirarLado)) + 6f * Mathf.Sin(_tiempo * 0.61f) + 38f * mirarLado);
+			pitchObjetivo = Mathf.DegToRad(3f * Mathf.Sin(_tiempo * 0.37f) + 4f * quieto);
 		}
 		float suave = 1f - Mathf.Exp(-dt * 4f);
 		_yawCabeza = Mathf.Lerp(_yawCabeza, yawObjetivo, suave);
@@ -242,9 +344,13 @@ public partial class AnimacionPersonaje : Node
 	private void AnimarModelo()
 	{
 		float respira = Mathf.Sin(_fase);
-		var giro = new Basis(Vector3.Up, Mathf.DegToRad(5f * Mathf.Sin(_tiempo * 0.3f + _fase)))
-			* new Basis(Vector3.Back, Mathf.DegToRad(1.8f * Mathf.Sin(_tiempo * 0.7f + _fase)));
-		Transform3D t = new Transform3D(giro, Vector3.Zero) * _baseModelo;
+		float peso = _ultimaActividad == 1 ? _pesoActividad * _ladoActividad : 0f;
+		float mirarLado = _ultimaActividad == 2 ? _pesoActividad * _ladoActividad : 0f;
+		// Al caminar se balancea de lado a lado con cada paso y sube y baja
+		float paso = Mathf.Sin(_paso) * _pesoPaso;
+		var giro = new Basis(Vector3.Up, Mathf.DegToRad(5f * Mathf.Sin(_tiempo * 0.3f + _fase) + 20f * mirarLado))
+			* new Basis(Vector3.Back, Mathf.DegToRad(1.8f * Mathf.Sin(_tiempo * 0.7f + _fase) + 3f * peso + 5f * paso));
+		Transform3D t = new Transform3D(giro, Vector3.Up * 0.04f * Mathf.Abs(Mathf.Cos(_paso)) * _pesoPaso) * _baseModelo;
 		if (_respiraModelo)
 			t.Basis = t.Basis * Basis.FromScale(new Vector3(1f - respira * 0.006f, 1f + respira * 0.012f, 1f));
 		Modelo.Transform = t;

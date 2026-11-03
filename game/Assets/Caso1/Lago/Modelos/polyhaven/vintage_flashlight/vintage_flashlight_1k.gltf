@@ -1,0 +1,399 @@
+{
+  "asset": {
+    "generator": "Khronos glTF Blender I/O v5.1.20",
+    "version": "2.0"
+  },
+  "extensionsUsed": [
+    "KHR_materials_clearcoat",
+    "KHR_materials_specular"
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "mesh": 0,
+      "name": "vintage_flashlight"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.10000000149011612
+        },
+        "KHR_materials_specular": {
+          "specularColorFactor": [
+            2,
+            2,
+            2
+          ]
+        }
+      },
+      "name": "vintage_flashlight",
+      "normalTexture": {
+        "index": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 1
+        },
+        "metallicRoughnessTexture": {
+          "index": 2
+        }
+      }
+    },
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_clearcoat": {
+          "clearcoatRoughnessFactor": 0.10000000149011612
+        },
+        "KHR_materials_specular": {
+          "specularColorFactor": [
+            2,
+            2,
+            2
+          ]
+        }
+      },
+      "name": "vintage_flashlight_glass",
+      "normalTexture": {
+        "index": 3
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 4
+        },
+        "metallicRoughnessTexture": {
+          "index": 5
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Mesh",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2,
+            "COLOR_0": 3,
+            "COLOR_1": 4,
+            "COLOR_2": 5,
+            "COLOR_3": 6
+          },
+          "indices": 7,
+          "material": 0
+        },
+        {
+          "attributes": {
+            "POSITION": 8,
+            "NORMAL": 9,
+            "TEXCOORD_0": 10,
+            "COLOR_0": 11,
+            "COLOR_1": 12,
+            "COLOR_2": 13,
+            "COLOR_3": 14
+          },
+          "indices": 15,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ],
+  "images": [
+    {
+      "mimeType": "image/jpeg",
+      "name": "vintage_flashlight_nor_gl",
+      "uri": "textures/vintage_flashlight_nor_gl_1k.jpg"
+    },
+    {
+      "mimeType": "image/jpeg",
+      "name": "vintage_flashlight_diff",
+      "uri": "textures/vintage_flashlight_diff_1k.jpg"
+    },
+    {
+      "mimeType": "image/jpeg",
+      "name": "vintage_flashlight_metal-vintage_flashlight_rough",
+      "uri": "textures/vintage_flashlight_arm_1k.jpg"
+    },
+    {
+      "mimeType": "image/jpeg",
+      "name": "vintage_flashlight_diff-vintage_flashlight_alpha",
+      "uri": "textures/vintage_flashlight_diff_1k.jpg"
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 7103,
+      "max": [
+        0.047932423651218414,
+        0.1443331092596054,
+        0.14743585884571075
+      ],
+      "min": [
+        -0.047932423651218414,
+        -6.200257640642803e-9,
+        -0.15273195505142212
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 7103,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 7103,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5121,
+      "count": 7103,
+      "normalized": true,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5123,
+      "count": 7103,
+      "normalized": true,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5123,
+      "count": 7103,
+      "normalized": true,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5123,
+      "count": 7103,
+      "normalized": true,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5123,
+      "count": 31350,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 66,
+      "max": [
+        0.03644828125834465,
+        0.1427638679742813,
+        0.15273194015026093
+      ],
+      "min": [
+        -0.03768829628825188,
+        0.06926938146352768,
+        0.14508622884750366
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5126,
+      "count": 66,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5126,
+      "count": 66,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 11,
+      "componentType": 5121,
+      "count": 66,
+      "normalized": true,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 12,
+      "componentType": 5123,
+      "count": 66,
+      "normalized": true,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 13,
+      "componentType": 5123,
+      "count": 66,
+      "normalized": true,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 14,
+      "componentType": 5123,
+      "count": 66,
+      "normalized": true,
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 15,
+      "componentType": 5123,
+      "count": 336,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 85236,
+      "byteOffset": 0,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 85236,
+      "byteOffset": 85236,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 56824,
+      "byteOffset": 170472,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 28412,
+      "byteOffset": 227296,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 56824,
+      "byteOffset": 255708,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 56824,
+      "byteOffset": 312532,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 56824,
+      "byteOffset": 369356,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 62700,
+      "byteOffset": 426180,
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 792,
+      "byteOffset": 488880,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 792,
+      "byteOffset": 489672,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 528,
+      "byteOffset": 490464,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 264,
+      "byteOffset": 490992,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 528,
+      "byteOffset": 491256,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 528,
+      "byteOffset": 491784,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 528,
+      "byteOffset": 492312,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 672,
+      "byteOffset": 492840,
+      "target": 34963
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 493512,
+      "uri": "vintage_flashlight.bin"
+    }
+  ]
+}

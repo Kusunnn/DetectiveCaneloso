@@ -237,7 +237,14 @@ func input(evento: InputEvent) -> void:
 		if evento.ctrl_pressed and evento.keycode == KEY_Z:
 			deshacer()
 			return
-		match evento.keycode:
+		var tecla: int = evento.keycode
+		if evento.is_action_pressed("deducir"):
+			tecla = KEY_R
+		elif evento.is_action_pressed("diario"):
+			tecla = KEY_Q
+		elif tecla in [KEY_R, KEY_Q]:
+			tecla = KEY_NONE
+		match tecla:
 			KEY_R, KEY_ESCAPE: hud.cerrar_tablero()
 			KEY_Q:
 				hud.diario_abierto = not hud.diario_abierto
