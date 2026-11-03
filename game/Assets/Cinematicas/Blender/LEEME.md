@@ -4,6 +4,8 @@ Animación de la cinemática final del Caso 0 «La cinta de las 3:12». Se arma 
 
 Godot no importa esta carpeta (`.gdignore`).
 
+**La versión del juego es la película** (`scripts/pelicula.py` → `Caso0/cinta_pelicula.glb`, sección «Película»). La versión animada y la de momentos congelados ya no están en el juego: sus `.glb` y su código siguen en el historial de git, y aquí quedan sus scripts y escenas porque la película toma de ellos las poses y la Sala 1. Lo que sigue sobre esas versiones es histórico.
+
 ## Archivos
 
 | Archivo | Qué es |

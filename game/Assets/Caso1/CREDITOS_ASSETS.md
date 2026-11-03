@@ -100,7 +100,7 @@ El escenario reusa los modelos del Campamento (Kenney, KayKit, Quaternius, `_pre
 
 ## Cinemática de la cinta (Caso 0)
 
-No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La cinta que se ve en la grabadora y en la mano de Porky es el casete que trae el modelo **Poly Haven · Cassette Player** (`cassette_player_tape`, el mismo de la grabadora de arriba). La animación está hecha en Blender 5.2 (`Assets/Cinematicas/Blender/`, ver su `LEEME.md`) y se exporta a `Assets/Cinematicas/Caso0/cinta_caso0.glb`. Ese .glb solo reúne modelos que ya estaban en el juego:
+No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La cinta que se ve en la grabadora y en la mano de Porky es el casete que trae el modelo **Poly Haven · Cassette Player** (`cassette_player_tape`, el mismo de la grabadora de arriba). La animación está hecha en Blender 5.2 (`Assets/Cinematicas/Blender/`, ver su `LEEME.md`) y se exportaba a `cinta_caso0.glb` (versión ya retirada del juego; sigue en el historial de git). Ese .glb solo reúne modelos que ya estaban en el juego:
 
 | Pieza | De dónde sale | Licencia |
 |---|---|---|
@@ -112,7 +112,7 @@ No trae modelos nuevos: rueda en la Sala 1 con lo que ya está en el juego. La c
 
 No se usaron animaciones de Mixamo ni capturas de Rokoko: Mixamo pide iniciar sesión con una cuenta de Adobe y Rokoko Vision necesita grabar a alguien con la webcam.
 
-**Momentos congelados** (`Assets/Cinematicas/Caso0/cinta_momentos.glb`, de `Blender/scripts/construir_momentos.py` y `momentos.py`): los mismos modelos (Porky, la figura con gabardina y capucha). No usa animaciones de Quaternius: cada pose está escrita a mano, hueso por hueso. Lo único nuevo son el polvo suspendido (pequeños icosaedros generados en Blender) y la cuerda (un cilindro de Blender), los dos propios.
+**Momentos congelados** (versión retirada del juego; `cinta_momentos.glb` sigue en el historial de git; poses que usa la película, de `Blender/scripts/construir_momentos.py` y `momentos.py`): los mismos modelos (Porky, la figura con gabardina y capucha). No usa animaciones de Quaternius: cada pose está escrita a mano, hueso por hueso. Lo único nuevo son el polvo suspendido (pequeños icosaedros generados en Blender) y la cuerda (un cilindro de Blender), los dos propios.
 
 **Versión película** (`cinta_pelicula.glb`, de `scripts/pelicula.py`): suma a Caneloso, que es el mismo modelo del juego (`Assets/Models/Caneloso/Archivo/player.tscn`), exportado a `Blender/caneloso.glb` con `Herramientas/exportar_modelo_blender.gd`. Los carretes de la cinta y las astillas del reloj están hechos en Blender y son propios.
 

@@ -15,19 +15,12 @@ using System.Text.RegularExpressions;
 // Todo depende de t: IrA, adelantar (por cuadro) y Movie Maker dan siempre lo mismo.
 public partial class CinematicaCinta
 {
-	public enum VersionCinta { Animada, Momentos, Pelicula }
-
-	// Qué versión se reproduce. Las tres se conservan para compararlas.
-	public static VersionCinta Version { get; set; } = VersionCinta.Pelicula;
-
 	public const string AnimacionPelicula = "res://Assets/Cinematicas/Caso0/cinta_pelicula.glb";
 	public const string DatosPelicula = "res://Assets/Cinematicas/Caso0/cinta_pelicula.json";
 	private const string Musica = "res://Assets/Audio/Cinematica/musica_moil.mp3";
 	private const string Titulo = "¿Quién es La Garra?";
 	private const double DuracionTitulo = 2.8;
 	private const double DuracionTracking = 0.45;
-
-	private bool _pelicula;
 
 	private class Cuadro
 	{
@@ -50,6 +43,23 @@ public partial class CinematicaCinta
 	private ShaderMaterial _recuerdo, _vineta;
 	private Label _titulo;
 	private AudioStreamPlayer _musica;
+	private readonly Camera3D[] _camIni = new Camera3D[32], _camFin = new Camera3D[32];
+	private readonly Node3D[] _foco = new Node3D[32];
+	private readonly List<(int Cuadro, Node3D Nodo)> _soloEn = new();
+	private OmniLight3D _recCara;
+	private Node3D _animPluma;
+	private (double T, string Texto)[] _horasPelicula;
+	private (double Inicio, double Fin, int Linea)[] _subtitulosPelicula;
+
+	private (double T, string Texto)[] HorasPeliculaActuales => _horasPelicula ??= HorasPelicula();
+	private (double Inicio, double Fin, int Linea)[] SubtitulosPeliculaActuales => _subtitulosPelicula ??= SubtitulosPelicula();
+	private double[] ParadasPelicula() => _cuadros.Skip(1).Select(c => c.Inicio).Append(_finPelicula - DuracionTitulo).Append(_finPelicula).ToArray();
+
+	private static float Suave(double u)
+	{
+		float x = (float)Mathf.Clamp(u, 0, 1);
+		return x * x * (3 - 2 * x);
+	}
 
 	// ---------- Montaje ----------
 
