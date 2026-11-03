@@ -393,10 +393,22 @@ public partial class TableroCapitulos : Control
 			presentacion.Pressed += () => IntroCaso.Reproducir(this, caso, aviso: false);
 			botones.AddChild(presentacion);
 		}
+		// HU-9.5 CA-03: la cinta del Caso 0 se puede volver a ver si ya salió en la partida guardada (no la cambia)
+		Button verCinta = null;
+		if (capitulo.Numero == 0 && GestorPartida.Instancia.CinematicaVistaEnPartidaGuardada(CinematicaCinta.Id))
+		{
+			verCinta = EstiloPapel.Boton("Volver a ver la cinta");
+			verCinta.Pressed += () => VerCinta.Abrir(GetTree().CurrentScene);
+			botones.AddChild(verCinta);
+		}
 		botones.AddChild(principal);
 		_detalleColumna.AddChild(botones);
 		UtilidadesUI.ConectarFocoConRaton(_detalleColumna);
-		var orden = presentacion != null ? new Control[] { principal, presentacion, cerrar } : new Control[] { principal, cerrar };
+		var lista = new List<Control> { principal };
+		if (verCinta != null) lista.Add(verCinta);
+		if (presentacion != null) lista.Add(presentacion);
+		lista.Add(cerrar);
+		var orden = lista.ToArray();
 		UtilidadesUI.EncadenarFoco(orden);
 		for (int i = 0; i < orden.Length; i++)
 		{

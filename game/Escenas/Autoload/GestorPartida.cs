@@ -82,6 +82,19 @@ public partial class GestorPartida : Node
 	public bool CinematicaVista(string id) => _cinematicasVistas.Contains(id);
 	public IReadOnlyCollection<string> CinematicasVistas => _cinematicasVistas;
 
+	// Si la partida guardada (la que abre «Continuar») ya vio una cinemática; sirve desde el menú, sin cargarla
+	public bool CinematicaVistaEnPartidaGuardada(string id)
+	{
+		var ranura = MasReciente();
+		if (ranura == null || ranura.Danada) return false;
+		var datos = LeerArchivo(RutaJson(ranura.Numero));
+		return datos != null && datos.TryGetValue("cinematicas", out Variant vistas) && vistas.AsGodotArray().Contains(id);
+	}
+
+	// Para probar_ca03.gd: cada pensamiento, línea de diálogo y reacción que sale en pantalla
+	[Signal] public delegate void EventoMostradoEventHandler(string tipo, string texto);
+	public void ContarEvento(string tipo, string texto) => EmitSignal(SignalName.EventoMostrado, tipo, texto);
+
 	public void RegistrarCinematica(string id)
 	{
 		_cinematicasVistas.Add(id);
