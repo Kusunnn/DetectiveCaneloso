@@ -50,6 +50,7 @@ public partial class Jugador : CharacterBody3D
 	// El rayo de interacción solo choca con: Mundo, Muebles, Interactuables, NPC y Bloqueos de zona.
 	// La decoración sin colisión nunca tapa una pista.
 	private const uint MascaraInteraccion = 1u | 2u | 8u | 16u | 32u;
+	private const uint CapaPistas = 8u;
 	// Llaves, combinaciones... que abren contenedores en otras zonas
 	private readonly System.Collections.Generic.HashSet<string> _objetos = new System.Collections.Generic.HashSet<string>();
 	// Vista de examen (HU-07) y el aviso "[E] Examinar" justo después de recoger una evidencia
@@ -235,6 +236,21 @@ public partial class Jugador : CharacterBody3D
 	}
 
 	// Rayo desde el centro de la cámara activa; devuelve lo que se puede usar, o null
+	// Un contenedor abierto sigue siendo sólido: lo que hay adentro (el baúl, la guantera) se alcanza a través de él
+	private IInteractuable PistaDentroDe(Contenedor contenedor, Vector3 origen, Vector3 destino, Vector3 golpe)
+	{
+		const float Fondo = 0.9f;
+		var query = PhysicsRayQueryParameters3D.Create(origen, destino);
+		query.Exclude = new Godot.Collections.Array<Rid> { GetRid(), contenedor.GetRid() };
+		query.CollisionMask = CapaPistas;
+		var resultado = GetWorld3D().DirectSpaceState.IntersectRay(query);
+		if (resultado.Count == 0 || resultado["position"].AsVector3().DistanceTo(golpe) > Fondo) return null;
+		Node nodo = resultado["collider"].As<Node>();
+		for (int nivel = 0; nivel < 4 && nodo != null; nivel++, nodo = nodo.GetParent())
+			if (nodo is ObjetoPista pista) return pista;
+		return null;
+	}
+
 	private IInteractuable BuscarInteractuable()
 	{
 		var espacioFisico = GetWorld3D().DirectSpaceState;
@@ -255,6 +271,7 @@ public partial class Jugador : CharacterBody3D
 		for (int nivel = 0; nivel < 4 && nodo != null; nivel++, nodo = nodo.GetParent())
 		{
 			if ((nodo is Contenedor { SoloAgachado: true } || nodo is ObjetoPista { SoloAgachado: true }) && !Agachado) return null; // Hay que agacharse para alcanzarlo
+			if (nodo is Contenedor { EstaAbierto: true } abierto) return PistaDentroDe(abierto, origen, destino, resultado["position"].AsVector3()) ?? abierto;
 			if (nodo is IInteractuable interactuable) return interactuable;
 		}
 		return null;

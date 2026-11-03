@@ -656,7 +656,7 @@ Lugar = "Cabaña de Porky · pared de fotos"
 Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_dedicatoria"), ExtResource("hu07_det_silbato")])
 
 [node name="Forma" type="CollisionShape3D" parent="FotoGrupo"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.008)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.09)
 shape = SubResource("BoxShape3D_37")
 
 [node name="FotoLago" type="Node3D" parent="." groups=["apoyar_pared"]]
