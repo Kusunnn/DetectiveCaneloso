@@ -37,6 +37,7 @@ public class ResultadoCapitulo
 	public int Porcentaje;      // pistas, diálogos clave y secretos
 	public double Tiempo;
 	public bool PrimerIntento;
+	public int AyudasUtilizadas;
 }
 
 // Catálogo de capítulos (datos) y progreso del jugador: qué está resuelto, desbloqueado y sus mejores resultados.
@@ -122,6 +123,7 @@ public static class Capitulos
 					var r = valor.AsGodotDictionary();
 					_resultados[id.AsString()] = new ResultadoCapitulo
 					{
+						AyudasUtilizadas = r.TryGetValue("ayudas_utilizadas", out var ayudas) ? ayudas.AsInt32() : 0,
 						Rango = r["rango"].AsString(), Lupas = r["lupas"].AsInt32(), Puntos = r["puntos"].AsInt32(),
 						Porcentaje = r["porcentaje"].AsInt32(), Tiempo = r["tiempo"].AsDouble(), PrimerIntento = r["primer_intento"].AsBool(),
 					};
@@ -153,6 +155,7 @@ public static class Capitulos
 		{
 			if (nuevo.Puntos >= anterior.Puntos)
 			{
+				anterior.AyudasUtilizadas = nuevo.AyudasUtilizadas;
 				anterior.Rango = nuevo.Rango;
 				anterior.Lupas = nuevo.Lupas;
 				anterior.Puntos = nuevo.Puntos;
@@ -175,6 +178,7 @@ public static class Capitulos
 		{
 			capitulos[id] = new Godot.Collections.Dictionary
 			{
+				{ "ayudas_utilizadas", r.AyudasUtilizadas },
 				{ "rango", r.Rango }, { "lupas", r.Lupas }, { "puntos", r.Puntos },
 				{ "porcentaje", r.Porcentaje }, { "tiempo", r.Tiempo }, { "primer_intento", r.PrimerIntento },
 			};

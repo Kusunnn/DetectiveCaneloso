@@ -34,6 +34,7 @@ public partial class MenuOpciones : PanelMenu
 	private FilaInterruptor _agacharse;
 	private FilaInterruptor _pantallaCompleta;
 	private FilaInterruptor _ayudas;
+	private FilaInterruptor _ayudasInvestigacion;
 	private readonly List<FilaTecla> _filasTecla = new();
 	private PanelTeclas _panelTeclas;
 	private OptionButton _tamanoTexto;
@@ -196,6 +197,10 @@ public partial class MenuOpciones : PanelMenu
 		filaTexto.AddChild(_tamanoTexto);
 		lista.AddChild(filaTexto);
 		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas, _tamanoTexto };
+		_ayudasInvestigacion = new FilaInterruptor("Ayudas de investigación", "Permite solicitar orientación si te estancas");
+		_ayudasInvestigacion.Cambiado += activado => Configuracion.Instancia.AyudasInvestigacion = activado;
+		lista.AddChild(_ayudasInvestigacion);
+		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas, _ayudasInvestigacion };
 		var contenedor = new Control { MouseFilter = MouseFilterEnum.Ignore };
 		contenedor.AddChild(lista);
 		return contenedor;
@@ -331,6 +336,8 @@ public partial class MenuOpciones : PanelMenu
 		int escala = Array.FindIndex(Configuracion.EscalasTexto, e => Mathf.IsEqualApprox(e.Escala, config.EscalaTexto));
 		_tamanoTexto.Select(Math.Max(escala, 0));
 		_panelTeclas.Refrescar();
+		_ayudasInvestigacion.Fijar(config.AyudasInvestigacion);
+		foreach (var fila in _filasTecla) fila.MostrarTecla(Teclas.EtiquetaTeclado(fila.Accion));
 	}
 
 	private void Restaurar()

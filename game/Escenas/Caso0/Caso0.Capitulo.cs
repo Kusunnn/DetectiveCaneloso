@@ -91,7 +91,7 @@ public partial class Caso0
 		var tiempo = TimeSpan.FromSeconds(_tiempoCaso);
 		Capitulos.Registrar(IdCapitulo, new ResultadoCapitulo
 		{
-			Rango = rango, Lupas = lupas, Puntos = puntos, Porcentaje = Porcentaje(), Tiempo = _tiempoCaso, PrimerIntento = _intentosAcusacion == 1,
+			AyudasUtilizadas = _ayudasInvestigacion.Usos, Rango = rango, Lupas = lupas, Puntos = puntos, Porcentaje = Porcentaje(), Tiempo = _tiempoCaso, PrimerIntento = _intentosAcusacion == 1,
 		});
 		if (gestor != null)
 		{
@@ -119,6 +119,7 @@ public partial class Caso0
 				("Deducciones en el tablero", $"{_deducciones.Count} de {DeduccionesTotales}"),
 				("Contenedores revisados", $"{revisados} de {contenedores}"),
 				("Secretos encontrados", _pistas.Contains(Pluma) ? "1 de 1 (la pluma negra)" : "0 de 1"),
+				("Ayudas utilizadas", _ayudasInvestigacion.Usos == 0 ? "Sin ayudas" : _ayudasInvestigacion.Usos.ToString()),
 				("Tiempo total", $"{(int)tiempo.TotalMinutes} min {tiempo.Seconds:00} s"),
 			},
 			Rango = rango,
