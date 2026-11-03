@@ -12,6 +12,7 @@ public class Hablante
 	public Color ColorAnimo = new Color(0.4f, 0.4f, 0.4f);
 	public bool Tiembla = false; // Nervioso: el retrato tiembla un poco
 	public float TonoVoz = 1f;   // Tono de los "blips" de máquina de escribir (personalidad de quien habla)
+	public AudioStream Voz;      // Clip de su voz (Assets/Audio/Voces); si no tiene, suenan los blips genéricos
 
 	public Hablante(string nombre, Texture2D retrato = null)
 	{
@@ -48,6 +49,8 @@ public partial class VentanaDialogo : CanvasLayer
 	private static readonly Color Tinta = new Color("20272b");
 	private static readonly Color Papel = new Color(0.84f, 0.81f, 0.72f);
 	private const float LetrasPorSegundo = 55f;
+	private const float VolumenVozDb = -13f;
+	private const string BusVoces = "Voces";   // Se crea al arrancar: pasa por un cambio de tono y sale por Interfaz
 
 	private Font _mono;
 	private Font _titulos;
@@ -67,9 +70,15 @@ public partial class VentanaDialogo : CanvasLayer
 	private Tween _escritura;
 	private Tween _temblor;
 	private float _tonoVoz = 1f;
+	private AudioStream _voz;
+	private bool _vozNerviosa;
+	private AudioStreamPlayer _reproductorVoz;
+	private AudioEffectPitchShift _tonoBusVoces;
+	private Tween _apagarVoz;
 	private int _letrasSonadas;
 	private Input.MouseModeEnum _ratonAnterior;
 	private readonly Dictionary<string, Texture2D> _retratos = new Dictionary<string, Texture2D>();
+	private readonly Dictionary<string, AudioStream> _voces = new Dictionary<string, AudioStream>();
 
 	public bool Abierto => _caja.Visible;
 
@@ -83,6 +92,10 @@ public partial class VentanaDialogo : CanvasLayer
 		_titulos = display;
 		ConstruirInterfaz();
 		_caja.Hide();
+		PrepararBusVoces();
+		_reproductorVoz = new AudioStreamPlayer { VolumeDb = VolumenVozDb, Bus = BusVoces };
+		_reproductorVoz.Finished += () => { if (Escribiendo) TocarVoz(); };
+		AddChild(_reproductorVoz);
 	}
 
 	private void ConstruirInterfaz()
@@ -302,12 +315,25 @@ public partial class VentanaDialogo : CanvasLayer
 	// Retratos en Assets/Retratos/<nombre>.png (Caneloso, Eriz, Porky, Comisario...)
 	public Hablante HablantePorNombre(string nombre)
 	{
-		return new Hablante(nombre, Retrato(nombre));
+		return new Hablante(nombre, Retrato(nombre)) { Voz = Voz(nombre) };
+	}
+
+	private static string Clave(string nombre) =>
+		nombre.ToLower().Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u");
+
+	// Voces en Assets/Audio/Voces/<nombre>.wav: el "bop" de cada quien, recortado del clip que grabó
+	public AudioStream Voz(string nombre)
+	{
+		string clave = Clave(nombre).Replace(" ", "_");
+		if (clave == "comisario") clave = "hecdog"; // El comisario del tutorial es Hecdog
+		if (_voces.TryGetValue(clave, out var voz)) return voz;
+		string ruta = $"res://Assets/Audio/Voces/{clave}.wav";
+		return _voces[clave] = ResourceLoader.Exists(ruta) ? GD.Load<AudioStream>(ruta) : null;
 	}
 
 	public Texture2D Retrato(string nombre)
 	{
-		string clave = nombre.ToLower().Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u");
+		string clave = Clave(nombre);
 		if (!_retratos.TryGetValue(clave, out var textura))
 		{
 			string ruta = "res://Assets/Retratos/" + clave + ".png";
@@ -369,6 +395,8 @@ public partial class VentanaDialogo : CanvasLayer
 		_retrato.Texture = h.Retrato;
 		_marcoRetrato.Visible = h.Retrato != null;
 		_tonoVoz = h.TonoVoz;
+		_voz = h.Voz;
+		_vozNerviosa = h.Tiembla;
 		_temblor?.Kill();
 		_marcoRetrato.Rotation = 0;
 		if (h.Tiembla)
@@ -386,6 +414,7 @@ public partial class VentanaDialogo : CanvasLayer
 		GestorPartida.Instancia?.ContarEvento("linea", _nombre.Text + ": " + texto);
 		_texto.Text = texto;
 		_escritura?.Kill();
+		_reproductorVoz.Stop();
 		if (instantaneo)
 		{
 			_texto.VisibleRatio = 1f;
@@ -399,9 +428,17 @@ public partial class VentanaDialogo : CanvasLayer
 
 	private bool Escribiendo => _escritura != null && _escritura.IsRunning();
 
-	// Blips suaves de máquina de escribir: uno cada 3 letras, con el tono de quien habla
+	// Mientras se escribe el texto suena la voz de quien habla, estilo Undertale; si no tiene voz,
+	// blips suaves de máquina de escribir cada 3 letras con su tono. La voz propia ya marca la personalidad,
+	// así que no se le aplica TonoVoz.
 	public override void _Process(double delta)
 	{
+		if (_voz != null)
+		{
+			if (Escribiendo && !_reproductorVoz.Playing) TocarVoz();
+			else if (!Escribiendo && _reproductorVoz.Playing) ApagarVoz();
+			return;
+		}
 		if (!Escribiendo) return;
 		int visibles = (int)(_texto.VisibleRatio * _texto.Text.Length);
 		if (visibles - _letrasSonadas < 3) return;
@@ -409,6 +446,41 @@ public partial class VentanaDialogo : CanvasLayer
 		char letra = _texto.Text[Math.Clamp(visibles - 1, 0, _texto.Text.Length - 1)];
 		if (char.IsWhiteSpace(letra)) return;
 		Sonidos.ReproducirUI(this, Sonidos.Tipo.Texto, 0f, _tonoVoz);
+	}
+
+	// Un bop tras otro mientras sale el texto (bop, bop, bop...), cada uno con otra velocidad y otro tono
+	// (por separado) para que no suene a bucle. Nervioso habla más rápido.
+	private void TocarVoz()
+	{
+		_apagarVoz?.Kill();
+		_reproductorVoz.VolumeDb = VolumenVozDb + (float)GD.RandRange(-0.6, 0.6);
+		_reproductorVoz.PitchScale = (float)GD.RandRange(0.92, 1.12) * (_vozNerviosa ? 1.15f : 1f);
+		if (_tonoBusVoces != null) _tonoBusVoces.PitchScale = (float)GD.RandRange(0.9, 1.1);
+		_reproductorVoz.Stream = _voz;
+		_reproductorVoz.Play();
+	}
+
+	// El texto ya terminó (o se adelantó con un clic): la voz se desvanece rápido en vez de cortarse
+	private void ApagarVoz()
+	{
+		if (_apagarVoz != null && _apagarVoz.IsRunning()) return;
+		_apagarVoz = CreateTween();
+		_apagarVoz.TweenProperty(_reproductorVoz, "volume_db", -40f, 0.12);
+		_apagarVoz.TweenCallback(Callable.From(_reproductorVoz.Stop));
+	}
+
+	private void PrepararBusVoces()
+	{
+		int bus = AudioServer.GetBusIndex(BusVoces);
+		if (bus < 0)
+		{
+			bus = AudioServer.BusCount;
+			AudioServer.AddBus();
+			AudioServer.SetBusName(bus, BusVoces);
+			AudioServer.SetBusSend(bus, Sonidos.BusInterfaz);
+			AudioServer.AddBusEffect(bus, new AudioEffectPitchShift());
+		}
+		_tonoBusVoces = AudioServer.GetBusEffect(bus, 0) as AudioEffectPitchShift;
 	}
 
 	// Una conversación completa (varias preguntas seguidas) mantiene la caja abierta sin parpadeos:
