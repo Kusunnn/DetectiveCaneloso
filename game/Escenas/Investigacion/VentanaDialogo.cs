@@ -383,6 +383,7 @@ public partial class VentanaDialogo : CanvasLayer
 	// Efecto de máquina de escribir; un clic mientras escribe completa la línea
 	private void Escribir(string texto, bool instantaneo = false)
 	{
+		GestorPartida.Instancia?.ContarEvento("linea", _nombre.Text + ": " + texto);
 		_texto.Text = texto;
 		_escritura?.Kill();
 		if (instantaneo)
