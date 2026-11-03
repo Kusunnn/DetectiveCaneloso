@@ -55,16 +55,16 @@ func _initialize() -> void:
 	await _cerrar_caso()
 	await create_timer(2.0).timeout
 
-	_decir("Se carga la partida guardada: la cinta NO vuelve a salir (veces: %d)" % _veces)
+	_decir("Se carga la partida guardada: la cinta NO vuelve a salir (veces: %d). Sigue el Caso 1" % _veces)
 	_gestor.CargarRanura(0, false)
-	await _esperar_escena(CASO0, true)
-	await create_timer(9.0).timeout
-	var dialogo = current_scene.get_node("VentanaDialogo")
+	await create_timer(7.0).timeout
+	_decir("Empieza el Caso 1 con su presentación, por primera vez. La cinta sigue en %d" % _veces)
+	await create_timer(5.0).timeout
 	for i in 20:
-		if dialogo.Abierto: await _clic()
+		if _intros() == 0: break
+		await _saltar_intro()
 		await create_timer(0.3).timeout
-	_decir("Después de cargar: sigue en %d y sin cinemática" % _veces)
-	await create_timer(4.0).timeout
+	await create_timer(1.0).timeout
 
 	_decir("Menú → Capítulos → Caso 0: «Volver a ver la cinta» (solo si ya se vio)")
 	_gestor.IrAlMenuInicio()
@@ -80,7 +80,8 @@ func _initialize() -> void:
 	for b in tablero.find_children("*", "Button", true, false):
 		if b.text.contains("Volver a ver la cinta") and b.is_visible_in_tree(): boton = b
 	boton.grab_focus()
-	await create_timer(1.0).timeout
+	_decir("Este es el botón nuevo: «Volver a ver la cinta»")
+	await create_timer(4.0).timeout
 	boton.emit_signal("pressed")
 	_decir("Volver a verla: no da pistas ni guarda (veces en la partida: %d)" % _veces)
 	await create_timer(8.0).timeout
@@ -101,7 +102,7 @@ func _initialize() -> void:
 		if _intros() == 0: break
 		await create_timer(0.3).timeout
 	await create_timer(1.0).timeout
-	dialogo = current_scene.get_node("VentanaDialogo")
+	var dialogo = current_scene.get_node("VentanaDialogo")
 	for i in 60:
 		if not dialogo.Abierto and i > 10: break
 		if dialogo.Abierto: await _clic()
