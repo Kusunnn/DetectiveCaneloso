@@ -139,7 +139,7 @@ Otras pruebas con esta rama: `probar_escenarios.gd` 0 fallos y `tests/cinematica
 | Acceso a la estación | Sin las pruebas, Caneloso explica por qué todavía no y no se va. |
 | Interrogatorios | Ver N-11. Las preguntas ya hechas se marcan con ✓ (`OpcionVista.Leida`). Las voces no están integradas (ver las ramas de abajo). |
 | NPC | Variantes de reposo, sin clones ni pies patinando, sin pose T (Mimita incluida), y se voltean al hablar. |
-| Cinemáticas propias del capítulo | **No existe ninguna** además de IntroCaso: ni libro quemado, ni foto del grupo, ni llegada al lago, ni silbato, ni reconstrucción de las 23:20, ni finales A y B (los finales son diálogo con un aviso en pantalla). **Queda pendiente de CA-01.** No las creé. |
+| Cinemáticas propias del capítulo | Ahora existen: ver «Cinemáticas del Caso 1» al final. |
 
 ### Ramas sin integrar
 
@@ -165,3 +165,30 @@ Rendimiento con todos los NPC del Campamento: de 0.5 a 1.4 ms de CPU y de 4.5 a 
 | N-08 | Poner a Hecdog junto a la patrulla en el Campamento y el Lago, con su reposo. No cambia líneas. | 2 a 4 horas |
 
 Total: de 1 a 1.5 días, sin contar rutinas de NPC con movimiento, que tampoco existen y serían otra tarea de varios días. Si se valida con esa exigencia, CA-02 no está completo.
+
+## Cinemáticas del Caso 1 (CA-01, aprobadas por Takeshi el 3 de noviembre)
+
+Todas están en `LibretosCaso1.cs`, las reproduce `CinematicaCaso1.cs`, salen una vez por partida (registro de `GestorPartida`) y se pueden adelantar o saltar. No hay líneas nuevas: lo que se lee viene de `caso1_pistas.json` y `caso1_acusacion.json`; solo se agregó la hora en pantalla en la reconstrucción, tomada de la cronología de la historia.
+
+| Id | Cuándo sale | Qué se ve |
+|---|---|---|
+| `caso1_libro` | Al encontrar el libro en la fogata | Las cenizas y las hojas quemadas, con su comentario |
+| `caso1_foto` | Al encontrar la foto en la cabaña de Porky | La foto en la pared, y de ahí al silbato de Tony |
+| `caso1_llegada` | La primera vez que se llega al Lago | Del sendero oscuro al agua que brilla, con las tres líneas de Caneloso |
+| `caso1_silbato` | Al encontrar el silbato | El silbato en el clavo, moviéndose, y el silbido a lo lejos |
+| `caso1_2320` | Solo al acusar a Tony, antes de que se derrumbe | 23:12 el sendero, 23:15 la linterna, 23:19 las dos siluetas, 23:20 el golpe, el silbido y el chapoteo, y el brillo que anotó Eriz |
+| `caso1_final_a` | Al terminar la confesión | Tony y Hecdog hacia la patrulla bajo la lluvia, y el muelle vacío con el agua brillando |
+| `caso1_final_b` | Al acusar a un inocente | Tony en su porche, el lago bajando, y el periódico que se hunde mientras se apaga el brillo |
+
+**Límites conocidos:**
+
+- Están filmadas en Godot con los modelos y escenarios del juego, no animadas en Blender como la cinta. Los personajes casi no actúan: en el golpe, el remo se mueve solo junto a Tony, sin estar en sus manos.
+- Final B: el guion menciona excavadoras y patrullas, pero en el proyecto no hay esos modelos. Se oyen las bombas y se ve bajar el agua.
+- Final A: la lluvia solo se ve en el primer plano.
+- En la foto se ven siluetas, porque así es la imagen del proyecto.
+- Tony aparece en la reconstrucción solo después de que el jugador lo acusa. Las cinemáticas de las pistas no enseñan a nadie.
+- Las cinemáticas de pistas no vuelven a salir al mirar otra vez ni al cargar. Tampoco hay «Volver a ver» para ellas.
+
+**Para el guion:** el modelo del silbato y la historia dicen «T. S.» (Tony Spínola), pero `caso1_pistas.json` dice «G. S.» en el comentario que se lee. Conviene que lo decida quien escribe el guion.
+
+**Pruebas:** el recorrido completo de `probar_ca03.gd` (Caso 0, Caso 1 con todas las pistas, guardar y cargar, y un final) dio 92 revisiones bien y 1 fallo, que era de la propia prueba: sin ventana, el autoguardado del final falla al tomar la miniatura (el `NullReference` ya conocido). Se corrigió la revisión. Los dos finales se volvieron a correr aparte (`-- solo-final-a` y `-- solo-final-b`) con 0 fallos: la reconstrucción solo sale en el final A. No volví a correr el recorrido completo después de esa corrección. Se revisaron con capturas y videos en `HU-9.5_CA01_capturas/`; nadie las ha jugado todavía con ventana y sonido en una partida normal, y el audio no se escuchó. Una vez, al grabar el video del final B, Godot se cerró solo por un error interno al liberar memoria (`NodePath.Finalize`); al repetirlo no volvió a pasar.
