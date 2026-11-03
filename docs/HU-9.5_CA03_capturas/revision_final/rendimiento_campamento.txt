@@ -1,0 +1,13 @@
+Eriz  FPS≈30  cpu=0.98 ms  gpu=5.01 ms
+Eriz_lado  FPS≈30  cpu=1.17 ms  gpu=5.07 ms
+JuanCarlos  FPS≈30  cpu=0.66 ms  gpu=5.02 ms
+JuanCarlos_lado  FPS≈30  cpu=0.94 ms  gpu=4.80 ms
+Miami  FPS≈30  cpu=1.19 ms  gpu=5.04 ms
+Miami_lado  FPS≈30  cpu=1.08 ms  gpu=5.09 ms
+Tony  FPS≈30  cpu=0.77 ms  gpu=4.71 ms
+Tony_lado  FPS≈30  cpu=0.54 ms  gpu=4.53 ms
+Aya  FPS≈30  cpu=0.63 ms  gpu=4.46 ms
+Aya_lado  FPS≈30  cpu=0.78 ms  gpu=4.64 ms
+Miaurio  FPS≈30  cpu=1.11 ms  gpu=4.97 ms
+Miaurio_lado  FPS≈30  cpu=1.18 ms  gpu=5.00 ms
+todos  FPS≈30  cpu=1.39 ms  gpu=5.66 ms
