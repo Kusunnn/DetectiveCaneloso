@@ -87,15 +87,19 @@ func _probar_pista(pista, jugador, hud) -> void:
 	# Se pone frente a la pista, a la altura de un jugador, y mira a su centro
 	# Un primer intento que se cayó del escenario no cuenta: vuelve a pararlo arriba
 	jugador.velocity = Vector3.ZERO
+	# Quieto en el aire: colocado sobre un mueble, la física lo sacaría de lugar. Lo que se prueba es la retícula
+	jugador.set_physics_process(false)
 	var mejor := await _colocar_y_apuntar(jugador, pista, punto, hud)
 	var apunta: bool = mejor != ""
 	if not apunta:
+		jugador.set_physics_process(true)
 		Input.action_release("agacharse")
 		_fallos += 1
 		print("  ✗ %s: la retícula no la alcanza (capa %d, posición %s)" % [id, capa_inicial, punto.snapped(Vector3.ONE * 0.01)])
 		_que_tapa(jugador, punto)
 		return
 	await _accion("interactuar")
+	jugador.set_physics_process(true)
 	await create_timer(0.3).timeout
 	await _pasar_cinematica()
 	await _cerrar_dialogos()
