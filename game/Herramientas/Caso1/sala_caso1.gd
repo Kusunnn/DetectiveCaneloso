@@ -27,7 +27,7 @@ const IMPLICADOS := {
 	"Aya": ["Aya", "res://Assets/Models/Aya/Ayas.tscn", 44.56, Vector3(0.124, -0.143, 26.497), "alto", 1.6, "Inaya"],
 	"Miawrio": ["Miawrio", "res://Assets/Models/Miaurio/miaurio.tscn", 365.8, Vector3(324.527, -0.547, 101.452), "alto", 1.7, "global/Inactivo"],
 	"Eriz": ["Eriz", "res://Assets/Models/Personajes/eriz.glb", 0.353, Vector3(0.0, 0.0, -0.0016), "esc", 4.77, ""],
-	"Mimita": ["Mimita", "res://Assets/Models/Personajes/miami.glb", 0.154, Vector3(0.0, 0.0, 0.0003), "alto", 1.5, ""],
+	"Mimita": ["Mimita", "res://Assets/Models/Personajes/mimita_rig.glb", 0.154, Vector3(0.0, 0.0, 0.0003), "alto", 1.5, "Reposo"],
 	"Tony": ["Tony", "res://Assets/Models/Tony/Tony.tscn", 2.768, Vector3(0.008, -0.0015, -0.035), "alto", 1.8, "global/InacTony"],
 }
 

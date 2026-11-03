@@ -91,6 +91,7 @@ El escenario reusa los modelos del Campamento (Kenney, KayKit, Quaternius, `_pre
 | Escenas/Caso1/Lago/*.gdshader | suelo, agua con algas y juncos con viento | Hechos para el proyecto | Equipo Detective Caneloso | Del proyecto | — |
 | ../Pistas/Modelos/<pista>/ de las 9 pistas del lago | silbato, cornamenta y zancos, soporte de remos, remo, cuaderno, huellas (mallas propias); altavoz y linterna (Poly Haven ajustados) | Hechos con `Herramientas/Caso1/modelos_pistas_lago.gd` | Equipo Detective Caneloso | Del proyecto | — |
 | ../Retratos/tony.png, aya.png, miawrio.png, juan carlos.png, mimita.png, hecdog.png | retratos de diálogo | Capturas de los modelos del equipo con `Herramientas/Caso1/retratos_caso1.gd` | Equipo Detective Caneloso | Del proyecto | — |
+| ../Models/Personajes/mimita_rig.glb y sus texturas | Mimita con esqueleto, brazos abajo y animaciones `Reposo`, `ReposoMirar`, `ReposoPeso` y `Caminar` (HU-9.5 CA-03). Malla y texturas sin cambios, las de `miami.glb` | Esqueleto y animaciones hechos para el proyecto con `../Models/Personajes/Blender/riggear_mimita.py`; modelo original: el de `miami.glb` (ver `../CREDITOS.md`) | Equipo Detective Caneloso | Del proyecto (esqueleto y animaciones); el modelo, **por confirmar** | — |
 | Fuentes/Caveat-Variable.ttf | letra de Eriz en su cuaderno | Google Fonts · Caveat | Impallari Type | SIL OFL 1.1 | https://fonts.google.com/specimen/Caveat |
 
 ## Caso 1 · Escenario 3 (sala de interrogatorio del Capítulo 1, HU-20.6)

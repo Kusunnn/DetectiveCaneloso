@@ -37,7 +37,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		["Aya"] = ("Aya", "Caminaya", "aya"),
 		["Miawrio"] = ("Miawrio", "global/Caminar", "miawrio"),
 		["Eriz"] = ("Eriz", "", "eriz"),
-		["Mimita"] = ("Mimita", "", "mimita"),
+		["Mimita"] = ("Mimita", "Caminar", "mimita"),
 		["Tony"] = ("Tony", "global/CaminaTony", "tony"),
 	};
 
