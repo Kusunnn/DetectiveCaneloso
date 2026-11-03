@@ -10,7 +10,7 @@ public partial class Caso1Lago : EscenarioCaso1
 	private const string HuellasPezuna = "huellas_pezuna";
 	private const string HuellasDetenidas = "huellas_detenidas";
 	private const string Cornamenta = "cornamenta_zancos";
-	private const string Cuaderno = "cuaderno_eriz";
+	private const string CuadernoEriz = "cuaderno_eriz";
 	private const string Silbato = "silbato_ts";
 	private const string Linterna = "linterna_porky";
 	private const string RemoSangre = "remo_sangre";
@@ -26,12 +26,12 @@ public partial class Caso1Lago : EscenarioCaso1
 	{
 		("El sendero baja al lago: ¿por dónde caminó el «ciervo»?", new[] { HuellasPezuna, HuellasDetenidas }),
 		("Los bramidos salían del bosque, al oeste del sendero.", new[] { Altavoz, Cornamenta }),
-		("En la orilla oeste alguien pasó un buen rato sentado.", new[] { Cuaderno }),
+		("En la orilla oeste alguien pasó un buen rato sentado.", new[] { CuadernoEriz }),
 		("El embarcadero: ahí terminó todo. El agua aún brilla.", new[] { Silbato, Linterna, RemoSangre }),
 		("¿De dónde salió el remo? El cobertizo de botes, al este del muelle.", new[] { HuecoRemo }),
 	};
 	// Sin estas, el embarcadero queda sin revisar: Hecdog lo recuerda antes de irse a la estación
-	private static readonly string[] PruebasEmbarcadero = { RemoSangre, Silbato, Linterna, Cuaderno };
+	private static readonly string[] PruebasEmbarcadero = { RemoSangre, Silbato, Linterna, CuadernoEriz };
 
 	[Export] public Puerta PuertaCobertizo;
 	[Export] public PuntoInteraccion VolverCampamento;
