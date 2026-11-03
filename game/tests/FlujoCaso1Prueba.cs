@@ -11,9 +11,10 @@ public partial class FlujoCaso1Prueba : Node
 	public bool AcusacionTerminada { get; private set; }
 
 	// Hecdog ya tiene las confesiones de los cinco y Caneloso acusa: corre la acusación y el final como en la partida
-	public async void Acusar(Node escenario)
+	public async void Acusar(Node escenario, bool todasLasPistas)
 	{
 		var guion = (GuionCaso1)typeof(EscenarioCaso1).GetField("Guion", Privado).GetValue(escenario);
+		if (todasLasPistas) { guion.Motor.TienePista = _ => true; guion.Motor.TieneConclusion = _ => true; }
 		foreach (string c in new[] { "juan_carlos_3", "aya_2", "miawrio_2", "eriz_1", "mimita_2" })
 			guion.Estado.DesbloquearConclusion(c);
 		Func<bool> sigue = () => IsInstanceValid(escenario) && escenario.IsInsideTree();

@@ -13,7 +13,7 @@ extends SceneTree
 ##  7b. Acercarse y alejarse de cada NPC y hablar dos veces: no se dispara nada solo.
 ##  8. Acusación y final: una sola vez. Al volver a la sala no se repite.
 ##  9. «Volver a ver» la cinta desde el tablero: una a la vez, sin efectos en la partida; regresa a la misma pantalla.
-## Para revisar una parte: «-- solo-caso0», «-- solo-sala» o «-- solo-ver» después del script.
+## Para revisar una parte: «-- solo-caso0», «-- solo-sala», «-- solo-ver», «-- solo-final-a» o «-- solo-final-b» después del script.
 ## Al final imprime el conteo de cada cinemática, escena, pensamiento y reacción.
 ## Uso: --headless --path game --script res://Herramientas/Caso1/probar_ca03.gd
 ## Respalda en disco (user://respaldo_pruebas/) las ranuras y el progreso, y los devuelve al final.
@@ -58,7 +58,7 @@ func _initialize() -> void:
 	_flujo = load("res://tests/FlujoCaso1Prueba.cs").new()
 	root.add_child(_flujo)
 
-	if not OS.get_cmdline_user_args().has("solo-sala"):
+	if not (OS.get_cmdline_user_args().has("solo-sala") or OS.get_cmdline_user_args().has("solo-final-a") or OS.get_cmdline_user_args().has("solo-final-b")):
 		await _probar_caso0()
 	if OS.get_cmdline_user_args().has("solo-caso0"):
 		_devolver_respaldo()
@@ -79,6 +79,15 @@ func _initialize() -> void:
 	await create_timer(0.5).timeout
 	_revisar(not _expediente().abierto, "después de la cinemática, Hecdog no vuelve a abrir el expediente")
 	_revisar(_gestor.CinematicaVista("intro_caso01"), "la presentación queda en el registro de la partida")
+
+	for final in ["solo-final-a", "solo-final-b"]:
+		if OS.get_cmdline_user_args().has(final):
+			await _probar_un_final(final == "solo-final-a")
+			print("Conteo: %s" % [_cinematicas])
+			print("Fallos: %d" % _fallos)
+			_devolver_respaldo()
+			quit(1 if _fallos > 0 else 0)
+			return
 
 	if OS.get_cmdline_user_args().has("solo-ver"):
 		await _probar_ver_cinta()
@@ -152,6 +161,19 @@ func _initialize() -> void:
 
 	print("4b) Todas las pistas del Campamento, dos veces")
 	await _recoger_pistas()
+	_revisar(_cinematicas.get("caso1_libro", 0) == 1 and _cinematicas.get("caso1_foto", 0) == 1, "el libro quemado y la foto salen una vez")
+	var conteo_antes: Dictionary = _cinematicas.duplicate()
+	for i in 20:
+		if get_nodes_in_group("estado_partida")[0].PuedeGuardar: break
+		await create_timer(0.3).timeout
+	_gestor.Guardar(3, false, "")
+	_gestor.CargarRanura(3, false)
+	await _esperar_escena(CAMPAMENTO, true)
+	await create_timer(2.0).timeout
+	await _cerrar_dialogos()
+	_revisar(_cinematicas == conteo_antes and _gestor.CinematicaVista("caso1_libro"), "al guardar y cargar no vuelven a salir")
+	await _recoger_pistas()
+	_revisar(_cinematicas == conteo_antes, "volver a mirar el libro y la foto después de cargar no las repite")
 
 	print("5) La estación pide pruebas del Lago")
 	_gestor.CambiarEscenaDelCapitulo(LAGO, "EntradaDesdeCampamento")
@@ -214,12 +236,15 @@ func _initialize() -> void:
 	print("8) Acusación y final")
 	await _probar_final()
 
-	_revisar(_cinematicas == {"intro_caso01": 1}, "cada cinemática salió una sola vez")
+	_revisar(_cinematicas.values().all(func(v): return v == 1), "cada cinemática salió una sola vez: %s" % [_cinematicas])
+	for id in ["intro_caso01", "caso1_libro", "caso1_foto", "caso1_llegada", "caso1_silbato"]:
+		_revisar(_cinematicas.get(id, 0) == 1, "%s salió una vez" % id)
+	_revisar(_cinematicas.has("caso1_final_a") or _cinematicas.has("caso1_final_b"), "salió uno de los dos finales")
 	print("\nCinemáticas que salieron solas: %s" % _cinematicas)
 	print("Escenas automáticas al llegar: %s" % _escenas)
 	_imprimir_conteo()
-	_revisar(_escenas.get("campamento", 0) == 1 and _escenas.get("sala", 0) == 1 and _escenas.get("lago", 0) == 1,
-		"Hecdog recibe una vez en el Campamento y otra en la sala, Caneloso piensa una vez al llegar al Lago; nada se repite al volver")
+	_revisar(_escenas.get("campamento", 0) == 1 and _escenas.get("sala", 0) == 1 and _escenas.get("lago", 0) <= 1,
+		"Hecdog recibe una vez en el Campamento y otra en la sala, la llegada al Lago es una cinemática de una sola vez; nada se repite al volver")
 	var repetidos := _repetidos("pensamiento")
 	_revisar(repetidos.is_empty(), "ningún pensamiento sale dos veces %s" % [repetidos])
 	repetidos = _repetidos("reaccion")
@@ -330,6 +355,11 @@ func _clic() -> void:
 ## Recoge todas las pistas del escenario actual, dos veces: la segunda vez no se dispara nada nuevo
 func _recoger_pistas() -> void:
 	var pistas := get_nodes_in_group("objetos_pista").filter(func(n): return current_scene.is_ancestor_of(n))
+	# Con la linterna prendida, como las buscaría el jugador (algunas no se ven sin ella)
+	var hud = current_scene.get_node("HUD")
+	if not hud.linterna_encendida:
+		hud.linterna_encendida = true
+		hud.linterna_cambiada.emit(true)
 	for pista in pistas:
 		if not pista.EsEvidencia: _descripciones[pista.Descripcion] = true
 	for vez in 2:
@@ -345,7 +375,8 @@ func _recoger_pistas() -> void:
 			for texto in _eventos["pensamiento"]:
 				if _eventos["pensamiento"][texto] > antes.get(texto, 0) and not _responde_a_mirar(texto): nuevos += 1
 			_revisar(nuevos == 0, "en %s, la segunda vuelta por las %d pistas no dispara pensamientos (%d)" % [current_scene.name, pistas.size(), nuevos])
-	_revisar(_intros() == 0 and _cinematicas.size() == 1, "las pistas no disparan cinemáticas")
+	_revisar(_intros() == 0, "las pistas no vuelven a disparar la presentación")
+	_revisar(root.get_node_or_null("CinematicaCaso1") == null, "no queda ninguna cinemática encima")
 
 ## Dos conversaciones con cada implicado: ninguna línea de la primera se repite en la segunda
 func _hablar_con_implicados() -> void:
@@ -422,11 +453,14 @@ func _probar_final() -> void:
 	await create_timer(1.0).timeout
 	await _cerrar_dialogos()
 	var sala = current_scene.get_node("Caso1Sala")
-	_flujo.Acusar(sala)
+	_flujo.Acusar(sala, false)
 	await create_timer(0.5).timeout
-	await _cerrar_dialogos(200)
-	await create_timer(0.5).timeout
-	_revisar(_flujo.AcusacionTerminada and _flujo.Resuelto(sala), "la acusación llega a un final")
+	# Sin ventana, el autoguardado del final falla al tomar la miniatura: por eso se mira el guion y no el final de la tarea
+	for i in 120:
+		if _flujo.Resuelto(sala) and root.get_node_or_null("CinematicaCaso1") == null and i > 3: break
+		await _cerrar_dialogos(5)
+		await create_timer(0.3).timeout
+	_revisar(_flujo.Resuelto(sala), "la acusación llega a un final")
 	var lineas := _total("linea")
 	_gestor.CambiarEscenaDelCapitulo(LAGO, "EntradaDesdeSala")
 	await _esperar_escena(LAGO)
@@ -436,6 +470,50 @@ func _probar_final() -> void:
 	await _esperar_escena(SALA)
 	await create_timer(1.5).timeout
 	_revisar(_total("linea") == lineas and not current_scene.get_node("VentanaDialogo").Abierto, "con el caso resuelto, volver a la sala no repite nada")
+
+## Acusar a Tony (reconstrucción y final A) o a Juan Carlos (final B), sin jugar todo el capítulo
+func _probar_un_final(a_tony: bool) -> void:
+	_gestor.CambiarEscenaDelCapitulo(SALA, "EntradaDesdeLago")
+	await _esperar_escena(SALA)
+	await create_timer(1.0).timeout
+	await _cerrar_dialogos(200)
+	var sala = current_scene.get_node("Caso1Sala")
+	_flujo.Acusar(sala, a_tony)
+	var dialogo = current_scene.get_node("VentanaDialogo")
+	for i in 300:
+		if _flujo.AcusacionTerminada: break
+		await _pasar_cinematica()
+		if _flujo.AcusacionTerminada: break
+		var opciones: Array = dialogo.find_children("*", "Button", true, false).filter(func(b): return b.is_visible_in_tree() and not b.disabled)
+		if opciones.size() > 0:
+			var tecla := InputEventKey.new()
+			tecla.keycode = KEY_1 + (opciones.size() - 1 if a_tony else 0)
+			tecla.pressed = true
+			Input.parse_input_event(tecla)
+			await process_frame
+			var suelta := tecla.duplicate()
+			suelta.pressed = false
+			Input.parse_input_event(suelta)
+		else:
+			await _clic()
+		await create_timer(0.35).timeout
+	_revisar(_flujo.Resuelto(sala), "la acusación llega a su final")
+	if a_tony:
+		_revisar(_cinematicas.get("caso1_2320", 0) == 1, "la reconstrucción de las 23:20 sale una vez")
+		_revisar(_cinematicas.get("caso1_final_a", 0) == 1, "el final A sale una vez")
+	else:
+		_revisar(not _cinematicas.has("caso1_2320"), "con acusación equivocada no se ve la reconstrucción")
+		_revisar(_cinematicas.get("caso1_final_b", 0) == 1, "el final B sale una vez")
+	_revisar(root.get_node_or_null("CinematicaCaso1") == null, "no queda ninguna cinemática encima")
+	_gestor.CambiarEscenaDelCapitulo(LAGO, "EntradaDesdeSala")
+	await _esperar_escena(LAGO)
+	await create_timer(1.0).timeout
+	await _cerrar_dialogos()
+	_gestor.CambiarEscenaDelCapitulo(SALA, "EntradaDesdeLago")
+	await _esperar_escena(SALA)
+	await create_timer(1.5).timeout
+	var total_final: int = _cinematicas.get("caso1_final_a", 0) + _cinematicas.get("caso1_final_b", 0)
+	_revisar(total_final == 1, "al volver a la sala el final no se repite")
 
 func _probar_ver_cinta() -> void:
 	var caso = get_nodes_in_group("estado_partida")[0]
@@ -639,8 +717,18 @@ func _saltar_intro() -> void:
 	Input.parse_input_event(s)
 	await create_timer(0.2).timeout
 
+## Si hay una cinemática del Caso 1 en curso, la adelanta con clics hasta que termina
+func _pasar_cinematica() -> void:
+	for i in 60:
+		if root.get_node_or_null("CinematicaCaso1") == null:
+			return
+		await _clic()
+		await create_timer(0.3).timeout
+
 func _cerrar_dialogos(intentos := 30) -> void:
+	await _pasar_cinematica()
 	for i in intentos:
+		await _pasar_cinematica()
 		var dialogo = current_scene.get_node_or_null("VentanaDialogo")
 		if dialogo == null or not dialogo.Abierto:
 			return
