@@ -174,11 +174,18 @@ public class GuionCaso1
 		Motor.AntesDeNodo = async (arbol, nodo) =>
 		{
 			if (arbol == acusacion && nodo.Id == "final_a" && NodoEscena != null)
-				await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.Id2320, LibretosCaso1.Reconstruccion(ComentarioDe("cuaderno_eriz")));
+				await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.Id2320, LibretosCaso1.Reconstruccion());
+		};
+		// Al final de la confesión, antes de que Hecdog lo detenga, la silueta de las 23:20 se ve como quien es
+		Motor.AntesDeLinea = async (arbol, nodo, linea) =>
+		{
+			if (arbol == acusacion && nodo.Id == "final_a" && linea.Habla == "Hecdog" && NodoEscena != null)
+				await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.IdRevelacion, LibretosCaso1.Revelacion());
 		};
 		string final = await Motor.Recorrer(acusacion);
 		Motor.OmitirLinea = null;
 		Motor.AntesDeNodo = null;
+		Motor.AntesDeLinea = null;
 		if (!sigue()) return;
 		if (NodoEscena != null)
 		{

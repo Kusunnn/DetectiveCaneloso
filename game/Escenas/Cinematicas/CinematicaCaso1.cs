@@ -22,6 +22,7 @@ public partial class CinematicaCaso1 : CanvasLayer
 		public string Hora, Texto;
 		public float Recuerdo;                 // 0 = color normal; más = frío y deslavado
 		public float Exposicion = 1f;          // Para los planos de noche cerrada
+		public bool Negro;                     // Cuadro en negro: solo se oye
 		public Action<float> Cada;             // Avance del plano (0 a 1)
 		public (double T, string Audio, float Volumen)[] Sonidos = Array.Empty<(double, string, float)>();
 	}
@@ -261,6 +262,12 @@ public partial class CinematicaCaso1 : CanvasLayer
 	private void Actualizar()
 	{
 		if (_libreto.Planos.Count == 0) return;
+		// Cambió la escena a media cinemática (cargar partida, volver al menú): ya no hay qué filmar
+		if (!IsInstanceValid(_camara) || !_camara.IsInsideTree())
+		{
+			Terminar();
+			return;
+		}
 		int i = Mathf.Min(PlanoEn(_t), _libreto.Planos.Count - 1);
 		var plano = _libreto.Planos[i];
 		_planoActual = i;
@@ -275,6 +282,7 @@ public partial class CinematicaCaso1 : CanvasLayer
 
 		// Interfaz: fundido al entrar y al salir, hora a máquina y texto del guion
 		float negro = Mathf.Max(1 - (float)Mathf.Clamp(_t / Fundido, 0, 1), (float)Mathf.Clamp((_t - (Total - Fundido)) / Fundido, 0, 1));
+		if (plano.Negro) negro = 1f;
 		_negro.Color = new Color(0, 0, 0, negro);
 		((ShaderMaterial)_capaRecuerdo.Material).SetShaderParameter("fuerza", plano.Recuerdo);
 		_capaRecuerdo.Visible = plano.Recuerdo > 0;
@@ -292,19 +300,21 @@ public partial class CinematicaCaso1 : CanvasLayer
 		_pista.Modulate = new Color(1, 1, 1, pista);
 	}
 
+	// Un sonido con T negativo empieza antes del corte de su plano (J-cut)
 	private void SonarLoQueToca()
 	{
-		int i = Mathf.Min(_planoActual, _libreto.Planos.Count - 1);
-		if (i < 0) return;
-		var sonidos = _libreto.Planos[i].Sonidos;
-		for (int k = 0; k < sonidos.Length; k++)
+		for (int i = 0; i < _libreto.Planos.Count; i++)
 		{
-			if (_t < _inicios[i] + sonidos[k].T || !_sonados.Add((i, k))) continue;
-			if (!ResourceLoader.Exists(sonidos[k].Audio)) continue;
-			var reproductor = new AudioStreamPlayer { Stream = GD.Load<AudioStream>(sonidos[k].Audio), VolumeDb = sonidos[k].Volumen, Bus = "Master" };
-			AddChild(reproductor);
-			reproductor.Finished += reproductor.QueueFree;
-			reproductor.Play();
+			var sonidos = _libreto.Planos[i].Sonidos;
+			for (int k = 0; k < sonidos.Length; k++)
+			{
+				if (_t < _inicios[i] + sonidos[k].T || !_sonados.Add((i, k))) continue;
+				if (!ResourceLoader.Exists(sonidos[k].Audio)) continue;
+				var reproductor = new AudioStreamPlayer { Stream = GD.Load<AudioStream>(sonidos[k].Audio), VolumeDb = sonidos[k].Volumen, Bus = "Master" };
+				AddChild(reproductor);
+				reproductor.Finished += reproductor.QueueFree;
+				reproductor.Play();
+			}
 		}
 	}
 

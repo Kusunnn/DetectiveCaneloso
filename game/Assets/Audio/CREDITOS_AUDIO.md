@@ -127,3 +127,7 @@ Están en `Assets/Audio/Cinematica/Caso1/`. Hechos para el proyecto con `generar
 | chapoteo.wav | La caída al lago | Equipo Detective Caneloso | Del proyecto |
 | viento_lago.wav | Viento de fondo | Equipo Detective Caneloso | Del proyecto |
 | bombas.wav | Las bombas que vacían el lago | Equipo Detective Caneloso | Del proyecto |
+
+## Escena de las 23:20 (Caso 1)
+
+Generados por código, sin grabaciones de terceros, con `Assets/Audio/Cinematica/Caso1/generar_sonidos.py`: `golpe_sordo.wav`, `pasos_madera.wav`, `clic_linterna.wav` y `agua_muelle.wav`.

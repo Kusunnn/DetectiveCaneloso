@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // HU-9.5 CA-01: los planos de las cinemáticas del Caso 1. Lo que se lee viene del guion (Datos/Dialogos): aquí solo se
@@ -12,6 +13,7 @@ public static class LibretosCaso1
 	public const string IdLlegada = "caso1_llegada";
 	public const string IdSilbato = "caso1_silbato";
 	public const string Id2320 = "caso1_2320";
+	public const string IdRevelacion = "caso1_2320_revelacion";
 	public const string IdFinalA = "caso1_final_a";
 	public const string IdFinalB = "caso1_final_b";
 
@@ -206,95 +208,239 @@ public static class LibretosCaso1
 
 	// ---------- 23:20: lo que el jugador acaba de demostrar al acusar a Tony ----------
 
-	public static CinematicaCaso1.Libreto Reconstruccion(string cuaderno)
+	// La escena de las 23:20 en cuadros congelados, como la cinta del Caso 0: las poses vienen de Blender
+	// (Blender/scripts/construir_2320.py → Caso1/reconstruccion_2320.glb, una pose por segundo de la animación Momentos); el
+	// lago, el muelle y la luz son los del juego. Solo se mueve la cámara, y la acción la cuenta el sonido: el golpe queda
+	// fuera de cuadro. Hasta la confesión la silueta no se identifica; Revelacion la muestra como quien es.
+	private const string Poses = "res://Assets/Cinematicas/Caso1/reconstruccion_2320.glb";
+	private const string ModeloRemo = "res://Assets/Pistas/Modelos/remo_sangre/remo_sangre.tscn";
+	private const string ModeloLinterna = "res://Assets/Pistas/Modelos/linterna_porky/linterna_porky.tscn";
+	private static readonly Color Linterna = new(1f, 0.85f, 0.6f);
+	private static readonly Color Oscuro = new(0.012f, 0.016f, 0.03f);
+
+	private class Montaje
 	{
-		Node3D tony = null, porky = null, remo = null;
-		OmniLight3D linterna = null;
-		GpuParticles3D salpicadura = null;
-		Action<float> brillo = null;
-		var finPorky = V(8.1f, 0.85f, -31.5f);
+		public Node3D Poses, Porky, LinternaMano, LinternaAire, CuerdaTensa, Silbato;
+		public AnimationPlayer Reproductor;
+		public Action<float> Brillo;
+		public readonly List<MeshInstance3D> Silueta = new();
+		public SpotLight3D HazMano, HazAire;
+		public OmniLight3D LuzAgua, Relleno;
+		public readonly List<(MeshInstance3D Malla, float Fase)> Ondas = new();
+
+		public void Pose(int k)
+		{
+			Reproductor.Seek(k, true);
+			Porky.Visible = k != 4;
+			LinternaMano.Visible = k != 4;
+		}
+	}
+
+	// Un tramo recto de cordón entre dos puntos
+	private static void Tramo(Node3D padre, Vector3 a, Vector3 b, float radio = 0.0035f)
+	{
+		var malla = new MeshInstance3D
+		{
+			Mesh = new CylinderMesh { TopRadius = radio, BottomRadius = radio, Height = a.DistanceTo(b), RadialSegments = 6 },
+			MaterialOverride = new StandardMaterial3D { AlbedoColor = new Color(0.62f, 0.06f, 0.05f), Roughness = 0.9f },
+		};
+		padre.AddChild(malla);
+		var eje = (b - a).Normalized();
+		var lado = Mathf.Abs(eje.Dot(Vector3.Forward)) > 0.95f ? Vector3.Right : Vector3.Forward;
+		var x = eje.Cross(lado).Normalized();
+		malla.GlobalTransform = new Transform3D(new Basis(x, eje, x.Cross(eje)), (a + b) / 2);
+	}
+
+	private static Montaje Montar(Node3D mundo)
+	{
+		var m = new Montaje { Brillo = Brillo(mundo) };
+		m.Poses = GD.Load<PackedScene>(Poses).Instantiate<Node3D>();
+		m.Poses.Name = "Poses2320";
+		mundo.AddChild(m.Poses);
+		m.Reproductor = m.Poses.FindChildren("*", "AnimationPlayer", true, false).OfType<AnimationPlayer>().First();
+		m.Reproductor.Play(m.Reproductor.GetAnimationList()[0]);
+		m.Reproductor.Pause();
+		m.Porky = (Node3D)m.Poses.FindChild("Porky", true, false);
+
+		// El remo, sin sangre: lo que importa queda fuera de cuadro
+		var remo = GD.Load<PackedScene>(ModeloRemo).Instantiate<Node3D>();
+		m.Poses.FindChild("Anim_Remo", true, false).AddChild(remo);
+		foreach (Node n in remo.FindChildren("Sangre*", "MeshInstance3D", true, false)) ((Node3D)n).Visible = false;
+		if (mundo.GetNodeOrNull<Node3D>("Orilla/Remo") is { } remoOrilla) remoOrilla.Visible = false;
+
+		// Tony y el remo: mallas que se pueden volver silueta
+		m.Silueta.AddRange(m.Poses.FindChild("Tony", true, false).FindChildren("*", "MeshInstance3D", true, false).OfType<MeshInstance3D>());
+		m.Silueta.AddRange(remo.FindChildren("*", "MeshInstance3D", true, false).OfType<MeshInstance3D>().Where(x => x.Visible));
+
+		// La linterna en la mano de Porky: alumbra el agua
+		var anclaLinterna = m.Poses.FindChild("Anim_Linterna", true, false);
+		m.LinternaMano = GD.Load<PackedScene>(ModeloLinterna).Instantiate<Node3D>();
+		anclaLinterna.AddChild(m.LinternaMano);
+		m.HazMano = new SpotLight3D { LightColor = Linterna, LightEnergy = 9f, SpotAngle = 26f, SpotRange = 9f, ShadowEnabled = true };
+		anclaLinterna.AddChild(m.HazMano);
+
+		// La misma linterna, congelada en el aire al caer
+		m.LinternaAire = GD.Load<PackedScene>(ModeloLinterna).Instantiate<Node3D>();
+		mundo.AddChild(m.LinternaAire);
+		m.LinternaAire.GlobalPosition = V(7.82f, 0.62f, -34.28f);
+		m.LinternaAire.RotationDegrees = V(-62f, 38f, 14f);
+		m.HazAire = new SpotLight3D { LightColor = Linterna, LightEnergy = 7f, SpotAngle = 30f, SpotRange = 4f };
+		m.LinternaAire.AddChild(m.HazAire);
+		m.LinternaAire.Visible = false;
+
+		// El azul de las algas donde cayó, y las ondas que abre
+		m.LuzAgua = Luz(mundo, V(8f, 0.15f, -35.2f), AzulAlgas, 0f, 7f);
+		m.Relleno = Luz(mundo, V(8.6f, 1.6f, -32f), new Color(0.62f, 0.72f, 1f), 0f, 7f);
+		for (int i = 0; i < 4; i++)
+		{
+			var onda = new MeshInstance3D
+			{
+				Mesh = new TorusMesh { InnerRadius = 0.97f, OuterRadius = 1f, Rings = 48, RingSegments = 4 },
+				MaterialOverride = new StandardMaterial3D
+				{
+					AlbedoColor = new Color(0.45f, 0.85f, 1f, 0.7f),
+					Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+					ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
+				},
+				Visible = false,
+			};
+			mundo.AddChild(onda);
+			onda.GlobalPosition = V(8f, -0.03f, -35.2f);
+			m.Ondas.Add((onda, i * 0.25f));
+		}
+
+		// El silbato del juego ya trae su cordón roto; tenso, le falta el tramo que sale del cuadro hacia quien lo jala
+		m.Silbato = mundo.GetNodeOrNull<Node3D>("Embarcadero/Silbato");
+		if (m.Silbato != null) m.Silbato.Visible = false;
+		var clavo = V(7.0f, 0.77f, -33.9f);
+		m.CuerdaTensa = new Node3D { Name = "CuerdaTensa", Visible = false };
+		mundo.AddChild(m.CuerdaTensa);
+		Tramo(m.CuerdaTensa, clavo + V(0.02f, 0.012f, 0), clavo + V(1.1f, 1.1f, -0.25f), 0.0018f);
+		return m;
+	}
+
+	private static void Silueta(Montaje m, bool activa)
+	{
+		var oscuro = new StandardMaterial3D { AlbedoColor = Oscuro, ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded };
+		foreach (var malla in m.Silueta) malla.MaterialOverride = activa ? oscuro : null;
+	}
+
+	public static CinematicaCaso1.Libreto Reconstruccion()
+	{
+		Montaje m = null;
+		var punta = V(8f, 1.05f, -33f);
 		return new CinematicaCaso1.Libreto
 		{
 			Mundo = Lago,
-			Luz = Audio + "viento_lago.wav",
+			Luz = Audio + "agua_muelle.wav",
 			Preparar = mundo =>
 			{
-				tony = Actor(mundo, Tony, EscalaTony, V(1f, 0f, 30f), 200f);
-				porky = Actor(mundo, Porky, EscalaPorky, finPorky, 180f);
-				BrazosAbajo(porky);
-				Animar(tony, "global/CaminaTony");
-				linterna = Luz(mundo, finPorky + V(0.3f, 1f, 0.2f), new Color(1f, 0.85f, 0.6f), 0f, 5f);
-				// El remo del juego, ahora en sus manos
-				remo = mundo.GetNodeOrNull<Node3D>("Orilla/Remo");
-				if (remo != null) remo.Visible = false;
-				salpicadura = Particulas(mundo, finPorky + V(0.9f, -1f, 0f), AzulAlgas, 90, 1.2f, 3.2f, 0.025f, new Vector3(0, -7f, 0), 30f);
-				salpicadura.Emitting = false;
-				salpicadura.OneShot = true;
-				brillo = Brillo(mundo);
-				brillo(0.45f);
+				m = Montar(mundo);
+				Silueta(m, true);
+				m.Brillo(0.6f);
+				m.Pose(2);
+			},
+			Planos =
+			{
+				// 1. Negro: pasos sobre madera, agua, el clic de una linterna
+				new()
+				{
+					Duracion = 3.4, Negro = true, Hora = "23:20 · EMBARCADERO", CamaraDesde = V(15f, 1f, -23f), CamaraHasta = V(15f, 1f, -23f), MiraDesde = punta, MiraHasta = punta,
+					Sonidos = new[] { (0.1, Audio + "pasos_madera.wav", -5f), (2.85, Audio + "clic_linterna.wav", -3f) },
+				},
+				// 2. General desde el lago: Porky de espaldas, atrás una silueta con el remo levantado. Push-in lento
+				new()
+				{
+					Duracion = 5.2, Exposicion = 2.2f, CamaraDesde = V(14.2f, 1.1f, -24.4f), CamaraHasta = V(12.7f, 1.05f, -26.6f), MiraDesde = V(8f, 1.35f, -32.3f), MiraHasta = V(8f, 1.3f, -32.5f), Fov = 30f,
+					Cada = _ => { m.Poses.Visible = true; m.Pose(2); m.Brillo(0.6f); m.LuzAgua.LightEnergy = 0.7f; m.HazMano.Visible = true; m.LinternaAire.Visible = false; },
+				},
+				// 3. Fuera de cuadro: la linterna congelada en el aire. Golpe sordo y silbido corto
+				new()
+				{
+					Duracion = 3.2, Exposicion = 1.7f, CamaraDesde = V(8.15f, 0.5f, -35.2f), CamaraHasta = V(8.08f, 0.52f, -35.0f), MiraDesde = V(7.82f, 0.6f, -34.28f), MiraHasta = V(7.82f, 0.61f, -34.28f), Fov = 30f,
+					Sonidos = new[] { (-0.12, Audio + "golpe_sordo.wav", -1f), (0.08, Audio + "silbido_corto.wav", -7f) },
+					Cada = _ => { m.Poses.Visible = false; m.HazMano.Visible = false; m.LinternaAire.Visible = true; m.Brillo(0.9f); m.LuzAgua.LightEnergy = 0.9f; },
+				},
+				// 4. Desde el agua: la estela azul y las ondas; la silueta retrocede en el muelle. Chapoteo
+				new()
+				{
+					Duracion = 4.8, Exposicion = 2f, CamaraDesde = V(10.6f, 0.1f, -40.6f), CamaraHasta = V(10.2f, 0.12f, -39.8f), MiraDesde = V(8.2f, 0.8f, -32f), MiraHasta = V(8.2f, 0.75f, -32.2f), Fov = 30f,
+					Sonidos = new[] { (-0.25, Audio + "chapoteo.wav", -2f) },
+					Cada = u =>
+					{
+						m.Poses.Visible = true;
+						m.Pose(4);
+						m.LinternaAire.Visible = false;
+						m.HazMano.Visible = false;
+						m.Brillo(2.4f - 0.5f * u);
+						m.LuzAgua.LightEnergy = 3.4f - u;
+						foreach (var (onda, fase) in m.Ondas)
+						{
+							float r = 0.5f + 3.2f * Mathf.Clamp(u * 0.55f + fase, 0f, 1f);
+							onda.Visible = true;
+							onda.Scale = V(r, 0.25f, r);
+						}
+					},
+				},
+				// 5. Inserto: el cordón tenso, atorado en el clavo, a punto de romperse
+				new()
+				{
+					Duracion = 3.0, Exposicion = 1.4f, CamaraDesde = V(7.42f, 0.86f, -33.42f), CamaraHasta = V(7.35f, 0.84f, -33.5f), MiraDesde = V(7.02f, 0.78f, -33.88f), MiraHasta = V(7.02f, 0.78f, -33.88f), Fov = 34f,
+					Cada = _ =>
+					{
+						m.Poses.Visible = false;
+						foreach (var (onda, _) in m.Ondas) onda.Visible = false;
+						m.Relleno.GlobalPosition = V(7.6f, 1.2f, -33.2f);
+						m.Relleno.LightEnergy = 1.2f;
+						m.CuerdaTensa.Visible = true;
+						if (m.Silbato != null) m.Silbato.Visible = true;
+						m.Brillo(1.6f);
+						m.LuzAgua.LightEnergy = 1.2f;
+					},
+				},
+				// 6. Inserto final: el silbato colgando solo del clavo. Silencio y agua
+				new()
+				{
+					Duracion = 4.0, Exposicion = 1.4f, CamaraDesde = V(7.42f, 0.8f, -33.5f), CamaraHasta = V(7.36f, 0.8f, -33.56f), MiraDesde = V(7.03f, 0.74f, -33.9f), MiraHasta = V(7.03f, 0.74f, -33.9f), Fov = 34f,
+					Cada = _ =>
+					{
+						m.Poses.Visible = false;
+						m.CuerdaTensa.Visible = false;
+						if (m.Silbato != null) m.Silbato.Visible = true;
+						m.Relleno.GlobalPosition = V(7.6f, 1.2f, -33.2f);
+						m.Relleno.LightEnergy = 1.2f;
+						m.Brillo(1.2f);
+						m.LuzAgua.LightEnergy = 0.8f;
+					},
+				},
+			},
+		};
+	}
+
+	// Al final de la confesión: el mismo instante, y ahora se ve quién era
+	public static CinematicaCaso1.Libreto Revelacion()
+	{
+		Montaje m = null;
+		return new CinematicaCaso1.Libreto
+		{
+			Mundo = Lago,
+			Luz = Audio + "agua_muelle.wav",
+			Preparar = mundo =>
+			{
+				m = Montar(mundo);
+				m.Pose(2);
+				m.Brillo(0.9f);
+				m.Relleno.GlobalPosition = V(9.8f, 1.6f, -33.4f);
+				m.Relleno.LightEnergy = 2.4f;
+				m.Relleno.LightColor = new Color(0.82f, 0.86f, 1f);
+				m.LuzAgua.LightEnergy = 1f;
 			},
 			Planos =
 			{
 				new()
 				{
-					Duracion = 4.5, Hora = "23:12 · SENDERO DEL LAGO", Recuerdo = 0.35f, Exposicion = 3f, CamaraDesde = V(-1f, 1.4f, 36f), CamaraHasta = V(0f, 1.4f, 31f), MiraDesde = V(1f, 1f, 28f), MiraHasta = V(3f, 1f, 22f), Fov = 40f,
-					Cada = u => { if (tony != null) tony.GlobalPosition = V(1f, 0f, 30f).Lerp(V(4f, 0f, 22f), u); },
-				},
-				new()
-				{
-					Duracion = 3.5, Hora = "23:15 · EMBARCADERO", Recuerdo = 0.35f, Exposicion = 1.8f, CamaraDesde = V(-3f, 1.8f, -18f), CamaraHasta = V(-1f, 1.6f, -21f), MiraDesde = finPorky + V(0, 0.8f, 0), MiraHasta = finPorky + V(0, 0.8f, 0), Fov = 16f,
-					Cada = u => { if (linterna != null) linterna.LightEnergy = 4f; if (tony != null) tony.Visible = false; },
-				},
-				new()
-				{
-					Duracion = 3.5, Hora = "23:19 · DESDE LA COLINA", Recuerdo = 0.35f, Exposicion = 1.8f, CamaraDesde = V(21f, 7.5f, -7f), CamaraHasta = V(20.5f, 7.2f, -8f), MiraDesde = V(8.2f, 1f, -30f), MiraHasta = V(8.2f, 1f, -30.2f), Fov = 16f,
-					Sonidos = new[] { (2.6, "res://Assets/Audio/Cinematica/Cinta/cinta_stop.wav", -10f) },
-					Cada = u =>
-					{
-						if (tony == null) return;
-						tony.Visible = true;
-						Animar(tony, "global/InacTony");
-						tony.GlobalPosition = V(8.2f, 0.85f, -29f);
-						tony.RotationDegrees = V(0, 180f, 0);
-					},
-				},
-				new()
-				{
-					Duracion = 3.2, Hora = "23:20", Recuerdo = 0.35f, Exposicion = 1.8f, CamaraDesde = V(3.4f, 1.5f, -29f), CamaraHasta = V(3.8f, 1.4f, -29.4f), MiraDesde = V(8.1f, 1.5f, -30.3f), MiraHasta = V(8.1f, 1.5f, -30.5f), Fov = 40f,
-					Sonidos = new[] { (1.75, Audio + "silbido_corto.wav", -8f), (1.7, "res://Assets/Audio/Cinematica/Cinta/reloj_rebote.wav", -6f) },
-					Cada = u =>
-					{
-						if (remo != null)
-						{
-							remo.Visible = true;
-							float golpe = Mathf.Clamp((u - 0.42f) / 0.14f, 0f, 1f);
-							remo.GlobalPosition = V(8.2f, 2.0f - 0.3f * golpe, -29.6f - 0.8f * golpe);
-							remo.GlobalRotation = V(Mathf.DegToRad(100f * golpe - 40f), 0, 0);
-						}
-						if (porky != null && u > 0.56f) porky.GlobalRotation = V(Mathf.DegToRad(-30f * Mathf.Clamp((u - 0.56f) / 0.44f, 0f, 1f)), Mathf.Pi, 0);
-					},
-				},
-				new()
-				{
-					Duracion = 3.5, Hora = "23:20", Recuerdo = 0.2f, Exposicion = 1.5f, CamaraDesde = V(13f, 0.5f, -24f), CamaraHasta = V(12.5f, 0.4f, -25.5f), MiraDesde = V(9f, 0f, -31f), MiraHasta = V(9f, -0.1f, -31.2f), Fov = 40f,
-					Sonidos = new[] { (0.35, Audio + "chapoteo.wav", -3f) },
-					Cada = u =>
-					{
-						if (porky != null)
-						{
-							float caida = Mathf.Clamp(u / 0.13f, 0f, 1f);
-							porky.GlobalPosition = (finPorky + V(0.9f, 0, 0)).Lerp(finPorky + V(0.9f, -1.5f, 0), caida * caida);
-							porky.Visible = u < 0.2f;
-							porky.GlobalRotation = V(Mathf.DegToRad(-30f - 60f * caida), Mathf.Pi, 0);
-						}
-						if (salpicadura != null && u > 0.1f && !salpicadura.Emitting) salpicadura.Emitting = true;
-						brillo?.Invoke(0.45f + 1.8f * Mathf.Clamp((u - 0.1f) * 3f, 0f, 1f));
-					},
-				},
-				new()
-				{
-					Duracion = 7.5, Hora = "23:20", Exposicion = 1.6f, CamaraDesde = V(-21f, 2.6f, -7f), CamaraHasta = V(-20f, 2.5f, -7.6f), MiraDesde = V(8f, 0.2f, -30f), MiraHasta = V(8f, 0.2f, -30f), Fov = 30f, Texto = cuaderno,
-					Cada = u => brillo?.Invoke(2.2f - 0.6f * u),
+					Duracion = 4.6, Hora = "23:20 · EMBARCADERO", Exposicion = 1.3f, CamaraDesde = V(12.6f, 1.1f, -35.6f), CamaraHasta = V(12f, 1.15f, -35f), MiraDesde = V(8f, 1.35f, -32.4f), MiraHasta = V(8f, 1.45f, -32.2f), Fov = 28f,
+					Cada = _ => m.Pose(2),
 				},
 			},
 		};

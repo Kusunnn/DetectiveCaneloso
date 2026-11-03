@@ -81,7 +81,54 @@ def bombas():
     return [(a + b) * (0.85 + 0.15 * math.sin(math.tau * 6 * i / TASA)) for i, (a, b) in enumerate(zip(salida, ruido))]
 
 
-guardar("silbido_corto.wav", silbido())
-guardar("chapoteo.wav", chapoteo())
-guardar("viento_lago.wav", viento())
-guardar("bombas.wav", bombas())
+def golpe_sordo():
+    # Madera contra algo blando: sin brillo, se oye más de lo que se ve
+    n = int(TASA * 0.5)
+    ruido = filtrado(n, 520, lambda t: min(1, t / 0.002) * math.exp(-t * 26), 2.4)
+    return [r + 0.9 * math.sin(math.tau * (58 + 70 * math.exp(-i / TASA * 34)) * i / TASA) * math.exp(-i / TASA * 15) for i, r in enumerate(ruido)]
+
+
+def pasos_madera():
+    # Cuatro pasos despacio sobre tablas huecas
+    salida = [0.0] * int(TASA * 2.6)
+    for inicio in (0.15, 0.78, 1.36, 2.0):
+        golpe = filtrado(int(TASA * 0.22), 900, lambda t: min(1, t / 0.003) * math.exp(-t * 38), 1.3)
+        for i, g in enumerate(golpe):
+            k = int(inicio * TASA) + i
+            if k < len(salida):
+                salida[k] += g + 0.55 * math.sin(math.tau * 172 * i / TASA) * math.exp(-i / TASA * 42)
+    return salida
+
+
+def clic_linterna():
+    # Dos topes del interruptor, muy seguidos
+    n = int(TASA * 0.16)
+    salida = [0.0] * n
+    for inicio, f in ((0.008, 3400), (0.05, 2500)):
+        for i in range(int(TASA * 0.02)):
+            k = int(inicio * TASA) + i
+            salida[k] += (math.sin(math.tau * f * i / TASA) + 0.5 * random.uniform(-1, 1)) * math.exp(-i / TASA * 340)
+    return salida
+
+
+def agua_muelle():
+    # El lago contra los postes: ondas bajas y alguna gota; empalma para repetirse
+    n = int(TASA * 6)
+    base = filtrado(n, 300, lambda t: 0.5 + 0.5 * math.sin(math.tau * t * 0.7) ** 2)
+    for _ in range(16):
+        inicio = random.uniform(0.1, 5.2)
+        f = random.uniform(380, 920)
+        for i in range(int(TASA * 0.09)):
+            base[int(inicio * TASA) + i] += 0.05 * math.sin(math.tau * f * i / TASA) * math.exp(-i / TASA * 44)
+    cruce = int(TASA * 0.4)
+    for i in range(cruce):
+        k = i / cruce
+        base[i] = base[i] * k + base[n - cruce + i] * (1 - k)
+    return base[:n - cruce]
+
+
+# Se generan solo los que falten (generar de nuevo cambiaría los que ya se oyeron y aprobaron)
+for nombre, generar in (("silbido_corto.wav", silbido), ("chapoteo.wav", chapoteo), ("viento_lago.wav", viento), ("bombas.wav", bombas),
+                        ("golpe_sordo.wav", golpe_sordo), ("pasos_madera.wav", pasos_madera), ("clic_linterna.wav", clic_linterna), ("agua_muelle.wav", agua_muelle)):
+    if not os.path.exists(os.path.join(CARPETA, nombre)):
+        guardar(nombre, generar())

@@ -1,0 +1,29 @@
+{
+ "cuadros": {
+  "2": {
+   "nombre": "La silueta levanta el remo",
+   "choques": {},
+   "intersecciones": 0,
+   "altura_pies_tony": {
+    "PieI": 0.091,
+    "PieD": 0.09
+   }
+  },
+  "4": {
+   "nombre": "La silueta retrocede",
+   "choques": {},
+   "intersecciones": 0,
+   "altura_pies_tony": {
+    "PieI": 0.09,
+    "PieD": 0.083
+   }
+  }
+ },
+ "ik_sin_llegar": [
+  [
+   "2:Tony:ManoD",
+   0.0696
+  ]
+ ],
+ "total_intersecciones": 0
+}

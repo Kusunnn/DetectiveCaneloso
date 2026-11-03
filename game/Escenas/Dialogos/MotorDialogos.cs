@@ -113,6 +113,7 @@ public class MotorDialogos
 	// Para las cinemáticas: lo que hay que esperar antes de un nodo y las líneas que se cuentan en imagen
 	public Func<ArbolDialogo, NodoDialogo, Task> AntesDeNodo;
 	public Func<ArbolDialogo, NodoDialogo, LineaDialogo, bool> OmitirLinea;
+	public Func<ArbolDialogo, NodoDialogo, LineaDialogo, Task> AntesDeLinea;
 
 	private readonly VentanaDialogo _ventana;
 	private readonly Dictionary<string, Hablante> _hablantes = new();
@@ -208,6 +209,7 @@ public class MotorDialogos
 		foreach (var linea in LineasDe(arbol, nodo))
 		{
 			if (OmitirLinea?.Invoke(arbol, nodo, linea) ?? false) continue;
+			if (AntesDeLinea != null) await AntesDeLinea(arbol, nodo, linea);
 			string quien = string.IsNullOrEmpty(linea.Habla) ? arbol.Personaje : linea.Habla;
 			var hablante = Hablante(arbol, quien);
 			string animo = !string.IsNullOrEmpty(linea.Animo) ? linea.Animo : quien == arbol.Personaje ? nodo.Animo : "";

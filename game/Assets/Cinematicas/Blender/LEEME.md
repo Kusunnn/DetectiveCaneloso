@@ -81,3 +81,7 @@ blender -b --python game/Assets/Cinematicas/Blender/scripts/construir_momentos.p
 ```
 
 Archivos: `caso0_pelicula.blend`, `caneloso.glb`, `reporte_choques_pelicula.json`. En Godot la reproduce `CinematicaCintaPelicula.cs` (`CinematicaCinta.Version = Pelicula`).
+
+## Las 23:20 del Caso 1
+
+`scripts/construir_2320.py` posa a Tony y a Porky en el muelle (cuadros 2 y 4) y exporta `Caso1/reconstruccion_2320.glb` y `reporte_choques_2320.json`. Usa `caso1_tony.glb` y `caso1_remo.glb`, exportados con `Herramientas/exportar_modelo_blender.gd` y limpiados con `scripts/limpiar_glb.py`. Los brazos de Tony miden 0.32 m y su cabeza 1 m, así que el remo se levanta a un lado, no sobre la cabeza. La cámara, las luces y los sonidos están en `LibretosCaso1.Reconstruccion`.
