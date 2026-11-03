@@ -38,6 +38,8 @@ public class GuionCaso1
 	public Action<string> AlTerminar;
 	// Antes y después de cada interrogatorio (la sala sienta al implicado en su silla)
 	public Func<string, Task> AntesDeInterrogar = _ => Task.CompletedTask;
+	// La escena donde se juega (para las cinemáticas)
+	public Node NodoEscena;
 	public bool AbrirExpediente;
 
 	public EstadoDialogos Estado => Motor.Estado;
@@ -109,6 +111,17 @@ public class GuionCaso1
 		return true;
 	}
 
+	// Con cinemática, el comentario se lee en ella: aquí solo queda la nota
+	public string AnotarConCinematica(string id)
+	{
+		if (!_pistas.TryGetValue(id, out var guion)) return "";
+		_hud.Call("agregar_nota", guion.Nota);
+		return guion.Comentario;
+	}
+
+	// Lo que dice Caneloso del cuaderno de Eriz: el texto de la pista, con o sin ella en el diario
+	public string ComentarioDe(string id) => _pistas.TryGetValue(id, out var guion) ? guion.Comentario : "";
+
 	public string NotaDeDetalle(string id) => _notasDetalles.TryGetValue(id, out string nota) ? nota : null;
 
 	// ---------- Conversaciones ----------
@@ -153,8 +166,32 @@ public class GuionCaso1
 	// 11.x y 12.x: la acusación y uno de los dos finales
 	private async Task Acusar(Func<bool> sigue)
 	{
-		string final = await Motor.Recorrer(_arboles[ArbolAcusacion]);
+		var acusacion = _arboles[ArbolAcusacion];
+		var finalA = acusacion.Nodo("final_a");
+		// Lo que se cuenta en imagen: los tres párrafos del final B y el último del final A
+		Motor.OmitirLinea = (arbol, nodo, linea) => arbol == acusacion && linea.Habla == "Narración" && (nodo.Id == "final_b" || linea == finalA.Lineas[^1]);
+		// Al acusar a Tony, antes de que se derrumbe, se ve lo que acaba de demostrarse
+		Motor.AntesDeNodo = async (arbol, nodo) =>
+		{
+			if (arbol == acusacion && nodo.Id == "final_a" && NodoEscena != null)
+				await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.Id2320, LibretosCaso1.Reconstruccion(ComentarioDe("cuaderno_eriz")));
+		};
+		string final = await Motor.Recorrer(acusacion);
+		Motor.OmitirLinea = null;
+		Motor.AntesDeNodo = null;
 		if (!sigue()) return;
+		if (NodoEscena != null)
+		{
+			if (final == "A")
+				await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.IdFinalA, LibretosCaso1.FinalA(finalA.Lineas[^1].Texto));
+			else if (final == "B" && !CinematicaCaso1.Vista(LibretosCaso1.IdFinalB))
+			{
+				var parrafos = acusacion.Nodo("final_b").Lineas;
+				await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.IdFinalB, LibretosCaso1.FinalBPorche(parrafos[0].Texto));
+				if (sigue()) await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.IdFinalB, LibretosCaso1.FinalBLago(parrafos[1].Texto, parrafos[2].Texto), registrar: false);
+			}
+			if (!sigue()) return;
+		}
 		_hud.Call("avisar", final == "A" ? "FINAL A" : "FINAL B", final == "A" ? "LA CONFESIÓN" : "EL ERROR TRÁGICO");
 		AlTerminar?.Invoke("Fin del caso");
 	}

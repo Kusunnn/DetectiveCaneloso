@@ -50,13 +50,23 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 	protected virtual void AlObtenerObjeto(string id) { }
 	protected virtual void ActualizarObjetivo() { }
 
+	// Para una cinemática: el escenario solo es el decorado, el caso no arranca ni toca la partida
+	public bool SoloVer { get; set; }
+
 	public override void _Ready()
 	{
+		if (SoloVer)
+		{
+			SetProcess(false);
+			SetProcessUnhandledInput(false);
+			return;
+		}
 		Caneloso = Dialogo.HablantePorNombre("Caneloso");
 		Caneloso.TonoVoz = 1f;
 		Guion = new GuionCaso1(Dialogo, Hud, Caneloso, Cambio)
 		{
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
+			NodoEscena = this,
 		};
 
 		Hud.Set("caso", "01");

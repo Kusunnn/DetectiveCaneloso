@@ -110,6 +110,9 @@ public class MotorDialogos
 	public Action<string> Evento;              // "al_completar": { "eventos": [...] }
 	// Quién habla: el caso puede dar retratos o tonos propios (por defecto, Assets/Retratos/<nombre>.png)
 	public Func<string, Hablante> HablantePorNombre;
+	// Para las cinemáticas: lo que hay que esperar antes de un nodo y las líneas que se cuentan en imagen
+	public Func<ArbolDialogo, NodoDialogo, Task> AntesDeNodo;
+	public Func<ArbolDialogo, NodoDialogo, LineaDialogo, bool> OmitirLinea;
 
 	private readonly VentanaDialogo _ventana;
 	private readonly Dictionary<string, Hablante> _hablantes = new();
@@ -155,6 +158,7 @@ public class MotorDialogos
 		{
 			if (!(regreso && actual.Opciones.Count > 0))
 			{
+				if (AntesDeNodo != null) await AntesDeNodo(arbol, actual);
 				await Decir(arbol, actual);
 				Completar(arbol, actual);
 				var salto = actual.IrA.FirstOrDefault(s => Cumple(arbol, s.Si));
@@ -203,6 +207,7 @@ public class MotorDialogos
 	{
 		foreach (var linea in LineasDe(arbol, nodo))
 		{
+			if (OmitirLinea?.Invoke(arbol, nodo, linea) ?? false) continue;
 			string quien = string.IsNullOrEmpty(linea.Habla) ? arbol.Personaje : linea.Habla;
 			var hablante = Hablante(arbol, quien);
 			string animo = !string.IsNullOrEmpty(linea.Animo) ? linea.Animo : quien == arbol.Personaje ? nodo.Animo : "";

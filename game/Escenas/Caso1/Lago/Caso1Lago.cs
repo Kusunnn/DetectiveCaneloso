@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 // Caso 1 «La Noche del Ciervo de Luz» — Escenario 2: el Lago y el Bosque (HU-20.6).
 // Las pistas del sendero, el bosque, la orilla, el embarcadero y el cobertizo de botes (cerrado hasta tener el
@@ -52,6 +53,7 @@ public partial class Caso1Lago : EscenarioCaso1
 	public override void _Ready()
 	{
 		base._Ready();
+		if (SoloVer) return;
 		PuertaCobertizo.Bloqueada = true;
 		PuertaCobertizo.MensajeBloqueada = "Cobertizo de botes. Cerrado con llave: solo Tony y Porky tienen copia.";
 		VolverCampamento.Usado += () => Conversar(AlVolverCampamento);
@@ -68,23 +70,36 @@ public partial class Caso1Lago : EscenarioCaso1
 		ActualizarObjetivo();
 		// Lo que piensa al llegar sale una sola vez (antes se repetía cada vez que volvía sin pistas del lago)
 		if (Pistas.Count > 0 || !IsInsideTree() || !PrimeraVez("_llegada")) return;
-		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
+		await ToSignal(GetTree().CreateTimer(0.3), SceneTreeTimer.SignalName.Timeout);
 		if (!IsInsideTree() || EnDialogo) return;
 		EnDialogo = true;
-		await Dialogo.Decir(Caneloso,
+		await CinematicaCaso1.Reproducir(this, LibretosCaso1.IdLlegada, LibretosCaso1.Llegada(new[]
+		{
 			"El sendero del Lago Espejo.",
 			"Aquí abajo vieron al «ciervo de luz». Y aquí encontraron a Porky.",
-			"El agua todavía brilla.");
-		EnDialogo = false;
+			"El agua todavía brilla.",
+		}));
+		if (IsInsideTree()) EnDialogo = false;
 	}
 
 	// ---------- Pistas ----------
+
+	private async void CinematicaSilbato(string comentario, Node3D silbato)
+	{
+		EnDialogo = true;
+		await CinematicaCaso1.Reproducir(this, LibretosCaso1.IdSilbato, LibretosCaso1.Silbato(comentario, silbato));
+		if (!IsInsideTree()) return;
+		EnDialogo = false;
+		Cambio();
+	}
 
 	protected override void AlRegistrarEvidencia(string id)
 	{
 		if (id == Altavoz && Estatica != null) Estatica.Stop();
 		// Lo que piensa Caneloso y lo que anota viene del guion (Datos/Dialogos/caso1_pistas.json)
-		if (!Guion.ComentarPista(Jugador, id)) Hud.Call("agregar_nota", "Pista: " + id);
+		if (id == Silbato && !CinematicaCaso1.Vista(LibretosCaso1.IdSilbato) && GetTree().GetNodesInGroup("objetos_pista").OfType<ObjetoPista>().FirstOrDefault(p => p.IdPista == id) is { } silbato)
+			CinematicaSilbato(Guion.AnotarConCinematica(id), silbato);
+		else if (!Guion.ComentarPista(Jugador, id)) Hud.Call("agregar_nota", "Pista: " + id);
 		ActualizarObjetivo();
 	}
 

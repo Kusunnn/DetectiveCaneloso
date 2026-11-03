@@ -116,3 +116,14 @@ También usa `Ambiente/reloj_pared.wav` (tic-tac), `Ambiente/zumbido_sala.ogg`, 
 Grabadas por conocidos del equipo (un clip de ~1 s por personaje). Están en `Assets/Audio/Voces/<nombre>.wav`, convertidas a mono 44.1 kHz, normalizadas a −1 dBFS de pico y recortadas al "bop" (sin el silencio de antes y después, máximo 0.45 s, fades de 8 ms y 40 ms). Después se igualó su volumen (RMS ≈ −9.6 dBFS, con saturación suave para no recortar), porque las voces graves como la de Miawrio casi no se oían. Mientras se escribe el texto, `VentanaDialogo.cs` toca un bop tras otro; en cada uno cambia al azar la velocidad (0.92–1.12, más rápido si está nervioso) y, por separado, el tono (0.9–1.1, con un PitchShift en el bus Voces). Al terminar el texto la voz se desvanece. La voz de Miawrio se grabó muy grave: su archivo se subió de tono ×1.7 (los primeros 0.45 s del clip, con sus dos bops) antes de recortarlo e igualar el volumen. El comisario del tutorial usa la voz de Hecdog. Los personajes sin clip (Caneloso, Cinta, la narración) siguen con los blips de máquina de escribir.
 
 Personajes con voz: Aya, Eriz, Hecdog, Juan Carlos, Miawrio, Mimita, Porky y Tony.
+
+## Cinemáticas del Caso 1
+
+Están en `Assets/Audio/Cinematica/Caso1/`. Hechos para el proyecto con `generar_sonidos.py`: síntesis y ruido, sin grabaciones de terceros.
+
+| Archivo | Qué es | Autor | Licencia |
+|---|---|---|---|
+| silbido_corto.wav | El silbato de Tony | Equipo Detective Caneloso | Del proyecto |
+| chapoteo.wav | La caída al lago | Equipo Detective Caneloso | Del proyecto |
+| viento_lago.wav | Viento de fondo | Equipo Detective Caneloso | Del proyecto |
+| bombas.wav | Las bombas que vacían el lago | Equipo Detective Caneloso | Del proyecto |

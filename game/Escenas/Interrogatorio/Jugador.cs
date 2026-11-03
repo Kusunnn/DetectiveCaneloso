@@ -495,7 +495,7 @@ public partial class Jugador : CharacterBody3D
 	// Pensamiento corto que se oculta solo (al abrir un casillero, al examinar algo...)
 	public void MostrarPensamiento(string texto, double segundos)
 	{
-		if (!CinematicaCinta.EnCurso) GestorPartida.Instancia?.ContarEvento("pensamiento", texto);
+		if (!CinematicaCinta.EnCurso && !CinematicaCaso1.EnCurso) GestorPartida.Instancia?.ContarEvento("pensamiento", texto);
 		MostrarTemporal("“" + texto + "”", ColorPensamiento, segundos);
 	}
 
@@ -507,7 +507,7 @@ public partial class Jugador : CharacterBody3D
 
 	private void MostrarTemporal(string texto, Color color, double segundos)
 	{
-		if (_textoTutorial == null || CinematicaCinta.EnCurso) return;
+		if (_textoTutorial == null || CinematicaCinta.EnCurso || CinematicaCaso1.EnCurso) return;
 		int id = ++_idAviso;
 		_textoTutorial.Text = texto;
 		_textoTutorial.Modulate = color;
