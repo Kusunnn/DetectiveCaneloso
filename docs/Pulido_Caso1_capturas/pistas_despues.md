@@ -1,6 +1,6 @@
 # Reporte de pistas
 
-Visibles que no se pueden tomar: **1**
+Visibles que no se pueden tomar: **0**
 
 | id | escena | ¿se toma? | si todavía no se puede, ¿lo explica? | causa | corrección |
 |---|---|---|---|---|---|
@@ -25,12 +25,12 @@ Visibles que no se pueden tomar: **1**
 | candado_caseta | Campamento | sí | — | — | — |
 | interruptor_generador | Campamento | sí | — | — | — |
 | registro_llamadas | Campamento | sí | — | — | — |
-| huellas_pezuna | Lago | sí | NO: de pie no dice nada | — | — |
+| huellas_pezuna | Lago | sí | sí: «Agacharme [Ctrl]» | — | — |
 | huellas_detenidas | Lago | sí | sí: «Agacharme [Ctrl]» | — | — |
 | altavoz | Lago | sí | — | — | — |
 | cornamenta_zancos | Lago | sí | — | — | — |
 | cuaderno_eriz | Lago | sí | — | — | — |
 | remo_sangre | Lago | sí | sí: «Agacharme [Ctrl]» | — | — |
 | silbato_ts | Lago | sí | — | — | — |
-| linterna_porky | Lago | **NO** | — | Responde a la retícula pero no se registró | Revisar script e Id |
+| linterna_porky | Lago | sí | — | — | — |
 | hueco_remo | Lago | sí | — | — | — |

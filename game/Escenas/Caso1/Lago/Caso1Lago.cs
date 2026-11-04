@@ -69,9 +69,9 @@ public partial class Caso1Lago : EscenarioCaso1
 		AbrirSiTieneLlavero(false);
 		ActualizarObjetivo();
 		// Lo que piensa al llegar sale una sola vez (antes se repetía cada vez que volvía sin pistas del lago)
-		if (Pistas.Count > 0 || !IsInsideTree() || !PrimeraVez("_llegada")) return;
+		if (Pistas.Count > 0 || !Sigue() || !PrimeraVez("_llegada")) return;
 		await ToSignal(GetTree().CreateTimer(0.3), SceneTreeTimer.SignalName.Timeout);
-		if (!IsInsideTree() || EnDialogo) return;
+		if (!Sigue() || EnDialogo) return;
 		EnDialogo = true;
 		await CinematicaCaso1.Reproducir(this, LibretosCaso1.IdLlegada, LibretosCaso1.Llegada(new[]
 		{
@@ -79,7 +79,7 @@ public partial class Caso1Lago : EscenarioCaso1
 			"Aquí abajo vieron al «ciervo de luz». Y aquí encontraron a Porky.",
 			"El agua todavía brilla.",
 		}));
-		if (IsInsideTree()) EnDialogo = false;
+		if (Sigue()) EnDialogo = false;
 	}
 
 	// ---------- Pistas ----------
@@ -88,7 +88,7 @@ public partial class Caso1Lago : EscenarioCaso1
 	{
 		EnDialogo = true;
 		await CinematicaCaso1.Reproducir(this, LibretosCaso1.IdSilbato, LibretosCaso1.Silbato(comentario, silbato));
-		if (!IsInsideTree()) return;
+		if (!Sigue()) return;
 		EnDialogo = false;
 		Cambio();
 	}

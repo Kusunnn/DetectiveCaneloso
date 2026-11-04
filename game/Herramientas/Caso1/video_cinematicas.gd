@@ -4,7 +4,7 @@ extends SceneTree
 ## Después de «--», los nombres de las que se quieren grabar; sin nombres, todas.
 ## No toca las partidas: no pasa por GestorPartida.
 
-const CUALES := ["libro", "foto", "llegada", "silbato", "reconstruccion", "final_a", "final_b_porche", "final_b_lago"]
+const CUALES := ["libro", "foto", "llegada", "silbato", "reconstruccion", "revelacion", "final_a", "final_b_porche", "final_b_lago"]
 
 func _initialize() -> void:
 	var pistas: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Datos/Dialogos/caso1_pistas.json"))["pistas"]
@@ -17,6 +17,7 @@ func _initialize() -> void:
 		"llegada": ["El sendero del Lago Espejo.", "Aquí abajo vieron al «ciervo de luz». Y aquí encontraron a Porky."],
 		"silbato": [pistas["silbato_gs"]["comentario"], ""],
 		"reconstruccion": [pistas["cuaderno_eriz"]["comentario"], ""],
+		"revelacion": ["", ""],
 		"final_a": [final_a[final_a.size() - 1]["texto"], ""],
 		"final_b_porche": [final_b[0]["texto"], ""],
 		"final_b_lago": [final_b[1]["texto"], final_b[2]["texto"]],

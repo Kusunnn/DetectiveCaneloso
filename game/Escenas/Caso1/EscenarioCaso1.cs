@@ -171,13 +171,16 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 
 	// ---------- Conversaciones y entrada ----------
 
+	// Cambiar de escena a media conversación (cargar partida) libera este nodo: no se le puede ni preguntar si sigue
+	protected bool Sigue() => IsInstanceValid(this) && IsInsideTree();
+
 	protected async void Conversar(Func<System.Threading.Tasks.Task> conversacion)
 	{
 		if (EnDialogo || Tablero.Abierto) return;
 		EnDialogo = true;
 		Dialogo.Retener();
 		await conversacion();
-		if (!IsInsideTree()) return;
+		if (!Sigue()) return;
 		Dialogo.Soltar();
 		EnDialogo = false;
 	}

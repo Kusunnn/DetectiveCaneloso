@@ -77,7 +77,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		base._Ready();
 		SetProcess(false);
 		Salida.Usado += () => Conversar(AlSalir);
-		Hecdog.Usado += () => { EmitSignal(SignalName.HablarConHecdog); Conversar(() => Guion.Sala(IsInsideTree)); };
+		Hecdog.Usado += () => { EmitSignal(SignalName.HablarConHecdog); Conversar(() => Guion.Sala(Sigue)); };
 		if (Guion != null) // Sin guion cuando solo se filma el escenario (SoloVer)
 		{
 			PrepararPuestaEnEscena();
@@ -96,7 +96,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 			{
 				punto.Habilitar(false, CapaImplicado);
 				string quien = ClaveDeGuion.First(p => p.Value == clave).Key;
-				punto.Usado += () => { EmitSignal(SignalName.HablarConImplicado, clave); Conversar(() => Guion.Interrogar(quien, IsInsideTree)); };
+				punto.Usado += () => { EmitSignal(SignalName.HablarConImplicado, clave); Conversar(() => Guion.Interrogar(quien, Sigue)); };
 			}
 			if (implicado.GetNodeOrNull<AnimacionPersonaje>("Animacion") is { } anim && Nervios.TryGetValue(clave, out var nervios))
 			{
@@ -117,7 +117,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		if (Guion.SalaVista || Guion.Resuelto) return;
 		// La primera vez, Hecdog recibe al detective y presenta a los seis
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
-		if (IsInsideTree()) Conversar(() => Guion.Sala(IsInsideTree));
+		if (Sigue()) Conversar(() => Guion.Sala(Sigue));
 	}
 
 	protected override void AlRestaurar() => AcomodarPruebas();

@@ -77,7 +77,7 @@ public partial class SalaInterrogatorioCaso1
 		await TraerImplicado(clave, corta);
 		_saltable = false;
 		Engine.TimeScale = 1;
-		if (!IsInsideTree()) return;
+		if (!Sigue()) return;
 		await TransicionAPov(clave);
 		Dialogo.Compacto(true);
 		Dialogo.Visible = true;
@@ -90,6 +90,7 @@ public partial class SalaInterrogatorioCaso1
 		Dialogo.Visible = false;
 		await Fundir(0f, 1f, 0.15);
 		_luzPov.Visible = false;
+		BajarLampara(false);
 		QuitarPruebasDeMesa();
 		var hecdog = Hecdog.GetParent<Node3D>();
 		hecdog.GlobalPosition = _hecdogPuerta;
@@ -102,7 +103,7 @@ public partial class SalaInterrogatorioCaso1
 		await RetirarImplicado();
 		_saltable = false;
 		Engine.TimeScale = 1;
-		if (!IsInsideTree()) return;
+		if (!Sigue()) return;
 		await Fundir(0f, 1f, 0.2);
 		Jugador.Visible = true;
 		Jugador.CamaraActiva?.MakeCurrent();
@@ -136,11 +137,12 @@ public partial class SalaInterrogatorioCaso1
 		hecdog.GlobalRotation = new Vector3(0, Mathf.Atan2(-HecdogPov.X, -2.85f - HecdogPov.Z), 0);
 		PonerPruebasEnMesa();
 		_luzPov.Visible = true;
+		BajarLampara(true);
 		_luzPov.LookAtFromPosition(new Vector3(0.25f, 2.4f, -1.4f), new Vector3(0, cabeza - 0.25f, -2.85f));
 		var fundido = Fundir(1f, 0f, 0.12);
 		var hastaBase = Basis.LookingAt(_miraPov - _ojoPov, Vector3.Up).GetRotationQuaternion();
 		double t = 0;
-		while (t < SegundosTransicion && IsInsideTree())
+		while (t < SegundosTransicion && Sigue())
 		{
 			t += GetProcessDeltaTime();
 			float u = (float)Mathf.Clamp(t / SegundosTransicion, 0, 1);
@@ -156,6 +158,18 @@ public partial class SalaInterrogatorioCaso1
 		_enPov = true;
 		_tPov = 0;
 		_proximoDesvio = 2.5;
+	}
+
+	// Desde este ángulo la lámpara de arriba quema las cabezas (grandes y claras): en el plano medio baja un poco
+	private SpotLight3D _lampara;
+	private float _energiaLampara;
+
+	private void BajarLampara(bool bajar)
+	{
+		_lampara ??= GetParent().GetNodeOrNull("Lampara")?.FindChildren("*", "SpotLight3D", true, false).OfType<SpotLight3D>().FirstOrDefault();
+		if (_lampara == null) return;
+		if (bajar && _energiaLampara <= 0f) _energiaLampara = _lampara.LightEnergy;
+		if (_energiaLampara > 0f) _lampara.LightEnergy = _energiaLampara * (bajar ? 0.5f : 1f);
 	}
 
 	private float AlturaCabeza(Node3D implicado)
@@ -195,7 +209,7 @@ public partial class SalaInterrogatorioCaso1
 		bool nervioso = anim != null && anim.Actual != AnimacionPersonaje.Animo.Sereno;
 		if (nervioso && _tPov >= _proximoDesvio)
 		{
-			_desvioObjetivo = (GD.Randf() < 0.5f ? -1f : 1f) * (float)GD.RandRange(14.0, 24.0);
+			_desvioObjetivo = (GD.Randf() < 0.5f ? -1f : 1f) * (float)GD.RandRange(9.0, 15.0);
 			_finDesvio = _tPov + GD.RandRange(0.7, 1.3);
 			_proximoDesvio = _finDesvio + GD.RandRange(1.8, 4.0);
 		}

@@ -156,6 +156,17 @@ func _revisar_pista(pista, jugador, hud, piso: Array[Vector3], titulo: String) -
 	var paso := maxi(1, cercanos.size() / (12 if not visibles.is_empty() else 36))
 	var aviso := "—"
 	var encontro := ""
+	# Si exige agacharse, de pie y en el punto más cercano debe decirlo
+	if pista.SoloAgachado:
+		jugador.velocity = Vector3.ZERO
+		jugador.global_position = cercanos[0] + Vector3.UP * 1.02
+		await physics_frame
+		await physics_frame
+		_apuntar(jugador, punto)
+		await physics_frame
+		await process_frame
+		await process_frame
+		aviso = _explica(pista, hud)
 	var ultimo_tapa := ""
 	for i in range(0, cercanos.size(), paso):
 		var pie: Vector3 = cercanos[i]
@@ -166,9 +177,6 @@ func _revisar_pista(pista, jugador, hud, piso: Array[Vector3], titulo: String) -
 		_apuntar(jugador, punto)
 		await physics_frame
 		await process_frame
-		# Si exige agacharse, de pie debe decirlo
-		if pista.SoloAgachado and aviso == "—":
-			aviso = _explica(pista, hud)
 		if pista.SoloAgachado:
 			Input.action_press("agacharse")
 			await create_timer(0.35).timeout
@@ -180,7 +188,8 @@ func _revisar_pista(pista, jugador, hud, piso: Array[Vector3], titulo: String) -
 			hud.linterna_cambiada.emit(true)
 			await physics_frame
 		var texto: String = str(hud.get("interaccion"))
-		if (texto == "Inspeccionar" or texto == "Recoger"):
+		# Debe ser ella la que está en la retícula: el texto puede venir de otra cosa que quedó en medio
+		if (texto == "Inspeccionar" or texto == "Recoger") and jugador.ApuntadoNodo == pista:
 			encontro = texto
 			break
 		ultimo_tapa = _lo_que_tapa(jugador, punto)
@@ -193,6 +202,14 @@ func _revisar_pista(pista, jugador, hud, piso: Array[Vector3], titulo: String) -
 	await create_timer(0.3).timeout
 	await _pasar_cinematica()
 	await _cerrar_dialogos()
+	# Si la tecla se perdió (una cinemática o un pensamiento encima), otra vez, como haría el jugador
+	if not pista.Encontrada:
+		_apuntar(jugador, punto)
+		await create_timer(0.4).timeout
+		await _accion("interactuar")
+		await create_timer(0.4).timeout
+		await _pasar_cinematica()
+		await _cerrar_dialogos()
 	Input.action_release("agacharse")
 	await create_timer(0.25).timeout
 	var registrada := false

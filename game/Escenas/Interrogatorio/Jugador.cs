@@ -258,6 +258,9 @@ public partial class Jugador : CharacterBody3D
 		return null;
 	}
 
+	// Lo que tiene en la retícula (para las pruebas)
+	public Node ApuntadoNodo => _apuntado as Node;
+
 	private const string AvisoAgacharse = "Tendría que agacharme [Ctrl]...";
 	private Node _alcanceBajo;
 	private readonly System.Collections.Generic.HashSet<ulong> _avisadosBajo = new();

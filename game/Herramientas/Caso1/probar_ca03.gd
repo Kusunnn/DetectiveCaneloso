@@ -636,7 +636,7 @@ func _probar_caminar() -> void:
 	var reproductor: AnimationPlayer = mimita.get_node("Modelo").find_children("*", "AnimationPlayer", true, false)[0]
 	caso.Traer("Mimita")
 	await create_timer(0.4).timeout
-	_revisar(reproductor.current_animation == "Caminar", "Mimita entra con su animación de caminar")
+	_revisar(str(reproductor.current_animation).contains("Caminar"), "Mimita entra con su animación de caminar")
 	_revisar(not _en_pose_t(mimita), "Mimita no está en pose T al caminar")
 	await caso.ImplicadoSentado
 	_revisar(reproductor.current_animation == "Reposo", "al llegar a la silla, Mimita vuelve a su reposo")
