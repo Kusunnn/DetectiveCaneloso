@@ -148,6 +148,11 @@ public partial class Jugador : CharacterBody3D
 				GetViewport().SetInputAsHandled();
 				objetivo.Interactuar(this);
 			}
+			else if (_alcanceBajo != null)
+			{
+				GetViewport().SetInputAsHandled();
+				MostrarPensamiento(AvisoAgacharse, 3.0);
+			}
 			// Recién recogida una evidencia, [E] sin apuntar a nada la abre en la vista de examen
 			else if (!clic && _ofertaExamen > 0 && _pistaReciente != null)
 			{
@@ -185,7 +190,7 @@ public partial class Jugador : CharacterBody3D
 		_cuerpo?.MostrarEnPrimeraPersona(!_terceraPersona);
 	}
 
-	private Camera3D CamaraActiva => _terceraPersona ? _camaraTercera : _camara;
+	public Camera3D CamaraActiva => _terceraPersona ? _camaraTercera : _camara;
 
 	private void AlCambiarPanel(bool abierto, bool expediente)
 	{
@@ -253,8 +258,13 @@ public partial class Jugador : CharacterBody3D
 		return null;
 	}
 
+	private const string AvisoAgacharse = "Tendría que agacharme [Ctrl]...";
+	private Node _alcanceBajo;
+	private readonly System.Collections.Generic.HashSet<ulong> _avisadosBajo = new();
+
 	private IInteractuable BuscarInteractuable()
 	{
+		_alcanceBajo = null;
 		var espacioFisico = GetWorld3D().DirectSpaceState;
 		Vector2 centroPantalla = GetViewport().GetVisibleRect().Size / 2;
 		// En tercera persona la cámara está detrás del detective, así que el rayo se alarga esa distancia
@@ -272,7 +282,12 @@ public partial class Jugador : CharacterBody3D
 		Node nodo = resultado["collider"].As<Node>();
 		for (int nivel = 0; nivel < 4 && nodo != null; nivel++, nodo = nodo.GetParent())
 		{
-			if ((nodo is Contenedor { SoloAgachado: true } || nodo is ObjetoPista { SoloAgachado: true }) && !Agachado) return null; // Hay que agacharse para alcanzarlo
+			if ((nodo is Contenedor { SoloAgachado: true } || nodo is ObjetoPista { SoloAgachado: true }) && !Agachado)
+			{
+				// Hay que agacharse para alcanzarlo: se resalta nada, pero sí se dice
+				_alcanceBajo = nodo;
+				return null;
+			}
 			if (nodo is Contenedor { EstaAbierto: true } abierto) return PistaDentroDe(abierto, origen, destino, resultado["position"].AsVector3()) ?? abierto;
 			if (nodo is IInteractuable interactuable) return interactuable;
 		}
@@ -560,7 +575,9 @@ public partial class Jugador : CharacterBody3D
 				MostrarPensamiento(objeto.ComentarioAlMirar, 4.0);
 		}
 		// Se actualiza siempre: el texto cambia al abrir un contenedor ("Abrir" → "Revisado")
-		_hud.Set("interaccion", _apuntado?.TextoAccion ?? "");
+		_hud.Set("interaccion", _apuntado?.TextoAccion ?? (_alcanceBajo != null && IsInstanceValid(_alcanceBajo) ? "Agacharme [Ctrl]" : ""));
+		if (_alcanceBajo != null && IsInstanceValid(_alcanceBajo) && _avisadosBajo.Add(_alcanceBajo.GetInstanceId()))
+			MostrarPensamiento(AvisoAgacharse, 3.0);
 	}
 
 	// Borde brillante en el objeto que apunta la retícula
