@@ -319,7 +319,10 @@ public partial class GestorPartida : Node
 	// La captura se toma antes de abrir el menú de pausa, para que la miniatura sea de la escena
 	public void PrepararMiniatura()
 	{
+		// Sin ventana (las pruebas) no hay qué fotografiar
+		if (DisplayServer.GetName() == "headless") return;
 		var imagen = GetViewport().GetTexture().GetImage();
+		if (imagen == null) return;
 		imagen.Resize(256, 144, Image.Interpolation.Bilinear);
 		_miniaturaPendiente = imagen;
 	}

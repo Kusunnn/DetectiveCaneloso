@@ -64,6 +64,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	};
 
 	public string ImplicadoActual { get; private set; }
+	public PanelArmarCaso Panel { get; private set; }
 	public IEnumerable<string> NombresImplicados => Datos.Keys;
 	private bool _moviendo;
 
@@ -74,15 +75,17 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	public override void _Ready()
 	{
 		base._Ready();
+		SetProcess(false);
 		Salida.Usado += () => Conversar(AlSalir);
 		Hecdog.Usado += () => { EmitSignal(SignalName.HablarConHecdog); Conversar(() => Guion.Sala(IsInsideTree)); };
 		if (Guion != null) // Sin guion cuando solo se filma el escenario (SoloVer)
 		{
-			Guion.AntesDeInterrogar = async quien =>
-			{
-				if (ClaveDeGuion.TryGetValue(quien, out string clave)) await TraerImplicado(clave);
-			};
-			Guion.DespuesDeInterrogar = async _ => await RetirarImplicado();
+			PrepararPuestaEnEscena();
+			var panel = PanelArmarCaso.Crear(this, Guion, Dialogo);
+			Panel = panel;
+			Guion.AbrirArmarCaso = panel.Abrir;
+			Guion.SelloDeCasilla = panel.Sello;
+			Guion.CerrarPanelCaso = panel.Cerrar;
 		}
 		foreach (Node hijo in Implicados.GetChildren())
 		{

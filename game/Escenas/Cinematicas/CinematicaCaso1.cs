@@ -246,6 +246,8 @@ public partial class CinematicaCaso1 : CanvasLayer
 		if (_t >= Total) Terminar();
 	}
 
+	public void Saltar() => Terminar();
+
 	private void Terminar()
 	{
 		if (_terminada) return;
