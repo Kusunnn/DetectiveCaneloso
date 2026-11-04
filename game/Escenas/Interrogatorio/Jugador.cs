@@ -13,6 +13,8 @@ public partial class Jugador : CharacterBody3D
 	[Signal] public delegate void DetalleDescubiertoEventHandler(string origenId, string id);
 
 	[Export] public float Velocidad = 3.0f;
+	[Export] public float Aceleracion = 20f;   // m/s²: unos 0.15 s hasta caminar
+	[Export] public float Frenado = 15f;       // m/s²: unos 0.2 s hasta detenerse
 	[Export] public float SensibilidadRaton = 0.003f;
 	[Export] public float DistanciaInteraccion = 3.0f;
 	// Agacharse: velocidad relativa y alturas de la cápsula (de pie / agachado)
@@ -668,21 +670,18 @@ public partial class Jugador : CharacterBody3D
 		Vector2 entrada = Input.GetVector("mover_izquierda", "mover_derecha", "mover_adelante", "mover_atras");
 		Vector3 direccion = (Transform.Basis * new Vector3(entrada.X, 0, entrada.Y)).Normalized();
 
-		if (direccion != Vector3.Zero)
-		{
-			velocidadActual.X = direccion.X * velocidad;
-			velocidadActual.Z = direccion.Z * velocidad;
-			SeHaMovido = true;
-		}
-		else
-		{
-			velocidadActual.X = Mathf.MoveToward(Velocity.X, 0, Velocidad);
-			velocidadActual.Z = Mathf.MoveToward(Velocity.Z, 0, Velocidad);
-		}
+		// Arranca y frena en unas décimas: ni de golpe ni resbalando
+		var plano = new Vector2(velocidadActual.X, velocidadActual.Z);
+		var objetivo = new Vector2(direccion.X, direccion.Z) * velocidad;
+		plano = plano.MoveToward(objetivo, (direccion != Vector3.Zero ? Aceleracion : Frenado) * (float)delta);
+		velocidadActual.X = plano.X;
+		velocidadActual.Z = plano.Y;
+		if (direccion != Vector3.Zero) SeHaMovido = true;
 
 		Velocity = velocidadActual;
 		MoveAndSlide();
-		bool moviendose = new Vector2(Velocity.X, Velocity.Z).LengthSquared() > 0.001f;
+		bool moviendose = new Vector2(Velocity.X, Velocity.Z).LengthSquared() > 0.01f;
+		if (_cuerpo != null) _cuerpo.Rapidez = new Vector2(Velocity.X, Velocity.Z).Length();
 		Pisadas(moviendose, (float)delta);
 		_hud.Call("actualizar_movimiento", moviendose);
 		_cuerpo?.ActualizarMovimiento(moviendose);

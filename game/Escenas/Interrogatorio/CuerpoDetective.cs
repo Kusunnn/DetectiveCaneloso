@@ -44,6 +44,9 @@ public partial class CuerpoDetective : Node3D
 
 	// anim_caminar avanza la cadera hacia delante (root motion de Mixamo); como el movimiento
 	// real lo hace el CharacterBody3D, se crea una copia que camina en el sitio y en bucle.
+	private float _avanceCaminar;   // m/s que avanza la caminata original
+	public float Rapidez { get; set; }   // m/s reales del detective: la caminata se ajusta para que los pies no patinen
+
 	private void PrepararCaminarEnSitio()
 	{
 		var original = _animaciones.GetAnimation("anim_caminar");
@@ -51,12 +54,16 @@ public partial class CuerpoDetective : Node3D
 
 		var copia = (Animation)original.Duplicate();
 		copia.LoopMode = Animation.LoopModeEnum.Linear;
+		_avanceCaminar = 0f;
 		for (int pista = 0; pista < copia.GetTrackCount(); pista++)
 		{
 			if (copia.TrackGetType(pista) != Animation.TrackType.Position3D) continue;
 			if (!copia.TrackGetPath(pista).ToString().Contains("Hips")) continue;
 
 			float zInicial = copia.TrackGetKeyValue(pista, 0).AsVector3().Z;
+			float zFinal = copia.TrackGetKeyValue(pista, copia.TrackGetKeyCount(pista) - 1).AsVector3().Z;
+			Node esqueleto = FindChildren("*", "Skeleton3D", true, false).Count > 0 ? FindChildren("*", "Skeleton3D", true, false)[0] : null;
+			_avanceCaminar = Mathf.Abs(zFinal - zInicial) * ((esqueleto as Node3D)?.GlobalBasis.Scale.X ?? 1f) / Mathf.Max(0.01f, (float)copia.Length);
 			for (int clave = 0; clave < copia.TrackGetKeyCount(pista); clave++)
 			{
 				Vector3 posicion = copia.TrackGetKeyValue(pista, clave).AsVector3();
@@ -97,6 +104,8 @@ public partial class CuerpoDetective : Node3D
 			_animaciones.SpeedScale = 1f;
 			_animaciones.Play(deseada, Mezcla);
 		}
+		// Los pies avanzan lo mismo que el cuerpo, también al arrancar, frenar y correr
+		if (moviendose && _avanceCaminar > 0.05f) _animaciones.SpeedScale = Mathf.Clamp(Rapidez / _avanceCaminar, 0.25f, 3f);
 	}
 
 	public void FijarAgachado(bool agachado)

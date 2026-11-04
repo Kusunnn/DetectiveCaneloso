@@ -382,6 +382,8 @@ func _recoger_pistas() -> void:
 func _hablar_con_implicados() -> void:
 	var caso = current_scene.get_node("Caso1Sala")
 	var repetidas := {}
+	var sentados := {}
+	caso.ImplicadoSentado.connect(func(quien): sentados[quien] = true)
 	for clave in IMPLICADOS:
 		var implicado: Node3D = current_scene.get_node("Implicados/" + clave)
 		var punto = implicado.get_node("Colision")
@@ -393,7 +395,7 @@ func _hablar_con_implicados() -> void:
 				if _eventos["linea"][linea] > antes.get(linea, 0):
 					if vez == 0: primera[linea] = true
 					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS): repetidas[linea] = true
-		_revisar(caso.ImplicadoActual == clave, "%s está en la silla al hablar con él" % clave)
+		_revisar(sentados.has(clave), "%s se sienta en la silla al hablar con él" % clave)
 		_revisar(not _en_pose_t(implicado), "%s no está en pose T en la sala" % clave)
 		await _retirar(caso)
 	print("    líneas repetidas al hablar dos veces: %s" % [repetidas.keys()])

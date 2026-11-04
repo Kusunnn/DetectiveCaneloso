@@ -33,6 +33,17 @@ public partial class AnimacionPersonaje : Node
 	// cada una), para que no repita el mismo ciclo para siempre. Cada cuánto, en segundos.
 	[Export] public string[] Variantes = System.Array.Empty<string>();
 	[Export] public Vector2 IntervaloVariante = new(12f, 26f);
+	// Animaciones del modelo para sus nervios; vacío = lo hace por código (hombros tensos, respiración rápida)
+	[Export] public string AnimacionTenso = "";
+	[Export] public string AnimacionAlterado = "";
+	// Algunos modelos usan otro reposo para los nervios: lo aceleran para que se note
+	[Export] public float AceleraNervios = 1f;
+
+	public enum Animo { Sereno, Tenso, Alterado }
+	public Animo Actual { get; private set; } = Animo.Sereno;
+	public const double Mezcla = 0.25;
+	// Velocidad con que se mueve el personaje (si no trae caminata propia, la del paso por código)
+	public const float VelocidadPorCodigo = 1.1f;
 
 	// Mientras camina (lo pone quien lo mueve): con animaciones del modelo usa la de caminar; por código mueve
 	// piernas y brazos y sube y baja el cuerpo, así los pies no se deslizan quietos por el piso.
@@ -47,6 +58,9 @@ public partial class AnimacionPersonaje : Node
 	private int _actividad, _ultimaActividad = 1;
 	private float _finActividad, _pesoActividad, _ladoActividad = 1f;
 	private float _paso, _pesoPaso;
+	private float _tension, _tensionObjetivo;
+	private string _reposoActual = "";
+	private float _velocidadPaso = 1f;
 	private bool _modeloMovido;
 	private int _piernaI = -1, _piernaD = -1;
 	private Skeleton3D _esqueleto;
@@ -78,7 +92,8 @@ public partial class AnimacionPersonaje : Node
 		// Cada copia a su ritmo: nadie se mueve al mismo cuadro ni a la misma velocidad
 		_velocidad = (float)GD.RandRange(0.9, 1.1);
 		_finActividad = (float)GD.RandRange(4.0, 12.0);
-		if (Animacion != "" && Reproducir(Animacion))
+		_reposoActual = Animacion;
+		if (Animacion != "" && Reproducir(Animacion, azar: true))
 		{
 			_siguienteVariante = GD.RandRange(IntervaloVariante.X, IntervaloVariante.Y);
 			// Solo hace falta seguir procesando si tiene variantes que intercalar
@@ -91,16 +106,16 @@ public partial class AnimacionPersonaje : Node
 		if (_esqueleto != null) PrepararEsqueleto();
 	}
 
-	// Repite una animación del modelo desde un punto al azar, para que dos copias no se muevan igual
-	public bool Reproducir(string nombre)
+	// Repite una animación del modelo con mezcla. azar: desde un punto al azar, para que dos copias no se muevan igual
+	public bool Reproducir(string nombre, bool azar = false)
 	{
 		foreach (Node n in Modelo.FindChildren("*", "AnimationPlayer", true, false))
 		{
 			if (n is not AnimationPlayer reproductor || !reproductor.HasAnimation(nombre)) continue;
 			Animation animacion = reproductor.GetAnimation(nombre);
 			animacion.LoopMode = Animation.LoopModeEnum.Linear;
-			reproductor.Play(nombre);
-			reproductor.Seek(GD.RandRange(0.0, animacion.Length), true);
+			reproductor.Play(nombre, azar ? -1 : Mezcla);
+			if (azar) reproductor.Seek(GD.RandRange(0.0, animacion.Length), true);
 			reproductor.SpeedScale = _velocidad;
 			_reproductor = reproductor;
 			_finVariante = -1;
@@ -108,6 +123,58 @@ public partial class AnimacionPersonaje : Node
 		}
 		GD.PushWarning($"AnimacionPersonaje: {_personaje.Name} no tiene la animación «{nombre}».");
 		return false;
+	}
+
+	// Las caminatas de Mixamo avanzan la cadera (root motion). Como al personaje lo mueve el código, se usa una copia que
+	// camina en su sitio; devuelve a cuántos m/s avanzaba, para moverlo igual y que los pies no patinen (0 = no se sabe).
+	private readonly System.Collections.Generic.Dictionary<string, (string Copia, float Velocidad)> _caminatas = new();
+
+	private (string Copia, float Velocidad) CaminataEnSitio(string nombre)
+	{
+		if (_caminatas.TryGetValue(nombre, out var hecha)) return hecha;
+		foreach (Node n in Modelo.FindChildren("*", "AnimationPlayer", true, false))
+		{
+			if (n is not AnimationPlayer reproductor || !reproductor.HasAnimation(nombre)) continue;
+			var copia = (Animation)reproductor.GetAnimation(nombre).Duplicate();
+			copia.LoopMode = Animation.LoopModeEnum.Linear;
+			float avance = 0f;
+			for (int pista = 0; pista < copia.GetTrackCount(); pista++)
+			{
+				if (copia.TrackGetType(pista) != Animation.TrackType.Position3D || !copia.TrackGetPath(pista).ToString().Contains("Hips")) continue;
+				int claves = copia.TrackGetKeyCount(pista);
+				if (claves < 2) continue;
+				Vector3 inicio = copia.TrackGetKeyValue(pista, 0).AsVector3();
+				Vector3 fin = copia.TrackGetKeyValue(pista, claves - 1).AsVector3();
+				var deriva = new Vector3(fin.X - inicio.X, 0, fin.Z - inicio.Z);
+				Skeleton3D esqueleto = BuscarEsqueleto(Modelo);
+				avance = deriva.Length() * (esqueleto?.GlobalBasis.Scale.X ?? 1f);
+				// Quita el avance y deja el balanceo
+				for (int clave = 0; clave < claves; clave++)
+				{
+					double u = copia.TrackGetKeyTime(pista, clave) / copia.Length;
+					copia.TrackSetKeyValue(pista, clave, copia.TrackGetKeyValue(pista, clave).AsVector3() - deriva * (float)u);
+				}
+			}
+			if (!reproductor.HasAnimationLibrary("")) reproductor.AddAnimationLibrary("", new AnimationLibrary());
+			string nombreCopia = "en_sitio_" + nombre.Replace("/", "_");
+			if (!reproductor.GetAnimationLibrary("").HasAnimation(nombreCopia)) reproductor.GetAnimationLibrary("").AddAnimation(nombreCopia, copia);
+			return _caminatas[nombre] = (nombreCopia, copia.Length > 0 ? avance / (float)copia.Length : 0f);
+		}
+		return _caminatas[nombre] = (nombre, 0f);
+	}
+
+	// Nervios: se ven en su animación o, si no tiene, por código
+	public void FijarAnimo(Animo animo)
+	{
+		if (animo == Actual) return;
+		Actual = animo;
+		_tensionObjetivo = animo == Animo.Sereno ? 0f : animo == Animo.Tenso ? 0.55f : 1f;
+		if (_reproductor == null || Animacion == "") { SetProcess(true); return; }
+		string nombre = animo == Animo.Tenso ? AnimacionTenso : animo == Animo.Alterado ? AnimacionAlterado : Animacion;
+		if (string.IsNullOrEmpty(nombre)) nombre = Animacion;
+		_reposoActual = nombre;
+		if (!Caminando && Reproducir(nombre)) _reproductor.SpeedScale = _velocidad * (animo == Animo.Sereno ? 1f : AceleraNervios);
+		if (Variantes.Length > 0) SetProcess(true);
 	}
 
 	// Algunos modelos traen un esqueleto vacío además del bueno: se queda el de más huesos
@@ -173,16 +240,23 @@ public partial class AnimacionPersonaje : Node
 	private Transform3D GlobalHueso(int hueso) => _esqueleto.GlobalTransform * _esqueleto.GetBoneGlobalPose(hueso);
 	private Vector3 PosicionHueso(int hueso) => GlobalHueso(hueso).Origin;
 
-	// Empieza o deja de caminar. animacionCaminar: la del modelo, si la tiene (vacío = paso por código).
-	public void Caminar(bool caminando, string animacionCaminar = "")
+	// Empieza o deja de caminar. animacionCaminar: la del modelo, si la tiene (vacío = paso por código). velocidad: a la que
+	// lo mueven: la animación se acelera en proporción, así los pies avanzan lo mismo que el cuerpo.
+	public void Caminar(bool caminando, string animacionCaminar = "", float velocidad = VelocidadPorCodigo)
 	{
 		Caminando = caminando;
 		if (_reproductor != null && Animacion != "")
 		{
-			if (caminando && animacionCaminar != "") Reproducir(animacionCaminar);
-			else if (!caminando) Reproducir(Animacion);
+			if (caminando && animacionCaminar != "")
+			{
+				var (copia, propia) = CaminataEnSitio(animacionCaminar);
+				if (Reproducir(copia)) _reproductor.SpeedScale = propia > 0.05f ? velocidad / propia : 1f;
+			}
+			else if (!caminando) Reproducir(_reposoActual != "" ? _reposoActual : Animacion);
 			return;
 		}
+		// El paso por código avanza 1.1 m/s con 15.5 rad/s
+		_velocidadPaso = velocidad / VelocidadPorCodigo;
 		SetProcess(true);
 	}
 
@@ -191,9 +265,10 @@ public partial class AnimacionPersonaje : Node
 		float dt = (float)delta;
 		_tiempo += dt;
 		if (_reproductor != null && Animacion != "") { IntercalarVariantes(); return; }
-		_fase += dt * VelocidadRespiracion * _velocidad * (Somnoliento && !JugadorCerca(out _) ? 0.6f : 1f);
+		_fase += dt * VelocidadRespiracion * _velocidad * (Somnoliento && !JugadorCerca(out _) ? 0.6f : 1f) * (1f + 1.1f * _tension);
 		_pesoPaso = Mathf.MoveToward(_pesoPaso, Caminando ? 1f : 0f, dt * 5f);
-		if (_pesoPaso > 0f) _paso += dt * 7.5f;
+		if (_pesoPaso > 0f) _paso += dt * 15.5f * _velocidadPaso;
+		_tension = Mathf.MoveToward(_tension, _tensionObjetivo, dt * 2.5f);
 		ElegirActividad(dt);
 		if (_esqueleto != null) AnimarEsqueleto(dt);
 		else AnimarModelo();
@@ -202,12 +277,12 @@ public partial class AnimacionPersonaje : Node
 	// Animaciones del modelo: de vez en cuando una vuelta de una variante y de regreso al reposo, con mezcla
 	private void IntercalarVariantes()
 	{
-		if (Caminando || Variantes.Length == 0) return;
+		if (Caminando || Variantes.Length == 0 || Actual != Animo.Sereno) return;
 		if (_finVariante >= 0)
 		{
 			if (_tiempo < _finVariante) return;
 			_finVariante = -1;
-			_reproductor.Play(Animacion, 0.5);
+			_reproductor.Play(_reposoActual != "" ? _reposoActual : Animacion, 0.5);
 			_siguienteVariante = _tiempo + GD.RandRange(IntervaloVariante.X, IntervaloVariante.Y);
 			return;
 		}
@@ -257,8 +332,9 @@ public partial class AnimacionPersonaje : Node
 
 		// Espalda: respira inclinándose apenas y se mece de lado muy lento (al cargar el peso, se ladea más)
 		float meceLado = 1.5f * Mathf.Sin(_tiempo * 0.45f + _fase) * (1f - quieto * 0.7f) + 4f * peso;
-		Agregar(_espalda, new Quaternion(lado, Mathf.DegToRad(1.2f * respira)) * new Quaternion(frente, Mathf.DegToRad(meceLado)));
-		Agregar(_pecho, new Quaternion(lado, Mathf.DegToRad(0.8f * respira)));
+		// Con los nervios se encorva y respira más hondo
+		Agregar(_espalda, new Quaternion(lado, Mathf.DegToRad(1.2f * respira * (1f + _tension) + 7f * _tension)) * new Quaternion(frente, Mathf.DegToRad(meceLado)));
+		Agregar(_pecho, new Quaternion(lado, Mathf.DegToRad(0.8f * respira * (1f + _tension) + 5f * _tension)));
 
 		// Caminar por código: las piernas van y vienen y los brazos al revés (no hay animación de caminar)
 		float zancada = Mathf.Sin(_paso) * _pesoPaso;
@@ -272,7 +348,7 @@ public partial class AnimacionPersonaje : Node
 		}
 
 		// Brazos abajo, con un vaivén que sigue la respiración (o los pasos)
-		float vaiven = Mathf.DegToRad(3f * Mathf.Sin(_fase * 0.5f) * (1f - quieto) - 16f * zancada);
+		float vaiven = Mathf.DegToRad(3f * Mathf.Sin(_fase * 0.5f) * (1f - quieto) - 16f * zancada + 9f * _tension);
 		Agregar(_brazoI, new Quaternion(lado, vaiven) * _bajarBrazoI);
 		Agregar(_brazoD, new Quaternion(lado, -vaiven * (_pesoPaso > 0f ? 1f : 0.7f)) * _bajarBrazoD);
 		Agregar(_codoI, new Quaternion(lado, Mathf.DegToRad(-8f)));

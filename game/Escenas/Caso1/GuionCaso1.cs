@@ -38,6 +38,7 @@ public class GuionCaso1
 	public Action<string> AlTerminar;
 	// Antes y después de cada interrogatorio (la sala sienta al implicado en su silla)
 	public Func<string, Task> AntesDeInterrogar = _ => Task.CompletedTask;
+	public Func<string, Task> DespuesDeInterrogar = _ => Task.CompletedTask;
 	// La escena donde se juega (para las cinemáticas)
 	public Node NodoEscena;
 	public bool AbrirExpediente;
@@ -139,6 +140,7 @@ public class GuionCaso1
 		await AntesDeInterrogar(quien);
 		if (!sigue()) return true;
 		string salida = await Motor.Recorrer(_arboles["caso1_" + quien]);
+		if (sigue()) await DespuesDeInterrogar(quien);
 		AlTerminar?.Invoke("Diálogo: " + quien);
 		if (salida != "paciencia" || !sigue()) return false;
 		await Sala(sigue, "paciencia");
