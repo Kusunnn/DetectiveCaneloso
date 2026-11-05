@@ -135,11 +135,11 @@
 			"nota": "Remo con sangre entre los juncos, abajo del embarcadero: el arma."
 		},
 		"silbato_gs": {
-			"titulo": "Silbato «G. S.»",
+			"titulo": "Silbato «T. S.»",
 			"escenario": "Lago y bosque",
 			"donde": "Clavo del embarcadero",
-			"comentario": "Atorado en un clavo, con el cordón roto. Trae grabadas dos iniciales: «G. S.». ¿De quién será?",
-			"nota": "Silbato con las iniciales «G. S.» y el cordón roto, atorado en un clavo del embarcadero."
+			"comentario": "Atorado en un clavo, con el cordón roto. Trae grabadas dos iniciales: «T. S.». ¿De quién será?",
+			"nota": "Silbato con las iniciales «T. S.» y el cordón roto, atorado en un clavo del embarcadero."
 		},
 		"linterna_porky": {
 			"titulo": "Linterna de Porky",
@@ -159,7 +159,7 @@
 	"detalles": {
 		"libro_guardia_quemado.antonio": "Reverso del libro de guardia: «De guardia: monitor auxiliar...». El nombre se quemó.",
 		"foto_grupo.dedicatoria": "Detrás de la foto: «Lago Espejo, 14 de agosto. Para Paco, que nunca le tuvo miedo al lago. — G. S.»",
-		"foto_grupo.silbato": "En la foto, Tony de monitor lleva al cuello un silbato con las iniciales «G. S.».",
+		"foto_grupo.silbato": "En la foto, Tony de monitor lleva al cuello un silbato con las iniciales «T. S.».",
 		"registro_enfermeria.tachon": "Bajo el tachón del registro de la enfermería: «23:20, se escuchó algo en el lago».",
 		"botas_tony.juncos": "En la suela de las botas hay juncos del lago: quien las usó bajó a la orilla."
 	}

@@ -35,13 +35,6 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 	private const string Llavero = "llavero_porky";
 
-	// HU-07: detalles que solo aparecen examinando la evidencia (entradas nuevas del diario)
-	private const string LibroAntonio = "libro_guardia_quemado.antonio";
-	private const string FotoDedicatoria = "foto_grupo.dedicatoria";
-	private const string FotoSilbato = "foto_grupo.silbato";
-	private const string RegistroTachon = "registro_enfermeria.tachon";
-	private const string BotasJuncos = "botas_tony.juncos";
-
 	private readonly SistemaAyudas _ayudasInvestigacion = new();
 	private bool AyudasHabilitadas => Configuracion.Instancia?.AyudasInvestigacion ?? true;
 
@@ -187,16 +180,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
 	private void AlDescubrirDetalle(string origen, string id)
 	{
-		string nota = id switch
-		{
-			LibroAntonio => "Reverso del libro de guardia: «De guardia: monitor auxiliar Antonio R.»",
-			FotoDedicatoria => "Detrás de la foto: «Cabaña 4, 14 de agosto. Para Daniel... — A. R.»",
-			FotoSilbato => "En la foto, el silbato del monitor lleva grabado «A. R.»: es Tony.",
-			RegistroTachon => "Bajo el tachón del registro de la enfermería: «23:20, ruido en el lago».",
-			BotasJuncos => "En la suela de las botas hay juncos del lago: quien las usó bajó a la orilla.",
-			_ => null,
-		};
-		if (nota != null) Hud.Call("agregar_nota", nota);
+		if (_guion.NotaDeDetalle(id) is string nota) Hud.Call("agregar_nota", nota);
 		Cambio();
 		Autoguardar("Detalle: " + id);
 	}

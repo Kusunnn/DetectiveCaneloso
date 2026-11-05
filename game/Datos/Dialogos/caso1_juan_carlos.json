@@ -333,7 +333,7 @@
 				{
 					"id": "silbato_gs",
 					"tipo": "MOSTRAR",
-					"texto": "Silbato «G. S.»",
+					"texto": "Silbato «T. S.»",
 					"destino": "e_silbato",
 					"requiere": {
 						"pistas": [

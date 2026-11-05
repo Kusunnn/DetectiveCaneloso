@@ -397,7 +397,7 @@
 				{
 					"habla": "Tony",
 					"animo": "dolido",
-					"texto": "Pero no me acerqué al lago. Después de... lo que pasó con Paco, no piso esa orilla. Hace años."
+					"texto": "No me acerqué al lago. Después de... lo que pasó con Paco, no piso esa orilla. Hace años."
 				}
 			],
 			"siguiente": "hub_2"
@@ -492,7 +492,7 @@
 				{
 					"habla": "Tony",
 					"animo": "molesto",
-					"texto": "¿Ese silbato? No es mío. «G. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?"
+					"texto": "¿Ese silbato? No es mío. «T. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?"
 				}
 			],
 			"siguiente": "hub_3"
@@ -503,7 +503,7 @@
 				{
 					"id": "silbato_gs",
 					"tipo": "MOSTRAR",
-					"texto": "Silbato «G. S.»",
+					"texto": "Silbato «T. S.»",
 					"destino": "e3_silbato",
 					"requiere": {
 						"pistas": [
@@ -545,7 +545,7 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "«G. S.»: Guillermo Spínola. Su abuelo. Usted heredó el campamento... y también su silbato. Estaba atorado en un clavo del embarcadero, con el cordón roto. Y hoy trae uno nuevo."
+					"texto": "«T. S.»: Tony Spínola. Estaba atorado en un clavo del embarcadero, con el cordón roto. Y hoy trae uno nuevo."
 				}
 			],
 			"ir_a": [
@@ -570,7 +570,7 @@
 				{
 					"habla": "Tony",
 					"animo": "sarcástico",
-					"texto": "¿En serio? Mi abuelo les regalaba silbatos a todos los monitores. Hay docenas así. Usted es muy chismoso, detective."
+					"texto": "¿En serio? Mi abuelo les regalaba silbatos a todos los monitores. Cualquiera pudo grabarle esas letras. Usted es muy chismoso, detective."
 				}
 			]
 		},
@@ -580,7 +580,7 @@
 					"habla": "Tony",
 					"animo": "nervioso",
 					"gesto": "Se queda callado un momento",
-					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años ya lo traigo colgado. Sí. Era de mi abuelo. Se me cayó."
+					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años ya lo traigo colgado. Sí. Es mío. Se me cayó."
 				}
 			],
 			"siguiente": "excusa_4",
@@ -589,7 +589,7 @@
 					"tony_3"
 				],
 				"notas": [
-					"El silbato «G. S.» era de Guillermo Spínola, el abuelo de Tony. Tony lo traía anoche y se le cayó en el embarcadero."
+					"El silbato «T. S.» es de Tony Spínola. Lo traía anoche y se le cayó en el embarcadero."
 				]
 			}
 		},
