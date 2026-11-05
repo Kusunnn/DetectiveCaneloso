@@ -1,4 +1,4 @@
-using Godot;
+﻿using Godot;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +16,13 @@ public partial class FondoMenu : Control
 	public Texture2D TexturaSilueta { get; set; }
 
 	private const string RutaShaderGrano = "res://Escenas/Menus/Fondo/grano_pelicula.gdshader";
+	private const string RutaShaderDestello = "res://Escenas/Menus/Fondo/destello_lupa.gdshader";
 	private const string RutaCaneloso = "res://Assets/Menu/caneloso.png";
+	private const string RutaCapas = "res://Assets/Menu/Caneloso/";
+
+	// Alto de Caneloso en pantalla (a 1080p) y duración del ciclo de reposo
+	private const float AltoFigura = 540f;
+	private const double Ciclo = 3.0;
 
 	private TextureRect _cono;
 	private TextureRect _brillo;
@@ -27,6 +33,16 @@ public partial class FondoMenu : Control
 	private TextureRect _imagenFigura;
 	private TextureRect _sombraFigura;
 	private double _tiempo;
+
+	// Caneloso por capas (render de Assets/Menu/Blender/caneloso_menu.py): un nodo por capa con su pivote
+	private CanvasGroup _grupo;
+	private float _escala = 1f;
+	private readonly Dictionary<string, Node2D> _partes = new();
+	private readonly Dictionary<string, Vector2> _base = new();
+	private Vector2 _cuello;
+	private Sprite2D _brilloAro;
+	private ShaderMaterial _destello;
+	private bool _aContraluz;
 
 	// Pasos pendientes de la animación de luz: (nivel de luz 0..1, duración en ms).
 	private readonly Queue<(float Luz, double Ms)> _pasos = new();
@@ -43,7 +59,16 @@ public partial class FondoMenu : Control
 		// Balanceo suave del personaje (como en el diseño)
 		_tiempo += delta;
 		float t = (float)_tiempo;
-		_figura.RotationDegrees = Mathf.Sin(t * 0.7f) * 1.6f;
+		float balanceo = Mathf.Sin(t * 0.7f) * 1.6f;
+		if (_grupo != null)
+		{
+			_grupo.RotationDegrees = balanceo;
+			AnimarPartes((float)(_tiempo % Ciclo));
+		}
+		else
+		{
+			_figura.RotationDegrees = balanceo;
+		}
 
 		_tiempoRestante -= delta;
 		if (_tiempoRestante > 0.0) return;
@@ -102,7 +127,15 @@ public partial class FondoMenu : Control
 		_oscuridad.Modulate = new Color(_oscuridad.Modulate, (1.0f - valor) * 0.82f);
 		// Con poca luz es solo una silueta negra; con luz, se le ve (algo más brillante que la imagen)
 		float brillo = valor < 0.35f ? 0.03f : 0.55f + 0.5f * valor;
-		_imagenFigura.Modulate = new Color(brillo, brillo, brillo);
+		_aContraluz = valor < 0.35f;
+		if (_grupo != null)
+		{
+			_grupo.Modulate = new Color(brillo, brillo, brillo);
+		}
+		else
+		{
+			_imagenFigura.Modulate = new Color(brillo, brillo, brillo);
+		}
 		_sombraFigura.Modulate = new Color(1, 1, 1, 0.4f + 0.6f * valor);
 		_puerta.Modulate = new Color(_puerta.Modulate, 0.5f + (1.0f - valor) * 0.2f + GD.Randf() * 0.05f);
 	}
@@ -174,12 +207,12 @@ public partial class FondoMenu : Control
 	}
 
 	// Caneloso delante de la puerta (medidas del diseño a 1920×1080): 540 px de alto (50vh),
-	// los pies al 15 % del borde inferior y centrado con la puerta. La lupa ya viene en la imagen,
-	// en su mano (la hace Herramientas/retratos.gd con el nombre "menu").
+	// los pies al 15 % del borde inferior y centrado con la puerta. Si hay capas (Assets/Menu/Caneloso,
+	// render de Assets/Menu/Blender/caneloso_menu.py), se arma por partes y respira; si no, es la imagen fija.
 	private void ConstruirFigura()
 	{
 		var textura = TexturaSilueta ?? GD.Load<Texture2D>(RutaCaneloso);
-		float alto = 540f;
+		float alto = AltoFigura;
 		float ancho = alto * textura.GetWidth() / textura.GetHeight();
 		const float centroPuerta = 0.805f;
 
@@ -197,7 +230,156 @@ public partial class FondoMenu : Control
 		_figura.OffsetRight = ancho / 2f;
 		_figura.OffsetTop = -alto;
 		_figura.PivotOffset = new Vector2(ancho / 2f, alto); // se balancea desde los pies
+		if (TexturaSilueta == null && ConstruirCapas(centroPuerta))
+		{
+			return;
+		}
 		_imagenFigura = Imagen(_figura, textura, 0, 0, 1, 1);
+	}
+
+	// Un CanvasGroup con un Sprite2D por capa: así los bordes que se traslapan no se oscurecen y la silueta
+	// de los apagones se aplica al grupo entero. Cada capa cuelga de un Node2D puesto en su pivote.
+	private bool ConstruirCapas(float centroPuerta)
+	{
+		using var archivo = FileAccess.Open(RutaCapas + "capas.json", FileAccess.ModeFlags.Read);
+		if (archivo == null)
+		{
+			return false;
+		}
+		var datos = Json.ParseString(archivo.GetAsText()).AsGodotDictionary();
+		var lienzo = Vec(datos["lienzo"]);
+		var pies = Vec(datos["pies"]);
+		_escala = AltoFigura / lienzo.Y;
+
+		// El control de la figura queda con el tamaño del lienzo escalado y los pies en el ancla
+		_figura.OffsetLeft = -pies.X * _escala;
+		_figura.OffsetRight = (lienzo.X - pies.X) * _escala;
+		_figura.OffsetTop = -pies.Y * _escala;
+		_figura.OffsetBottom = (lienzo.Y - pies.Y) * _escala;
+
+		_grupo = new CanvasGroup { Name = "Figura", FitMargin = 8f, ClearMargin = 8f };
+		_grupo.Position = pies * _escala;
+		_grupo.Scale = new Vector2(_escala, _escala);
+		_figura.AddChild(_grupo);
+
+		// Coordenadas dentro del grupo: píxeles del lienzo con el origen en los pies
+		var pivotes = new Dictionary<string, Vector2>();
+		foreach (var capa in datos["capas"].AsGodotArray())
+		{
+			var c = capa.AsGodotDictionary();
+			string nombre = c["nombre"].AsString();
+			var pivote = Vec(c["pivote"]);
+			pivotes[nombre] = pivote;
+			string padre = c["padre"].VariantType == Variant.Type.Nil ? null : c["padre"].AsString();
+			Node padreNodo = padre != null && _partes.TryGetValue(padre, out var p) ? p : _grupo;
+			var origen = padre != null ? pivotes[padre] : pies;
+
+			var nodo = new Node2D { Name = nombre, Position = pivote - origen };
+			padreNodo.AddChild(nodo);
+			var sprite = new Sprite2D
+			{
+				Texture = GD.Load<Texture2D>(RutaCapas + c["archivo"].AsString()),
+				Centered = false,
+				Position = Vec(c["offset"]) - pivote,
+			};
+			nodo.AddChild(sprite);
+			_partes[nombre] = nodo;
+			_base[nombre] = nodo.Position;
+
+			if (nombre == "mascara_vidrio")
+			{
+				_destello = new ShaderMaterial { Shader = GD.Load<Shader>(RutaShaderDestello) };
+				sprite.Material = _destello;
+				// Brillo pequeño en el borde del aro, arriba a la derecha del vidrio
+				var tam = Vec(c["tam"]);
+				var brillo = new Gradient { Offsets = new[] { 0f, 0.25f, 1f }, Colors = new[] { new Color(1, 1, 1, 1), new Color(1, 1, 1, 0.5f), new Color(1, 1, 1, 0) } };
+				_brilloAro = new Sprite2D
+				{
+					Texture = Gradiente(brillo.Colors, brillo.Offsets, true, new Vector2(0.5f, 0.5f), new Vector2(1f, 0.5f)),
+					Position = sprite.Position + new Vector2(tam.X * 0.88f, tam.Y * 0.14f),
+					Scale = Vector2.One * (tam.X * 0.35f / 256f),
+					Material = new CanvasItemMaterial { BlendMode = CanvasItemMaterial.BlendModeEnum.Add },
+					Modulate = new Color(1, 1, 1, 0),
+				};
+				nodo.AddChild(_brilloAro);
+			}
+		}
+		if (_partes.TryGetValue("ojos_cerrados", out var cerrados))
+		{
+			cerrados.Visible = false;
+		}
+		_cuello = pivotes.GetValueOrDefault("cabeza", pies) - pies;
+		return true;
+	}
+
+	// Ciclo de reposo de 3 s (valores a 1080p), calculado a partir del tiempo: sin AnimationPlayer
+	private void AnimarPartes(float s)
+	{
+		float t = s / (float)Ciclo;
+		float ang = Mathf.Tau * t;
+		float px = 1f / _escala; // un píxel de pantalla en píxeles del lienzo
+		float respira = (Mathf.Sin(ang) + 1f) / 2f;
+
+		if (_partes.TryGetValue("cuerpo", out var cuerpo))
+		{
+			// Escala en Y con pivote en la cadera (el nodo del cuerpo está en ella)
+			float k = 1f + 0.012f * respira;
+			cuerpo.Scale = new Vector2(1f, k);
+		}
+		var sube = new Vector2(0, -3f * respira * px);
+
+		float giroCabeza = Mathf.DegToRad(2.4f) * Mathf.Sin(ang + 0.9f);
+		var cuello = _cuello + sube + new Vector2(0, 1f * respira * px);
+		if (_partes.TryGetValue("cabeza", out var cabeza))
+		{
+			cabeza.Position = _base["cabeza"] + sube + new Vector2(0, 1f * respira * px);
+			cabeza.Rotation = giroCabeza;
+		}
+		// Las orejas siguen a la cabeza (giran con ella alrededor del cuello) y cuelgan con su propio vaivén
+		float oreja = Mathf.DegToRad(4f) * Mathf.Sin(ang + 0.2f);
+		foreach (var (nombre, signo) in new[] { ("oreja_lejana", 1f), ("oreja_cercana", -1f) })
+		{
+			if (!_partes.TryGetValue(nombre, out var o)) continue;
+			o.Position = cuello + (_base[nombre] - _cuello).Rotated(giroCabeza);
+			o.Rotation = giroCabeza + signo * oreja;
+		}
+		if (_partes.TryGetValue("ceja_arriba", out var ceja))
+		{
+			ceja.Position = _base["ceja_arriba"] + new Vector2(0, -4f * Campana(s, 0.36f, 1.05f) * px);
+		}
+		if (_partes.TryGetValue("ojos_cerrados", out var cerrados) && _partes.TryGetValue("ojos_abiertos", out var abiertos))
+		{
+			bool parpadea = Mathf.Abs(s - 2.1f) < 0.07f;
+			cerrados.Visible = parpadea;
+			abiertos.Visible = !parpadea;
+		}
+		if (_partes.TryGetValue("brazo_lupa", out var brazo))
+		{
+			brazo.Position = _base["brazo_lupa"] + sube;
+			brazo.Rotation = Mathf.DegToRad(1.5f) * Mathf.Sin(ang + 0.4f);
+		}
+		if (_destello != null)
+		{
+			// Entre 1.2 s y 1.86 s la franja cruza el vidrio y el borde del aro brilla; a contraluz no hay destello
+			float avance = (s - 1.2f) / 0.66f;
+			float luz = _aContraluz ? 0f : 1f;
+			_destello.SetShaderParameter("avance", Mathf.Lerp(-0.15f, 1.15f, avance));
+			_destello.SetShaderParameter("intensidad", avance is >= 0f and <= 1f ? luz : 0f);
+			_brilloAro.Modulate = new Color(1, 1, 1, Campana(s, 1.35f, 1.86f) * luz);
+		}
+	}
+
+	// 0 fuera de [desde, hasta]; sube y baja suave dentro
+	private static float Campana(float s, float desde, float hasta)
+	{
+		if (s < desde || s > hasta) return 0f;
+		return Mathf.Sin(Mathf.Pi * (s - desde) / (hasta - desde));
+	}
+
+	private static Vector2 Vec(Variant v)
+	{
+		var a = v.AsGodotArray();
+		return new Vector2((float)a[0].AsDouble(), (float)a[1].AsDouble());
 	}
 
 	// ---------- Utilidades ----------

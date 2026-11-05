@@ -43,6 +43,9 @@ func probar() -> void:
 	escala = minf(hud._lienzo.size.x / 1600.0, hud._lienzo.size.y / 900.0)
 	hud.registrar_pista("prueba_a", "Grabadora", "Primera pista")
 	hud.registrar_pista("prueba_b", "Reloj", "Segunda pista")
+	hud.pistas[1].imagen = load("res://Assets/Pistas/reloj.png")
+	hud.pistas[1].examinada = true
+	hud._pista_diario = 1
 	var ids: Array[String] = ["prueba_a", "prueba_b"]
 	tablero.Sugerir("Arrastra las pistas al pizarrón.", ids)
 	tablero.Abrir()
@@ -62,6 +65,13 @@ func probar() -> void:
 		if zona.has("pista"):
 			origenes.append(hud._origen_diario_tablero() + zona.rect.get_center() * hud.ESCALA_DIARIO_TABLERO)
 	assert(origenes.size() == 2, "Deben existir dos fotografías arrastrables")
+	var pantalla := Rect2(Vector2.ZERO, hud._lienzo.size / escala)
+	for zona in hud._zonas_libro:
+		var rect: Rect2 = zona.rect
+		rect.position = hud._origen_diario_tablero() + rect.position * hud.ESCALA_DIARIO_TABLERO
+		rect.size *= hud.ESCALA_DIARIO_TABLERO
+		assert(pantalla.encloses(rect), "La libreta compacta conserva sus controles en pantalla")
+		assert(rect.end.y < pantalla.end.y - 78, "La libreta no invade las herramientas del tablero")
 	# Un clic inspecciona sin añadir tarjetas ni generar deducciones.
 	boton(origenes[0], true)
 	boton(origenes[0], false)

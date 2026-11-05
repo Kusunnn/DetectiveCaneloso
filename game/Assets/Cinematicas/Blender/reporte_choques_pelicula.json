@@ -1,0 +1,171 @@
+{
+ "cuadros": {
+  "1": {
+   "nombre": "Caneloso pone PLAY",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "2": {
+   "nombre": "Los carretes giran",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "3": {
+   "nombre": "El reloj marca las 3:09",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "4": {
+   "nombre": "Plano de situación",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "5": {
+   "nombre": "REC",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "6": {
+   "nombre": "Porky dormido",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "7": {
+   "nombre": "La rejilla se abre",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "8": {
+   "nombre": "La figura baja por la cuerda",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "9": {
+   "nombre": "El susurro",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "10": {
+   "nombre": "El reloj en sus manos",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "11": {
+   "nombre": "El reloj cae",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "12": {
+   "nombre": "La carátula y la pluma",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "13": {
+   "nombre": "Porky despierta",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "14": {
+   "nombre": "Porky cuelga el reloj",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "15": {
+   "nombre": "Porky saca la cinta",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "16": {
+   "nombre": "Porky se va",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "17": {
+   "nombre": "Caneloso, la mano en el botón",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "18": {
+   "nombre": "Rebobina y la vuelve a oír",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "19": {
+   "nombre": "Caneloso mira la rejilla",
+   "choques": {},
+   "intersecciones": 0
+  }
+ },
+ "ik": {
+  "1:Caneloso:ManoI": 0.0948,
+  "2:Caneloso:ManoI": 0.0948,
+  "3:Porky:ManoI": 0.1192,
+  "3:Porky:ManoD": 0.1444,
+  "4:Porky:ManoI": 0.1192,
+  "4:Porky:ManoD": 0.1444,
+  "5:Porky:ManoI": 0.1192,
+  "5:Porky:ManoD": 0.1444,
+  "6:Porky:ManoI": 0.1192,
+  "6:Porky:ManoD": 0.1444,
+  "7:Porky:ManoI": 0.1192,
+  "7:Porky:ManoD": 0.1444,
+  "7:Figura:ManoI": 0.0,
+  "8:Porky:ManoI": 0.1192,
+  "8:Porky:ManoD": 0.1444,
+  "8:Figura:ManoI": 0.0,
+  "8:Figura:ManoD": 0.0,
+  "9:Porky:ManoI": 0.1192,
+  "9:Porky:ManoD": 0.1444,
+  "9:Figura:ManoI": 0.0,
+  "9:Figura:ManoD": 0.0,
+  "10:Porky:ManoI": 0.1192,
+  "10:Porky:ManoD": 0.1444,
+  "10:Figura:ManoI": 0.0,
+  "10:Figura:ManoD": 0.0,
+  "11:Porky:ManoI": 0.1192,
+  "11:Porky:ManoD": 0.1444,
+  "12:Porky:ManoI": 0.1192,
+  "12:Porky:ManoD": 0.1444,
+  "14:Porky:ManoI": 0.1325,
+  "14:Porky:ManoD": 0.1207,
+  "15:Porky:ManoD": 0.0781,
+  "15:Porky:ManoI": 0.0493,
+  "17:Caneloso:ManoI": 0.0948,
+  "18:Caneloso:ManoI": 0.0886,
+  "19:Caneloso:ManoI": 0.1267
+ },
+ "ik_lejos": {
+  "1:Caneloso:ManoI": 0.0948,
+  "2:Caneloso:ManoI": 0.0948,
+  "3:Porky:ManoI": 0.1192,
+  "3:Porky:ManoD": 0.1444,
+  "4:Porky:ManoI": 0.1192,
+  "4:Porky:ManoD": 0.1444,
+  "5:Porky:ManoI": 0.1192,
+  "5:Porky:ManoD": 0.1444,
+  "6:Porky:ManoI": 0.1192,
+  "6:Porky:ManoD": 0.1444,
+  "7:Porky:ManoI": 0.1192,
+  "7:Porky:ManoD": 0.1444,
+  "8:Porky:ManoI": 0.1192,
+  "8:Porky:ManoD": 0.1444,
+  "9:Porky:ManoI": 0.1192,
+  "9:Porky:ManoD": 0.1444,
+  "9:Figura:ManoI": 0.0102,
+  "9:Figura:ManoD": 0.0111,
+  "10:Porky:ManoI": 0.1192,
+  "10:Porky:ManoD": 0.1444,
+  "11:Porky:ManoI": 0.1192,
+  "11:Porky:ManoD": 0.1444,
+  "12:Porky:ManoI": 0.1192,
+  "12:Porky:ManoD": 0.1444,
+  "14:Porky:ManoI": 0.1325,
+  "14:Porky:ManoD": 0.1207,
+  "15:Porky:ManoD": 0.0781,
+  "15:Porky:ManoI": 0.0493,
+  "17:Caneloso:ManoI": 0.0948,
+  "18:Caneloso:ManoI": 0.0886,
+  "19:Caneloso:ManoI": 0.1267
+ },
+ "total_intersecciones": 0
+}

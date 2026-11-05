@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" path="res://Assets/Models/Aya/Ayas.tscn" id="22_q6cd3"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Miaurio/miaurio.tscn" id="23_kdvbp"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Personajes/eriz.glb" id="24_o7prt"]
-[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/miami.glb" id="25_r5n3a"]
+[ext_resource type="PackedScene" path="res://Assets/Models/Personajes/mimita_rig.glb" id="25_r5n3a"]
 [ext_resource type="PackedScene" path="res://Assets/Models/Tony/Tony.tscn" id="26_kqkqx"]
 [ext_resource type="Script" path="res://Escenas/Caso1/Interrogatorio/SalaInterrogatorioCaso1.cs" id="27_vpiht"]
 
@@ -979,6 +979,8 @@ transform = Transform3D(9.74026, 0, 0, 0, 9.74026, 0, 0, 0, 9.74026, 0, 0, -0.00
 script = ExtResource("20_unede")
 Modelo = NodePath("../Modelo")
 AlturaOjos = 1.2
+Animacion = "Reposo"
+Variantes = PackedStringArray("ReposoMirar", "ReposoPeso")
 
 [node name="Colision" type="StaticBody3D" parent="Implicados/Mimita" unique_id=1802284563 groups=["auditoria_invisible_ok"]]
 collision_layer = 0

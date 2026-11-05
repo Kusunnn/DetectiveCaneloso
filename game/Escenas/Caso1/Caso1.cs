@@ -83,8 +83,17 @@ public partial class Caso1 : Node, ICuadernoPistas
 	private Hablante _caneloso;
 	private bool _enDialogo;
 
+	// Para una cinemática: el campamento solo es el decorado, el caso no arranca ni toca la partida
+	public bool SoloVer { get; set; }
+
 	public override void _Ready()
 	{
+		if (SoloVer)
+		{
+			SetProcess(false);
+			SetProcessUnhandledInput(false);
+			return;
+		}
 		_caneloso = Dialogo.HablantePorNombre("Caneloso");
 		_caneloso.TonoVoz = 1f;
 
@@ -162,13 +171,26 @@ public partial class Caso1 : Node, ICuadernoPistas
 		_pistas.Add(id);
 		Cambio();
 		Autoguardar("Pista: " + id);
-		if (!_guion.ComentarPista(Jugador, id))
+		if (id == LibroQuemado && !CinematicaCaso1.Vista(LibretosCaso1.IdLibro))
+			Cinematica(LibretosCaso1.IdLibro, LibretosCaso1.Libro(_guion.AnotarConCinematica(id)));
+		else if (id == FotoGrupo && !CinematicaCaso1.Vista(LibretosCaso1.IdFoto) && Jugador.GetTree().GetNodesInGroup("objetos_pista").OfType<ObjetoPista>().FirstOrDefault(p => p.IdPista == id) is { } foto)
+			Cinematica(LibretosCaso1.IdFoto, LibretosCaso1.Foto(_guion.AnotarConCinematica(id), foto.GlobalPosition, foto.GlobalBasis.Z));
+		else if (!_guion.ComentarPista(Jugador, id))
 			Hud.Call("agregar_nota", "Pista: " + id);
 		AvisarSiPuedeSalir();
 		ActualizarObjetivo();
 	}
 
 	private bool _avisoSendero;
+
+	private async void Cinematica(string id, CinematicaCaso1.Libreto libreto)
+	{
+		_enDialogo = true;
+		await CinematicaCaso1.Reproducir(this, id, libreto);
+		if (!IsInsideTree()) return;
+		_enDialogo = false;
+		Cambio();
+	}
 
 	private void AvisarSiPuedeSalir()
 	{

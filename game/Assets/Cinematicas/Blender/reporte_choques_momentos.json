@@ -1,0 +1,118 @@
+{
+ "cuadros": {
+  "1": {
+   "nombre": "La grabadora graba",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "2": {
+   "nombre": "Porky dormido",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "3": {
+   "nombre": "La rejilla se abre",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "4": {
+   "nombre": "La figura cuelga",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "5": {
+   "nombre": "El susurro",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "6": {
+   "nombre": "El reloj descolgado",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "7": {
+   "nombre": "El reloj cae",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "8": {
+   "nombre": "La carátula y la pluma",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "9": {
+   "nombre": "Porky despierta",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "10": {
+   "nombre": "Porky cuelga el reloj",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "11": {
+   "nombre": "Porky saca la cinta",
+   "choques": {},
+   "intersecciones": 0
+  },
+  "12": {
+   "nombre": "Porky se va",
+   "choques": {},
+   "intersecciones": 0
+  }
+ },
+ "ik": {
+  "1:Porky:ManoI": 0.1192,
+  "1:Porky:ManoD": 0.1444,
+  "2:Porky:ManoI": 0.1192,
+  "2:Porky:ManoD": 0.1444,
+  "3:Porky:ManoI": 0.1192,
+  "3:Porky:ManoD": 0.1444,
+  "3:Figura:ManoI": 0.0,
+  "4:Porky:ManoI": 0.1192,
+  "4:Porky:ManoD": 0.1444,
+  "4:Figura:ManoI": 0.0,
+  "4:Figura:ManoD": 0.0,
+  "5:Porky:ManoI": 0.1192,
+  "5:Porky:ManoD": 0.1444,
+  "5:Figura:ManoI": 0.0,
+  "5:Figura:ManoD": 0.0,
+  "6:Porky:ManoI": 0.1192,
+  "6:Porky:ManoD": 0.1444,
+  "6:Figura:ManoI": 0.0,
+  "6:Figura:ManoD": 0.0,
+  "7:Porky:ManoI": 0.1192,
+  "7:Porky:ManoD": 0.1444,
+  "8:Porky:ManoI": 0.1192,
+  "8:Porky:ManoD": 0.1444,
+  "10:Porky:ManoI": 0.1325,
+  "10:Porky:ManoD": 0.1207,
+  "11:Porky:ManoD": 0.0781,
+  "11:Porky:ManoI": 0.0493
+ },
+ "ik_lejos": {
+  "1:Porky:ManoI": 0.1192,
+  "1:Porky:ManoD": 0.1444,
+  "2:Porky:ManoI": 0.1192,
+  "2:Porky:ManoD": 0.1444,
+  "3:Porky:ManoI": 0.1192,
+  "3:Porky:ManoD": 0.1444,
+  "4:Porky:ManoI": 0.1192,
+  "4:Porky:ManoD": 0.1444,
+  "5:Porky:ManoI": 0.1192,
+  "5:Porky:ManoD": 0.1444,
+  "5:Figura:ManoI": 0.0102,
+  "5:Figura:ManoD": 0.0111,
+  "6:Porky:ManoI": 0.1192,
+  "6:Porky:ManoD": 0.1444,
+  "7:Porky:ManoI": 0.1192,
+  "7:Porky:ManoD": 0.1444,
+  "8:Porky:ManoI": 0.1192,
+  "8:Porky:ManoD": 0.1444,
+  "10:Porky:ManoI": 0.1325,
+  "10:Porky:ManoD": 0.1207,
+  "11:Porky:ManoD": 0.0781,
+  "11:Porky:ManoI": 0.0493
+ },
+ "total_intersecciones": 0
+}

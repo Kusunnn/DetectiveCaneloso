@@ -198,6 +198,36 @@
 					"final:A"
 				]
 			}
+		},
+		"a_aya": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "seguro",
+					"texto": "Aya. Tenía la cámara, estaba en el bosque y no dijo nada de lo que vio."
+				}
+			],
+			"siguiente": "equivocado",
+			"al_completar": {
+				"eventos": [
+					"acusado:aya"
+				]
+			}
+		},
+		"a_mimita": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"animo": "seguro",
+					"texto": "Mimita. Tachó la hora en su registro y mintió sobre dónde estuvo."
+				}
+			],
+			"siguiente": "equivocado",
+			"al_completar": {
+				"eventos": [
+					"acusado:mimita"
+				]
+			}
 		}
 	}
 }

@@ -4,6 +4,8 @@ Animación de la cinemática final del Caso 0 «La cinta de las 3:12». Se arma 
 
 Godot no importa esta carpeta (`.gdignore`).
 
+**La versión del juego es la película** (`scripts/pelicula.py` → `Caso0/cinta_pelicula.glb`, sección «Película»). La versión animada y la de momentos congelados ya no están en el juego: sus `.glb` y su código siguen en el historial de git, y aquí quedan sus scripts y escenas porque la película toma de ellos las poses y la Sala 1. Lo que sigue sobre esas versiones es histórico.
+
 ## Archivos
 
 | Archivo | Qué es |
@@ -39,3 +41,47 @@ Después de exportar, abrir Godot (o `--import`) para que reimporte `cinta_caso0
 - **El reloj.** Cae con Rigid Body (cilindro de 14.5 cm de radio, piso y pared pasivos) y se hornea cuadro a cuadro.
 - **Cámara.** Una toma por tramo con cortes secos, lente por toma y un leve movimiento de cámara en mano. El desenfoque lo pone Godot.
 - **Exportación.** Una sola animación «Cinta» (pistas NLA) con Porky, la figura, la cámara, la cuerda y vacíos `Anim_*` que llevan el recorrido del reloj, la tapa de la rejilla, la puerta, la silla y la cinta. En Godot, los objetos reales de la sala copian esos vacíos.
+
+## Momentos congelados (versión nueva)
+
+La cinemática también existe como 12 cuadros quietos, estilo Return of the Obra Dinn (`CinematicaCinta.UsarMomentosCongelados`, por defecto activado; en `false` se ve la versión animada de arriba).
+
+| Archivo | Qué es |
+|---|---|
+| `scripts/momentos.py` | Los 12 cuadros: la pose de cada personaje hueso por hueso (giros en los ejes del personaje), los puntos que tocan las manos (IK), los objetos, el polvo, la cuerda, la cámara de inicio y de fin con su lente, el punto de enfoque y la luz de acento |
+| `scripts/construir_momentos.py` | Abre `caso0_cinta.blend`, le quita la animación, pone cada pose, corrige los contactos hasta que no atraviesan nada, revisa choques y exporta |
+| `caso0_momentos.blend` | La escena con los 12 cuadros (el cuadro k en el fotograma 1 + 30·k) |
+| `reporte_choques_momentos.json` | Triángulos que se cruzan por cuadro (personajes contra la sala, los objetos y entre ellos) y cuánto le falta a cada mano para su punto |
+
+```
+# Armar, revisar choques y exportar Assets/Cinematicas/Caso0/cinta_momentos.glb
+blender -b --python game/Assets/Cinematicas/Blender/scripts/construir_momentos.py
+
+# Renders rápidos de algunos cuadros desde su cámara (y desde las cámaras libres de momentos.py)
+blender -b --python game/Assets/Cinematicas/Blender/scripts/construir_momentos.py -- --vista <carpeta> 2,5,9 --libre
+```
+
+- **Poses.** No hay animaciones de Quaternius ni keyframes calculados: cada hueso tiene su giro escrito a mano y el IK solo lleva la mano o el pie al punto que toca. Después, los «contactos» corrigen un parámetro de la pose paso a paso (subir, bajar, acercar, levantar la cabeza) hasta que lo que se apoya queda tocando sin meterse.
+- **Choques.** Se revisan con árboles BVH de las mallas deformadas: triángulos del personaje contra la mesa, las sillas, las paredes, el piso, el techo (salvo el hueco de la rejilla), el reloj, la grabadora, la puerta, la cuerda y el otro personaje.
+- **Exportación.** Una animación «Momentos» con un fotograma por cuadro e interpolación constante (Porky, la figura y los vacíos `Anim_*`), y sin animar `Cam_k_Ini`, `Cam_k_Fin`, `Foco_k`, `Luz_k`, `Polvo_k` y `Cuerda_k`. `CinematicaCintaMomentos.cs` hace el resto.
+
+## Versión película (presente → cinta → presente)
+
+La misma herramienta arma la versión película con otros datos: `scripts/pelicula.py` (19 cuadros; toma las poses del pasado de `momentos.py` y agrega a Caneloso en el presente). Lo que Godot necesita y no va en el .glb (duración, época, transición, hora, luces, sonidos, subtítulos y música) sale en `Caso0/cinta_pelicula.json`.
+
+```
+# Caneloso: su modelo del juego a glTF (el .fbx de Mixamo entra a Blender con escalas rotas)
+Godot --headless --path game --script res://Herramientas/exportar_modelo_blender.gd -- res://Assets/Models/Caneloso/Archivo/player.tscn <ruta absoluta>/game/Assets/Cinematicas/Blender/caneloso.glb
+
+# Armar, revisar choques y exportar cinta_pelicula.glb + cinta_pelicula.json
+blender -b --python game/Assets/Cinematicas/Blender/scripts/construir_momentos.py -- --datos pelicula
+
+# Renders rápidos
+blender -b --python game/Assets/Cinematicas/Blender/scripts/construir_momentos.py -- --datos pelicula --vista <carpeta> 1,7,11 --libre
+```
+
+Archivos: `caso0_pelicula.blend`, `caneloso.glb`, `reporte_choques_pelicula.json`. En Godot la reproduce `CinematicaCintaPelicula.cs` (`CinematicaCinta.Version = Pelicula`).
+
+## Las 23:20 del Caso 1
+
+`scripts/construir_2320.py` posa a Tony y a Porky en el muelle (cuadros 2 y 4) y exporta `Caso1/reconstruccion_2320.glb` y `reporte_choques_2320.json`. Usa `caso1_tony.glb` y `caso1_remo.glb`, exportados con `Herramientas/exportar_modelo_blender.gd` y limpiados con `scripts/limpiar_glb.py`. Los brazos de Tony miden 0.32 m y su cabeza 1 m, así que el remo se levanta a un lado, no sobre la cabeza. La cámara, las luces y los sonidos están en `LibretosCaso1.Reconstruccion`.

@@ -1,0 +1,178 @@
+{
+ "lienzo": [
+  1504,
+  2158
+ ],
+ "pies": [
+  723.6,
+  2130.1
+ ],
+ "cadera": [
+  613.8,
+  1626.6
+ ],
+ "capas": [
+  {
+   "nombre": "cuerpo",
+   "archivo": "cuerpo.png",
+   "offset": [
+    259,
+    1082
+   ],
+   "tam": [
+    727,
+    1070
+   ],
+   "pivote": [
+    613.8,
+    1626.6
+   ],
+   "padre": null,
+   "orden": 0
+  },
+  {
+   "nombre": "oreja_lejana",
+   "archivo": "oreja_lejana.png",
+   "offset": [
+    923,
+    424
+   ],
+   "tam": [
+    295,
+    591
+   ],
+   "pivote": [
+    974.7,
+    504.0
+   ],
+   "padre": null,
+   "orden": 1
+  },
+  {
+   "nombre": "cabeza",
+   "archivo": "cabeza.png",
+   "offset": [
+    7,
+    10
+   ],
+   "tam": [
+    1091,
+    1145
+   ],
+   "pivote": [
+    649.7,
+    1165.6
+   ],
+   "padre": null,
+   "orden": 2
+  },
+  {
+   "nombre": "ojos_abiertos",
+   "archivo": "ojos_abiertos.png",
+   "offset": [
+    378,
+    575
+   ],
+   "tam": [
+    435,
+    168
+   ],
+   "pivote": [
+    649.7,
+    1165.6
+   ],
+   "padre": "cabeza",
+   "orden": 3
+  },
+  {
+   "nombre": "ojos_cerrados",
+   "archivo": "ojos_cerrados.png",
+   "offset": [
+    378,
+    588
+   ],
+   "tam": [
+    441,
+    127
+   ],
+   "pivote": [
+    649.7,
+    1165.6
+   ],
+   "padre": "cabeza",
+   "orden": 4
+  },
+  {
+   "nombre": "ceja_arriba",
+   "archivo": "ceja_arriba.png",
+   "offset": [
+    731,
+    508
+   ],
+   "tam": [
+    77,
+    30
+   ],
+   "pivote": [
+    649.7,
+    1165.6
+   ],
+   "padre": "cabeza",
+   "orden": 5
+  },
+  {
+   "nombre": "oreja_cercana",
+   "archivo": "oreja_cercana.png",
+   "offset": [
+    58,
+    601
+   ],
+   "tam": [
+    174,
+    556
+   ],
+   "pivote": [
+    138.9,
+    680.0
+   ],
+   "padre": null,
+   "orden": 6
+  },
+  {
+   "nombre": "brazo_lupa",
+   "archivo": "brazo_lupa.png",
+   "offset": [
+    801,
+    892
+   ],
+   "tam": [
+    685,
+    501
+   ],
+   "pivote": [
+    855.7,
+    1227.8
+   ],
+   "padre": null,
+   "orden": 7
+  },
+  {
+   "nombre": "mascara_vidrio",
+   "archivo": "mascara_vidrio.png",
+   "offset": [
+    1204,
+    898
+   ],
+   "tam": [
+    275,
+    275
+   ],
+   "pivote": [
+    855.7,
+    1227.8
+   ],
+   "padre": "brazo_lupa",
+   "orden": 8
+  }
+ ]
+}

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 
 // Caso 1 «La Noche del Ciervo de Luz» — Escenario 2: el Lago y el Bosque (HU-20.6).
 // Las pistas del sendero, el bosque, la orilla, el embarcadero y el cobertizo de botes (cerrado hasta tener el
@@ -10,7 +11,7 @@ public partial class Caso1Lago : EscenarioCaso1
 	private const string HuellasPezuna = "huellas_pezuna";
 	private const string HuellasDetenidas = "huellas_detenidas";
 	private const string Cornamenta = "cornamenta_zancos";
-	private const string Cuaderno = "cuaderno_eriz";
+	private const string CuadernoEriz = "cuaderno_eriz";
 	private const string Silbato = "silbato_ts";
 	private const string Linterna = "linterna_porky";
 	private const string RemoSangre = "remo_sangre";
@@ -26,12 +27,12 @@ public partial class Caso1Lago : EscenarioCaso1
 	{
 		("El sendero baja al lago: ¿por dónde caminó el «ciervo»?", new[] { HuellasPezuna, HuellasDetenidas }),
 		("Los bramidos salían del bosque, al oeste del sendero.", new[] { Altavoz, Cornamenta }),
-		("En la orilla oeste alguien pasó un buen rato sentado.", new[] { Cuaderno }),
+		("En la orilla oeste alguien pasó un buen rato sentado.", new[] { CuadernoEriz }),
 		("El embarcadero: ahí terminó todo. El agua aún brilla.", new[] { Silbato, Linterna, RemoSangre }),
 		("¿De dónde salió el remo? El cobertizo de botes, al este del muelle.", new[] { HuecoRemo }),
 	};
 	// Sin estas, el embarcadero queda sin revisar: Hecdog lo recuerda antes de irse a la estación
-	private static readonly string[] PruebasEmbarcadero = { RemoSangre, Silbato, Linterna, Cuaderno };
+	private static readonly string[] PruebasEmbarcadero = { RemoSangre, Silbato, Linterna, CuadernoEriz };
 
 	[Export] public Puerta PuertaCobertizo;
 	[Export] public PuntoInteraccion VolverCampamento;
@@ -52,6 +53,7 @@ public partial class Caso1Lago : EscenarioCaso1
 	public override void _Ready()
 	{
 		base._Ready();
+		if (SoloVer) return;
 		PuertaCobertizo.Bloqueada = true;
 		PuertaCobertizo.MensajeBloqueada = "Cobertizo de botes. Cerrado con llave: solo Tony y Porky tienen copia.";
 		VolverCampamento.Usado += () => Conversar(AlVolverCampamento);
@@ -67,24 +69,37 @@ public partial class Caso1Lago : EscenarioCaso1
 		AbrirSiTieneLlavero(false);
 		ActualizarObjetivo();
 		// Lo que piensa al llegar sale una sola vez (antes se repetía cada vez que volvía sin pistas del lago)
-		if (Pistas.Count > 0 || !IsInsideTree() || !PrimeraVez("_llegada")) return;
-		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
-		if (!IsInsideTree() || EnDialogo) return;
+		if (Pistas.Count > 0 || !Sigue() || !PrimeraVez("_llegada")) return;
+		await ToSignal(GetTree().CreateTimer(0.3), SceneTreeTimer.SignalName.Timeout);
+		if (!Sigue() || EnDialogo) return;
 		EnDialogo = true;
-		await Dialogo.Decir(Caneloso,
+		await CinematicaCaso1.Reproducir(this, LibretosCaso1.IdLlegada, LibretosCaso1.Llegada(new[]
+		{
 			"El sendero del Lago Espejo.",
 			"Aquí abajo vieron al «ciervo de luz». Y aquí encontraron a Porky.",
-			"El agua todavía brilla.");
-		EnDialogo = false;
+			"El agua todavía brilla.",
+		}));
+		if (Sigue()) EnDialogo = false;
 	}
 
 	// ---------- Pistas ----------
+
+	private async void CinematicaSilbato(string comentario, Node3D silbato)
+	{
+		EnDialogo = true;
+		await CinematicaCaso1.Reproducir(this, LibretosCaso1.IdSilbato, LibretosCaso1.Silbato(comentario, silbato));
+		if (!Sigue()) return;
+		EnDialogo = false;
+		Cambio();
+	}
 
 	protected override void AlRegistrarEvidencia(string id)
 	{
 		if (id == Altavoz && Estatica != null) Estatica.Stop();
 		// Lo que piensa Caneloso y lo que anota viene del guion (Datos/Dialogos/caso1_pistas.json)
-		if (!Guion.ComentarPista(Jugador, id)) Hud.Call("agregar_nota", "Pista: " + id);
+		if (id == Silbato && !CinematicaCaso1.Vista(LibretosCaso1.IdSilbato) && GetTree().GetNodesInGroup("objetos_pista").OfType<ObjetoPista>().FirstOrDefault(p => p.IdPista == id) is { } silbato)
+			CinematicaSilbato(Guion.AnotarConCinematica(id), silbato);
+		else if (!Guion.ComentarPista(Jugador, id)) Hud.Call("agregar_nota", "Pista: " + id);
 		ActualizarObjetivo();
 	}
 

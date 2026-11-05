@@ -63,6 +63,7 @@ public partial class VentanaDialogo : CanvasLayer
 	private Label _ayuda;
 	private VBoxContainer _opciones;
 	private GridContainer _evidencias;
+	private ScrollContainer _marcoEvidencias;
 
 	private TaskCompletionSource<int> _espera;
 	private int _indiceSalir = -1;
@@ -178,7 +179,11 @@ public partial class VentanaDialogo : CanvasLayer
 		_evidencias = new GridContainer { Columns = 4 };
 		_evidencias.AddThemeConstantOverride("h_separation", 12);
 		_evidencias.AddThemeConstantOverride("v_separation", 8);
-		columna.AddChild(_evidencias);
+		// Con muchas pruebas el selector se desplaza en lugar de salirse de la pantalla
+		_marcoEvidencias = new ScrollContainer { HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled, Visible = false };
+		_marcoEvidencias.AddChild(_evidencias);
+		_evidencias.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+		columna.AddChild(_marcoEvidencias);
 
 		_ayuda = new Label { Text = "Clic o [E] para continuar", HorizontalAlignment = HorizontalAlignment.Right };
 		_ayuda.AddThemeFontOverride("font", _mono);
@@ -268,10 +273,14 @@ public partial class VentanaDialogo : CanvasLayer
 		var cancelar = CrearBoton("Mejor no mostrarle nada", true);
 		cancelar.Pressed += () => _espera?.TrySetResult(-1);
 		_evidencias.AddChild(cancelar);
+		_evidencias.Columns = pistas.Count > 8 ? 3 : 4;
+		_marcoEvidencias.CustomMinimumSize = new Vector2(0, Mathf.Min(((pistas.Count + 1 + _evidencias.Columns - 1) / _evidencias.Columns) * 82, 480));
+		_marcoEvidencias.Visible = true;
 		if (!AplicarSugerencia(_evidencias)) ((Button)_evidencias.GetChild(0)).GrabFocus();
 
 		int elegida = await _espera.Task;
-		foreach (Node n in _evidencias.GetChildren()) n.QueueFree();
+		foreach (Node n in _evidencias.GetChildren()) { _evidencias.RemoveChild(n); n.QueueFree(); }
+		_marcoEvidencias.Visible = false;
 		RestaurarRaton();
 		Cerrar();
 		return elegida < 0 ? null : pistas[elegida].Id;
@@ -343,6 +352,36 @@ public partial class VentanaDialogo : CanvasLayer
 		return textura;
 	}
 
+	// ---------- Para las pruebas ----------
+
+	public bool PruebasHayOpciones => _opciones.GetChildCount() > 0 || _evidencias.GetChildCount() > 0;
+
+	public string PruebasOpciones()
+	{
+		var textos = new List<string>();
+		foreach (Node n in _opciones.GetChildren()) if (n is Button b) textos.Add(b.Text);
+		foreach (Node n in _evidencias.GetChildren()) if (n is Button b) textos.Add(b.Text);
+		return string.Join(" | ", textos);
+	}
+
+	public bool PruebasElegir(string fragmento)
+	{
+		foreach (Node contenedor in new Node[] { _opciones, _evidencias })
+			foreach (Node n in contenedor.GetChildren())
+				if (n is Button b && !b.Disabled && b.Text.Contains(fragmento))
+				{
+					b.EmitSignal(BaseButton.SignalName.Pressed);
+					return true;
+				}
+		return false;
+	}
+
+	public void PruebasAvanzar()
+	{
+		_escritura?.Kill();
+		_espera?.TrySetResult(0);
+	}
+
 	// ---------- Interior ----------
 
 	private Button CrearBoton(string texto, bool apagado)
@@ -411,6 +450,7 @@ public partial class VentanaDialogo : CanvasLayer
 	// Efecto de máquina de escribir; un clic mientras escribe completa la línea
 	private void Escribir(string texto, bool instantaneo = false)
 	{
+		GestorPartida.Instancia?.ContarEvento("linea", _nombre.Text + ": " + texto);
 		_texto.Text = texto;
 		_escritura?.Kill();
 		_reproductorVoz.Stop();
@@ -530,7 +570,17 @@ public partial class VentanaDialogo : CanvasLayer
 
 	private void LimpiarOpciones()
 	{
-		foreach (Node boton in _opciones.GetChildren()) boton.QueueFree();
+		foreach (Node boton in _opciones.GetChildren()) { _opciones.RemoveChild(boton); boton.QueueFree(); }
+	}
+
+	// Interrogatorio en primera persona: la caja queda más baja para que se vea la mesa y a quien se interroga
+	public void Compacto(bool activo)
+	{
+		var panel = (PanelContainer)_caja;
+		panel.OffsetTop = activo ? -250 : -330;
+		_marcoRetrato.Scale = Vector2.One;
+		_retrato.CustomMinimumSize = activo ? new Vector2(130, 130) : new Vector2(180, 180);
+		_marcoRetrato.CustomMinimumSize = activo ? new Vector2(146, 0) : new Vector2(196, 0);
 	}
 
 	private Jugador JugadorActual() => GetTree().GetFirstNodeInGroup("jugador") as Jugador;

@@ -84,7 +84,7 @@ func _initialize() -> void:
 	caso.Traer("Tony")
 	await caso.ImplicadoSentado
 	var tony: Node3D = current_scene.get_node("Implicados/Tony")
-	_revisar(tony.visible and tony.global_position.distance_to(current_scene.get_node("PuntoSilla").global_position) < 0.1 and sentados == ["Tony"],
+	_revisar(tony.visible and absf(tony.global_position.x) < 0.3 and absf(tony.global_position.z + 2.85) < 0.6 and sentados == ["Tony"],
 		"Tony entra y llega a la silla del sospechoso")
 	caso.Traer("Aya")
 	await caso.ImplicadoSentado

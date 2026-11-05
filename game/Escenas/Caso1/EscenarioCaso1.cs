@@ -50,13 +50,23 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 	protected virtual void AlObtenerObjeto(string id) { }
 	protected virtual void ActualizarObjetivo() { }
 
+	// Para una cinemática: el escenario solo es el decorado, el caso no arranca ni toca la partida
+	public bool SoloVer { get; set; }
+
 	public override void _Ready()
 	{
+		if (SoloVer)
+		{
+			SetProcess(false);
+			SetProcessUnhandledInput(false);
+			return;
+		}
 		Caneloso = Dialogo.HablantePorNombre("Caneloso");
 		Caneloso.TonoVoz = 1f;
 		Guion = new GuionCaso1(Dialogo, Hud, Caneloso, Cambio)
 		{
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
+			NodoEscena = this,
 		};
 
 		Hud.Set("caso", "01");
@@ -161,13 +171,16 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 
 	// ---------- Conversaciones y entrada ----------
 
+	// Cambiar de escena a media conversación (cargar partida) libera este nodo: no se le puede ni preguntar si sigue
+	protected bool Sigue() => IsInstanceValid(this) && IsInsideTree();
+
 	protected async void Conversar(Func<System.Threading.Tasks.Task> conversacion)
 	{
 		if (EnDialogo || Tablero.Abierto) return;
 		EnDialogo = true;
 		Dialogo.Retener();
 		await conversacion();
-		if (!IsInsideTree()) return;
+		if (!Sigue()) return;
 		Dialogo.Soltar();
 		EnDialogo = false;
 	}

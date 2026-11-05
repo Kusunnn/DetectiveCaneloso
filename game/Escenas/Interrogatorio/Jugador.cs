@@ -13,6 +13,8 @@ public partial class Jugador : CharacterBody3D
 	[Signal] public delegate void DetalleDescubiertoEventHandler(string origenId, string id);
 
 	[Export] public float Velocidad = 3.0f;
+	[Export] public float Aceleracion = 20f;   // m/s²: unos 0.15 s hasta caminar
+	[Export] public float Frenado = 15f;       // m/s²: unos 0.2 s hasta detenerse
 	[Export] public float SensibilidadRaton = 0.003f;
 	[Export] public float DistanciaInteraccion = 3.0f;
 	// Agacharse: velocidad relativa y alturas de la cápsula (de pie / agachado)
@@ -50,6 +52,7 @@ public partial class Jugador : CharacterBody3D
 	// El rayo de interacción solo choca con: Mundo, Muebles, Interactuables, NPC y Bloqueos de zona.
 	// La decoración sin colisión nunca tapa una pista.
 	private const uint MascaraInteraccion = 1u | 2u | 8u | 16u | 32u;
+	private const uint CapaPistas = 8u;
 	// Llaves, combinaciones... que abren contenedores en otras zonas
 	private readonly System.Collections.Generic.HashSet<string> _objetos = new System.Collections.Generic.HashSet<string>();
 	// Vista de examen (HU-07) y el aviso "[E] Examinar" justo después de recoger una evidencia
@@ -145,6 +148,11 @@ public partial class Jugador : CharacterBody3D
 				GetViewport().SetInputAsHandled();
 				objetivo.Interactuar(this);
 			}
+			else if (_alcanceBajo != null)
+			{
+				GetViewport().SetInputAsHandled();
+				MostrarPensamiento(AvisoAgacharse, 3.0);
+			}
 			// Recién recogida una evidencia, [E] sin apuntar a nada la abre en la vista de examen
 			else if (!clic && _ofertaExamen > 0 && _pistaReciente != null)
 			{
@@ -182,7 +190,7 @@ public partial class Jugador : CharacterBody3D
 		_cuerpo?.MostrarEnPrimeraPersona(!_terceraPersona);
 	}
 
-	private Camera3D CamaraActiva => _terceraPersona ? _camaraTercera : _camara;
+	public Camera3D CamaraActiva => _terceraPersona ? _camaraTercera : _camara;
 
 	private void AlCambiarPanel(bool abierto, bool expediente)
 	{
@@ -235,8 +243,31 @@ public partial class Jugador : CharacterBody3D
 	}
 
 	// Rayo desde el centro de la cámara activa; devuelve lo que se puede usar, o null
+	// Un contenedor abierto sigue siendo sólido: lo que hay adentro (el baúl, la guantera) se alcanza a través de él
+	private IInteractuable PistaDentroDe(Contenedor contenedor, Vector3 origen, Vector3 destino, Vector3 golpe)
+	{
+		const float Fondo = 0.9f;
+		var query = PhysicsRayQueryParameters3D.Create(origen, destino);
+		query.Exclude = new Godot.Collections.Array<Rid> { GetRid(), contenedor.GetRid() };
+		query.CollisionMask = CapaPistas;
+		var resultado = GetWorld3D().DirectSpaceState.IntersectRay(query);
+		if (resultado.Count == 0 || resultado["position"].AsVector3().DistanceTo(golpe) > Fondo) return null;
+		Node nodo = resultado["collider"].As<Node>();
+		for (int nivel = 0; nivel < 4 && nodo != null; nivel++, nodo = nodo.GetParent())
+			if (nodo is ObjetoPista pista) return pista;
+		return null;
+	}
+
+	// Lo que tiene en la retícula (para las pruebas)
+	public Node ApuntadoNodo => _apuntado as Node;
+
+	private const string AvisoAgacharse = "Tendría que agacharme [Ctrl]...";
+	private Node _alcanceBajo;
+	private readonly System.Collections.Generic.HashSet<ulong> _avisadosBajo = new();
+
 	private IInteractuable BuscarInteractuable()
 	{
+		_alcanceBajo = null;
 		var espacioFisico = GetWorld3D().DirectSpaceState;
 		Vector2 centroPantalla = GetViewport().GetVisibleRect().Size / 2;
 		// En tercera persona la cámara está detrás del detective, así que el rayo se alarga esa distancia
@@ -254,7 +285,13 @@ public partial class Jugador : CharacterBody3D
 		Node nodo = resultado["collider"].As<Node>();
 		for (int nivel = 0; nivel < 4 && nodo != null; nivel++, nodo = nodo.GetParent())
 		{
-			if ((nodo is Contenedor { SoloAgachado: true } || nodo is ObjetoPista { SoloAgachado: true }) && !Agachado) return null; // Hay que agacharse para alcanzarlo
+			if ((nodo is Contenedor { SoloAgachado: true } || nodo is ObjetoPista { SoloAgachado: true }) && !Agachado)
+			{
+				// Hay que agacharse para alcanzarlo: se resalta nada, pero sí se dice
+				_alcanceBajo = nodo;
+				return null;
+			}
+			if (nodo is Contenedor { EstaAbierto: true } abierto) return PistaDentroDe(abierto, origen, destino, resultado["position"].AsVector3()) ?? abierto;
 			if (nodo is IInteractuable interactuable) return interactuable;
 		}
 		return null;
@@ -495,6 +532,7 @@ public partial class Jugador : CharacterBody3D
 	// Pensamiento corto que se oculta solo (al abrir un casillero, al examinar algo...)
 	public void MostrarPensamiento(string texto, double segundos)
 	{
+		if (!CinematicaCinta.EnCurso && !CinematicaCaso1.EnCurso) GestorPartida.Instancia?.ContarEvento("pensamiento", texto);
 		MostrarTemporal("“" + texto + "”", ColorPensamiento, segundos);
 	}
 
@@ -506,7 +544,7 @@ public partial class Jugador : CharacterBody3D
 
 	private void MostrarTemporal(string texto, Color color, double segundos)
 	{
-		if (_textoTutorial == null || CinematicaCinta.EnCurso) return;
+		if (_textoTutorial == null || CinematicaCinta.EnCurso || CinematicaCaso1.EnCurso) return;
 		int id = ++_idAviso;
 		_textoTutorial.Text = texto;
 		_textoTutorial.Modulate = color;
@@ -540,7 +578,9 @@ public partial class Jugador : CharacterBody3D
 				MostrarPensamiento(objeto.ComentarioAlMirar, 4.0);
 		}
 		// Se actualiza siempre: el texto cambia al abrir un contenedor ("Abrir" → "Revisado")
-		_hud.Set("interaccion", _apuntado?.TextoAccion ?? "");
+		_hud.Set("interaccion", _apuntado?.TextoAccion ?? (_alcanceBajo != null && IsInstanceValid(_alcanceBajo) ? "Agacharme [Ctrl]" : ""));
+		if (_alcanceBajo != null && IsInstanceValid(_alcanceBajo) && _avisadosBajo.Add(_alcanceBajo.GetInstanceId()))
+			MostrarPensamiento(AvisoAgacharse, 3.0);
 	}
 
 	// Borde brillante en el objeto que apunta la retícula
@@ -650,21 +690,18 @@ public partial class Jugador : CharacterBody3D
 		Vector2 entrada = Input.GetVector("mover_izquierda", "mover_derecha", "mover_adelante", "mover_atras");
 		Vector3 direccion = (Transform.Basis * new Vector3(entrada.X, 0, entrada.Y)).Normalized();
 
-		if (direccion != Vector3.Zero)
-		{
-			velocidadActual.X = direccion.X * velocidad;
-			velocidadActual.Z = direccion.Z * velocidad;
-			SeHaMovido = true;
-		}
-		else
-		{
-			velocidadActual.X = Mathf.MoveToward(Velocity.X, 0, Velocidad);
-			velocidadActual.Z = Mathf.MoveToward(Velocity.Z, 0, Velocidad);
-		}
+		// Arranca y frena en unas décimas: ni de golpe ni resbalando
+		var plano = new Vector2(velocidadActual.X, velocidadActual.Z);
+		var objetivo = new Vector2(direccion.X, direccion.Z) * velocidad;
+		plano = plano.MoveToward(objetivo, (direccion != Vector3.Zero ? Aceleracion : Frenado) * (float)delta);
+		velocidadActual.X = plano.X;
+		velocidadActual.Z = plano.Y;
+		if (direccion != Vector3.Zero) SeHaMovido = true;
 
 		Velocity = velocidadActual;
 		MoveAndSlide();
-		bool moviendose = new Vector2(Velocity.X, Velocity.Z).LengthSquared() > 0.001f;
+		bool moviendose = new Vector2(Velocity.X, Velocity.Z).LengthSquared() > 0.01f;
+		if (_cuerpo != null) _cuerpo.Rapidez = new Vector2(Velocity.X, Velocity.Z).Length();
 		Pisadas(moviendose, (float)delta);
 		_hud.Call("actualizar_movimiento", moviendose);
 		_cuerpo?.ActualizarMovimiento(moviendose);

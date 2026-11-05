@@ -28,6 +28,7 @@ public partial class Npc : PuntoInteraccion
 
 	public void FijarAnimo(int animo)
 	{
+		GestorPartida.Instancia?.ContarEvento("reaccion", $"{GetParent()?.Name}: ánimo {animo}");
 		_velocidadRespiracion = animo <= -1 ? 4.5f : 2.2f;
 		Respiracion = animo <= -1 ? 0.022f : 0.012f;
 		Animador?.FijarAnimo(animo);
@@ -37,7 +38,11 @@ public partial class Npc : PuntoInteraccion
 	public void Hablar(bool hablando) => Animador?.Hablar(hablando);
 
 	// Negar, asentir...: una animación de una vez (si tiene animaciones)
-	public void Gesto(string animacion) => Animador?.Gesto(animacion);
+	public void Gesto(string animacion)
+	{
+		GestorPartida.Instancia?.ContarEvento("reaccion", $"{GetParent()?.Name}: {animacion}");
+		Animador?.Gesto(animacion);
+	}
 
 	public override void _Process(double delta)
 	{

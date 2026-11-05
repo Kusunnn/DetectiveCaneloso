@@ -110,8 +110,8 @@
 				},
 				{
 					"id": "acusar",
-					"texto": "Hacer la acusación",
-					"destino": "acusar"
+					"texto": "Armar el caso",
+					"destino": "armar"
 				},
 				{
 					"id": "salir",
@@ -262,6 +262,16 @@
 					"texto": "Aquí te espero, Nya. No te tardes."
 				}
 			]
+		},
+		"armar": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Hecdog, creo que ya sé quién fue."
+				}
+			],
+			"fin": true,
+			"salida": "armar"
 		}
 	}
 }

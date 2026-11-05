@@ -110,8 +110,21 @@ public class MotorDialogos
 	public Action<string> Evento;              // "al_completar": { "eventos": [...] }
 	// Quién habla: el caso puede dar retratos o tonos propios (por defecto, Assets/Retratos/<nombre>.png)
 	public Func<string, Hablante> HablantePorNombre;
+	// Para las cinemáticas: lo que hay que esperar antes de un nodo y las líneas que se cuentan en imagen
+	public Func<ArbolDialogo, NodoDialogo, Task> AntesDeNodo;
+	public Func<ArbolDialogo, NodoDialogo, LineaDialogo, bool> OmitirLinea;
+	public Func<ArbolDialogo, NodoDialogo, LineaDialogo, Task> AntesDeLinea;
+	// Interrogatorios: en lugar de la lista de pruebas, el caso ofrece sus acciones y devuelve la opción que resulta (null = salir)
+	public Func<ArbolDialogo, NodoDialogo, Task<OpcionDialogo>> ElegirAccion;
+	// Antes de decir cada línea: quién habla y con qué ánimo (lo que se le ve en la cara)
+	public Action<string, string> AnimoDeLinea;
+	// Se detiene al llegar a este nodo (sin decirlo)
+	public string DetenerEn;
+	// Lo último que dijo el personaje de la conversación (para pedirle que lo repita)
+	public readonly List<(LineaDialogo Linea, NodoDialogo Nodo)> UltimoDicho = new();
 
 	private readonly VentanaDialogo _ventana;
+	public VentanaDialogo Ventana => _ventana;
 	private readonly Dictionary<string, Hablante> _hablantes = new();
 	private readonly Dictionary<string, int> _ultimaVariante = new();
 
@@ -153,8 +166,10 @@ public class MotorDialogos
 		_ventana.Retener();
 		while (actual != null)
 		{
+			if (actual.Id == DetenerEn) break;
 			if (!(regreso && actual.Opciones.Count > 0))
 			{
+				if (AntesDeNodo != null) await AntesDeNodo(arbol, actual);
 				await Decir(arbol, actual);
 				Completar(arbol, actual);
 				var salto = actual.IrA.FirstOrDefault(s => Cumple(arbol, s.Si));
@@ -172,13 +187,22 @@ public class MotorDialogos
 			}
 			regreso = false;
 
-			var visibles = OpcionesVisibles(arbol, actual);
-			if (visibles.Count == 0) break;
-			var personaje = Hablante(arbol, arbol.Personaje);
-			personaje.Tiembla = false;
-			int salir = visibles.FindLastIndex(v => v.Opcion.Fin);
-			int elegida = await _ventana.Elegir(personaje, actual.Pregunta, visibles.Select(v => v.Vista).ToList(), salir);
-			var opcion = visibles[elegida].Opcion;
+			OpcionDialogo opcion;
+			if (ElegirAccion != null && actual.Opciones.Any(EsPrueba))
+			{
+				opcion = await ElegirAccion(arbol, actual);
+				if (opcion == null) break;
+			}
+			else
+			{
+				var visibles = OpcionesVisibles(arbol, actual);
+				if (visibles.Count == 0) break;
+				var personaje = Hablante(arbol, arbol.Personaje);
+				personaje.Tiembla = false;
+				int salir = visibles.FindLastIndex(v => v.Opcion.Fin);
+				int elegida = await _ventana.Elegir(personaje, actual.Pregunta, visibles.Select(v => v.Vista).ToList(), salir);
+				opcion = visibles[elegida].Opcion;
+			}
 			// «Seguir investigando» no se marca: siempre es la salida
 			if (!opcion.Fin && Estado.MarcarOpcion(arbol.Id, actual.Id, opcion.Id)) Cambio?.Invoke();
 			if (opcion.Fin)
@@ -199,16 +223,53 @@ public class MotorDialogos
 		return salida;
 	}
 
+	public static bool EsPrueba(OpcionDialogo opcion) => opcion.Tipo == "MOSTRAR" || opcion.Tipo == "CONTAR";
+
+	// Si se cumple lo que pide una opción
+	public bool Disponible(ArbolDialogo arbol, OpcionDialogo opcion) => Cumple(arbol, opcion.Requiere);
+
+	// Una línea corta fuera del guion (o una que se repite)
+	public async Task Hablar(ArbolDialogo arbol, string quien, string animo, string texto)
+	{
+		var hablante = Hablante(arbol, quien);
+		hablante.Animo = animo;
+		hablante.ColorAnimo = ColorDeAnimo(animo);
+		hablante.Tiembla = Tiembla(animo);
+		AnimoDeLinea?.Invoke(quien, animo);
+		await _ventana.Decir(hablante, texto);
+	}
+
+	// El personaje repite lo último que dijo, con el mismo ánimo
+	public async Task Repetir(ArbolDialogo arbol)
+	{
+		foreach (var (linea, nodo) in UltimoDicho.ToList())
+			await Hablar(arbol, string.IsNullOrEmpty(linea.Habla) ? arbol.Personaje : linea.Habla, linea.Animo ?? "", linea.Texto);
+	}
+
+	public int Credibilidad => Estado.Contador("credibilidad");
+
+	public Hablante HablanteDe(ArbolDialogo arbol, string nombre) => Hablante(arbol, nombre);
+
 	private async Task Decir(ArbolDialogo arbol, NodoDialogo nodo)
 	{
+		bool habloPersonaje = false;
 		foreach (var linea in LineasDe(arbol, nodo))
 		{
+			if (OmitirLinea?.Invoke(arbol, nodo, linea) ?? false) continue;
+			if (AntesDeLinea != null) await AntesDeLinea(arbol, nodo, linea);
 			string quien = string.IsNullOrEmpty(linea.Habla) ? arbol.Personaje : linea.Habla;
 			var hablante = Hablante(arbol, quien);
 			string animo = !string.IsNullOrEmpty(linea.Animo) ? linea.Animo : quien == arbol.Personaje ? nodo.Animo : "";
 			hablante.Animo = animo;
 			hablante.ColorAnimo = ColorDeAnimo(animo);
 			hablante.Tiembla = (nodo.Nervioso && quien == arbol.Personaje) || Tiembla(animo);
+			AnimoDeLinea?.Invoke(quien, animo);
+			if (quien == arbol.Personaje)
+			{
+				if (!habloPersonaje) UltimoDicho.Clear();
+				habloPersonaje = true;
+				UltimoDicho.Add((linea, nodo));
+			}
 			string texto = string.IsNullOrEmpty(linea.Gesto) ? linea.Texto : $"({linea.Gesto}) {linea.Texto}";
 			await _ventana.Decir(hablante, texto.Trim());
 		}

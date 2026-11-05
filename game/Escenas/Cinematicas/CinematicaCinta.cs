@@ -13,12 +13,10 @@ using System.Threading.Tasks;
 // la silla, ve la luz de REC, para la grabadora, rebobina hasta 03:12, saca la cinta y se va al vestidor
 // (sus botas son las huellas del pasillo). No se ve el rostro de la figura.
 //
-// La animación está hecha en Blender (Assets/Cinematicas/Blender, ver construir_cinta.py) y llega en
-// cinta_caso0.glb: Porky, la figura, la cámara y vacíos con el recorrido del reloj, la tapa de la rejilla, la
-// puerta, la silla y la cinta. Aquí un AnimationPlayer se pone en el segundo t cada cuadro y los objetos reales
-// de la sala copian a sus vacíos. Todo depende de t (también luces y sonidos continuos), así que IrA, adelantar
-// con clic o Enter y Movie Maker dan siempre lo mismo. Mantener [Espacio], [Esc] o B/Start la salta.
-// Todo lo que se oye viene de la cinta: va por un bus con filtro de cinta. Al terminar deja la sala como estaba.
+// Las poses, las cámaras y los objetos vienen de Blender (ver CinematicaCintaPelicula.cs). Un AnimationPlayer se pone
+// en la pose del cuadro y los objetos reales de la sala copian a sus vacíos. Todo depende de t (también luces y sonidos
+// continuos), así que IrA, adelantar con clic o Enter y Movie Maker dan siempre lo mismo. Mantener [Espacio], [Esc] o
+// B/Start la salta. Lo que se oye de la cinta va por un bus con filtro de cinta. Al terminar deja la sala como estaba.
 public partial class CinematicaCinta : CanvasLayer
 {
 	[Signal] public delegate void TerminadaEventHandler();
@@ -35,8 +33,6 @@ public partial class CinematicaCinta : CanvasLayer
 		public string[] Lineas;
 	}
 
-	public const string Animacion = "res://Assets/Cinematicas/Caso0/cinta_caso0.glb";
-
 	// Mientras dura no debe aparecer ninguna ayuda, pensamiento ni aviso encima (ver Jugador y Caso0)
 	public static bool EnCurso { get; private set; }
 
@@ -52,67 +48,20 @@ public partial class CinematicaCinta : CanvasLayer
 	// Id en el registro de cinemáticas de la partida (GestorPartida)
 	public const string Id = "caso0_cinta";
 
-	public static async Task Reproducir(Node3D sala, Actores actores)
+	// registrar: false al volver a verla (VerCinta); no cuenta como vista en la partida
+	public static async Task Reproducir(Node3D sala, Actores actores, bool registrar = true)
 	{
 		// No se puede disparar dos veces a la vez
 		if (EnCurso) return;
 		EnCurso = true;
-		GestorPartida.Instancia?.RegistrarCinematica(Id);
+		if (registrar) GestorPartida.Instancia?.RegistrarCinematica(Id);
 		var cinematica = new CinematicaCinta { _a = actores, _sala = sala };
 		sala.AddChild(cinematica);
 		await cinematica.ToSignal(cinematica, SignalName.Terminada);
 	}
 
-	// ---------- Tiempos (segundos; los mismos de coreografia.py) ----------
-
-	private const double TPlay = 0.25;           // clic de PLAY sobre negro
-	private const double TImagen = 4.2;          // termina el negro: SALA 1 · 03:09
-	private const double TRejilla = 12.0;        // la rejilla vibra y suena
-	private const double TTapa = 12.6;           // la tapa se desliza hacia adentro
-	private const double TAterriza = 15.75;
-	private const double TSusurro = 20.1;
-	private const double TDescuelga = 24.95;
-	private const double TGolpe = 26.4;          // el reloj golpea el piso (Rigid Body): se para a las 3:12
-	private const double TRebote = 26.53;
-	private const double TSeVa = 32.0;
-	private const double TCierraTapa = 32.5;
-	private const double TDespierta = 33.6;      // 03:15
-	private const double TEmpuja = 37.8;
-	private const double TSillaPared = 39.3;
-	private const double TSubeSilla = 41.0;
-	private const double TCuelga = 42.3;         // el reloj queda colgado otra vez
-	private const double TBajaSilla = 42.6;
-	private const double TJala = 43.4;
-	private const double TSillaMesa = 44.9;
-	private const double TSobresalto = 46.45;
-	private const double TStop = 48.0;
-	private const double TRebobina = 48.4;
-	private const double TFinRebobinado = 50.9;
-	private const double TExpulsa = 51.1;
-	private const double TAbrePuerta = 55.0;
-	private const double TCierraPuerta = 57.7;
-	private const double TBotas = 56.3;
-	private const double TFin = 59.7;
 	private const double SegundosParaSaltar = 1.2;
 
-	// Inicio de cada toma (la cámara viene del .glb) y distancia de enfoque para el desenfoque (0 = sin él)
-	private static readonly (double Inicio, float Enfoque)[] Tomas =
-	{
-		(0.0, 0.48f), (TImagen, 0.48f), (8.4, 0), (11.6, 0), (17.2, 0), (23.0, 0), (27.45, 0.5f), (29.6, 0),
-		(33.3, 0), (37.1, 0), (39.45, 0), (40.7, 0), (42.6, 0), (45.75, 0.6f), (46.3, 0), (47.6, 0.6f), (51.9, 0),
-		(TBotas, 0), (57.5, 0),
-	};
-	private static readonly double[] Paradas = Tomas.Select(t => t.Inicio).Where(t => t > 0).Append(TFin).ToArray();
-
-	// Textos: la hora arriba, la cinta abajo
-	private static readonly (double T, string Texto)[] Horas = { (3.6, "SALA 1 · 03:09"), (TRejilla, "SALA 1 · 03:12"), (TDespierta - 0.4, "SALA 1 · 03:15") };
-	// Cada subtítulo empieza con su sonido y dura al menos lo que pide leerlo a 15 caracteres por segundo
-	private static readonly (double Inicio, double Fin, int Linea)[] Subtitulos =
-	{
-		(0.7, 4.3, 0),
-		(TRejilla, TRejilla + 2.8, 1),
-		(TSusurro, TSusurro + 2.7, 2),
-	};
 
 	// ---------- Estado ----------
 
@@ -128,7 +77,7 @@ public partial class CinematicaCinta : CanvasLayer
 	private AnimationPlayer _anim;
 	private Camera3D _camara, _camaraAntes;
 	private CameraAttributesPractical _enfoque;
-	private Node3D _porky, _figura;
+	private Node3D _figura;
 	private Node3D _animReloj, _animRejilla, _animPuerta, _animSilla, _animCinta;
 	private Node3D _cinta, _silla, _rejilla, _pluma, _puerta, _grietas, _minutero, _horario, _huellas;
 	private bool _cintaVisibleAntes, _plumaVisible, _grietasVisible, _huellasVisibles, _porkyVisible;
@@ -154,8 +103,6 @@ public partial class CinematicaCinta : CanvasLayer
 	private Label _hora, _subtitulo, _pista;
 	private CirculoSalto _circulo;
 	private AudioStreamPlayer _tictac, _zumbido, _ronquido, _siseo, _voz;
-	private double _relojPaso, _relojPasoFigura;
-	private Vector3 _pasoPorky, _pasoFigura;
 	private float _escala = 1f;
 
 	private const string BusCinta = "Cinta";
@@ -182,20 +129,20 @@ public partial class CinematicaCinta : CanvasLayer
 		_camaraAntes = GetViewport().GetCamera3D();
 
 		// La animación de Blender: personajes, cámara y vacíos de los objetos
-		_escena = GD.Load<PackedScene>(Animacion).Instantiate<Node3D>();
+		_escena = GD.Load<PackedScene>(AnimacionPelicula).Instantiate<Node3D>();
 		_escena.Name = "CinematicaCintaBlender";
 		_sala.AddChild(_escena);
 		_anim = _escena.FindChildren("*", "AnimationPlayer", true, false).OfType<AnimationPlayer>().First();
-		_anim.Play("Cinta");
+		_anim.Play("Momentos");
 		_anim.Pause();
-		_porky = _escena.GetNode<Node3D>("Porky");
 		_figura = _escena.GetNode<Node3D>("Figura");
 		_animReloj = _escena.GetNode<Node3D>("Anim_Reloj");
 		_animRejilla = _escena.GetNode<Node3D>("Anim_Rejilla");
 		_animPuerta = _escena.GetNode<Node3D>("Anim_Puerta");
 		_animSilla = _escena.GetNode<Node3D>("Anim_Silla");
 		_animCinta = _escena.GetNode<Node3D>("Anim_Cinta");
-		_camara = _escena.GetNode<Camera3D>("Camara");
+		_camara = new Camera3D { Name = "Camara" };
+		_escena.AddChild(_camara);
 		_enfoque = new CameraAttributesPractical { DofBlurAmount = 0.06f, DofBlurFarTransition = 0.5f };
 		_camara.Near = 0.02f;
 		_camara.Attributes = _enfoque;
@@ -275,6 +222,8 @@ public partial class CinematicaCinta : CanvasLayer
 		if (_pizarron != null) { _pizarronVisible = _pizarron.Visible; _pizarron.Visible = false; }
 
 		if (_a.Musica != null) _intensidadMusica = _a.Musica.Intensidad;
+
+		PrepararPelicula();
 
 		// Los contornos de ayuda de las pistas no van en un recuerdo
 		if (Configuracion.Instancia != null)
@@ -358,8 +307,7 @@ public partial class CinematicaCinta : CanvasLayer
 		if (Manual) { Actualizar(true); return; }
 		_t += delta;
 		Actualizar(false);
-		Pasos(delta);
-		if (_t >= TFin) Terminar();
+		if (_t >= _finPelicula) Terminar();
 	}
 
 	// Pone todo como va en el segundo _t. Los sonidos de un solo golpe solo suenan al pasar por ellos
@@ -371,11 +319,9 @@ public partial class CinematicaCinta : CanvasLayer
 			if (!silencio) _eventos[_siguienteEvento].Accion();
 			_siguienteEvento++;
 		}
-		_anim.Seek(Math.Min(_t, _anim.CurrentAnimationLength), true);
-		Objetos();
-		Camara();
+		ActualizarPelicula();
 		Interfaz();
-		SonidosContinuos();
+		SonidosPelicula();
 	}
 
 	private void Terminar()
@@ -389,64 +335,9 @@ public partial class CinematicaCinta : CanvasLayer
 		Restaurar();
 	}
 
-	// ---------- Objetos ----------
+	// ---------- Entrada ----------
 
 	private static float Rampa(double t, double desde, double hasta) => (float)Mathf.Clamp((t - desde) / (hasta - desde), 0, 1);
-
-	private void Objetos()
-	{
-		// Los objetos reales siguen a sus vacíos animados en Blender
-		_a.Reloj.GlobalTransform = _animReloj.GlobalTransform;
-		if (_silla != null) _silla.GlobalTransform = _animSilla.GlobalTransform;
-		if (_rejilla != null) _rejilla.GlobalTransform = _animRejilla.GlobalTransform;
-		if (_puerta != null) _puerta.GlobalTransform = _animPuerta.GlobalTransform;
-		if (_cinta != null) { _cinta.Visible = true; _cinta.GlobalTransform = _animCinta.GlobalTransform; }
-		_figura.Visible = _t > 13.3 && _t < TSeVa + 0.2;
-
-		// Cristal entero hasta el golpe; las manecillas avanzan de las 3:09 a las 3:12 y se paran con el golpe
-		if (_grietas != null) _grietas.Visible = _t >= TGolpe;
-		double minuto = Mathf.Lerp(9.0, 12.0, Mathf.Clamp((_t - TImagen) / (TGolpe - TImagen), 0, 1));
-		float atraso = (float)(12.0 - minuto);
-		if (_minutero != null) _minutero.Transform = _minuteroAntes with { Basis = new Basis(Vector3.Back, Mathf.DegToRad(6f * atraso)) * _minuteroAntes.Basis };
-		if (_horario != null) _horario.Transform = _horarioAntes with { Basis = new Basis(Vector3.Back, Mathf.DegToRad(0.5f * atraso)) * _horarioAntes.Basis };
-
-		// REC parpadea todo el tiempo: es la trampa del comisario y nadie la apagó (a las 6:02 sigue en REC).
-		// El STOP solo detiene la cinta.
-		bool encendida = Mathf.PosMod((float)_t, 1f) < 0.6f;
-		_luzRec.LightEnergy = encendida ? 0.12f : 0.02f;
-		if (_luzRecMalla != null) _luzRecMalla.Visible = encendida;
-
-		// Contador de la cinta: avanza mientras graba; el STOP lo detiene y el rebobinado lo regresa a 03:12
-		if (_contador != null)
-		{
-			double m = _t < TStop ? Mathf.Lerp(9.0, 15.0, Mathf.Clamp((_t - 4.0) / (TStop - 4.0), 0, 1)) : Mathf.Lerp(15.0, 12.0, Rampa(_t, TRebobina, TFinRebobinado));
-			_contador.Text = $"03:{(int)m:00}";
-		}
-
-		// El ducto abierto (con su luz) mientras la tapa está corrida
-		float abierta = Rampa(_t, TTapa + 0.15, TTapa + 0.45) * (1 - Rampa(_t, TCierraTapa - 0.25, TCierraTapa));
-		_hueco.Visible = abierta > 0.01f;
-		_luzRejilla.LightEnergy = 9f * abierta;
-		if (_pluma != null) _pluma.Visible = _t >= TCierraTapa;
-		// Las huellas de las botas de Porky, hacia el vestidor
-		if (_huellas != null) _huellas.Visible = _t >= TBotas - 0.3 || _huellasVisibles;
-		// La luz del pasillo entra con la puerta abierta
-		float puerta = Rampa(_t, TAbrePuerta + 0.15, TAbrePuerta + 0.75) * (1 - Rampa(_t, TCierraPuerta, TCierraPuerta + 0.5));
-		_luzPasillo.LightEnergy = 2.2f * puerta;
-	}
-
-	// ---------- Cámara ----------
-
-	private void Camara()
-	{
-		// La cámara (posición, giro, lente y el temblor del golpe) viene de Blender; aquí solo el desenfoque
-		int i = Array.FindLastIndex(Tomas, toma => toma.Inicio <= _t);
-		float enfoque = Tomas[Math.Max(0, i)].Enfoque;
-		_enfoque.DofBlurFarEnabled = enfoque > 0;
-		if (enfoque > 0) _enfoque.DofBlurFarDistance = enfoque;
-	}
-
-	// ---------- Entrada ----------
 
 	public override void _Input(InputEvent evento)
 	{
@@ -487,8 +378,8 @@ public partial class CinematicaCinta : CanvasLayer
 	// Clic o Enter: pasa a la siguiente toma
 	private void Avanzar()
 	{
-		_t = Paradas.FirstOrDefault(p => p > _t + 0.05, TFin);
-		if (_t >= TFin) { Terminar(); return; }
+		_t = ParadasPelicula().FirstOrDefault(p => p > _t + 0.05, _finPelicula);
+		if (_t >= _finPelicula) { Terminar(); return; }
 		Actualizar(true);
 	}
 
@@ -542,8 +433,8 @@ public partial class CinematicaCinta : CanvasLayer
 		Anclar(_interfaz, 0, 0, 1, 1);
 
 		// Recuerdo: frío y deslavado (salvo el rojo de REC), con viñeta y grano de película
-		Capa(GD.Load<Shader>("res://Escenas/Cinematicas/recuerdo.gdshader"));
-		Capa(GD.Load<Shader>("res://Escenas/Cinematicas/vineta.gdshader"));
+		_recuerdo = (ShaderMaterial)Capa(GD.Load<Shader>("res://Escenas/Cinematicas/recuerdo.gdshader")).Material;
+		_vineta = (ShaderMaterial)Capa(GD.Load<Shader>("res://Escenas/Cinematicas/vineta.gdshader")).Material;
 		var grano = Capa(GD.Load<Shader>("res://Escenas/Menus/Fondo/grano_pelicula.gdshader"));
 		((ShaderMaterial)grano.Material).SetShaderParameter("intensidad", 0.1f);
 
@@ -558,6 +449,7 @@ public partial class CinematicaCinta : CanvasLayer
 		_negro = new ColorRect { Color = Colors.Black, MouseFilter = Control.MouseFilterEnum.Ignore };
 		_interfaz.AddChild(_negro);
 		Anclar(_negro, 0, 0, 1, 1);
+		CrearInterfazPelicula();
 
 		// Las horas: a máquina, arriba a la izquierda, en el papel del HUD
 		_hora = NuevaEtiqueta(Fuente("SpecialElite-Regular.ttf", 4), 30 * e, new Color(0.86f, 0.84f, 0.78f), HorizontalAlignment.Left);
@@ -580,18 +472,18 @@ public partial class CinematicaCinta : CanvasLayer
 
 	private int SubtituloActual()
 	{
-		for (int i = 0; i < Subtitulos.Length; i++)
-			if (_t >= Subtitulos[i].Inicio && _t < Subtitulos[i].Fin) return i;
+		var subtitulos = SubtitulosPeliculaActuales;
+		for (int i = 0; i < subtitulos.Length; i++)
+			if (_t >= subtitulos[i].Inicio && _t < subtitulos[i].Fin) return i;
 		return -1;
 	}
 
 	private void Interfaz()
 	{
-		// Negro con la cinta sonando; fundido a la sala; fundido a negro al final
-		_negro.Color = new Color(0, 0, 0, Mathf.Max(1 - Rampa(_t, TImagen, TImagen + 1.0), Rampa(_t, TFin - 1.4, TFin)));
+		InterfazPelicula();
 
 		// La hora, a máquina
-		var hora = Horas.LastOrDefault(h => h.T <= _t);
+		var hora = HorasPeliculaActuales.LastOrDefault(h => h.T <= _t);
 		_hora.Visible = hora.Texto != null;
 		if (hora.Texto != null)
 		{
@@ -601,10 +493,10 @@ public partial class CinematicaCinta : CanvasLayer
 
 		// Subtítulo de la cinta: aparece entero con su sonido y se desvanece
 		int s = SubtituloActual();
-		_subtitulo.Visible = s >= 0 && _a.Lineas != null && Subtitulos[s].Linea < _a.Lineas.Length;
+		_subtitulo.Visible = s >= 0 && _a.Lineas != null && SubtitulosPeliculaActuales[s].Linea < _a.Lineas.Length;
 		if (_subtitulo.Visible)
 		{
-			var (inicio, fin, linea) = Subtitulos[s];
+			var (inicio, fin, linea) = SubtitulosPeliculaActuales[s];
 			_subtitulo.Text = "▶ " + _a.Lineas[linea];
 			_subtitulo.Modulate = new Color(1, 1, 1, Rampa(_t, inicio, inicio + 0.15) * (1 - Rampa(_t, fin - 0.35, fin)));
 		}
@@ -699,85 +591,16 @@ public partial class CinematicaCinta : CanvasLayer
 
 	private void CrearEventos()
 	{
-		const string maquina = "res://Assets/Audio/Cinematica/";
-		const string paso = "res://Assets/Audio/Efectos/paso_";
-		_eventos.AddRange(new (double, Action)[]
-		{
-			(TPlay, () => Sonar(Cinta + "cinta_play.wav", -6f)),
-			(0.7, () => { if (_voz.Stream != null) _voz.Play(); }),
-			// Las horas se escriben a máquina (no vienen de la cinta: van por la interfaz)
-			(Horas[0].T, () => Sonar(maquina + "maquina_2.wav", -14f, Sonidos.BusInterfaz)),
-			(Horas[1].T, () => Sonar(maquina + "maquina_4.wav", -14f, Sonidos.BusInterfaz)),
-			(Horas[2].T, () => Sonar(maquina + "maquina_5.wav", -14f, Sonidos.BusInterfaz)),
-			// La rejilla vibra y la tapa se desliza
-			(TRejilla, () => Sonar(Cinta + "rejilla_metal.wav", -3f)),
-			(TTapa + 0.2, () => Sonar(Cinta + "reloj_rebote.wav", -14f)),
-			// Aterriza agachada, casi sin ruido
-			(TAterriza, () => Sonar(Cinta + "reloj_rebote.wav", -18f)),
-			(TSusurro, () => Sonar(Cinta + "susurro.wav", -2.5f)),
-			(TDescuelga + 0.1, () => Sonar(Cinta + "reloj_rebote.wav", -18f)),
-			// El golpe del reloj es el pico más fuerte de la cinemática
-			(TGolpe, () => Sonar(Cinta + "reloj_golpe.wav", 5f)),
-			(TRebote, () => Sonar(Cinta + "reloj_rebote.wav", -10f)),
-			(TCierraTapa, () => Sonar(Cinta + "rejilla_metal.wav", -10f)),
-			// Porky mueve la silla, se sube, cuelga el reloj, se baja y la regresa
-			(TEmpuja, () => Sonar("res://Assets/Audio/Efectos/cajon_1.wav", -16f)),
-			(TSillaPared, () => Sonar("res://Assets/Audio/Efectos/cajon_3.wav", -14f)),
-			(TSubeSilla + 0.3, () => Sonar(paso + "2.wav", -14f)),
-			(TCuelga, () => Sonar(Cinta + "reloj_rebote.wav", -10f)),
-			(TBajaSilla + 0.35, () => Sonar(paso + "3.wav", -12f)),
-			(TJala, () => Sonar("res://Assets/Audio/Efectos/cajon_1.wav", -16f)),
-			(TSillaMesa, () => Sonar("res://Assets/Audio/Efectos/cajon_3.wav", -14f)),
-			(TSobresalto, () => Sonar(Cinta + "sobresalto.wav", -2f)),
-			(TStop, () => Sonar(Cinta + "cinta_stop.wav", -3f)),
-			(TRebobina, () => Sonar(Cinta + "cinta_rebobinar.wav", -3f)),
-			(TExpulsa, () => Sonar(Cinta + "cinta_expulsar.wav", -2f)),
-			(TAbrePuerta + 0.1, () => Sonar(Cinta + "puerta_abrir.wav", -4f)),
-			(TCierraPuerta, () => Sonar(Cinta + "puerta_cerrar.wav", -4f)),
-		});
+		CrearEventosPelicula();
 		_eventos.Sort((a, b) => a.T.CompareTo(b.T));
 	}
 
-	// Los sonidos continuos dependen solo de _t: así quedan bien aunque se adelante o se salte
-	private void SonidosContinuos()
-	{
-		bool jugando = !Manual && !_terminada;
-		Mantener(_siseo, jugando && _t >= TPlay + 0.1);
-		Mantener(_zumbido, jugando && _t >= TImagen - 0.5);
-		// El tic-tac se corta en seco con el golpe
-		Mantener(_tictac, jugando && _t >= TImagen - 0.5 && _t < TGolpe);
-		// Ronca mientras duerme; el golpe lo calla un momento y vuelve a dormirse
-		Mantener(_ronquido, jugando && _t >= TImagen - 0.5 && _t < TDespierta && (_t < TGolpe - 0.05 || _t > TGolpe + 2.4));
-		// La voz de Tito solo suena sobre negro
-		if (_voz.Playing && _t >= TImagen) _voz.Stop();
-	}
 
 	private static void Mantener(AudioStreamPlayer reproductor, bool sonando)
 	{
 		if (reproductor?.Stream == null) return;
 		if (sonando && !reproductor.Playing) reproductor.Play();
 		else if (!sonando && reproductor.Playing) reproductor.Stop();
-	}
-
-	// Pasos: las botas de Porky (bajas, son de la cinta) y los de la figura, casi mudos, cuando caminan
-	private void Pasos(double delta)
-	{
-		Vector3 porky = _porky.GlobalPosition with { Y = 0 };
-		Vector3 figura = _figura.GlobalPosition with { Y = 0 };
-		float vPorky = porky.DistanceTo(_pasoPorky) / (float)Math.Max(delta, 1e-4);
-		float vFigura = figura.DistanceTo(_pasoFigura) / (float)Math.Max(delta, 1e-4);
-		_pasoPorky = porky;
-		_pasoFigura = figura;
-		if (vPorky > 0.4f && (_relojPaso -= delta) <= 0)
-		{
-			_relojPaso = 0.42;
-			Sonar($"res://Assets/Audio/Efectos/paso_{GD.RandRange(1, 4)}.wav", -15f);
-		}
-		if (_figura.Visible && _figura.GlobalPosition.Y < 0.7f && vFigura > 0.4f && (_relojPasoFigura -= delta) <= 0)
-		{
-			_relojPasoFigura = 0.36;
-			Sonar($"res://Assets/Audio/Efectos/paso_{GD.RandRange(1, 4)}.wav", -27f);
-		}
 	}
 
 	// Círculo que se llena mientras se mantiene la tecla de saltar

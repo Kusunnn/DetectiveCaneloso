@@ -3,7 +3,7 @@
 **CA-03:** No deben haber animaciones ni cinemáticas repetidas sin contexto alguno.
 
 Rama: `HU-9.5-Animaciones-Tutorial` (d25b2aa: main y dialogos-caso1 integrados). Fecha: 2026-10-27.
-Solo es una revisión: todavía no cambié nada en el código.
+Esta primera parte es la revisión del 27 de octubre. **El estado final está en «Cierre de CA-03», al final.**
 
 ## Alcance
 
@@ -76,3 +76,119 @@ Rendimiento con los 6 NPC del Campamento en pantalla: CPU de 2.0 a 2.7 ms y GPU 
 3. **N-02**, **N-03** y **N-06** (variantes de reposo y voltearse al hablar).
 4. **C-03**, **C-10**, **N-05** y **N-10** (detalles y verificaciones con captura).
 5. **C-06** necesita una decisión de historia de Takeshi. **N-07** y **N-08** dependen de CA-02.
+
+## Cierre de CA-03 (3 de noviembre de 2026)
+
+Rama: `HU-9.5-Animaciones-Tutorial`, al día con `main` (7db7c33, con Pistas-y-flujo-Caso-1). El merge no hizo falta: la rama ya contenía `main`, sin conflictos.
+
+### Tabla final
+
+| ID | Estado | Qué quedó |
+|---|---|---|
+| C-01 | Corregido | Registro de cinemáticas en cada ranura. La prueba confirma que viaja al guardar y cargar. |
+| C-02 | Corregido | Después de IntroCaso, Hecdog no vuelve a abrir el expediente. |
+| C-03 | Corregido | El aviso del expediente ya no sale encima de Hecdog. |
+| C-04 | Corregido | Una sola IntroCaso, también en su fundido final. |
+| C-05 | Corregido | Botón «Volver a ver la cinta» en el Caso 0 del tablero de capítulos. Solo sale si la partida guardada más reciente (la que abre «Continuar») ya la vio. `VerCinta` carga una Sala 1 aparte, en su propio mundo y encima del tablero, con el Caso 0 sin arrancar. No cambia la partida y regresa al mismo detalle. |
+| C-06 | Verificado | La estación pide 5 de las 9 pistas del Lago, también con el código de Pistas-y-flujo-Caso-1. Caneloso dice por qué todavía no. |
+| C-07 | Verificado | Al cargar sale el «Anteriormente…» y no IntroCaso. |
+| C-08 | Verificado | Campamento ↔ Lago ↔ sala no repite la llegada de Hecdog ni la presentación. |
+| C-09 | Corregido | Al usar el registro, la cinta sale una vez. Tampoco vuelve al cargar después del cierre. |
+| C-10 | Verificado | Al volver a la sala queda el objetivo; no se repite el pensamiento. |
+| C-11 | Verificado | El pensamiento al llegar al Lago sale una vez. |
+| C-12 | Corregido (nuevo) | Tres versiones de la cinta con un interruptor. Queda solo la película, elegida por Takeshi. El código, los `.glb` y el interruptor de las otras dos ya no están, así que ningún camino del juego, guardado ni prueba las puede reproducir. |
+| N-01 | Corregido | Porky no está en el Campamento. |
+| N-02 | Corregido | Variantes de reposo por código. |
+| N-03 | Corregido | Tony, Aya y Miawrio intercalan su reposo «tenso», sin ir al mismo cuadro ni a la misma velocidad. |
+| N-04 | Corregido | Nadie se desliza: Eriz y Juan Carlos caminan por código y Mimita tiene su propia animación de caminar. |
+| N-05 | Verificado | De pie junto a la silla, sin atravesarla (`revision_final/sala_*_lado.jpg`). |
+| N-06 | Corregido | Al hablar se voltean completos. |
+| N-07 | No aplica a CA-03 | Sin reacciones al avance del caso, así que nada se repite. Es de CA-02 (ver el reporte de abajo). |
+| N-08 | No aplica a CA-03 | Hecdog sin cuerpo en el Campamento y el Lago. Es de CA-02 (ver el reporte de abajo). |
+| N-09 | Verificado | Sin actividades ni rutas, no hay bucles visibles. |
+| N-10 | Corregido | Mimita tiene esqueleto y los brazos abajo en la malla: `mimita_rig.glb` (`Assets/Models/Personajes/Blender/riggear_mimita.py`), con `Reposo`, `ReposoMirar`, `ReposoPeso` y `Caminar`. Opción A, hecha en Blender sin Mixamo. La malla y las texturas son las mismas. Antes y después en `revision_final/mimita/`. |
+| N-11 | Verificado (nuevo) | Ninguna línea de un implicado se repite entre las dos primeras conversaciones. **A partir de la tercera sí**: «Ahorita regreso…» y su réplica salen iguales, porque el guion solo tiene esa variante. Pasa si el jugador vuelve sin pruebas nuevas, así que tiene contexto. No cambié líneas del guion. |
+
+### Conteo del recorrido (`Herramientas/Caso1/probar_ca03.gd`)
+
+| Qué se cuenta | Resultado |
+|---|---|
+| Cinta del Caso 0 (`caso0_cinta`) | **1** en la partida, 0 al cargar después del cierre. Repetir el capítulo es una partida aparte y se puede saltar. |
+| IntroCaso del Caso 1 (`intro_caso01`) | **1**; 0 al cargar y al volver a verla |
+| Escenas automáticas | Campamento **1**, Lago **1**, sala **1** |
+| Pensamientos | 45 distintos, 51 en total. Salen más de una vez solo «Ya lo examiné…», «Está demasiado oscuro…» y la descripción de la canoa, porque el jugador volvió a mirar |
+| Reacciones | **0**: en el Caso 1 todavía no hay (N-07) |
+| Líneas de diálogo | 59 distintas, 91 en total. Se repiten solo a partir de la tercera conversación (N-11) |
+| Volver a ver la cinta | Una a la vez, también en el fundido final. La partida guardada queda igual, byte por byte, y no cuenta en el registro |
+| Fallos | **0** |
+
+Otras pruebas con esta rama: `probar_escenarios.gd` 0 fallos y `tests/cinematica_cinta_smoke.gd` 33 revisiones sin fallos. El Caso 0 de principio a fin se probó **desde su resolución** (`FlujoRealCaso0Prueba`) y la acusación del Caso 1 con las confesiones puestas por la prueba (`FlujoCaso1Prueba`), con Esc o la última opción como respuesta. Guardar y cargar se probó en el cierre del Caso 0, en el Campamento y en el Lago (`probar_escenarios.gd`), no en cada fase de los interrogatorios. Lo último del recorrido se volvió a correr aparte después de corregir la entrada de «Volver a ver»; el recorrido entero es anterior a esa corrección.
+
+**Para el guion:** el título de la pista del silbato dice «T. S.» y el guion dice «G. S.» (`caso1_pistas.json`). No lo cambié porque es de la historia.
+
+`«Ya lo examiné…»`, `«Está demasiado oscuro…»` y la descripción de los objetos que no son evidencia responden a que el jugador volvió a mirar algo, así que no cuentan como repetición. Tampoco cuenta «¿Qué le enseño?», la pregunta del menú de pruebas, que sale cada vez que se abre.
+
+### Capítulo 1 en específico
+
+| Punto | Resultado |
+|---|---|
+| IntroCaso del Caso 1 | Sale una vez al empezar. Al cargar no sale. Se puede volver a ver sin cambiar el objetivo ni las notas. |
+| Llegada al campamento con Hecdog | Una vez; el expediente no se presenta otra vez. |
+| Presentación de los seis | Una vez; al volver a la sala no se repite. |
+| Pensamiento al llegar al Lago | Una vez. |
+| Acceso a la estación | Sin las pruebas, Caneloso explica por qué todavía no y no se va. |
+| Interrogatorios | Ver N-11. Las preguntas ya hechas se marcan con ✓ (`OpcionVista.Leida`). Las voces no están integradas (ver las ramas de abajo). |
+| NPC | Variantes de reposo, sin clones ni pies patinando, sin pose T (Mimita incluida), y se voltean al hablar. |
+| Cinemáticas propias del capítulo | Ahora existen: ver «Cinemáticas del Caso 1» al final. |
+
+### Ramas sin integrar
+
+| Rama | ¿Afecta CA-03? |
+|---|---|
+| `dialogos-caso1` | Ya está integrada: 0 commits por delante. |
+| `voces-personajes` (45ae6bc) | No repite nada por acercarse: las sílabas solo suenan mientras se escribe una línea, y no hay comentarios por cercanía. Ninguna sílaba sale dos veces seguidas y el tono varía ±6 %. Al integrarla habrá un conflicto en `CREDITOS_AUDIO.md` y otros dos en `.uid`, de arreglo fácil. |
+| `HU-10---Sistema-de-ayudas` (dfe1a39) | Mejora CA-03: quita las ayudas que salían solas y las deja a petición. `PedirPista` no da nada durante la cinta ni en diálogos, y la misma pista no se agrega dos veces. **Cuidado al integrarla:** en `Caso1.cs` vuelve a escribir a mano las notas de los detalles que hoy vienen del guion, y borra la tecla de ayuda `[H]`. Conflictos en tres `.uid`. |
+
+### Revisión visual
+
+Capturas a 1920×1080 en `HU-9.5_CA03_capturas/revision_final/`: cada NPC del Campamento y de la sala, de frente y de lado, y Mimita antes y después. La cinta está en `cinta_hoja_pelicula.jpg`, con las dos versiones retiradas para comparar. IntroCaso está en `intro_caso01_*.jpg`. Sin poses T ni personajes atravesando muebles.
+
+Rendimiento con todos los NPC del Campamento: de 0.5 a 1.4 ms de CPU y de 4.5 a 5.7 ms de GPU por cuadro (`rendimiento_campamento.txt`), dentro de los 16.6 ms que pide 60 FPS. La herramienta marca 30 FPS porque la ventana estaba en segundo plano.
+
+**Lo que no cubre la prueba:** corre sin ventana, así que no ve poses ni cortes; eso se revisó con las capturas y el video. El `NullReference` en `GestorPartida.PrepararMiniatura` solo sale sin ventana, porque no hay textura del viewport.
+
+### Reporte de CA-02 (no hecho, espera tu aprobación)
+
+| ID | Qué es | Trabajo estimado |
+|---|---|---|
+| N-07 | Conectar el `animo` que ya traen las líneas de los `.json` con `Npc.FijarAnimo`, guardarlo en la partida y probarlo. Tony, Aya y Miawrio solo tienen su reposo «tenso»; los demás solo cambiarían la respiración si no se les hace más animación. | Medio día a un día |
+| N-08 | Poner a Hecdog junto a la patrulla en el Campamento y el Lago, con su reposo. No cambia líneas. | 2 a 4 horas |
+
+Total: de 1 a 1.5 días, sin contar rutinas de NPC con movimiento, que tampoco existen y serían otra tarea de varios días. Si se valida con esa exigencia, CA-02 no está completo.
+
+## Cinemáticas del Caso 1 (CA-01, aprobadas por Takeshi el 3 de noviembre)
+
+Todas están en `LibretosCaso1.cs`, las reproduce `CinematicaCaso1.cs`, salen una vez por partida (registro de `GestorPartida`) y se pueden adelantar o saltar. No hay líneas nuevas: lo que se lee viene de `caso1_pistas.json` y `caso1_acusacion.json`; solo se agregó la hora en pantalla en la reconstrucción, tomada de la cronología de la historia.
+
+| Id | Cuándo sale | Qué se ve |
+|---|---|---|
+| `caso1_libro` | Al encontrar el libro en la fogata | Las cenizas y las hojas quemadas, con su comentario |
+| `caso1_foto` | Al encontrar la foto en la cabaña de Porky | La foto en la pared, y de ahí al silbato de Tony |
+| `caso1_llegada` | La primera vez que se llega al Lago | Del sendero oscuro al agua que brilla, con las tres líneas de Caneloso |
+| `caso1_silbato` | Al encontrar el silbato | El silbato en el clavo, moviéndose, y el silbido a lo lejos |
+| `caso1_2320` | Solo al acusar a Tony, antes de que se derrumbe | 23:12 el sendero, 23:15 la linterna, 23:19 las dos siluetas, 23:20 el golpe, el silbido y el chapoteo, y el brillo que anotó Eriz |
+| `caso1_final_a` | Al terminar la confesión | Tony y Hecdog hacia la patrulla bajo la lluvia, y el muelle vacío con el agua brillando |
+| `caso1_final_b` | Al acusar a un inocente | Tony en su porche, el lago bajando, y el periódico que se hunde mientras se apaga el brillo |
+
+**Límites conocidos:**
+
+- Están filmadas en Godot con los modelos y escenarios del juego, no animadas en Blender como la cinta. Los personajes casi no actúan: en el golpe, el remo se mueve solo junto a Tony, sin estar en sus manos.
+- Final B: el guion menciona excavadoras y patrullas, pero en el proyecto no hay esos modelos. Se oyen las bombas y se ve bajar el agua.
+- Final A: la lluvia solo se ve en el primer plano.
+- En la foto se ven siluetas, porque así es la imagen del proyecto.
+- Tony aparece en la reconstrucción solo después de que el jugador lo acusa. Las cinemáticas de las pistas no enseñan a nadie.
+- Las cinemáticas de pistas no vuelven a salir al mirar otra vez ni al cargar. Tampoco hay «Volver a ver» para ellas.
+
+**Para el guion:** el modelo del silbato y la historia dicen «T. S.» (Tony Spínola), pero `caso1_pistas.json` dice «G. S.» en el comentario que se lee. Conviene que lo decida quien escribe el guion.
+
+**Pruebas:** el recorrido completo de `probar_ca03.gd` (Caso 0, Caso 1 con todas las pistas, guardar y cargar, y un final) dio 92 revisiones bien y 1 fallo, que era de la propia prueba: sin ventana, el autoguardado del final falla al tomar la miniatura (el `NullReference` ya conocido). Se corrigió la revisión. Los dos finales se volvieron a correr aparte (`-- solo-final-a` y `-- solo-final-b`) con 0 fallos: la reconstrucción solo sale en el final A. No volví a correr el recorrido completo después de esa corrección. Se revisaron con capturas y videos en `HU-9.5_CA01_capturas/`; nadie las ha jugado todavía con ventana y sonido en una partida normal, y el audio no se escuchó. Una vez, al grabar el video del final B, Godot se cerró solo por un error interno al liberar memoria (`NodePath.Finalize`); al repetirlo no volvió a pasar.

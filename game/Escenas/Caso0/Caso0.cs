@@ -99,8 +99,25 @@ public partial class Caso0 : Node, ICuadernoPistas
 	private int _intentosAcusacion;
 	private double _tiempoCaso;
 
+	// Lo que se oye en la cinta (también al volver a verla, VerCinta)
+	public static readonly string[] LineasCinta =
+	{
+		"[Tito Garras] «...sí, yo me robé la cartera del alcalde.»",
+		"[Ronquidos. Ruido metálico en el techo]",
+		"«La Garra no olvida, Caneloso.»",
+	};
+
+	// Para volver a ver la cinta: la Sala 1 solo es el escenario, el caso no arranca ni toca la partida
+	public bool SoloVer { get; set; }
+
 	public override void _Ready()
 	{
+		if (SoloVer)
+		{
+			SetProcess(false);
+			SetProcessUnhandledInput(false);
+			return;
+		}
 		_tutorial = !(GestorPartida.Instancia?.SaltarTutorial ?? false);
 		_caneloso = Dialogo.HablantePorNombre("Caneloso");
 		_eriz = CrearPersonaje("Eriz", Eriz, -1);
@@ -615,12 +632,7 @@ public partial class Caso0 : Node, ICuadernoPistas
 		SillaAcusacion.Habilitar(false, CapaInteractuable);
 		await Habla(_porky, "Perdón, detective. La próxima guardia la hago de pie.");
 		await Habla(_comisario, "Se acabaron mis trampas. El juicio sigue. Buen trabajo, Caneloso.");
-		string[] cinta =
-		{
-			"[Tito Garras] «...sí, yo me robé la cartera del alcalde.»",
-			"[Ronquidos. Ruido metálico en el techo]",
-			"«La Garra no olvida, Caneloso.»",
-		};
+		string[] cinta = LineasCinta;
 		// Mientras suena la cinta se ve lo que pasó en la Sala 1 a las 3:12
 		if (RelojSala != null && GrabadoraSala != null && GetParent() is Node3D sala)
 			await CinematicaCinta.Reproducir(sala, new CinematicaCinta.Actores

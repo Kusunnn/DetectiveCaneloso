@@ -50,10 +50,11 @@ const TAM_TARJETA := Vector2(190, 154)
 func _origen_diario_tablero() -> Vector2:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
 	var medida := _lienzo.size / escala
-	var mirar_abajo: float = -pizarron_espacial.desplazamiento.y if is_instance_valid(pizarron_espacial) else 0.0
-	return Vector2(medida.x / 2 - 800 * ESCALA_DIARIO_TABLERO, medida.y - 220 - mirar_abajo * 450)
+	# Mantiene toda la libreta y sus controles dentro de la pantalla, sin depender de la cámara 3D.
+	return Vector2(medida.x / 2 - 800 * ESCALA_DIARIO_TABLERO, medida.y - 856 * ESCALA_DIARIO_TABLERO - 100)
 
 const ESCALA_DIARIO_TABLERO := 0.56
+const RECT_DIARIO_TABLERO := Rect2(202, 40, 1192, 816)
 
 func sugerir_tablero(nota: String, ids: Array[String]) -> void:
 	_nota_tablero = nota
@@ -662,8 +663,9 @@ func _dibujar_libro(w: float, h: float) -> void:
 	if not tablero_abierto:
 		_lienzo.draw_rect(Rect2(0, 0, w, h), Color(0.02, 0.03, 0.04, 0.88))
 	# Cubierta de cuero, cantos de papel y dos páginas unidas por el lomo.
-	_lienzo.draw_rect(Rect2(origen + Vector2(-18, 0), Vector2(1204, 688)), Color(0, 0, 0, 0.35))
-	_lienzo.draw_rect(Rect2(origen + Vector2(-16, -16), Vector2(1192, 688)), Color("483329"))
+	var cubierta := Rect2(origen + Vector2(-16, -80 if tablero_abierto else -16), Vector2(1192, 816 if tablero_abierto else 688))
+	_lienzo.draw_rect(Rect2(cubierta.position + Vector2(-2, 10), cubierta.size + Vector2(12, 6)), Color(0, 0, 0, 0.35))
+	_lienzo.draw_rect(cubierta, Color("483329"))
 	for canto in range(5, 0, -1):
 		_lienzo.draw_rect(Rect2(origen + Vector2(-canto, canto * 2), Vector2(1160 + canto * 2, 650)), Color("a99c80").lightened(canto * 0.025))
 	for lado in range(2):
@@ -782,11 +784,14 @@ func _dibujar_estado(pista: Pista, p: Vector2, libreta: bool) -> void:
 ## Sello "EXAMINADA" ladeado, como de tinta.
 func _sello(centro: Vector2) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-	_lienzo.draw_set_transform(centro * escala, -0.2, Vector2.ONE * escala)
+	var base := Transform2D(0.0, Vector2.ONE * escala, 0.0, Vector2.ZERO)
+	if tablero_abierto and diario_abierto:
+		base = Transform2D(0.0, Vector2.ONE * escala * ESCALA_DIARIO_TABLERO, 0.0, _origen_diario_tablero() * escala)
+	_lienzo.draw_set_transform_matrix(base * Transform2D(-0.2, centro))
 	_lienzo.draw_rect(Rect2(-92, -24, 184, 48), Color(COLOR_SELLO, 0.85), false, 3.0)
 	_lienzo.draw_rect(Rect2(-86, -18, 172, 36), Color(COLOR_SELLO, 0.5), false, 1.0)
 	_texto("EXAMINADA", Vector2(-74, 12), _bold, 32, Color(COLOR_SELLO, 0.85))
-	_lienzo.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE * escala)
+	_lienzo.draw_set_transform_matrix(base)
 
 ## Lupa de estado: 0 gris (sin revisar), 1 ámbar (examinada), 2 ámbar con destello (detalle).
 func _lupa(centro: Vector2, estado: int, alfa: float = 1.0, tam: float = 1.0) -> void:
@@ -807,7 +812,7 @@ func _lupa(centro: Vector2, estado: int, alfa: float = 1.0, tam: float = 1.0) ->
 
 func _boton_libro_examinar(rect: Rect2, indice: int) -> void:
 	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
-	var encima := rect.has_point(_lienzo.get_local_mouse_position() / escala)
+	var encima := rect.has_point(_raton_libro())
 	_lienzo.draw_rect(rect, Color("b99a55") if encima else Color("483b30"))
 	_texto("EXAMINAR [E]", rect.position + Vector2(22, 26), MONO, 14, BLANCO)
 	_zonas_libro.append({"rect": rect, "examinar": indice})

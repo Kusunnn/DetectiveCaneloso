@@ -26,7 +26,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	[Export] public Marker3D PuntoEntradaImplicado;
 	[Export] public Node3D Corcho;
 	[Export] public Node3D MesaEvidencias;
-	[Export] public float VelocidadCaminar = 1.1f;
+	[Export] public float VelocidadCaminar = AnimacionPersonaje.VelocidadPorCodigo;
 
 	private const uint CapaImplicado = (1u << 3) | (1u << 4);
 
@@ -37,9 +37,24 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		["Aya"] = ("Aya", "Caminaya", "aya"),
 		["Miawrio"] = ("Miawrio", "global/Caminar", "miawrio"),
 		["Eriz"] = ("Eriz", "", "eriz"),
-		["Mimita"] = ("Mimita", "", "mimita"),
+		["Mimita"] = ("Mimita", "Caminar", "mimita"),
 		["Tony"] = ("Tony", "global/CaminaTony", "tony"),
 	};
+
+	// Sus animaciones de nervios. Juan Carlos y Eriz no tienen: se les ve por código. Mimita usa otros reposos, acelerados.
+	private static readonly Dictionary<string, (string Tenso, string Alterado, float Acelera)> Nervios = new()
+	{
+		["Aya"] = ("Tensaya", "Alteraya", 1f),
+		["Miawrio"] = ("global/Tenso", "global/Alterado", 1f),
+		["Mimita"] = ("ReposoMirar", "ReposoPeso", 1.7f),
+		["Tony"] = ("global/TensoTony", "global/AltTony", 1f),
+	};
+
+	// El recorrido de la cadera, alrededor de la mesa: la silla queda del otro lado, frente al detective.
+	// La mesa va de x = -0.8 a 0.8 y de z = -2.45 a -1.55; la silla está en z = -2.8 y el asiento a 0.47 m del piso.
+	private const float AlturaAsiento = 0.47f, GrosorCadera = 0.08f, SegundosGiro = 0.28f, SegundosSentarse = 0.5f;
+	private static readonly Vector3 ViaPasillo = new(1.35f, 0, -0.9f), ViaEsquina = new(1.25f, 0, -2.85f), JuntoSilla = new(0.62f, 0, -2.85f);
+	private readonly Dictionary<string, PoseInterrogatorio> _poses = new();
 
 	// Id del implicado en el guion → su nodo en Implicados
 	private static readonly Dictionary<string, string> ClaveDeGuion = new()
@@ -49,6 +64,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	};
 
 	public string ImplicadoActual { get; private set; }
+	public PanelArmarCaso Panel { get; private set; }
 	public IEnumerable<string> NombresImplicados => Datos.Keys;
 	private bool _moviendo;
 
@@ -59,12 +75,18 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	public override void _Ready()
 	{
 		base._Ready();
+		SetProcess(false);
 		Salida.Usado += () => Conversar(AlSalir);
-		Hecdog.Usado += () => { EmitSignal(SignalName.HablarConHecdog); Conversar(() => Guion.Sala(IsInsideTree)); };
-		Guion.AntesDeInterrogar = async quien =>
+		Hecdog.Usado += () => { EmitSignal(SignalName.HablarConHecdog); Conversar(() => Guion.Sala(Sigue)); };
+		if (Guion != null) // Sin guion cuando solo se filma el escenario (SoloVer)
 		{
-			if (ClaveDeGuion.TryGetValue(quien, out string clave)) await TraerImplicado(clave);
-		};
+			PrepararPuestaEnEscena();
+			var panel = PanelArmarCaso.Crear(this, Guion, Dialogo);
+			Panel = panel;
+			Guion.AbrirArmarCaso = panel.Abrir;
+			Guion.SelloDeCasilla = panel.Sello;
+			Guion.CerrarPanelCaso = panel.Cerrar;
+		}
 		foreach (Node hijo in Implicados.GetChildren())
 		{
 			if (hijo is not Node3D implicado) continue;
@@ -74,8 +96,15 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 			{
 				punto.Habilitar(false, CapaImplicado);
 				string quien = ClaveDeGuion.First(p => p.Value == clave).Key;
-				punto.Usado += () => { EmitSignal(SignalName.HablarConImplicado, clave); Conversar(() => Guion.Interrogar(quien, IsInsideTree)); };
+				punto.Usado += () => { EmitSignal(SignalName.HablarConImplicado, clave); Conversar(() => Guion.Interrogar(quien, Sigue)); };
 			}
+			if (implicado.GetNodeOrNull<AnimacionPersonaje>("Animacion") is { } anim && Nervios.TryGetValue(clave, out var nervios))
+			{
+				anim.AnimacionTenso = nervios.Tenso;
+				anim.AnimacionAlterado = nervios.Alterado;
+				anim.AceleraNervios = nervios.Acelera;
+			}
+			if (implicado.GetNodeOrNull<Node3D>("Modelo") is { } modelo && PoseInterrogatorio.Poner(implicado, modelo) is { } pose) _poses[clave] = pose;
 		}
 		ArmarCorcho();
 	}
@@ -88,7 +117,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		if (Guion.SalaVista || Guion.Resuelto) return;
 		// La primera vez, Hecdog recibe al detective y presenta a los seis
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
-		if (IsInsideTree()) Conversar(() => Guion.Sala(IsInsideTree));
+		if (Sigue()) Conversar(() => Guion.Sala(Sigue));
 	}
 
 	protected override void AlRestaurar() => AcomodarPruebas();
@@ -101,9 +130,10 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 
 	// ---------- Implicados ----------
 
-	// Hace pasar a un implicado: entra por la puerta, camina hasta la silla del sospechoso y mira al detective.
-	// Si ya había otro, primero sale. Devuelve false si el nombre no existe.
-	public async Task<bool> TraerImplicado(string clave)
+	// Hace pasar a un implicado: entra por la puerta, rodea la mesa, se detiene junto a la silla, gira y se sienta frente al
+	// detective. corta: ya entró antes, aparece a unos pasos de la silla. Si ya había otro, primero sale. Devuelve false si el
+	// nombre no existe.
+	public async Task<bool> TraerImplicado(string clave, bool corta = false)
 	{
 		var implicado = Implicados.GetNodeOrNull<Node3D>(clave);
 		if (implicado == null || _moviendo) return false;
@@ -111,10 +141,22 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		if (ImplicadoActual != null) await RetirarImplicado();
 		_moviendo = true;
 		ImplicadoActual = clave;
+		if (_poses.TryGetValue(clave, out var poseInicial)) poseInicial.Sentado = 0f;
 		implicado.GlobalPosition = PuntoEntradaImplicado.GlobalPosition;
+		implicado.GlobalRotation = Vector3.Zero;
 		implicado.Visible = true;
-		await Caminar(implicado, PuntoSilla.GlobalPosition, clave);
-		implicado.GlobalRotation = new Vector3(0, PuntoSilla.GlobalRotation.Y, 0);
+		float piso = PuntoEntradaImplicado.GlobalPosition.Y;
+		// Dónde queda su cadera respecto a su nodo, mirando a +Z (algunos modelos no están centrados)
+		await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+		Vector3 cadera = CaderaLocal(implicado, clave);
+		var recorrido = corta
+			? new[] { ViaEsquina, JuntoSilla }
+			: new[] { ViaPasillo, ViaEsquina, JuntoSilla };
+		if (corta) implicado.GlobalPosition = ViaEsquina + new Vector3(0, piso, 0) - new Basis(Vector3.Up, Mathf.Pi) * cadera;
+		await Caminar(implicado, recorrido.Select(p => p + new Vector3(0, piso, 0)).ToArray(), clave, cadera);
+		// Gira hacia la mesa y se acomoda en el asiento
+		await Girar(implicado, PuntoSilla.GlobalRotation.Y);
+		await Sentarse(implicado, clave, true);
 		implicado.GetNodeOrNull<PuntoInteraccion>("Colision")?.Habilitar(true, CapaImplicado);
 		_moviendo = false;
 		EmitSignal(SignalName.ImplicadoSentado, clave);
@@ -129,7 +171,12 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		var implicado = Implicados.GetNode<Node3D>(clave);
 		_moviendo = true;
 		implicado.GetNodeOrNull<PuntoInteraccion>("Colision")?.Habilitar(false, CapaImplicado);
-		await Caminar(implicado, PuntoEntradaImplicado.GlobalPosition, clave);
+		implicado.GetNodeOrNull<AnimacionPersonaje>("Animacion")?.FijarAnimo(AnimacionPersonaje.Animo.Sereno);
+		await Sentarse(implicado, clave, false);
+		float piso = PuntoEntradaImplicado.GlobalPosition.Y;
+		Vector3 cadera = CaderaLocal(implicado, clave);
+		var puerta = PuntoEntradaImplicado.GlobalPosition;
+		await Caminar(implicado, new[] { ViaEsquina, ViaPasillo, new Vector3(puerta.X, 0, puerta.Z) }.Select(p => p + new Vector3(0, piso, 0)).ToArray(), clave, cadera);
 		implicado.Visible = false;
 		ImplicadoActual = null;
 		_moviendo = false;
@@ -140,23 +187,77 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	public void Traer(string clave) => _ = TraerImplicado(clave);
 	public void Retirar() => _ = RetirarImplicado();
 
-	private async Task Caminar(Node3D implicado, Vector3 destino, string clave)
+	private Vector3 CaderaLocal(Node3D implicado, string clave)
 	{
-		var desde = implicado.GlobalPosition;
-		var dir = destino - desde;
-		dir.Y = 0;
-		if (dir.Length() < 0.05f) return;
-		// El frente de los modelos es +Z
-		implicado.GlobalRotation = new Vector3(0, Mathf.Atan2(dir.X, dir.Z), 0);
-		var anim = implicado.GetNodeOrNull<AnimacionPersonaje>("Animacion");
-		// Con su animación de caminar si la tiene; si no, el paso por código (así no se desliza con los pies quietos)
-		string caminar = Datos.TryGetValue(clave, out var d) ? d.Caminar : "";
-		anim?.Caminar(true, caminar);
-		var tween = CreateTween();
-		tween.TweenProperty(implicado, "global_position", destino, dir.Length() / VelocidadCaminar);
-		await ToSignal(tween, Tween.SignalName.Finished);
-		anim?.Caminar(false);
+		var modelo = implicado.GetNodeOrNull<Node3D>("Modelo");
+		if (modelo == null) return Vector3.Zero;
+		var local = implicado.GlobalBasis.Orthonormalized().Inverse() * (PoseInterrogatorio.PosicionCadera(modelo) - implicado.GlobalPosition);
+		local.Y = 0;
+		return local;
 	}
+
+	private static float Giro(Vector3 direccion) => Mathf.Atan2(direccion.X, direccion.Z); // El frente de los modelos es +Z
+
+	private async Task Girar(Node3D implicado, float giro)
+	{
+		float desde = implicado.GlobalRotation.Y;
+		float hasta = desde + Mathf.Wrap(giro - desde, -Mathf.Pi, Mathf.Pi);
+		if (Mathf.Abs(hasta - desde) < 0.01f) return;
+		var tween = CreateTween();
+		tween.TweenProperty(implicado, "global_rotation:y", hasta, SegundosGiro).SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
+		await ToSignal(tween, Tween.SignalName.Finished);
+	}
+
+	// Lleva la cadera por los puntos: gira mientras avanza, sin voltear de golpe, y los pies van a la velocidad del cuerpo
+	private async Task Caminar(Node3D implicado, Vector3[] recorrido, string clave, Vector3 cadera)
+	{
+		var anim = implicado.GetNodeOrNull<AnimacionPersonaje>("Animacion");
+		string caminar = Datos.TryGetValue(clave, out var d) ? d.Caminar : "";
+		anim?.Caminar(true, caminar, VelocidadCaminar);
+		Vector3 anterior = implicado.GlobalPosition + implicado.GlobalBasis.Orthonormalized() * cadera;
+		foreach (Vector3 punto in recorrido)
+		{
+			var dir = punto - anterior;
+			dir.Y = 0;
+			float largo = dir.Length();
+			if (largo < 0.05f) continue;
+			float giro = Giro(dir);
+			var destino = punto - new Basis(Vector3.Up, giro) * cadera;
+			float desde = implicado.GlobalRotation.Y;
+			float hasta = desde + Mathf.Wrap(giro - desde, -Mathf.Pi, Mathf.Pi);
+			var tween = CreateTween().SetParallel();
+			tween.TweenProperty(implicado, "global_position", destino, largo / VelocidadCaminar);
+			tween.TweenProperty(implicado, "global_rotation:y", hasta, Mathf.Min(SegundosGiro, largo / VelocidadCaminar)).SetTrans(Tween.TransitionType.Sine);
+			await ToSignal(tween, Tween.SignalName.Finished);
+			anterior = punto;
+		}
+		anim?.Caminar(false);
+		// Que se note el alto antes de seguir
+		await ToSignal(GetTree().CreateTimer(0.12), SceneTreeTimer.SignalName.Timeout);
+	}
+
+	// Baja la cadera al asiento mientras dobla las piernas, o al revés
+	private async Task Sentarse(Node3D implicado, string clave, bool sentarse)
+	{
+		var pose = _poses.GetValueOrDefault(clave);
+		var modelo = implicado.GetNodeOrNull<Node3D>("Modelo");
+		if (modelo == null) return;
+		Vector3 hasta;
+		if (sentarse)
+		{
+			_paradoEn = implicado.GlobalPosition;
+			Vector3 asiento = new(0, PuntoEntradaImplicado.GlobalPosition.Y + AlturaAsiento + GrosorCadera, -2.85f);
+			hasta = implicado.GlobalPosition + (asiento - PoseInterrogatorio.PosicionCadera(modelo));
+		}
+		else hasta = _paradoEn;
+		var tween = CreateTween().SetParallel();
+		tween.TweenProperty(implicado, "global_position", hasta, SegundosSentarse).SetTrans(Tween.TransitionType.Sine).SetEase(Tween.EaseType.InOut);
+		if (pose != null)
+			tween.TweenMethod(Callable.From<float>(v => { if (IsInstanceValid(pose)) pose.Sentado = v; }), sentarse ? 0f : 1f, sentarse ? 1f : 0f, SegundosSentarse);
+		await ToSignal(tween, Tween.SignalName.Finished);
+	}
+
+	private Vector3 _paradoEn;
 
 	public string NombreDe(string clave) => Datos.TryGetValue(clave, out var d) ? d.Nombre : clave;
 
