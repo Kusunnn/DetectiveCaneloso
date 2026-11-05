@@ -75,9 +75,9 @@ public partial class MenuOpciones : PanelMenu
 
 		var barra = EstiloMenus.Columna(0);
 		var filaPestanas = EstiloMenus.Fila(80);
-		foreach (var (clave, numero, nombre) in new[] { ("controles", "01", "CONTROLES"), ("pantalla", "02", "PANTALLA"), ("audio", "03", "AUDIO") })
+		foreach (var (clave, nombre) in new[] { ("controles", "CONTROLES"), ("pantalla", "PANTALLA"), ("audio", "AUDIO") })
 		{
-			var pestana = new PestanaMenu(numero, nombre);
+			var pestana = new PestanaMenu("", nombre);
 			pestana.Pressed += () => MostrarPestana(clave, enfocarPestana: true);
 			_pestanas[clave] = pestana;
 			filaPestanas.AddChild(pestana);
@@ -122,7 +122,7 @@ public partial class MenuOpciones : PanelMenu
 
 		var izquierda = EstiloMenus.Columna(28);
 		izquierda.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-		izquierda.AddChild(EstiloMenus.Seccion("A", "MOUSE Y MOVIMIENTO"));
+		izquierda.AddChild(EstiloMenus.Seccion("", "MOUSE Y MOVIMIENTO"));
 		var bloque = EstiloMenus.Columna(16);
 		var cabecera = EstiloMenus.Fila(16);
 		var nombre = EstiloMenus.Etiqueta("Sensibilidad del mouse", EstiloMenus.Display(800, 42, 0.02f), 42, EstiloMenus.Texto);
@@ -149,7 +149,7 @@ public partial class MenuOpciones : PanelMenu
 
 		var derecha = EstiloMenus.Columna(8);
 		derecha.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-		derecha.AddChild(EstiloMenus.Seccion("B", "TECLAS"));
+		derecha.AddChild(EstiloMenus.Seccion("", "TECLAS"));
 		var desplazable = new ScrollContainer
 		{
 			SizeFlagsVertical = SizeFlags.ExpandFill,
@@ -313,7 +313,8 @@ public partial class MenuOpciones : PanelMenu
 
 	private void MostrarAyuda(string texto, Color? color = null)
 	{
-		_ayuda.Text = texto;
+		// El pie solo muestra avisos de captura o validación, sin descripciones al navegar.
+		_ayuda.Text = color.HasValue ? texto : "";
 		_ayuda.AddThemeColorOverride("font_color", color ?? EstiloMenus.Gris);
 	}
 
