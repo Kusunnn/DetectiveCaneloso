@@ -53,7 +53,7 @@ public partial class MenuPausa : CanvasLayer
 		_menuOpciones.Cerrado += AlCerrarPanel;
 		_panelRanuras.Cerrado += AlCerrarPanel;
 		UtilidadesUI.ConectarFocoConRaton(_raiz);
-		UtilidadesUI.EncadenarFoco(new Control[] { _botonReanudar, _botonGuardar, _botonOpciones, _botonMenuInicio, _botonSalirJuego, _botonPistas });
+		UtilidadesUI.EncadenarFoco(new Control[] { _botonReanudar, _botonGuardar, _botonPistas, _botonOpciones, _botonMenuInicio, _botonSalirJuego });
 	}
 
 	private void ConstruirPantallaPrincipal()
@@ -76,13 +76,13 @@ public partial class MenuPausa : CanvasLayer
 
 		var lista = EstiloMenus.Columna(8);
 		columna.AddChild(lista);
-		_botonReanudar = new OpcionMenu("01", "REANUDAR");
-		_botonGuardar = new OpcionMenu("02", "GUARDAR PARTIDA");
-		_botonOpciones = new OpcionMenu("03", "OPCIONES");
-		_botonMenuInicio = new OpcionMenu("04", "VOLVER AL MENÚ PRINCIPAL");
-		_botonSalirJuego = new OpcionMenu("05", "SALIR DEL JUEGO");
-		_botonPistas = new OpcionMenu("06", "PISTAS") { Name = "BotonPistas" };
-		foreach (var opcion in new[] { _botonReanudar, _botonGuardar, _botonOpciones, _botonMenuInicio, _botonSalirJuego, _botonPistas })
+		_botonReanudar = new OpcionMenu("", "REANUDAR");
+		_botonGuardar = new OpcionMenu("", "GUARDAR PARTIDA");
+		_botonOpciones = new OpcionMenu("", "OPCIONES");
+		_botonMenuInicio = new OpcionMenu("", "VOLVER AL MENÚ PRINCIPAL");
+		_botonSalirJuego = new OpcionMenu("", "SALIR DEL JUEGO");
+		_botonPistas = new OpcionMenu("", "PISTAS") { Name = "BotonPistas" };
+		foreach (var opcion in new[] { _botonReanudar, _botonGuardar, _botonPistas, _botonOpciones, _botonMenuInicio, _botonSalirJuego })
 		{
 			opcion.SizeFlagsHorizontal = Control.SizeFlags.ShrinkBegin;
 			lista.AddChild(opcion);

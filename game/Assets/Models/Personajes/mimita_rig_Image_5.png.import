@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dbqprcpw3c8km"
-path="res://.godot/imported/mimita_rig_Image_5.png-395d0ef9e896a7af59831c8dbb72b267.ctex"
+path.s3tc="res://.godot/imported/mimita_rig_Image_5.png-395d0ef9e896a7af59831c8dbb72b267.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "22d07fef8bb733fc61ae9b7a00928231"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Models/Personajes/mimita_rig_Image_5.png"
-dest_files=["res://.godot/imported/mimita_rig_Image_5.png-395d0ef9e896a7af59831c8dbb72b267.ctex"]
+dest_files=["res://.godot/imported/mimita_rig_Image_5.png-395d0ef9e896a7af59831c8dbb72b267.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0

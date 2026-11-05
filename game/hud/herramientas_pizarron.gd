@@ -43,7 +43,7 @@ func _sobre_diario(pantalla: Vector2) -> bool:
 	if not hud.diario_abierto: return false
 	var escala: float = minf(hud._lienzo.size.x / 1600.0, hud._lienzo.size.y / 900.0)
 	var local: Vector2 = (pantalla / escala - hud._origen_diario_tablero()) / hud.ESCALA_DIARIO_TABLERO
-	return Rect2(202, 52, 1192, 800).has_point(local)
+	return hud.RECT_DIARIO_TABLERO.has_point(local)
 
 func _nota_en(punto: Vector2) -> Dictionary:
 	for i in range(postits.size() - 1, -1, -1):

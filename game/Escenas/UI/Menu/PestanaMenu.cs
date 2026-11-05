@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-// Pestaña de Opciones: "01  CONTROLES". La activa va en coral con raya roja debajo.
+// Pestaña de Opciones con prefijo opcional. La activa va en coral con raya roja debajo.
 public partial class PestanaMenu : FilaResaltable
 {
 	private readonly Label _texto;
@@ -24,9 +24,12 @@ public partial class PestanaMenu : FilaResaltable
 		margen.AddThemeConstantOverride("margin_top", 20);
 		margen.AddThemeConstantOverride("margin_bottom", 20);
 		var fila = EstiloMenus.Fila(24);
-		var num = EstiloMenus.Etiqueta(numero, EstiloMenus.Mono(22, 0.1f), 22, EstiloMenus.Numero);
-		num.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-		fila.AddChild(num);
+		if (!string.IsNullOrEmpty(numero))
+		{
+			var num = EstiloMenus.Etiqueta(numero, EstiloMenus.Mono(22, 0.1f), 22, EstiloMenus.Numero);
+			num.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+			fila.AddChild(num);
+		}
 		_texto = EstiloMenus.Etiqueta(texto, EstiloMenus.Display(800, 48, 0.08f), 48, EstiloMenus.Texto);
 		fila.AddChild(_texto);
 		margen.AddChild(fila);
