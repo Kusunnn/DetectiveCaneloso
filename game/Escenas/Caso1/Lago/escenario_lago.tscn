@@ -1,4 +1,4 @@
-[gd_scene load_steps=121 format=3]
+[gd_scene load_steps=122 format=3]
 
 [ext_resource type="Shader" path="res://Escenas/Caso1/cielo_noche.gdshader" id="e1"]
 [ext_resource type="Shader" path="res://Escenas/Caso1/Lago/suelo_lago.gdshader" id="e2"]
@@ -46,6 +46,7 @@
 [ext_resource type="Script" path="res://Escenas/Investigacion/MusicaFondo.cs" id="e44"]
 [ext_resource type="Script" path="res://Escenas/UI/MandoHud.cs" id="e45"]
 [ext_resource type="Script" path="res://Escenas/Caso1/Lago/Caso1Lago.cs" id="e46"]
+[ext_resource type="Script" path="res://Escenas/Investigacion/ContornoPistas.cs" id="contorno_pistas"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1"]
 shader = ExtResource("e1")
@@ -1123,3 +1124,7 @@ Estatica = NodePath("../Bosque/Altavoz/Estatica")
 ContenedoresConPista = [NodePath("../Bosque/TroncoHueco"), NodePath("../Orilla/Mochila")]
 PistasDentro = [NodePath("../Bosque/Cornamenta"), NodePath("../Orilla/Cuaderno")]
 Zonas = [NodePath("../Sendero/Sendero"), NodePath("../Bosque/Bosque"), NodePath("../Colina/Colina"), NodePath("../Orilla/Orilla"), NodePath("../Embarcadero/Embarcadero"), NodePath("../Cobertizo/Cobertizo"), NodePath("../Embarcadero/Lago")]
+
+[node name="ContornoPistas" type="Node" parent="."]
+script = ExtResource("contorno_pistas")
+DistanciaMaxima = 5.5

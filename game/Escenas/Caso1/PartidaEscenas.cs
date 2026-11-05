@@ -12,11 +12,11 @@ public static class PartidaEscenas
 	public const string Lago = "res://Escenas/Caso1/Lago/escenario_lago.tscn";
 	public const string Sala = "res://Escenas/Caso1/Interrogatorio/sala_interrogatorio_caso1.tscn";
 
-	// Pistas del capítulo: 13 del Campamento y 9 del Lago y el Bosque
-	public const int TotalPistas = 22;
-	// HU-9.5 CA-03: pistas del Lago que hacen falta antes de ir a la estación, para que Hecdog no presente
-	// a los seis sin las pruebas del lago (las mismas a partir de las que el Lago ya da la pista del remo)
-	public const int PistasLagoParaEstacion = 5;
+// Pistas del capítulo: 13 del Campamento y 9 del Lago y el Bosque.
+public const int TotalPistas = 22;
+
+// Pistas del Lago necesarias antes de poder ir a la estación.
+public const int PistasLagoParaEstacion = 5;
 
 	// Pistas del diario sin contar los detalles descubiertos en la vista de examen
 	public static int PistasEnDiario(CanvasLayer hud)
