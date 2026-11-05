@@ -13,7 +13,9 @@ public sealed class GuiaCaso1
 
 	public sealed class Candado
 	{
-		public string Id, Quien, Previo;
+		public string Id, Quien, Previo, Nodo;
+		public int Frase;
+		public bool Oculta;
 		public string[] Da = Array.Empty<string>(), Pistas = Array.Empty<string>(), Conclusiones = Array.Empty<string>();
 		public bool EsDeTony => Quien == GuionCaso1.Culpable;
 	}
@@ -30,11 +32,9 @@ public sealed class GuiaCaso1
 	private const string RutaCandados = "res://Datos/Caso1/caso1_candados.json";
 	private const string RutaSistema = "res://Datos/Dialogos/caso1_sistema.json";
 
-	// Hasta que Tony tenga su contrainterrogatorio, sus candados caen en el careo del final: se piden, pero no brillan
-	public bool TonyEnCareo = true;
-
 	public readonly List<Candado> Candados = new();
 	private readonly Dictionary<string, (string Escenario, string Zona, bool Llavero)> _pistas = new();
+	private readonly Dictionary<string, List<string>> _frases = new();
 	private readonly Godot.Collections.Dictionary _sistema;
 	private readonly Func<string, bool> _tienePista, _tieneConclusion;
 	private readonly Func<bool> _tieneLlavero;
@@ -58,11 +58,16 @@ public sealed class GuiaCaso1
 				Id = c["id"].AsString(),
 				Quien = c["quien"].AsString(),
 				Previo = c.TryGetValue("previo", out var previo) ? previo.AsString() : null,
+				Nodo = c["nodo"].AsString(),
+				Frase = c["frase"].AsInt32(),
+				Oculta = c.TryGetValue("oculta", out var oculta) && oculta.AsBool(),
 				Da = Lista(c, "da"),
 				Pistas = Lista(c, "pistas"),
 				Conclusiones = Lista(c, "conclusiones"),
 			});
 		}
+		foreach (var (quien, frases) in datos["declaraciones"].AsGodotDictionary())
+			_frases[quien.AsString()] = frases.AsGodotArray().Select(f => f.AsString()).ToList();
 		_sistema = Leer(RutaSistema);
 	}
 
@@ -89,7 +94,7 @@ public sealed class GuiaCaso1
 	private bool TieneTodo(Candado c) => c.Pistas.All(_tienePista) && c.Conclusiones.All(_tieneConclusion);
 
 	// Ya se tiene con qué romperlo: su retrato brilla
-	public bool Listo(Candado c) => !Roto(c) && Abierto(c) && TieneTodo(c) && !(TonyEnCareo && c.EsDeTony);
+	public bool Listo(Candado c) => !Roto(c) && Abierto(c) && TieneTodo(c);
 
 	public int CandadosRotos => Candados.Count(Roto);
 	public int CandadosTotales => Candados.Count;
@@ -127,6 +132,16 @@ public sealed class GuiaCaso1
 		}
 		return new Paso { Clase = Clase.TodoRoto };
 	}
+
+	// ---------- Declaraciones ----------
+
+	public IReadOnlyList<string> FrasesDe(string quien) => _frases[quien];
+	public string Frase(Candado c) => _frases[c.Quien][c.Frase];
+	public int IndiceFrase(Candado c) => c.Frase;
+	public string NodoDe(Candado c) => c.Nodo;
+	public bool FraseOculta(Candado c) => c.Oculta;
+	public string Interrogatorio(string id) => Texto("interrogatorio", id);
+	public string FaltaParaTony(Candado c) => Texto("candados_tony", c.Id);
 
 	// ---------- Textos ----------
 

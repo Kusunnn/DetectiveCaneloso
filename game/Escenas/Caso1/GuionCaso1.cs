@@ -140,14 +140,14 @@ public partial class GuionCaso1
 		AlTerminar?.Invoke("Introducción");
 	}
 
-	// Un interrogatorio. Si se agota la credibilidad, Hecdog lo corta y se puede volver a intentar: nunca lleva a acusar.
+	// Un interrogatorio: se sale con «Seguir investigando» o cuando ya no queda nada que decir
 	public async Task Interrogar(string quien, Func<bool> sigue)
 	{
 		await AntesDeInterrogar(quien);
 		if (!sigue()) return;
-		var arbol = _arboles["caso1_" + quien];
-		string salida = await Motor.Recorrer(arbol);
-		if (salida == "paciencia" && sigue()) await CortarInterrogatorio(arbol);
+		await Motor.Recorrer(_arboles["caso1_" + quien]);
+		Motor.Ventana.MostrarCandados(0, 0);
+		_frasesDichas.Clear();
 		if (sigue()) await DespuesDeInterrogar(quien);
 		AlTerminar?.Invoke("Diálogo: " + quien);
 	}
@@ -195,7 +195,7 @@ public partial class GuionCaso1
 				await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.IdRevelacion, LibretosCaso1.Revelacion());
 		};
 		string final = await Motor.Recorrer(acusacion, desde);
-		Motor.OmitirLinea = null;
+		Motor.OmitirLinea = _omitirNormal;
 		Motor.AntesDeNodo = antes;
 		Motor.AntesDeLinea = null;
 		if (!sigue()) return;
@@ -215,10 +215,10 @@ public partial class GuionCaso1
 		AlTerminar?.Invoke("Fin del caso");
 	}
 
+	// La credibilidad no se ve en pantalla y tiene piso: solo cuenta para la calificación
 	private void AlCambiarContador(string id, int valor)
 	{
-		if (id == "credibilidad")
-			_hud.Call("avisar", "CREDIBILIDAD", $"{Math.Max(valor, 0)} / {CredibilidadInicial}");
+		if (id == "credibilidad" && valor < CredibilidadMinima) Estado.Sumar(id, CredibilidadMinima - valor);
 	}
 
 	// Ids de fase de capitulos.json, según hasta dónde llegó el guion
@@ -245,6 +245,12 @@ public partial class GuionCaso1
 	{
 		_hud.Set("objetivo", ObjetivoEn(donde));
 		_hud.Call("poner_objetivos", Guia.TituloSecundarios, new Godot.Collections.Array(Guia.Secundarios().Select(s => Variant.From(s))));
+		foreach (string quien in Sospechosos.Where(DioDeclaracion))
+		{
+			var propios = Guia.Candados.Where(c => c.Quien == quien).ToList();
+			var frases = Guia.FrasesDe(quien).Where((_, i) => !propios.Any(c => c.Frase == i && c.Oculta && !Guia.Roto(Guia.Buscar(c.Previo))));
+			_hud.Call("poner_persona", NombreDe(quien), string.Join(" ", frases), Motor.Ventana.Retrato(NombreDe(quien)), propios.Count(Guia.Roto), propios.Count, Guia.Brilla(quien));
+		}
 	}
 
 	// ---------- Guardado ----------

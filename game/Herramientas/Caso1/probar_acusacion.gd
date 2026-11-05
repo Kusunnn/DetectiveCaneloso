@@ -94,19 +94,29 @@ func _libre() -> bool:
 	return not _flujo.EnDialogo(_sala)
 
 func _credibilidad_agotada() -> void:
-	print("== Credibilidad agotada: Hecdog corta y no obliga a acusar")
+	print("== Errores sin castigo, corazonada y tres pruebas")
 	await _nueva(false)
-	_flujo.Credibilidad(_sala, 1)
-	_hablar_con_hecdog()
-	var ok := await _jugar(["Interrogar a Miawrio", "PRESIONAR", "Seguir investigando"], func(): return _flujo.ValorCredibilidad(_sala) == 2 and _sala.ImplicadoActual == "" and _libre())
-	_revisar(ok, "presionar sin pruebas agota la credibilidad; Hecdog corta, el implicado sale y vuelve a 2")
-	_revisar(not _flujo.Resuelto(_sala) and not _flujo.PasoPorAcusacion(_sala), "no lleva a acusar")
 	_flujo.DarPistas(_sala)
-	_flujo.Credibilidad(_sala, 1)
+	_flujo.Credibilidad(_sala, 2)
 	_hablar_con_hecdog()
-	ok = await _jugar(["Interrogar a Miawrio", "PRESENTAR", "lena_intacta", "Seguir investigando"], func(): return _flujo.ValorCredibilidad(_sala) == 2 and _sala.ImplicadoActual == "" and _libre())
-	_revisar(ok, "una prueba que no viene al caso también puede agotarla, y tampoco lleva a acusar")
-	_revisar(not _flujo.Resuelto(_sala), "sigue sin final")
+	# Dos veces la frase que no es: a la segunda, la corazonada la marca y arranca ahí
+	var ok := await _jugar(["Interrogar a Miawrio", "Confrontar", "Confrontar"], func(): return _flujo.Errores(_sala, "MI-1") == 2 and _dialogo.PruebasHayOpciones and _dialogo.PruebasAyuda.contains("Frase 3/"))
+	_revisar(ok, "dos errores marcan la frase correcta")
+	# Tercer error con una prueba que no es
+	ok = await _jugar(["Confrontar", "Ver todas", "lena_intacta"], func(): return _flujo.Errores(_sala, "MI-1") == 3 and _dialogo.PruebasHayOpciones)
+	_revisar(ok and _flujo.ValorCredibilidad(_sala) == 2, "la credibilidad no baja del mínimo y no corta el interrogatorio")
+	ok = await _jugar(["Confrontar"], func(): return _dialogo.PruebasOpciones().contains("Mejor no"))
+	_revisar(ok and _dialogo.PruebasOpciones().split(" | ").size() == 4, "después de 3 errores quedan solo 3 pruebas: " + _dialogo.PruebasOpciones())
+	ok = await _jugar(["oferta_compra"], func(): return _flujo.TieneConclusion(_sala, "miawrio_1"))
+	_revisar(ok, "la prueba correcta rompe el candado")
+	ok = await _jugar(["registro_llamadas", "Seguir investigando"], func(): return _flujo.TieneConclusion(_sala, "miawrio_oyo_cita") and _libre())
+	_revisar(ok, "con un solo candado va directo a la prueba y termina")
+	_revisar(not _flujo.Resuelto(_sala) and not _flujo.PasoPorAcusacion(_sala), "no lleva a acusar")
+	# Tony desde el inicio, sin pruebas: dice qué falta
+	await _nueva(false)
+	_hablar_con_hecdog()
+	ok = await _jugar(["Interrogar a Tony"], func(): return _dialogo.PruebasHayOpciones and _flujo.EnEspera(_sala) and _dialogo.PruebasAyuda.contains("camino al lago"), 60.0)
+	_revisar(ok, "a Tony se le puede hablar desde el inicio y su candado dice qué falta")
 
 func _caso_vacio() -> void:
 	print("== Armar el caso vacío y salir")
@@ -148,15 +158,15 @@ func _caso_completo() -> void:
 		c[0] = _flujo.ValorCredibilidad(_sala)
 		p.Pruebas_Presentar()
 	var plan := ["Armar el caso", armar,
-		"PRESENTAR", "oferta_compra",        # Error: Tony se burla y baja la credibilidad
-		"PRESENTAR", "Foto de Aya de las 23:12",
-		"PRESENTAR", "botas_tony",
-		"PRESENTAR", "silbato_ts",
-		"PRESENTAR", "libro_guardia_quemado",
-		"PRESENTAR", "hueco_remo"]
+		"Confrontar", "oferta_compra",        # Error: Tony se burla y baja la credibilidad
+		"Confrontar", "Foto de Aya de las 23:12",
+		"Confrontar", "botas_tony",
+		"Confrontar", "silbato_ts",
+		"Confrontar", "libro_guardia_quemado",
+		"hueco_remo"]                         # Queda una sola: directo a la prueba
 	var ok := await _jugar(plan, func(): return _flujo.Resuelto(_sala) and root.get_node_or_null("CinematicaCaso1") == null, 240.0)
 	_revisar(ok and _flujo.Final(_sala) == "A", "llega al Final A")
-	_revisar(_flujo.TieneConclusion(_sala, "tony_5"), "el careo tumbó las cinco excusas")
+	_revisar(_flujo.TieneConclusion(_sala, "tony_5"), "cayeron los cinco candados de Tony")
 	_revisar(_flujo.ValorCredibilidad(_sala) >= 1, "con un error, la credibilidad no llegó a 0")
 	_revisar(_gestor.CinematicaVista("caso1_2320") and _gestor.CinematicaVista("caso1_2320_revelacion"), "se vieron la escena de las 23:20 y la revelación")
 	await create_timer(0.5).timeout
@@ -197,7 +207,7 @@ func _guardar_en_medio() -> void:
 	_flujo.DarTodo(_sala)
 	_flujo.CasoCompletoYPrimeraExcusa(_sala)
 	_hablar_con_hecdog()
-	ok = await _jugar(["Armar el caso", func(p): p.Pruebas_Presentar()], func(): return _dialogo.PruebasHayOpciones and _flujo.EnEspera(_sala) and _dialogo.PruebasOpciones().contains("PRESENTAR"), 80.0)
+	ok = await _jugar(["Armar el caso", func(p): p.Pruebas_Presentar()], func(): return _dialogo.PruebasHayOpciones and _flujo.EnEspera(_sala) and _dialogo.PruebasOpciones().contains("Confrontar"), 80.0)
 	_revisar(ok, "llega al careo")
 	await _guardar_cargar()
 	_revisar(_flujo.TieneConclusion(_sala, "tony_1") and not _flujo.Resuelto(_sala), "al cargar conserva la excusa tumbada y no hay final")

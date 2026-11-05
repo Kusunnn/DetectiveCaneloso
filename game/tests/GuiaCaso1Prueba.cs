@@ -13,11 +13,9 @@ public partial class GuiaCaso1Prueba : RefCounted
 	public bool Ejecutar()
 	{
 		TablaContraGuion();
-		foreach (bool careo in new[] { true, false })
-		{
-			Dirigido(careo);
-			for (ulong semilla = 1; semilla <= 300; semilla++) AlAzar(semilla, careo);
-		}
+		Dirigido();
+		for (ulong semilla = 1; semilla <= 300; semilla++) AlAzar(semilla);
+		Declaraciones();
 		Textos();
 		GD.Print($"GuiaCaso1Prueba: {_fallos} fallos");
 		return _fallos == 0;
@@ -28,7 +26,7 @@ public partial class GuiaCaso1Prueba : RefCounted
 		public readonly HashSet<string> Pistas = new(), Conclusiones = new();
 		public bool Llavero;
 		public readonly GuiaCaso1 Guia;
-		public Partida(bool careo) { Guia = new GuiaCaso1(Pistas.Contains, Conclusiones.Contains, () => Llavero) { TonyEnCareo = careo }; }
+		public Partida() { Guia = new GuiaCaso1(Pistas.Contains, Conclusiones.Contains, () => Llavero); }
 		public void Romper(string id) { foreach (string d in Guia.Buscar(id).Da) Conclusiones.Add(d); }
 		public int Avance => Pistas.Count + Conclusiones.Count + (Llavero ? 1 : 0);
 	}
@@ -43,31 +41,30 @@ public partial class GuiaCaso1Prueba : RefCounted
 		}
 	}
 
-	// Sin candados pendientes, o solo los de Tony cuando caen en el careo con todas sus pruebas
-	private void RevisarFin(Partida p, bool careo, string quien)
+	// Sin candados pendientes
+	private void RevisarFin(Partida p, string quien)
 	{
-		foreach (var c in p.Guia.Candados.Where(c => !p.Guia.Roto(c)))
-			Revisar(careo && c.EsDeTony && c.Pistas.All(p.Pistas.Contains) && c.Conclusiones.All(p.Conclusiones.Contains), $"{quien}: callejón en {c.Id}");
+		foreach (var c in p.Guia.Candados.Where(c => !p.Guia.Roto(c))) Revisar(false, $"{quien}: callejón en {c.Id}");
 	}
 
 	// Haciendo solo lo que dice la guía se termina el caso
-	private void Dirigido(bool careo)
+	private void Dirigido()
 	{
-		var p = new Partida(careo);
+		var p = new Partida();
 		for (int vuelta = 0; vuelta < 80; vuelta++)
 		{
 			var paso = p.Guia.Siguiente();
-			if (paso.Clase == GuiaCaso1.Clase.TodoRoto) { RevisarFin(p, careo, "dirigido"); return; }
+			if (paso.Clase == GuiaCaso1.Clase.TodoRoto) { RevisarFin(p, "dirigido"); return; }
 			Aplicar(p, paso);
 		}
 		Revisar(false, "dirigido: la guía da vueltas sin terminar");
 	}
 
 	// En cualquier estado alcanzable, la guía propone algo que se puede hacer y que hace avanzar
-	private void AlAzar(ulong semilla, bool careo)
+	private void AlAzar(ulong semilla)
 	{
 		var azar = new RandomNumberGenerator { Seed = semilla };
-		var p = new Partida(careo);
+		var p = new Partida();
 		var todas = new[] { "lena_intacta", "cornamenta_zancos", "huellas_detenidas", "altavoz", "oferta_compra", "registro_llamadas", "cuaderno_eriz", "registro_enfermeria", "botas_tony", "hueco_remo", "remo_sangre", "candado_caseta", "silbato_ts", "foto_grupo", "libro_guardia_quemado", "nota_porky" };
 		var cerradas = new HashSet<string> { "hueco_remo", "foto_grupo", "nota_porky", "oferta_compra" };
 		for (int vuelta = 0; vuelta < 200; vuelta++)
@@ -81,7 +78,7 @@ public partial class GuiaCaso1Prueba : RefCounted
 
 			int antes = p.Avance;
 			var paso = p.Guia.Siguiente();
-			if (paso.Clase == GuiaCaso1.Clase.TodoRoto) { RevisarFin(p, careo, $"semilla {semilla}"); return; }
+			if (paso.Clase == GuiaCaso1.Clase.TodoRoto) { RevisarFin(p, $"semilla {semilla}"); return; }
 			Aplicar(p, paso);
 			Revisar(p.Avance > antes, $"semilla {semilla}: el paso no hace avanzar ({paso.Clase} {paso.Pista} {paso.Candado?.Id})");
 		}
@@ -91,7 +88,7 @@ public partial class GuiaCaso1Prueba : RefCounted
 	// Cada candado existe en el árbol de su sospechoso, con esa prueba
 	private void TablaContraGuion()
 	{
-		var guia = new Partida(false).Guia;
+		var guia = new Partida().Guia;
 		Revisar(guia.CandadosTotales == 15, "son 15 candados");
 		var enGuion = new Dictionary<string, string> { ["cornamenta_zancos"] = "disfraz_ciervo", ["hueco_remo"] = "soporte_remos", ["silbato_ts"] = "silbato_gs" };
 		foreach (var c in guia.Candados)
@@ -103,10 +100,45 @@ public partial class GuiaCaso1Prueba : RefCounted
 		}
 	}
 
+	// Las frases son el texto del guion, sin cambiar palabras, y cada candado tiene su nodo y su frase
+	private void Declaraciones()
+	{
+		var guia = new Partida().Guia;
+		foreach (string quien in GuionCaso1.Sospechosos)
+		{
+			var arbol = (Godot.Collections.Dictionary)Json.ParseString(FileAccess.GetFileAsString($"res://Datos/Dialogos/caso1_{quien}.json"));
+			var nodos = arbol["nodos"].AsGodotDictionary();
+			string TextoDe(string nodo)
+			{
+				var lineas = nodos[nodo].AsGodotDictionary()["lineas"].AsGodotArray().Select(l => l.AsGodotDictionary()).ToList();
+				return string.Join(" ", lineas.Where(l => l["habla"].AsString() != "Caneloso").Select(l => l["texto"].AsString()));
+			}
+			var frases = guia.FrasesDe(quien);
+			if (quien == GuionCaso1.Culpable)
+			{
+				for (int i = 0; i < 5; i++) Revisar(TextoDe("excusa_" + (i + 1)) == frases[i], $"Tony: la excusa {i + 1} no coincide con la frase");
+			}
+			else
+			{
+				var propias = guia.Candados.Where(c => c.Quien == quien && !c.Oculta).Select(c => c.Frase).Max();
+				string unidas = string.Join(" ", frases.Where((_, i) => !guia.Candados.Any(c => c.Quien == quien && c.Oculta && c.Frase == i)));
+				Revisar(TextoDe("mentira") == unidas, $"{quien}: las frases no coinciden con el guion: {unidas}");
+				Revisar(propias < frases.Count, $"{quien}: índice de frase");
+			}
+			foreach (var c in guia.Candados.Where(c => c.Quien == quien))
+			{
+				Revisar(nodos.ContainsKey(c.Nodo), $"{c.Id}: no existe el nodo {c.Nodo}");
+				Revisar(c.Frase < frases.Count, $"{c.Id}: no existe la frase {c.Frase}");
+				if (c.EsDeTony) Revisar(guia.FaltaParaTony(c) != "", $"{c.Id}: sin texto de lo que falta");
+			}
+		}
+		Revisar(FileAccess.GetFileAsString("res://Datos/Dialogos/caso1_juan_carlos.json").Contains(guia.FrasesDe("juan_carlos")[2]), "la frase oculta de Juan Carlos está en el guion");
+	}
+
 	private void Textos()
 	{
 		const GuiaCaso1.Escenario Sala = GuiaCaso1.Escenario.Sala;
-		var p = new Partida(false);
+		var p = new Partida();
 		string o = p.Guia.ObjetivoInterrogatorios(Sala);
 		Revisar(o == "Me falta algo del campamento: la fogata.", "sin nada: " + o);
 		p.Pistas.Add("lena_intacta");
@@ -124,7 +156,7 @@ public partial class GuiaCaso1Prueba : RefCounted
 		o = p.Guia.ObjetivoInterrogatorios(Sala);
 		Revisar(o.Contains("Las llaves de Porky"), "sin llavero lo dice: " + o);
 		// Antes de la sala se conserva el recorrido por zonas
-		var r = new Partida(false);
+		var r = new Partida();
 		o = r.Guia.ObjetivoExploracion(GuiaCaso1.Escenario.Campamento);
 		Revisar(o == "La fogata del centro: ahí estaban todos cuando se fue la luz. (0/13 pistas)", "exploración: " + o);
 		Revisar(r.Guia.PistasTotales("lago") == 9 && r.Guia.PistasTotales("campamento") == 13, "13 y 9 pistas");

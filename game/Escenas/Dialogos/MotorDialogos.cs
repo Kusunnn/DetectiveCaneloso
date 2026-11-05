@@ -118,6 +118,8 @@ public class MotorDialogos
 	public Func<ArbolDialogo, NodoDialogo, Task<OpcionDialogo>> ElegirAccion;
 	// Antes de decir cada línea: quién habla y con qué ánimo (lo que se le ve en la cara)
 	public Action<string, string> AnimoDeLinea;
+	// El texto con que se ve una opción (la sala le agrega los candados)
+	public Func<ArbolDialogo, OpcionDialogo, string> DecorarOpcion;
 	// Se detiene al llegar a este nodo (sin decirlo)
 	public string DetenerEn;
 	// Lo último que dijo el personaje de la conversación (para pedirle que lo repita)
@@ -146,7 +148,7 @@ public class MotorDialogos
 		{
 			bool cumple = Cumple(arbol, opcion.Requiere);
 			if (!cumple && opcion.OcultarSiNoCumple) continue;
-			lista.Add((opcion, new OpcionVista(opcion.Texto, opcion.Tipo, Estado.OpcionVisitada(arbol.Id, nodo.Id, opcion.Id))
+			lista.Add((opcion, new OpcionVista(DecorarOpcion?.Invoke(arbol, opcion) ?? opcion.Texto, opcion.Tipo, Estado.OpcionVisitada(arbol.Id, nodo.Id, opcion.Id))
 			{
 				Bloqueada = !cumple,
 			}));
@@ -247,6 +249,9 @@ public class MotorDialogos
 	}
 
 	public int Credibilidad => Estado.Contador("credibilidad");
+
+	// Dice un nodo fuera del recorrido (una línea suelta del guion)
+	public Task DecirNodo(ArbolDialogo arbol, NodoDialogo nodo) => Decir(arbol, nodo);
 
 	public Hablante HablanteDe(ArbolDialogo arbol, string nombre) => Hablante(arbol, nombre);
 

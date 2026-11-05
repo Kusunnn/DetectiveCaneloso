@@ -8,83 +8,15 @@
 			"ir_a": [
 				{
 					"si": {
-						"sin_conclusiones": [
-							"juan_carlos_3"
-						]
-					},
-					"destino": "bloqueado"
-				},
-				{
-					"si": {
-						"sin_conclusiones": [
-							"aya_2"
-						]
-					},
-					"destino": "bloqueado"
-				},
-				{
-					"si": {
-						"sin_conclusiones": [
-							"miawrio_2"
-						]
-					},
-					"destino": "bloqueado"
-				},
-				{
-					"si": {
-						"sin_conclusiones": [
-							"eriz_1"
-						]
-					},
-					"destino": "bloqueado"
-				},
-				{
-					"si": {
-						"sin_conclusiones": [
-							"mimita_2"
-						]
-					},
-					"destino": "bloqueado"
-				},
-				{
-					"si": {
 						"conclusiones": [
+							"tony_1",
+							"tony_2",
+							"tony_3",
+							"tony_4",
 							"tony_5"
 						]
 					},
 					"destino": "cerrado"
-				},
-				{
-					"si": {
-						"conclusiones": [
-							"tony_4"
-						]
-					},
-					"destino": "regreso_5"
-				},
-				{
-					"si": {
-						"conclusiones": [
-							"tony_3"
-						]
-					},
-					"destino": "regreso_4"
-				},
-				{
-					"si": {
-						"conclusiones": [
-							"tony_2"
-						]
-					},
-					"destino": "regreso_3"
-				},
-				{
-					"si": {
-						"conclusiones": [
-							"tony_1"
-						]
-					},
-					"destino": "regreso_2"
 				},
 				{
 					"si": {
@@ -145,7 +77,7 @@
 					}
 				]
 			],
-			"siguiente": "hub_1"
+			"siguiente": "hub"
 		},
 		"regreso_2": {
 			"variantes": [
@@ -271,7 +203,7 @@
 					"texto": "Mmh... no me moví de la fogata. Solo salí un momento a revisar el generador. Alguien tenía que hacerlo."
 				}
 			],
-			"siguiente": "hub_1",
+			"siguiente": "hub",
 			"al_completar": {
 				"notas": [
 					"Tony dice que no se movió de la fogata y que solo salió un momento a revisar el generador."
@@ -364,7 +296,7 @@
 					"texto": "...Está bien. El candado no estaba forzado y Juan Carlos me vio en el sendero. No fui al generador. Fui a caminar. Necesitaba aire."
 				}
 			],
-			"siguiente": "excusa_2",
+			"siguiente": "hub",
 			"al_completar": {
 				"conclusiones": [
 					"tony_1"
@@ -459,7 +391,7 @@
 					"texto": "Mmh... esas botas las usé ayer para arreglar el muelle. Bueno. A lo mejor bajé un momento. Eso no significa nada."
 				}
 			],
-			"siguiente": "excusa_3",
+			"siguiente": "hub",
 			"al_completar": {
 				"conclusiones": [
 					"tony_2"
@@ -583,7 +515,7 @@
 					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años ya lo traigo colgado. Sí. Es mío. Se me cayó."
 				}
 			],
-			"siguiente": "excusa_4",
+			"siguiente": "hub",
 			"al_completar": {
 				"conclusiones": [
 					"tony_3"
@@ -707,7 +639,7 @@
 					"texto": "La nota, la cita de las 18:00... Ya. Sí, vino a verme. Habló de un libro viejo, de cosas que ya estaban enterradas. No le hice caso."
 				}
 			],
-			"siguiente": "excusa_5",
+			"siguiente": "hub",
 			"al_completar": {
 				"conclusiones": [
 					"tony_4"
@@ -826,22 +758,17 @@
 					"animo": "acorralado",
 					"gesto": "Aprieta la mandíbula, mueve la mano derecha y aparta la vista. No contesta",
 					"texto": "..."
-				},
-				{
-					"habla": "Tony",
-					"animo": "frío",
-					"texto": "Mmh... no voy a decir nada más. Si cree que fui yo, demuéstrelo."
 				}
 			],
-			"fin": true,
 			"al_completar": {
 				"conclusiones": [
 					"tony_5"
 				],
 				"notas": [
-					"El remo salió del cobertizo, que solo abren dos llaves: la de Porky y la de Tony. Tony ya no contesta."
+					"El remo salió del cobertizo, que solo abren dos llaves: la de Porky y la de Tony."
 				]
-			}
+			},
+			"siguiente": "hub"
 		},
 		"e_bocina": {
 			"lineas": [
@@ -970,6 +897,86 @@
 						"texto": "Ahorita regreso, Tony. No se vaya lejos."
 					}
 				]
+			]
+		},
+		"hub": {
+			"pregunta": "¿Qué le enseño?",
+			"ir_a": [
+				{
+					"si": {
+						"conclusiones": [
+							"tony_1",
+							"tony_2",
+							"tony_3",
+							"tony_4",
+							"tony_5"
+						]
+					},
+					"destino": "cerrado"
+				}
+			],
+			"opciones": [
+				{
+					"id": "foto_aya_2312",
+					"tipo": "MOSTRAR",
+					"texto": "Foto de Aya de las 23:12",
+					"destino": "e1_foto",
+					"requiere": {
+						"conclusiones": [
+							"foto_aya_2312"
+						]
+					}
+				},
+				{
+					"id": "botas_tony",
+					"tipo": "MOSTRAR",
+					"texto": "Botas con lodo",
+					"destino": "e2_botas",
+					"requiere": {
+						"pistas": [
+							"botas_tony"
+						]
+					}
+				},
+				{
+					"id": "silbato_gs",
+					"tipo": "MOSTRAR",
+					"texto": "Silbato «T. S.»",
+					"destino": "e3_silbato",
+					"requiere": {
+						"pistas": [
+							"silbato_gs"
+						]
+					}
+				},
+				{
+					"id": "libro_guardia_quemado",
+					"tipo": "MOSTRAR",
+					"texto": "Libro de guardia quemado",
+					"destino": "e4_libro",
+					"requiere": {
+						"pistas": [
+							"libro_guardia_quemado"
+						]
+					}
+				},
+				{
+					"id": "soporte_remos",
+					"tipo": "MOSTRAR",
+					"texto": "Soporte de remos vacío",
+					"destino": "e5_soporte",
+					"requiere": {
+						"pistas": [
+							"soporte_remos"
+						]
+					}
+				},
+				{
+					"id": "salir",
+					"texto": "Seguir investigando",
+					"destino": "despedida",
+					"fin": true
+				}
 			]
 		}
 	}

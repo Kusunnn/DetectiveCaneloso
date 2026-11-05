@@ -91,17 +91,7 @@
 				{
 					"id": "tony",
 					"texto": "Interrogar a Tony",
-					"destino": "a_tony",
-					"requiere": {
-						"conclusiones": [
-							"juan_carlos_3",
-							"aya_2",
-							"miawrio_2",
-							"eriz_1",
-							"mimita_2"
-						]
-					},
-					"motivo": "Tony se abre cuando los otros cinco ya confesaron."
+					"destino": "a_tony"
 				},
 				{
 					"id": "repasar",

@@ -195,7 +195,14 @@ public partial class Caso1 : Node, ICuadernoPistas
 		ActualizarObjetivo();
 	}
 
-	private void ActualizarObjetivo() => _guion.PublicarObjetivo(GuiaCaso1.Escenario.Campamento);
+	private readonly Dictionary<string, Label3D> _signos = new();
+
+	private void ActualizarObjetivo()
+	{
+		_guion.PublicarObjetivo(GuiaCaso1.Escenario.Campamento);
+		// «!» mientras tenga algo nuevo que decir
+		foreach (var (quien, signo) in _signos) signo.Visible = !_guion.DioDeclaracion(quien);
+	}
 
 	// El llavero de Porky también abre el cobertizo del lago: sin él, allá abajo no se podría seguir
 	private bool PuedeSalir => _pistas.Count >= PistasParaSalir && Jugador.TieneObjeto(Llavero);
@@ -289,7 +296,14 @@ public partial class Caso1 : Node, ICuadernoPistas
 			var npc = GetParent().GetNodeOrNull<Npc>($"Personajes/{nodo}/Colision");
 			if (npc == null) continue;
 			string quien = id;
-			npc.Usado += () => _ = Conversar(() => _guion.Interrogar(quien, IsInsideTree));
+			npc.Usado += () => _ = Conversar(() => _guion.Charla(quien));
+			var signo = new Label3D
+			{
+				Text = "!", FontSize = 96, Modulate = new Color("efca08"), OutlineSize = 16,
+				Billboard = BaseMaterial3D.BillboardModeEnum.Enabled, NoDepthTest = true, Position = new Vector3(0, 2.3f, 0),
+			};
+			npc.GetParent().AddChild(signo);
+			_signos[quien] = signo;
 		}
 	}
 

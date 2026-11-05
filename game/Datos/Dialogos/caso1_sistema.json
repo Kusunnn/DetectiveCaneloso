@@ -6,10 +6,22 @@
 		"falta_lago": { "texto": "Me falta algo del lago: {zona}.", "nueva": true },
 		"falta_campamento": { "texto": "Me falta algo del campamento: {zona}.", "nueva": true },
 		"falta_llavero": { "texto": "Me falta algo de {zona}, y está cerrado. Las llaves de Porky están en su cocina.", "nueva": true },
-		"armar_caso": { "texto": "Todos confesaron su secreto... menos uno. Cuando estés listo, arma el caso con Hecdog.", "nueva": false },
+		"armar_caso": { "texto": "Ya no le queda ni una excusa. Cuando estés listo, arma el caso con Hecdog.", "nueva": true },
 		"escuchar_hecdog": { "texto": "Escucha a Hecdog: él tiene el expediente.", "nueva": false },
 		"sala_inicio": { "texto": "Sala de interrogatorio de la estación. Habla con Hecdog, o sal por la puerta para volver al lago o al campamento.", "nueva": false },
 		"cerrado": { "texto": "Caso cerrado.", "nueva": false }
+	},
+	"interrogatorio": {
+		"no_es_esa": { "texto": "Esa frase no me dice nada, Caneloso, Nya.", "nueva": true },
+		"corazonada": { "texto": "Esa frase... ahí hay algo que no me cuadra.", "nueva": true },
+		"brilla": { "texto": "Tengo algo", "nueva": true }
+	},
+	"candados_tony": {
+		"T1": { "texto": "Necesito saber quién lo vio camino al lago. Juan Carlos y Aya saben algo, y el candado de la caseta también.", "nueva": true },
+		"T2": { "texto": "Necesito algo que lo ponga en la orilla. Sus cosas, tal vez.", "nueva": true },
+		"T3": { "texto": "Necesito saber de quién es ese silbato. Mimita oyó algo, y hay una foto vieja.", "nueva": true },
+		"T4": { "texto": "Necesito saber para qué lo citó Porky. Miawrio estaba ahí, y ella dejó algo escrito.", "nueva": true },
+		"T5": { "texto": "Necesito el arma, y de dónde salió.", "nueva": true }
 	},
 	"secundarios": {
 		"pistas_campamento": { "texto": "Pistas del campamento {n}/{total}", "nueva": true },

@@ -394,12 +394,20 @@ func _hablar_con_implicados() -> void:
 			for linea in _eventos["linea"]:
 				if _eventos["linea"][linea] > antes.get(linea, 0):
 					if vez == 0: primera[linea] = true
-					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS): repetidas[linea] = true
+					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS) and not _es_declaracion(linea): repetidas[linea] = true
 		_revisar(sentados.has(clave), "%s se sienta en la silla al hablar con él" % clave)
 		_revisar(not _en_pose_t(implicado), "%s no está en pose T en la sala" % clave)
 		await _retirar(caso)
 	print("    líneas repetidas al hablar dos veces: %s" % [repetidas.keys()])
 	_revisar(repetidas.is_empty(), "hablar dos veces con cada implicado no repite ninguna línea suya")
+
+## En la sala el sospechoso repite su declaración a propósito, para poder confrontarla
+func _es_declaracion(linea: String) -> bool:
+	var datos: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Datos/Caso1/caso1_candados.json"))
+	for frases in datos["declaraciones"].values():
+		for frase in frases:
+			if linea.ends_with(frase): return true
+	return false
 
 ## Habla con alguien y espera a que empiece su primera línea (puede venir caminando) y a que termine la conversación
 func _hablar(punto, espera: float) -> void:
@@ -444,7 +452,7 @@ func _acercarse_a_npc(personajes: Node3D) -> void:
 			for linea in _eventos["linea"]:
 				if _eventos["linea"][linea] > antes.get(linea, 0):
 					if vez == 0: primera[linea] = true
-					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS): repetidas[linea] = true
+					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS) and not _es_declaracion(linea): repetidas[linea] = true
 	print("    líneas repetidas en el Campamento: %s" % [repetidas.keys()])
 	_revisar(repetidas.is_empty(), "hablar dos veces con cada NPC del Campamento no repite sus líneas")
 

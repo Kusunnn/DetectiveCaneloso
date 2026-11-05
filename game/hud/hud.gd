@@ -142,6 +142,24 @@ func poner_objetivos(titulo: String, lineas: Array) -> void:
 	_titulo_objetivos = titulo
 	_objetivos_secundarios = lineas
 
+# Una persona con su declaración y sus candados: se puede actualizar conforme avanza el caso
+func poner_persona(nombre: String, resumen: String, retrato: Texture2D, rotos: int, total: int, brilla: bool) -> void:
+	for persona in personas:
+		if persona.nombre == nombre:
+			persona.resumen = resumen
+			persona.candados = [rotos, total, brilla]
+			return
+	personas.append({"nombre": nombre, "resumen": resumen, "imagen": retrato, "candados": [rotos, total, brilla]})
+
+func _dibujar_candados(p: Vector2, candados: Array) -> void:
+	for i in candados[1]:
+		var centro := p + Vector2(i * 34.0, 0)
+		var color := Color("8a8a8a") if i < candados[0] else Color("b58f1f")
+		_lienzo.draw_arc(centro + Vector2(10 if i < candados[0] else 0, -6), 7.0, PI, TAU, 10, color, 3.0, true)
+		_lienzo.draw_rect(Rect2(centro + Vector2(-11, -6), Vector2(22, 16)), color)
+	if candados[2]:
+		_texto("TENGO ALGO", p + Vector2(candados[1] * 34.0 + 6, 8), MONO, 14, Color("866134"))
+
 func _paginas_libro() -> Array[Dictionary]:
 	var paginas: Array[Dictionary] = []
 	# Cada hoja de fotos comparte una sola página de detalle.
@@ -164,7 +182,7 @@ func _paginas_libro() -> Array[Dictionary]:
 		if not nota.begins_with("Deducción: "):
 			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
 	for persona in personas:
-		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen, "persona": persona.nombre})
+		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen, "candados": persona.get("candados", []), "persona": persona.nombre})
 	if personas.is_empty():
 		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Habla con las personas del caso para añadir sus fichas al diario."})
 	return paginas.filter(func(pagina: Dictionary) -> bool: return pagina.seccion == _seccion)
@@ -736,6 +754,9 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 		medida *= minf(264.0 / medida.x, 192.0 / medida.y)
 		_lienzo.draw_texture_rect(imagen, Rect2(marco.get_center() - medida / 2, medida), false)
 		texto_y = 422.0
+	if not pagina.get("candados", []).is_empty():
+		_dibujar_candados(p + Vector2(50, texto_y - 12), pagina.candados)
+		texto_y += 14
 	if pagina.has("persona"):
 		_zonas_libro.append({"rect": Rect2(p + Vector2(38, 165), Vector2(504, 405)), "persona": pagina.persona})
 	_parrafo(pagina.texto, p + Vector2(38, texto_y), 504, 17, TINTA, 6 if imagen else 14)
