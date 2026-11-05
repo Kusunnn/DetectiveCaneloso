@@ -67,7 +67,7 @@ public partial class GuionCaso1
 	private bool _enCareo;
 	private string _ultimoGuardado;
 
-	private static string NombreDe(string quien) => quien switch
+	public static string NombreDe(string quien) => quien switch
 	{
 		"juan_carlos" => "Juan Carlos", "aya" => "Aya", "miawrio" => "Miawrio", "eriz" => "Eriz", "mimita" => "Mimita", "tony" => "Tony", _ => quien,
 	};

@@ -44,6 +44,10 @@ public partial class GuionCaso1
 	public bool AbrirExpediente;
 
 	public EstadoDialogos Estado => Motor.Estado;
+	// El «qué sigue» del caso: lo pregunta cada escenario para su objetivo
+	public readonly GuiaCaso1 Guia;
+	// Lo pone el escenario: el llavero viaja con el jugador
+	public Func<bool> TieneLlavero = () => false;
 	public bool IntroduccionVista => Estado.NodoCompletado(ArbolIntroduccion, "ir");
 	public bool SalaVista => Estado.NodoCompletado(ArbolSala, "llegada");
 	public bool TonyDisponible => Confesiones.All(Estado.TieneConclusion);
@@ -72,6 +76,7 @@ public partial class GuionCaso1
 		foreach (string id in new[] { ArbolIntroduccion, ArbolSala, ArbolAcusacion }.Concat(Sospechosos.Select(s => "caso1_" + s)))
 			_arboles[id] = ArbolDialogo.Cargar(RutaDialogos + id + ".json");
 		CargarPistas();
+		Guia = new GuiaCaso1(TienePista, Estado.TieneConclusion, () => TieneLlavero());
 	}
 
 	// Las pistas del diario valen en cualquier escenario (las del Lago sirven en la sala)
@@ -224,15 +229,22 @@ public partial class GuionCaso1
 		: IntroduccionVista ? "investigacion"
 		: "introduccion";
 
-	// Objetivo que manda el guion (o null para que el escenario ponga el suyo)
-	public string Objetivo()
+	// El objetivo principal del HUD en cada escenario
+	public string ObjetivoEn(GuiaCaso1.Escenario donde)
 	{
-		if (Resuelto) return "Caso cerrado.";
-		if (!IntroduccionVista) return "Escucha a Hecdog: él tiene el expediente.";
-		if (!SalaVista) return null;
-		return TonyDisponible
-			? "Todos confesaron su secreto... menos uno. Cuando estés listo, arma el caso con Hecdog."
-			: "Interroga a los seis y enséñales la prueba que les tumbe la historia.";
+		if (Resuelto) return Guia.Objetivo("cerrado");
+		if (!IntroduccionVista) return Guia.Objetivo("escuchar_hecdog");
+		if (SalaVista) return Guia.ObjetivoInterrogatorios(donde);
+		return donde == GuiaCaso1.Escenario.Sala ? Guia.Objetivo("sala_inicio") : Guia.ObjetivoExploracion(donde);
+	}
+
+	public string Objetivo() => ObjetivoEn(GuiaCaso1.Escenario.Sala);
+
+	// Pone el objetivo en el HUD y los secundarios en el diario
+	public void PublicarObjetivo(GuiaCaso1.Escenario donde)
+	{
+		_hud.Set("objetivo", ObjetivoEn(donde));
+		_hud.Call("poner_objetivos", Guia.TituloSecundarios, new Godot.Collections.Array(Guia.Secundarios().Select(s => Variant.From(s))));
 	}
 
 	// ---------- Guardado ----------

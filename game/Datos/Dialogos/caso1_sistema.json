@@ -1,0 +1,51 @@
+{
+	"_ayuda": "Líneas de sistema del Caso 1, separadas del guion para que el equipo las revise. \"nueva\": true = la escribió programación y falta revisarla; false = ya estaba en el juego.",
+	"objetivos": {
+		"tengo_algo": { "texto": "Tengo algo para {quien}.", "nueva": true },
+		"tengo_algo_fuera": { "texto": "Tengo algo para {quien}. Vamos a la estación.", "nueva": true },
+		"falta_lago": { "texto": "Me falta algo del lago: {zona}.", "nueva": true },
+		"falta_campamento": { "texto": "Me falta algo del campamento: {zona}.", "nueva": true },
+		"falta_llavero": { "texto": "Me falta algo de {zona}, y está cerrado. Las llaves de Porky están en su cocina.", "nueva": true },
+		"armar_caso": { "texto": "Todos confesaron su secreto... menos uno. Cuando estés listo, arma el caso con Hecdog.", "nueva": false },
+		"escuchar_hecdog": { "texto": "Escucha a Hecdog: él tiene el expediente.", "nueva": false },
+		"sala_inicio": { "texto": "Sala de interrogatorio de la estación. Habla con Hecdog, o sal por la puerta para volver al lago o al campamento.", "nueva": false },
+		"cerrado": { "texto": "Caso cerrado.", "nueva": false }
+	},
+	"secundarios": {
+		"pistas_campamento": { "texto": "Pistas del campamento {n}/{total}", "nueva": true },
+		"pistas_lago": { "texto": "Pistas del lago {n}/{total}", "nueva": true },
+		"candados": { "texto": "Candados rotos {n}/{total}", "nueva": true },
+		"titulo": { "texto": "Lo que sigue", "nueva": true }
+	},
+	"exploracion": {
+		"campamento": {
+			"pasos": [
+				{ "texto": "La fogata del centro: ahí estaban todos cuando se fue la luz.", "pistas": ["libro_guardia_quemado", "lena_intacta"] },
+				{ "texto": "¿Quién apagó la luz? La caseta del generador, al oeste.", "pistas": ["interruptor_generador", "candado_caseta"] },
+				{ "texto": "El «ciervo»: los disfraces se guardan en el almacén de los cuentos, al oeste de la fogata.", "pistas": ["baul_disfraces"] },
+				{ "texto": "Porky se fue de la fogata antes del apagón. Su cocina, al sur.", "pistas": ["taza_delantal"] },
+				{ "texto": "La cabaña de Porky, al este: ¿qué sabía ella?", "pistas": ["nota_porky", "foto_grupo", "recorte_periodico", "oferta_compra"] },
+				{ "texto": "La enfermería mira directo al lago. ¿Alguien vio algo?", "pistas": ["registro_enfermeria"] },
+				{ "texto": "Tony dice que no bajó al lago. Detrás de la cabaña del director, al noroeste.", "pistas": ["botas_tony"] },
+				{ "texto": "Un solo coche en el estacionamiento, junto a la entrada.", "pistas": ["registro_llamadas"] }
+			],
+			"completo": "Ya revisé todo el campamento. El sendero del lago, al norte.",
+			"delantal": "Revisa el delantal de Porky en la cocina.",
+			"abrir": "Abre la cabaña de Porky, al este.",
+			"general": "Revisa el campamento: fogata, cocina, cabañas, enfermería y caseta."
+		},
+		"lago": {
+			"pasos": [
+				{ "texto": "El sendero baja al lago: ¿por dónde caminó el «ciervo»?", "pistas": ["huellas_pezuna", "huellas_detenidas"] },
+				{ "texto": "Los bramidos salían del bosque, al oeste del sendero.", "pistas": ["altavoz", "cornamenta_zancos"] },
+				{ "texto": "En la orilla oeste alguien pasó un buen rato sentado.", "pistas": ["cuaderno_eriz"] },
+				{ "texto": "El embarcadero: ahí terminó todo. El agua aún brilla.", "pistas": ["silbato_ts", "linterna_porky", "remo_sangre"] },
+				{ "texto": "¿De dónde salió el remo? El cobertizo de botes, al este del muelle.", "pistas": ["hueco_remo"] }
+			],
+			"completo": "Ya revisé el lago. Hecdog espera en la patrulla para ir a la estación.",
+			"sin_llavero": "El cobertizo está cerrado. Porky tenía las llaves: búscalas en el Campamento.",
+			"abrir": "Abre el cobertizo de botes con el llavero de Porky.",
+			"general": "Revisa el sendero, el bosque, la colina, la orilla y el embarcadero."
+		}
+	}
+}

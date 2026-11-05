@@ -66,6 +66,7 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 		Guion = new GuionCaso1(Dialogo, Hud, Caneloso, Cambio)
 		{
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
+			TieneLlavero = () => Jugador.TieneObjeto("llavero_porky"),
 			NodoEscena = this,
 		};
 

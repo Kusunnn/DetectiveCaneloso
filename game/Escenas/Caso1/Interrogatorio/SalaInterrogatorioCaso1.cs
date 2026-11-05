@@ -122,8 +122,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 
 	protected override void AlRestaurar() => AcomodarPruebas();
 
-	protected override void ActualizarObjetivo() =>
-		Objetivo(Guion.Objetivo() ?? "Sala de interrogatorio de la estación. Habla con Hecdog, o sal por la puerta para volver al lago o al campamento.");
+	protected override void ActualizarObjetivo() => Guion.PublicarObjetivo(GuiaCaso1.Escenario.Sala);
 
 	protected override string PensamientoDeZona(string zona) => null;
 	protected override string NombreZona(string zona) => zona;

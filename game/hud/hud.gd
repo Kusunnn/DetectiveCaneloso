@@ -115,6 +115,8 @@ var linterna_encendida: bool = false
 ## Diario del caso (Q): pistas, deducciones, testimonios y personas.
 var notas: Array[String] = []
 var personas: Array[Dictionary] = []
+var _titulo_objetivos := ""
+var _objetivos_secundarios: Array = []
 const PISTAS_POR_HOJA := 9
 var _pista_diario: int = -1
 var _seccion: String = "PISTAS"
@@ -135,6 +137,11 @@ func registrar_persona(nombre: String, resumen: String, retrato: Texture2D) -> v
 			return
 	personas.append({"nombre": nombre, "resumen": resumen, "imagen": retrato})
 
+# Objetivos secundarios del diario (los pone el caso; sin ellos no hay página)
+func poner_objetivos(titulo: String, lineas: Array) -> void:
+	_titulo_objetivos = titulo
+	_objetivos_secundarios = lineas
+
 func _paginas_libro() -> Array[Dictionary]:
 	var paginas: Array[Dictionary] = []
 	# Cada hoja de fotos comparte una sola página de detalle.
@@ -146,6 +153,8 @@ func _paginas_libro() -> Array[Dictionary]:
 			paginas.append({"seccion": "PISTAS", "titulo": pista.titulo, "texto": pista.descripcion, "imagen": pista.imagen, "pista": _pista_diario})
 		else:
 			paginas.append({"seccion": "PISTAS", "titulo": "Una mirada más de cerca", "texto": "Haz clic en una fotografía para consultar la pista." if not pistas.is_empty() else "Las pistas que encuentres aparecerán en la hoja de al lado."})
+	if not _objetivos_secundarios.is_empty():
+		paginas.append({"seccion": "DEDUCCIONES", "titulo": _titulo_objetivos, "texto": objetivo + "\n\n" + "\n".join(_objetivos_secundarios)})
 	var conclusiones := notas.filter(func(n: String) -> bool: return n.begins_with("Deducción: "))
 	for conclusion in conclusiones:
 		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Una conexión confirmada", "texto": conclusion.trim_prefix("Deducción: ")})
