@@ -269,7 +269,7 @@ func input(evento: InputEvent) -> void:
 	var raton: Vector2 = evento.position / escala
 	var punto: Vector2 = hud._punto_pizarron(evento.position)
 	var local: Vector2 = (raton - hud._origen_diario_tablero()) / hud.ESCALA_DIARIO_TABLERO
-	var sobre_diario: bool = hud.diario_abierto and Rect2(202, 52, 1192, 800).has_point(local)
+	var sobre_diario: bool = hud.diario_abierto and hud.RECT_DIARIO_TABLERO.has_point(local)
 	var id := tarjeta_en(punto) if not sobre_diario else &""
 	if evento.button_index == MOUSE_BUTTON_LEFT and not evento.pressed and _nota_tinta != &"":
 		_terminar_tinta()

@@ -3,9 +3,10 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://53mckvu2tnev"
-path="res://.godot/imported/reconstruccion_2320_Tony_0.png-bf33443642b99f1d293ae3d2abc19a22.ctex"
+path.s3tc="res://.godot/imported/reconstruccion_2320_Tony_0.png-bf33443642b99f1d293ae3d2abc19a22.s3tc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 generator_parameters={
 "md5": "d07f538d8a0162d126ab6440138597c1"
@@ -14,11 +15,11 @@ generator_parameters={
 [deps]
 
 source_file="res://Assets/Cinematicas/Caso1/reconstruccion_2320_Tony_0.png"
-dest_files=["res://.godot/imported/reconstruccion_2320_Tony_0.png-bf33443642b99f1d293ae3d2abc19a22.ctex"]
+dest_files=["res://.godot/imported/reconstruccion_2320_Tony_0.png-bf33443642b99f1d293ae3d2abc19a22.s3tc.ctex"]
 
 [params]
 
-compress/mode=0
+compress/mode=2
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -40,4 +41,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=1
+detect_3d/compress_to=0
