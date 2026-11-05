@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 // Hecdog presenta el caso y Caneloso reúne pistas en el campamento (la cabaña de Porky se abre con su llavero).
 // El sendero lleva al Lago y el Bosque (Escenario 2, HU-20.6) o a la sala de la estación, donde se interroga a los seis
 // y se acusa. El guion vive en Datos/Dialogos/caso1_*.json (GuionCaso1); este script solo lo conecta con el escenario.
-public partial class Caso1 : Node
+public partial class Caso1 : Node, ICuadernoPistas
 {
 	// Pistas (★ señalan a Tony)
 	private const string Interruptor = "interruptor_generador";
@@ -49,6 +49,16 @@ public partial class Caso1 : Node
 	};
 
 	private const string Llavero = "llavero_porky";
+
+	// HU-07: detalles que solo aparecen examinando la evidencia (entradas nuevas del diario)
+	private const string LibroAntonio = "libro_guardia_quemado.antonio";
+	private const string FotoDedicatoria = "foto_grupo.dedicatoria";
+	private const string FotoSilbato = "foto_grupo.silbato";
+	private const string RegistroTachon = "registro_enfermeria.tachon";
+	private const string BotasJuncos = "botas_tony.juncos";
+
+	private readonly SistemaAyudas _ayudasInvestigacion = new();
+	private bool AyudasHabilitadas => Configuracion.Instancia?.AyudasInvestigacion ?? true;
 
 	[Export] public Jugador Jugador;
 	[Export] public CanvasLayer Hud;
@@ -170,7 +180,16 @@ public partial class Caso1 : Node
 	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
 	private void AlDescubrirDetalle(string origen, string id)
 	{
-		if (_guion.NotaDeDetalle(id) is string nota) Hud.Call("agregar_nota", nota);
+		string nota = id switch
+		{
+			LibroAntonio => "Reverso del libro de guardia: «De guardia: monitor auxiliar Antonio R.»",
+			FotoDedicatoria => "Detrás de la foto: «Cabaña 4, 14 de agosto. Para Daniel... — A. R.»",
+			FotoSilbato => "En la foto, el silbato del monitor lleva grabado «A. R.»: es Tony.",
+			RegistroTachon => "Bajo el tachón del registro de la enfermería: «23:20, ruido en el lago».",
+			BotasJuncos => "En la suela de las botas hay juncos del lago: quien las usó bajó a la orilla.",
+			_ => null,
+		};
+		if (nota != null) Hud.Call("agregar_nota", nota);
 		Cambio();
 		Autoguardar("Detalle: " + id);
 	}
@@ -307,6 +326,35 @@ public partial class Caso1 : Node
 		if (!IsInsideTree()) return;
 		Dialogo.Soltar();
 		_enDialogo = false;
+	}
+
+	private (string, string) OrientacionInvestigacion()
+	{
+		if (!_pistas.Contains(Lena) || !_pistas.Contains(LibroQuemado)) return ("fogata", "La zona de la fogata todavía merece otra mirada.");
+		if (!_pistas.Contains(TazaDelantal) || !Jugador.TieneObjeto(Llavero)) return ("cocina", "Quizá haya algo pendiente en la cocina.");
+		if (!_pistas.Contains(NotaPorky) || !_pistas.Contains(FotoGrupo) || !_pistas.Contains(Recorte) || !_pistas.Contains(Oferta))
+			return ("porky", "Ahora puedo investigar con más calma la cabaña de Porky.");
+		if (!_pistas.Contains(Baul)) return ("almacen", "Debería revisar el almacén.");
+		if (!_pistas.Contains(RegistroEnfermeria)) return ("enfermeria", "La enfermería es un buen lugar para seguir investigando.");
+		if (!_pistas.Contains(BotasTony)) return ("director", "Conviene recorrer los alrededores de la cabaña del director.");
+		if (!_pistas.Contains(Interruptor) || !_pistas.Contains(Candado)) return ("caseta", "Falta revisar algo en la caseta del generador.");
+		if (!_pistas.Contains(RegistroLlamadas)) return ("coche", "Podría volver al estacionamiento.");
+		return ("lago", "Ya revisé el campamento. Puedo seguir el sendero al Lago Espejo, al norte.");
+	}
+
+	public SistemaAyudas Cuaderno => _ayudasInvestigacion;
+
+	public string PedirPista()
+	{
+		if (!AyudasHabilitadas) return "Activa las ayudas de investigación en Opciones para pedir una pista.";
+		if (_guion.Resuelto || _restaurando || _enDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando)
+			return "Continúa la investigación antes de pedir otra pista.";
+		var (id, texto) = OrientacionInvestigacion();
+		if (id == null) return "No hay más orientaciones disponibles aquí.";
+		if (!_ayudasInvestigacion.Agregar("caso1:" + id, texto))
+			return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
+		Cambio();
+		return "Nueva pista añadida al cuaderno.";
 	}
 
 	public override void _UnhandledInput(InputEvent evento)

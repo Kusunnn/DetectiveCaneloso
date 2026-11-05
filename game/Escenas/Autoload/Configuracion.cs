@@ -66,6 +66,7 @@ public partial class Configuracion : Node
 	public static readonly (float Escala, string Nombre)[] EscalasTexto = { (1f, "Normal"), (1.15f, "Grande"), (1.3f, "Muy grande") };
 	private float _escalaTexto = 1f;
 	public float EscalaTexto { get => _escalaTexto; set => _escalaTexto = Mathf.Clamp(value, 1f, 1.3f); }
+	public bool AyudasInvestigacion { get; set; } = true;
 
 	// Teclas que el jugador puede cambiar en Opciones > Controles (nombre visible, acción del InputMap)
 	public static readonly (string Nombre, string Accion)[] TeclasConfigurables =
@@ -75,7 +76,7 @@ public partial class Configuracion : Node
 		("Correr", "correr"), ("Agacharse", "agacharse"),
 		("Interactuar", "interactuar"), ("Linterna", "linterna"),
 		("Diario", "diario"), ("Expediente", "expediente"),
-		("Tablero de deducción", "deducir"), ("Cambiar cámara", "cambiar_camara"), ("Ayuda", "ayuda"),
+		("Tablero de deducción", "deducir"), ("Cambiar cámara", "cambiar_camara"),
 	};
 
 	// Atajos globales que no se pueden reasignar.
@@ -87,7 +88,7 @@ public partial class Configuracion : Node
 	// Nombre en español de las demás acciones, para avisar de conflictos
 	private static readonly Dictionary<string, string> NombresAcciones = new()
 	{
-		["deducir"] = "Tablero", ["cambiar_camara"] = "Cambiar cámara", ["ayuda"] = "Ayuda",
+		["deducir"] = "Tablero", ["cambiar_camara"] = "Cambiar cámara",
 		["bailar"] = "Bailar", ["morir"] = "Morir", ["pausa"] = "Pausa",
 	};
 
@@ -235,6 +236,7 @@ public partial class Configuracion : Node
 		SensibilidadRaton = 1f;
 		AyudasVisuales = true;
 		EscalaTexto = 1f;
+		AyudasInvestigacion = true;
 		RestaurarTeclas();
 		Guardar();
 	}
@@ -271,6 +273,7 @@ public partial class Configuracion : Node
 		PantallaCompleta = eleccionGuardada ? archivo.GetValue("video", "pantalla_completa", PantallaCompleta).AsBool() : PantallaCompleta;
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
+		AyudasInvestigacion = archivo.GetValue("controles", "ayudas_investigacion", true).AsBool();
 		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
 		EscalaTexto = archivo.GetValue("accesibilidad", "escala_texto", EscalaTexto).AsSingle();
 		CargarTeclas(archivo);
@@ -349,6 +352,7 @@ public partial class Configuracion : Node
 			Key tecla = TeclaDe(accion);
 			if (tecla != TeclaOriginal(accion)) archivo.SetValue("teclas", accion, (long)tecla);
 		}
+		archivo.SetValue("controles", "ayudas_investigacion", AyudasInvestigacion);
 
 		Error error = archivo.Save(RutaConfiguracion);
 		if (error != Error.Ok)

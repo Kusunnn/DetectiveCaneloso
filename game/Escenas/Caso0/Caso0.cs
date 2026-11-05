@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 //        tablero [R] → se abre la siguiente zona o información.
 // Giro: Porky escondió la cinta por vergüenza, pero la grabadora grababa porque el comisario
 //       la dejó en REC a propósito. Cabo suelto: una voz desconocida en la cinta a las 3:12.
-public partial class Caso0 : Node
+public partial class Caso0 : Node, ICuadernoPistas
 {
 	// Pistas (diario [Q])
 	private const string Grabadora = "grabadora";
@@ -39,6 +39,9 @@ public partial class Caso0 : Node
 
 	private const string Combinacion = "combinacion_porky";
 	private const uint CapaInteractuable = 1u << 3;
+
+	private readonly SistemaAyudas _ayudasInvestigacion = new();
+	private bool AyudasHabilitadas => Configuracion.Instancia?.AyudasInvestigacion ?? true;
 
 	[Export] public Jugador Jugador;
 	[Export] public CanvasLayer Hud;
@@ -94,8 +97,7 @@ public partial class Caso0 : Node
 	private bool _tutorial;
 	private bool _autorizado, _resuelto, _enDialogo, _vioCandado;
 	private int _intentosAcusacion;
-	private double _tiempoCaso, _sinProgreso;
-	private int _nivelAyuda;
+	private double _tiempoCaso;
 
 	public override void _Ready()
 	{
@@ -243,8 +245,6 @@ public partial class Caso0 : Node
 
 	private void Progreso()
 	{
-		_sinProgreso = 0;
-		_nivelAyuda = 0;
 		if (Guia != null) Guia.Insistencia = 0;
 	}
 
@@ -677,20 +677,21 @@ public partial class Caso0 : Node
 		ActualizarGuia(delta);
 		if (_resuelto) return;
 		_tiempoCaso += delta;
-		if (_enDialogo || Tablero.Abierto) return;
-		_sinProgreso += delta;
-		if (_tutorial)
-		{
-			AyudaGradual();
-			return;
-		}
-		// Sin tutorial: solo pensamientos, más espaciados
-		if ((_nivelAyuda == 0 && _sinProgreso > 100) || (_nivelAyuda == 1 && _sinProgreso > 200))
-		{
-			_nivelAyuda++;
-			string ayuda = Ayuda(_nivelAyuda);
-			if (ayuda != null) Jugador.MostrarPensamiento(ConTeclas(ayuda), 6.0);
-		}
+	}
+
+	public SistemaAyudas Cuaderno => _ayudasInvestigacion;
+
+	public string PedirPista()
+	{
+		if (!AyudasHabilitadas) return "Activa las ayudas de investigación en Opciones para pedir una pista.";
+		if (_resuelto || CinematicaCinta.EnCurso || _restaurando || _enDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando)
+			return "Continúa la investigación antes de pedir otra pista.";
+		var (id, texto) = OrientacionInvestigacion();
+		if (id == null) return "No hay más orientaciones disponibles aquí.";
+		if (!_ayudasInvestigacion.Agregar("caso0:" + id, texto))
+			return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
+		Cambio();
+		return "Nueva pista añadida al cuaderno.";
 	}
 
 	public override void _UnhandledInput(InputEvent evento)
@@ -701,27 +702,7 @@ public partial class Caso0 : Node
 			SugerirEnTablero();
 			Tablero.Abrir();
 		}
-		else if (evento.IsActionPressed("ayuda") && !_enDialogo && !Tablero.Abierto && !_resuelto)
-		{
-			GetViewport().SetInputAsHandled();
-			RepetirAyuda();
-		}
-	}
 
-	// Pista sutil (nivel 1) y otra más clara (nivel 2), sin resolverle el caso
-	private string Ayuda(int nivel)
-	{
-		bool claro = nivel >= 2;
-		if (!_pistas.Contains(Grabadora)) return claro ? "La grabadora de la mesa. La reviso [E]." : "Esa luz roja de la mesa no deja de parpadear...";
-		if (!_pistas.Contains(Reloj)) return claro ? "El reloj de la pared... ¿está parado?" : "Hay algo raro en esta sala... ¿qué hora es?";
-		if (!_deducciones.Contains(D1)) return claro ? "Si uno la grabadora y el reloj en el tablero [R]..." : "La grabadora y el reloj... ¿estarán relacionados?";
-		if (!_pistas.Contains(Huellas)) return claro ? "El piso del pasillo está muy oscuro. Con la linterna [F]..." : "Si alguien salió de la sala de noche, habrá dejado rastro.";
-		if (!_pistas.Contains(Turnos)) return claro ? "En recepción tiene que haber un registro de turnos." : "¿Quién estaba de guardia anoche?";
-		if (!_deducciones.Contains(D2)) return claro ? "Huellas de bota y un solo agente de guardia. Al tablero [R]." : "Esas huellas... ¿de quién pueden ser?";
-		if (!_autorizado) return claro ? "Voy con el comisario a recepción." : "El comisario tiene la llave de los vestidores.";
-		if (_vioCandado && !Jugador.TieneObjeto(Combinacion)) return claro ? "¿Y si la mochila de Porky está bajo el banco de espera? Agachado [C]." : "Porky no se separa de sus cosas...";
-		if (!_pistas.Contains(Cinta)) return claro ? "El casillero de Porky, en los vestidores." : "Si yo escondiera algo aquí, ¿dónde sería?";
-		return claro ? "La silla del sospechoso, en la Sala 1. Ya puedo explicarlo todo." : "Creo que ya tengo todas las piezas.";
 	}
 
 	// ---------- Utilidades ----------

@@ -65,6 +65,8 @@ public partial class Jugador : CharacterBody3D
 	private static readonly Color ColorPensamiento = new Color(0.96f, 0.9f, 0.72f);
 	private static readonly Color ColorAviso = new Color(1f, 1f, 1f);
 
+	public bool Investigando => !_panelAbierto && !_bloqueado && !Examinando && !GetTree().Paused;
+
 	public bool SeHaMovido { get; private set; } = false;
 	public bool LinternaEncendida { get; private set; } = false;
 	public bool Agachado { get; private set; } = false;

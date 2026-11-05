@@ -103,6 +103,7 @@ public partial class Caso0 : IEstadoPartida
 
 		return new Diccionario
 		{
+			{ "ayudas", _ayudasInvestigacion.Capturar() },
 			{ "jugador", Jugador.CapturarEstado() },
 			{ "pistas", pistas },
 			{ "notas", Hud.Get("notas").AsGodotArray().Duplicate() },
@@ -243,6 +244,7 @@ public partial class Caso0 : IEstadoPartida
 		else ActualizarObjetivo();
 		Progreso();
 
+		_ayudasInvestigacion.Restaurar(estado.TryGetValue("ayudas", out var ayudas) ? ayudas.AsGodotDictionary() : new Diccionario());
 		_restaurando = false;
 		GestorPartida.Instancia.HayCambiosSinGuardar = false;
 		GestorPartida.Instancia.EstadoRestaurado();

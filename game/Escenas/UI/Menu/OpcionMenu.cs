@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-// Opción numerada de un menú: "01  REANUDAR". Se pone coral y se desliza al seleccionarla.
+// Opción de menú con prefijo opcional. Se pone coral y se desliza al seleccionarla.
 public partial class OpcionMenu : FilaResaltable
 {
 	private readonly Label _texto;
@@ -11,9 +11,12 @@ public partial class OpcionMenu : FilaResaltable
 	public OpcionMenu(string numero, string texto, int tam = 60, float espaciadoEm = 0.08f)
 	{
 		var fila = EstiloMenus.Fila(36);
-		var num = EstiloMenus.Etiqueta(numero, EstiloMenus.Mono(22, 0.1f), 22, EstiloMenus.Numero);
-		num.SizeFlagsVertical = SizeFlags.ShrinkCenter;
-		fila.AddChild(num);
+		if (!string.IsNullOrEmpty(numero))
+		{
+			var num = EstiloMenus.Etiqueta(numero, EstiloMenus.Mono(22, 0.1f), 22, EstiloMenus.Numero);
+			num.SizeFlagsVertical = SizeFlags.ShrinkCenter;
+			fila.AddChild(num);
+		}
 		_texto = EstiloMenus.Etiqueta(texto, EstiloMenus.Display(800, tam, espaciadoEm), tam, EstiloMenus.Texto);
 		fila.AddChild(_texto);
 		// 6 px de aire arriba y abajo en el diseño
