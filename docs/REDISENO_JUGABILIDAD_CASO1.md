@@ -1,6 +1,93 @@
 # Rediseño de la jugabilidad del Caso 1
 
-**Estado: propuesta, sin programar. Espera la aprobación de Takeshi.**
+**Estado: aprobado por Takeshi el 5 nov con cambios.** Esta sección manda sobre el resto del documento cuando se contradicen.
+
+## 0. Lo que se aprobó el 5 de noviembre
+
+| Tema | Decisión |
+|---|---|
+| Final A (D1) | Se dispara al sellar las viñetas con los candados de Tony rotos. Si faltan candados, Caneloso y Hecdog lo encaran. |
+| Reconstrucción | Recortada a 15 huecos (0.1). |
+| Juan Carlos (D2) | 3 candados; total 15. |
+| Candados de Tony (D3) | En cualquier orden, con los [AJUSTE] de la tabla 0.2. |
+| Teclas (D4) | Instinto en [V], cámara en [T], ambas configurables. |
+| Ayudas (D5) | Sin tecla H y sin ayuda automática por tiempo. Se piden a Hecdog y en Pausa → Pistas. Niveles 1 y 2 con plantillas de GuiaCaso1; solo el 3 a mano. Todas en `caso1_sistema.json` con `"nueva": true`. |
+| Acción (D6) | [E] Confrontar. Si al sospechoso le queda una sola frase falsa, se salta la elección y va directo a la prueba. |
+| Lago (D7) | Eriz en la orilla y Aya en el bosque. |
+| «Acusar ya» (D8) | Contra Tony sin el caso completo, Hecdog lo rechaza sin castigo. |
+| Silbato y pelo (D9) | «T. S.» y el color real del pelaje (0.3). |
+| Charlas (D10) | Una declaración por NPC. |
+| Huellas que se detienen | Es la llave de JC → Aya → Mimita: con el instinto brilla desde más lejos (16 m en lugar de 8). |
+| Credibilidad | No se muestra en pantalla; solo cuenta para la calificación. |
+| Calificación | Candados al primer intento 15, tiempo 5, pistas 40, ayudas 30, credibilidad 10. |
+| Instinto | Se amplía `ContornoPistas` con radio y colores. Sin shader de desaturación por ahora. |
+| Rutinas | Primero cada NPC en su lugar, con su actividad y objeto. Caminar va al final, si hay tiempo. |
+| FPS | Medir con la ventana al frente; si da 30 exactos, revisar VSync y el límite del proyecto. |
+
+**Orden de trabajo:** 1) GuiaCaso1 y objetivos, 2) candados con Relacionadas y corazonada, 3) ayudas, 4) Reconstrucción, 5) instinto, 6) tarjetas y calificación, 7) rutinas. Commit y pruebas por paso; aviso al terminar cada uno. Sin push ni PR hasta que Takeshi lo diga.
+
+### 0.1 Reconstrucción recortada: 15 huecos [NUEVA]
+
+| Viñeta | Frases | Huecos |
+|---|---|---|
+| **1 · La fogata** (motivo) | «Hace 10 años murió [Paco] en el lago, y el [libro de guardia] decía quién estaba de guardia.»<br>«Porky escribió en [su nota] que esa noche lo diría todo, y citó a [Tony] en el embarcadero.» | 4 |
+| **2 · El apagón** (oportunidad) | «A las [23:00], la luz se fue porque [Juan Carlos] bajó el interruptor del generador.»<br>«[Tony] caminó por el [sendero del lago] en lugar de ir a la caseta.» | 4 |
+| **3 · El embarcadero** (medio) | «A las [23:20], en el embarcadero, [Tony] golpeó a Porky con el [remo] del [cobertizo].» | 4 |
+| **4 · Después** | «Después, [Tony] quemó el [libro de guardia] en la fogata y escondió sus [botas].» | 3 |
+
+Las 8 pruebas mínimas de la historia siguen obligadas por sus fichas: Paco, libro de guardia, su nota (motivo); 23:20, sendero del lago, botas (oportunidad); remo, cobertizo (medio). Se quitan las frases 1.3, 2.2, 3.2, 4.1 y 4.2. Los demás señuelos se conservan.
+
+### 0.2 [AJUSTE] propuestos: Tony en cualquier orden (D3)
+
+**Se puede sin reescribir.** Son 4 cambios y ninguno se ha aplicado todavía.
+
+| Dónde | Hoy | Propuesta |
+|---|---|---|
+| `excusa_1` (Caneloso) | «Tony. Ya nada más falta usted.» | Se dice solo si los otros cinco ya confesaron. El texto no cambia. |
+| `excusa_2` | «Pero no me acerqué al lago. Después de...» | «No me acerqué al lago. Después de...» |
+| `e5_cae` | «...» y «Mmh... no voy a decir nada más. Si cree que fui yo, demuéstrelo.» | Al caer T5 queda solo «...». La segunda línea se dice al caer **el último candado**, sea cual sea. |
+| Nota de `tony_5` | «...Tony ya no contesta.» | «El remo salió del cobertizo, que solo abren dos llaves: la de Porky y la de Tony.» |
+
+### 0.3 [AJUSTE] propuestos: silbato «T. S.» (D9)
+
+**Ninguno se ha aplicado. Esperan el visto bueno de Takeshi.**
+
+| Dónde | Hoy | Propuesta |
+|---|---|---|
+| `caso1_pistas`: título | Silbato «G. S.» | Silbato «T. S.» |
+| `caso1_pistas`: comentario | ...dos iniciales: «G. S.». ¿De quién será? | ...dos iniciales: «T. S.». ¿De quién será? |
+| `caso1_pistas`: nota | Silbato con las iniciales «G. S.»... | Silbato con las iniciales «T. S.»... |
+| `caso1_pistas`: `foto_grupo.silbato` | ...un silbato con las iniciales «G. S.». | ...un silbato con las iniciales «T. S.». |
+| `foto_grupo_silbato.tres`: descripción | ...con las iniciales «G. S.» grabadas. No son sus iniciales. | ...con las iniciales «T. S.» grabadas. Son sus iniciales. |
+| `foto_grupo_silbato.tres`: pensamiento | «G. S.» en el silbato de Tony. ¿De quién eran esas iniciales? | «T. S.» en el silbato de Tony. Tony Spínola. |
+| `caso1_juan_carlos` y `caso1_tony`: opción | Silbato «G. S.» | Silbato «T. S.» |
+| `excusa_3` | ¿Ese silbato? No es mío. «G. S.» puede ser cualquiera... | ¿Ese silbato? No es mío. «T. S.» puede ser cualquiera... |
+| `e3_silbato` | «G. S.»: Guillermo Spínola. Su abuelo. Usted heredó el campamento... y también su silbato. Estaba atorado... | «T. S.»: Tony Spínola. Estaba atorado en un clavo del embarcadero, con el cordón roto. Y hoy trae uno nuevo. |
+| `e3_escapa` | ...Mi abuelo les regalaba silbatos a todos los monitores. Hay docenas así... | ...Mi abuelo les regalaba silbatos a todos los monitores. Cualquiera pudo grabarle esas letras... |
+| `e3_cae` | ...ya lo traigo colgado. Sí. Era de mi abuelo. Se me cayó. | ...ya lo traigo colgado. Sí. Es mío. Se me cayó. |
+| Nota de `tony_3` | El silbato «G. S.» era de Guillermo Spínola, el abuelo de Tony. Tony lo traía anoche... | El silbato «T. S.» es de Tony Spínola. Lo traía anoche... |
+| Textura de la foto (`generar_texturas.gd`) | El silbato dibujado dice G.S. | T.S., regenerando la imagen |
+
+**Duda:** la dedicatoria de la foto («Para Paco, que nunca le tuvo miedo al lago. — G. S.») no habla del silbato: la firma Don Guillermo, y el antecedente del expediente lo nombra. Propongo **dejarla como está**. Si se cambia a «T. S.», la firmaría Tony el mismo día que murió Paco, y eso cambia la historia.
+
+El id interno `silbato_gs` no se ve en el juego y no se toca.
+
+### 0.4 [AJUSTE] propuesto: pelo del disfraz (D9)
+
+La textura de Juan Carlos es **café lisa, sin rayas**, así que queda «pelo café». El guion y `caso1_pistas` ya lo dicen, y el modelo no cambia. Solo falta corregir la descripción de la pista en `zona_bosque.tscn`:
+
+| Hoy | Propuesta |
+|---|---|
+| ...Tiene pelos de gato a rayas atorados. | ...Tiene pelo café atorado en las correas. |
+
+### 0.5 Encontrado al integrar: notas con nombres viejos
+
+El commit `2608f23` (Mario, «revision final y hud») regresó en `Caso1.cs` las notas de detalles a una versión anterior: «monitor auxiliar Antonio R.», «Para Daniel... — A. R.», «lleva grabado "A. R.": es Tony» y «23:20, ruido en el lago». Esos nombres no existen en la historia v2, y hoy el juego los muestra al examinar esas pistas.
+
+**Propuesta:** volver a `_guion.NotaDeDetalle`, que lee `caso1_pistas.json` igual que el Lago. No lo he tocado: conviene confirmarlo con Mario.
+
+---
+
 Fuente de verdad: `docs/historias/Caso_1_La_Noche_del_Ciervo_de_Luz_v2.docx`. Base revisada: `HU-9.5-Animaciones-Tutorial` en `454e77d`.
 
 La idea central es que **casi nada del guion se toca**. Los árboles `caso1_*.json` ya tienen cada paso de cada sospechoso con su prueba y su confesión. El rediseño cambia cómo se llega a esos nodos, no lo que dicen.
