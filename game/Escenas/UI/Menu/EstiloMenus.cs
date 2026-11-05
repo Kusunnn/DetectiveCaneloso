@@ -108,7 +108,8 @@ public static class EstiloMenus
 	{
 		var bloque = Columna(20);
 		var fila = Fila(24);
-		fila.AddChild(Etiqueta(numero, Mono(22, 0.24f), 22, Numero));
+		if (!string.IsNullOrEmpty(numero))
+			fila.AddChild(Etiqueta(numero, Mono(22, 0.24f), 22, Numero));
 		fila.AddChild(Etiqueta(texto, Mono(22, 0.24f), 22, Gris));
 		bloque.AddChild(fila);
 		bloque.AddChild(Raya(0, 2, Linea));

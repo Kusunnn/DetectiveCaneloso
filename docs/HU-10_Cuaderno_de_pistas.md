@@ -1,6 +1,6 @@
 # HU-10 · Cuaderno de pistas
 
-En la pausa se añade la opción **06 · Pistas**. Las otras opciones conservan su orden y comportamiento.
+En la pausa se añade la opción **Pistas**, debajo de **Guardar partida**. Las opciones del menú se muestran sin numeración.
 
 - **Pedir una pista** añade la orientación del paso actual al cuaderno, sin temporizador.
 - Las orientaciones solicitadas se conservan en orden y se pueden releer. Solicitar otra vez la misma no duplica la entrada ni aumenta el contador.
