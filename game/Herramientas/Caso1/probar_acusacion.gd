@@ -33,6 +33,7 @@ func _initialize() -> void:
 	if solo == "" or solo == "guardar": await _guardar_en_medio()
 	if solo == "" or solo == "final-b": await _caso_incompleto_acusar()
 	if solo == "" or solo == "final-a": await _caso_completo()
+	if solo == "" or solo == "desorden": await _tony_en_desorden()
 	print("Fallos: %d" % _fallos)
 	_devolver_respaldo()
 	quit(1 if _fallos > 0 else 0)
@@ -174,6 +175,20 @@ func _caso_completo() -> void:
 	_revisar(_flujo.ValorCredibilidad(_sala) >= 1, "con un error, la credibilidad no llegó a 0")
 	_revisar(_gestor.CinematicaVista("caso1_2320") and _gestor.CinematicaVista("caso1_2320_revelacion"), "se vieron la escena de las 23:20 y la revelación")
 	await create_timer(0.5).timeout
+
+## Los candados de Tony caen en cualquier orden: primero el remo (5.º), luego las botas (2.º), y al final los demás
+func _tony_en_desorden() -> void:
+	print("== Tony en desorden")
+	await _nueva()
+	_hablar_con_hecdog()
+	var ok := await _jugar(["Interrogar a Tony", "Frase anterior", "Confrontar", "hueco_remo"], func(): return _flujo.TieneConclusion(_sala, "tony_5"), 90.0)
+	_revisar(ok and not _flujo.TieneConclusion(_sala, "tony_1"), "el 5.º candado cae primero")
+	ok = await _jugar(["Siguiente frase", "Confrontar", "botas_tony"], func(): return _flujo.TieneConclusion(_sala, "tony_2"))
+	_revisar(ok and not _flujo.TieneConclusion(_sala, "tony_1"), "luego el 2.º, sin el 1.º")
+	ok = await _jugar(["Confrontar", "Foto de Aya de las 23:12", "Confrontar", "silbato_ts", "libro_guardia_quemado"],
+		func(): return _flujo.TieneConclusion(_sala, "tony_4") and _flujo.TieneConclusion(_sala, "tony_1") and _flujo.TieneConclusion(_sala, "tony_3"), 90.0)
+	_revisar(ok, "los cinco caen en otro orden")
+	_revisar(not _flujo.Resuelto(_sala), "sin la Reconstrucción no hay final")
 
 ## Guarda en la ranura de prueba, carga y regresa a la sala
 func _guardar_cargar() -> void:
