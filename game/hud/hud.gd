@@ -112,14 +112,14 @@ const ZONA_CARPETA := Rect2(48, 36, 300, 96)
 const TECLAS := [["diario", "Libreta"], ["linterna", "Linterna"], ["deducir", "Tablero"], ["expediente", "Expediente"]]
 const ROJO_AVISO := Color("e0463c")
 var linterna_encendida: bool = false
-## Diario del caso (Q): pistas, deducciones, testimonios y personas.
+## Diario del caso (Q): pistas, deducciones y sospechosos.
 var notas: Array[String] = []
 var personas: Array[Dictionary] = []
 const PISTAS_POR_HOJA := 9
 var _pista_diario: int = -1
 var _seccion: String = "PISTAS"
-var _hojas_seccion: Dictionary = {"PISTAS": 0, "DEDUCCIONES": 0, "PERSONAS": 0, "SOSPECHOSOS": 0}
-const COLORES_SECCION := {"PISTAS": Color("dbb64f"), "DEDUCCIONES": Color("876348"), "PERSONAS": Color("993f40"), "SOSPECHOSOS": Color("3d5b63")}
+var _hojas_seccion: Dictionary = {"PISTAS": 0, "DEDUCCIONES": 0, "SOSPECHOSOS": 0}
+const COLORES_SECCION := {"PISTAS": Color("dbb64f"), "DEDUCCIONES": Color("876348"), "SOSPECHOSOS": Color("3d5b63")}
 ## HU-29: fichas de sospechosos. Cada caso pone un proveedor que las arma con lo que el jugador ya sabe;
 ## el diario se lo pide al abrirse. Cada ficha: id, nombre, retrato, datos, relacion, presencia, vinculo,
 ## pruebas [{titulo}], pruebas_faltan, contradicciones [{dicho, prueba, estado}], estado y consejo.
@@ -169,10 +169,6 @@ func _paginas_libro() -> Array[Dictionary]:
 	for nota in notas:
 		if not nota.begins_with("Deducción: "):
 			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
-	for persona in personas:
-		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen, "persona": persona.nombre})
-	if personas.is_empty():
-		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Habla con las personas del caso para añadir sus fichas al diario."})
 	if sospechosos.is_empty():
 		paginas.append({"seccion": "SOSPECHOSOS", "titulo": "Sospechosos del caso", "texto": "En este caso todavía no hay sospechosos."})
 	else:
@@ -782,7 +778,12 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 		_dibujar_galeria_sospechosos(p)
 		return
 	if pagina.has("ficha") and pagina.ficha < sospechosos.size():
-		_dibujar_ficha_sospechoso(p, sospechosos[pagina.ficha])
+		var sospechoso: Dictionary = sospechosos[pagina.ficha]
+		_dibujar_ficha_sospechoso(p, sospechoso)
+		for persona in personas:
+			if persona.nombre == sospechoso.get("nombre", ""):
+				_zonas_libro.append({"rect": Rect2(p + Vector2(38, 165), Vector2(504, 405)), "persona": persona.nombre})
+				break
 		return
 	var imagen: Texture2D = pagina.get("imagen")
 	var texto_y := 188.0
@@ -794,8 +795,6 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 		medida *= minf(264.0 / medida.x, 192.0 / medida.y)
 		_lienzo.draw_texture_rect(imagen, Rect2(marco.get_center() - medida / 2, medida), false)
 		texto_y = 422.0
-	if pagina.has("persona"):
-		_zonas_libro.append({"rect": Rect2(p + Vector2(38, 165), Vector2(504, 405)), "persona": pagina.persona})
 	_parrafo(pagina.texto, p + Vector2(38, texto_y), 504, 17, TINTA, 6 if imagen else 14)
 	if pagina.has("pista") and pagina.pista < pistas.size():
 		var pista: Pista = pistas[pagina.pista]
