@@ -23,6 +23,7 @@ public partial class FlujoCaso1Prueba : Node
 
 	private GuionCaso1 Guion(Node escenario) => (GuionCaso1)typeof(EscenarioCaso1).GetField("Guion", Privado).GetValue(escenario);
 
+	public int UsosAyudas(Node escenario) => ((EscenarioCaso1)escenario).Cuaderno.Usos;
 	public int Errores(Node escenario, string candado) => Guion(escenario).Estado.Contador("errores:" + candado);
 	public int ValorCredibilidad(Node escenario) => Guion(escenario).Estado.Contador("credibilidad");
 	public bool EnEspera(Node escenario) => Guion(escenario).EnEspera;

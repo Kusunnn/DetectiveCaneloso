@@ -48,8 +48,9 @@ public partial class GuionCaso1
 	public const string Culpable = "tony";
 	// La credibilidad baja, pero nunca corta el interrogatorio: solo cuenta para la calificación
 	private const int CredibilidadMinima = 2;
-	private const int ErroresParaCorazonada = 2;
-	private const int ErroresParaTresPruebas = 3;
+	// Historia: desde el primer error; Experto: nunca
+	private static int ErroresParaCorazonada => Dificultad switch { "historia" => 1, "experto" => int.MaxValue, _ => 2 };
+	private static int ErroresParaTresPruebas => Dificultad switch { "historia" => 2, "experto" => int.MaxValue, _ => 3 };
 	private const int MinimoRelacionadas = 4;
 
 	// El caso que el jugador va armando: viaja en la partida

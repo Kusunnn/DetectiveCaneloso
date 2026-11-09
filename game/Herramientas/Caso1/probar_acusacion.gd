@@ -119,8 +119,12 @@ func _credibilidad_agotada() -> void:
 	_revisar(ok, "a Tony se le puede hablar desde el inicio y su candado dice qué falta")
 
 func _caso_vacio() -> void:
-	print("== Armar el caso vacío y salir")
+	print("== Pedirle pistas a Hecdog, y armar el caso vacío y salir")
 	await _nueva()
+	_hablar_con_hecdog()
+	var antes: int = _flujo.UsosAyudas(_sala)
+	var pidio := await _jugar(["Pedirle una pista", "Pedirle una pista", "Seguir investigando"], _libre)
+	_revisar(pidio and _flujo.UsosAyudas(_sala) == antes + 2, "Hecdog da dos niveles de pista y quedan en el cuaderno")
 	_hablar_con_hecdog()
 	var c: int = _flujo.ValorCredibilidad(_sala)
 	var ok := await _jugar(["Armar el caso", func(p): p.Pruebas_Salir(), "Seguir investigando"], _libre)

@@ -67,6 +67,7 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 		{
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
 			TieneLlavero = () => Jugador.TieneObjeto("llavero_porky"),
+			Ayudas = Cuaderno,
 			NodoEscena = this,
 		};
 
@@ -123,15 +124,9 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
         ("estacion_" + Guion.FaseActual(), Guion.Objetivo() ?? "Habla con los implicados y contrasta sus relatos con las pruebas del diario.");
     public string PedirPista()
     {
-        if (!(Configuracion.Instancia?.AyudasInvestigacion ?? true))
-            return "Activa las ayudas de investigación en Opciones para pedir una pista.";
         if (_restaurando || EnDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando || Guion.Resuelto)
             return "Continúa la investigación antes de pedir otra pista.";
-        var (id, texto) = OrientacionInvestigacion();
-        if (!Cuaderno.Agregar("caso1:" + id, texto))
-            return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
-        Cambio();
-        return "Nueva pista añadida al cuaderno.";
+        return Guion.PedirPista(this is Caso1Lago ? GuiaCaso1.Escenario.Lago : GuiaCaso1.Escenario.Sala);
     }
 
 	// ---------- Pistas y zonas ----------

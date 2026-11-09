@@ -94,6 +94,11 @@
 					"destino": "a_tony"
 				},
 				{
+					"id": "pista",
+					"texto": "Pedirle una pista a Hecdog",
+					"destino": "pista"
+				},
+				{
 					"id": "repasar",
 					"texto": "Repasar el caso con Hecdog",
 					"destino": "repasar"
@@ -262,6 +267,10 @@
 			],
 			"fin": true,
 			"salida": "armar"
+		},
+		"pista": {
+			"fin": true,
+			"salida": "pista"
 		}
 	}
 }

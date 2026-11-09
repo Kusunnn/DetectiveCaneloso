@@ -16,6 +16,7 @@ public partial class GuiaCaso1Prueba : RefCounted
 		Dirigido();
 		for (ulong semilla = 1; semilla <= 300; semilla++) AlAzar(semilla);
 		Declaraciones();
+		Ayudas();
 		Textos();
 		GD.Print($"GuiaCaso1Prueba: {_fallos} fallos");
 		return _fallos == 0;
@@ -133,6 +134,44 @@ public partial class GuiaCaso1Prueba : RefCounted
 			}
 		}
 		Revisar(FileAccess.GetFileAsString("res://Datos/Dialogos/caso1_juan_carlos.json").Contains(guia.FrasesDe("juan_carlos")[2]), "la frase oculta de Juan Carlos está en el guion");
+	}
+
+	// Cada paso posible tiene sus tres niveles, sin repetir, y Experto se queda en el primero
+	private void Ayudas()
+	{
+		var p = new Partida();
+		foreach (var c in p.Guia.Candados)
+		{
+			Revisar(p.Guia.TieneNivel3(c.Id), $"{c.Id}: falta su ayuda de nivel 3");
+			foreach (string pista in c.Pistas) Revisar(p.Guia.TieneNivel3(pista), $"{pista}: falta su ayuda de nivel 3");
+		}
+		var cuaderno = new SistemaAyudas();
+		var paso = p.Guia.Siguiente();
+		var textos = new List<string>();
+		for (int i = 0; i < 4; i++) textos.Add(p.Guia.PedirAyuda(paso, cuaderno, 3).Texto);
+		Revisar(textos.Take(3).Distinct().Count() == 3 && cuaderno.Usos == 3, "tres niveles distintos: " + string.Join(" | ", textos));
+		Revisar(textos[0] == "¿Ya revisaste bien la fogata, Nya?", "nivel 1 con la zona: " + textos[0]);
+		Revisar(!p.Guia.PedirAyuda(paso, cuaderno, 3).Nueva && cuaderno.Usos == 3, "el cuarto pedido no cuenta");
+		var experto = new SistemaAyudas();
+		p.Guia.PedirAyuda(paso, experto, 1);
+		Revisar(!p.Guia.PedirAyuda(paso, experto, 1).Nueva && experto.Usos == 1, "Experto: solo el nivel 1");
+		p.Pistas.Add("lena_intacta");
+		var candado = p.Guia.Siguiente();
+		Revisar(p.Guia.Ayuda(candado, 2).Contains("Fíjate que fui por leña"), "nivel 2 de un candado cita la frase: " + p.Guia.Ayuda(candado, 2));
+		// Sin llavero, la cabaña lleva a las llaves
+		var q = new Partida();
+		foreach (string id in new[] { "libro_guardia_quemado", "lena_intacta", "interruptor_generador", "candado_caseta", "baul_disfraces", "taza_delantal" }) q.Pistas.Add(id);
+		var exploracion = q.Guia.SiguienteExploracion(GuiaCaso1.Escenario.Campamento);
+		Revisar(exploracion.Clase == GuiaCaso1.Clase.FaltaLlavero && q.Guia.Ayuda(exploracion, 3).Contains("delantal"), "sin llavero: " + q.Guia.Ayuda(exploracion, 3));
+		// Todos los pasos de un recorrido completo tienen texto en sus tres niveles
+		var r = new Partida();
+		for (int vuelta = 0; vuelta < 80; vuelta++)
+		{
+			var s = r.Guia.Siguiente();
+			for (int nivel = 1; nivel <= 3; nivel++) Revisar(!string.IsNullOrEmpty(r.Guia.Ayuda(s, nivel)), $"{GuiaCaso1.ClaveAyuda(s)} nivel {nivel} vacío");
+			if (s.Clase == GuiaCaso1.Clase.TodoRoto) break;
+			Aplicar(r, s);
+		}
 	}
 
 	private void Textos()

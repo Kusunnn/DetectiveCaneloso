@@ -46,6 +46,9 @@ public partial class GuionCaso1
 	public EstadoDialogos Estado => Motor.Estado;
 	// El «qué sigue» del caso: lo pregunta cada escenario para su objetivo
 	public readonly GuiaCaso1 Guia;
+	// El cuaderno de ayudas del escenario (HU-10): Hecdog anota ahí lo que dice
+	public SistemaAyudas Ayudas;
+	public static string Dificultad => Configuracion.Instancia?.Dificultad ?? "detective";
 	// Lo pone el escenario: el llavero viaja con el jugador
 	public Func<bool> TieneLlavero = () => false;
 	public bool IntroduccionVista => Estado.NodoCompletado(ArbolIntroduccion, "ir");
@@ -170,6 +173,12 @@ public partial class GuionCaso1
 				if (await ArmarCaso(sigue)) return;
 				continue;
 			}
+			if (salida == "pista")
+			{
+				var (_, texto) = PedirAyuda(GuiaCaso1.Escenario.Sala);
+				await Motor.Hablar(_arboles[ArbolSala], "Hecdog", "serio", texto);
+				continue;
+			}
 			return;
 		}
 	}
@@ -253,6 +262,39 @@ public partial class GuionCaso1
 		}
 	}
 
+	// ---------- Ayudas ----------
+
+	// La siguiente pista para donde está el jugador. Texto: lo que dice Hecdog (o por qué no puede).
+	public (bool Nueva, string Texto) PedirAyuda(GuiaCaso1.Escenario donde)
+	{
+		if (!(Configuracion.Instancia?.AyudasInvestigacion ?? true)) return (false, Guia.Aviso("desactivadas"));
+		if (Ayudas == null) return (false, Guia.Aviso("repetida"));
+		var paso = SalaVista || donde == GuiaCaso1.Escenario.Sala ? Guia.Siguiente() : Guia.SiguienteExploracion(donde);
+		var resultado = Guia.PedirAyuda(paso, Ayudas, Dificultad == "experto" ? 1 : 3);
+		if (resultado.Nueva) Motor.Cambio?.Invoke();
+		return resultado;
+	}
+
+	// Mensaje corto para Pausa → Pistas
+	public string PedirPista(GuiaCaso1.Escenario donde)
+	{
+		if (!(Configuracion.Instancia?.AyudasInvestigacion ?? true)) return Guia.Aviso("desactivadas");
+		var (nueva, _) = PedirAyuda(donde);
+		return nueva ? Guia.Aviso("nueva") : Dificultad == "experto" ? Guia.Aviso("experto") : Guia.Aviso("repetida");
+	}
+
+	// Al empezar el capítulo: cómo se quiere investigar
+	public async Task ElegirDificultad(Hablante caneloso)
+	{
+		// Las herramientas de prueba (--script) juegan sin elegir: se quedan con la dificultad que haya
+		if (OS.GetCmdlineArgs().Contains("--script")) return;
+		var opciones = Configuracion.Dificultades.Select(d => new OpcionVista(Guia.TextoDificultad(d.Id))).ToList();
+		int actual = Math.Max(Array.FindIndex(Configuracion.Dificultades, d => d.Id == Dificultad), 0);
+		int elegida = await Motor.Ventana.Elegir(caneloso, Guia.TextoDificultad("pregunta"), opciones, actual);
+		if (Configuracion.Instancia != null) Configuracion.Instancia.Dificultad = Configuracion.Dificultades[elegida].Id;
+		Motor.Cambio?.Invoke();
+	}
+
 	// ---------- Guardado ----------
 
 	public Diccionario Capturar()
@@ -261,6 +303,7 @@ public partial class GuionCaso1
 		var casillas = new Godot.Collections.Array();
 		foreach (var casilla in CasoPruebas) casillas.Add(new Godot.Collections.Array(casilla.Select(x => Variant.From(x))));
 		datos["caso_armado"] = new Diccionario { { "sospechoso", CasoSospechoso ?? "" }, { "casillas", casillas } };
+		datos["dificultad"] = Dificultad;
 		return datos;
 	}
 
@@ -272,6 +315,7 @@ public partial class GuionCaso1
 		if (datos != null && datos.TryGetValue("caso_armado", out Variant caso))
 		{
 			var d = caso.AsGodotDictionary();
+			if (datos.TryGetValue("dificultad", out Variant dificultad) && Configuracion.Instancia != null) Configuracion.Instancia.Dificultad = dificultad.AsString();
 			CasoSospechoso = d["sospechoso"].AsString();
 			var casillas = d["casillas"].AsGodotArray();
 			for (int i = 0; i < CasoPruebas.Length && i < casillas.Count; i++)

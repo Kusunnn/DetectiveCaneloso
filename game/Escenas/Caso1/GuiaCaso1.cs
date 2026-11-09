@@ -33,7 +33,7 @@ public sealed class GuiaCaso1
 	private const string RutaSistema = "res://Datos/Dialogos/caso1_sistema.json";
 
 	public readonly List<Candado> Candados = new();
-	private readonly Dictionary<string, (string Escenario, string Zona, bool Llavero)> _pistas = new();
+	private readonly Dictionary<string, (string Escenario, string Zona, bool Llavero, string Tipo)> _pistas = new();
 	private readonly Dictionary<string, List<string>> _frases = new();
 	private readonly Godot.Collections.Dictionary _sistema;
 	private readonly Func<string, bool> _tienePista, _tieneConclusion;
@@ -48,7 +48,7 @@ public sealed class GuiaCaso1
 		foreach (var (id, valor) in datos["pistas"].AsGodotDictionary())
 		{
 			var p = valor.AsGodotDictionary();
-			_pistas[id.AsString()] = (p["escenario"].AsString(), p["zona"].AsString(), p.TryGetValue("llavero", out var ll) && ll.AsBool());
+			_pistas[id.AsString()] = (p["escenario"].AsString(), p["zona"].AsString(), p.TryGetValue("llavero", out var ll) && ll.AsBool(), p.TryGetValue("tipo", out var tipo) ? tipo.AsString() : "");
 		}
 		foreach (Variant v in datos["candados"].AsGodotArray())
 		{
@@ -108,7 +108,7 @@ public sealed class GuiaCaso1
 		foreach (string pista in c.Pistas)
 		{
 			if (_tienePista(pista)) continue;
-			var (escenario, zona, llavero) = _pistas[pista];
+			var (escenario, zona, llavero, _) = _pistas[pista];
 			bool cerrado = llavero && !_tieneLlavero();
 			return new Paso { Clase = cerrado ? Clase.FaltaLlavero : Clase.FaltaPista, Candado = c, Pista = pista, Zona = zona, EscenarioPista = escenario };
 		}
@@ -143,9 +143,75 @@ public sealed class GuiaCaso1
 	public string Interrogatorio(string id) => Texto("interrogatorio", id);
 	public string FaltaParaTony(Candado c) => Texto("candados_tony", c.Id);
 
+	// ---------- Ayudas ----------
+
+	// Antes de la sala, lo que falta de este escenario en el orden del recorrido; después, lo mismo que el objetivo
+	public Paso SiguienteExploracion(Escenario donde)
+	{
+		string nombre = donde == Escenario.Lago ? "lago" : "campamento";
+		foreach (Variant v in _sistema["exploracion"].AsGodotDictionary()[nombre].AsGodotDictionary()["pasos"].AsGodotArray())
+			foreach (string pista in Lista(v.AsGodotDictionary(), "pistas"))
+			{
+				if (_tienePista(pista)) continue;
+				var (escenario, zona, llavero, _) = _pistas[pista];
+				return new Paso { Clase = llavero && !_tieneLlavero() ? Clase.FaltaLlavero : Clase.FaltaPista, Pista = pista, Zona = zona, EscenarioPista = escenario };
+			}
+		return Siguiente();
+	}
+
+	public static string ClaveAyuda(Paso p) => p.Clase switch
+	{
+		Clase.FaltaPista => "pista:" + p.Pista,
+		Clase.FaltaLlavero => "llavero",
+		Clase.Listo => "candado:" + p.Candado.Id,
+		_ => "armar",
+	};
+
+	// Nivel 1: insinuación; 2: dirección; 3: respuesta. Los dos primeros salen de plantillas.
+	public string Ayuda(Paso p, int nivel)
+	{
+		var ayudas = _sistema["ayudas"].AsGodotDictionary();
+		string De(string grupo, string id) => ayudas[grupo].AsGodotDictionary()[id].AsGodotDictionary()["texto"].AsString();
+		string Fija(string id) => ayudas["fijas"].AsGodotDictionary()[id].AsGodotArray()[nivel - 1].AsGodotDictionary()["texto"].AsString();
+		switch (p.Clase)
+		{
+			case Clase.FaltaPista:
+				if (nivel == 3) return De("nivel3", p.Pista);
+				if (nivel == 1) return De("plantillas", "pista_1").Replace("{zona}", p.Zona);
+				var (_, _, llavero, tipo) = _pistas[p.Pista];
+				string plantilla = llavero && !_tieneLlavero() ? "pista_2_cerrado" : tipo != "" ? "pista_2_" + tipo : "pista_2";
+				return De("plantillas", plantilla).Replace("{zona}", p.Zona);
+			case Clase.FaltaLlavero:
+				return Fija("llavero");
+			case Clase.Listo:
+				if (nivel == 3) return De("nivel3", p.Candado.Id);
+				string quien = GuionCaso1.NombreDe(p.Candado.Quien);
+				return nivel == 1 ? De("plantillas", "candado_1").Replace("{quien}", quien)
+					: De("plantillas", "candado_2").Replace("{quien}", quien).Replace("{frase}", Frase(p.Candado));
+			default:
+				return Fija("armar");
+		}
+	}
+
+	// Da el siguiente nivel que falte de este paso. false si ya se dieron todos los permitidos (texto: el último).
+	public (bool Nueva, string Texto) PedirAyuda(Paso paso, SistemaAyudas cuaderno, int niveles)
+	{
+		string clave = ClaveAyuda(paso), ultimo = Ayuda(paso, 1);
+		for (int nivel = 1; nivel <= niveles; nivel++)
+		{
+			ultimo = Ayuda(paso, nivel);
+			if (cuaderno.Agregar($"caso1:{clave}:{nivel}", ultimo)) return (true, ultimo);
+		}
+		return (false, ultimo);
+	}
+
+	public string Aviso(string id) => _sistema["ayudas"].AsGodotDictionary()["avisos"].AsGodotDictionary()[id].AsGodotDictionary()["texto"].AsString();
+	public string TextoDificultad(string id) => Texto("dificultad", id);
+
 	// ---------- Textos ----------
 
 	private string Texto(string grupo, string id) => _sistema[grupo].AsGodotDictionary()[id].AsGodotDictionary()["texto"].AsString();
+	public bool TieneNivel3(string id) => _sistema["ayudas"].AsGodotDictionary()["nivel3"].AsGodotDictionary().ContainsKey(id);
 
 	public string Objetivo(string id) => Texto("objetivos", id);
 

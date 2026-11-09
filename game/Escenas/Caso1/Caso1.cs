@@ -130,6 +130,8 @@ public partial class Caso1 : Node, ICuadernoPistas
 		if (!IsInstanceValid(this) || !IsInsideTree()) return;
 		bool vioExpediente = gestor?.PresentoConCinematica ?? false;
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
+		await Conversar(() => _guion.ElegirDificultad(_caneloso));
+		if (!IsInsideTree()) return;
 		await Conversar(_guion.Introduccion);
 		// Hecdog le da el expediente. Si la cinemática ya lo mostró hoja por hoja, no se abre otra vez:
 		// basta con recordar la tecla. Si no, se abre en cuanto se cierra la conversación.
@@ -290,6 +292,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 		{
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
 			TieneLlavero = () => Jugador.TieneObjeto(Llavero),
+			Ayudas = _ayudasInvestigacion,
 		};
 		foreach (var (nodo, id) in Sospechosos)
 		{
@@ -336,15 +339,9 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 	public string PedirPista()
 	{
-		if (!AyudasHabilitadas) return "Activa las ayudas de investigación en Opciones para pedir una pista.";
 		if (_guion.Resuelto || _restaurando || _enDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando)
 			return "Continúa la investigación antes de pedir otra pista.";
-		var (id, texto) = OrientacionInvestigacion();
-		if (id == null) return "No hay más orientaciones disponibles aquí.";
-		if (!_ayudasInvestigacion.Agregar("caso1:" + id, texto))
-			return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
-		Cambio();
-		return "Nueva pista añadida al cuaderno.";
+		return _guion.PedirPista(GuiaCaso1.Escenario.Campamento);
 	}
 
 	public override void _UnhandledInput(InputEvent evento)

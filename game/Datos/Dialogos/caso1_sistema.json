@@ -23,6 +23,263 @@
 		"T4": { "texto": "Necesito saber para qué lo citó Porky. Miawrio estaba ahí, y ella dejó algo escrito.", "nueva": true },
 		"T5": { "texto": "Necesito el arma, y de dónde salió.", "nueva": true }
 	},
+	"ayudas": {
+		"_ayuda": "Niveles 1 y 2: plantillas que llena GuiaCaso1 con la zona, la persona o el tipo de prueba. Nivel 3: a mano, una por pista y por candado.",
+		"plantillas": {
+			"pista_1": {
+				"texto": "¿Ya revisaste bien {zona}, Nya?",
+				"nueva": true
+			},
+			"pista_2": {
+				"texto": "Algo en {zona} no me cuadra, Nya.",
+				"nueva": true
+			},
+			"pista_2_dentro": {
+				"texto": "En {zona} hay algo guardado: ábrelo, Nya.",
+				"nueva": true
+			},
+			"pista_2_linterna": {
+				"texto": "En {zona} hay algo que no se ve sin luz, Nya.",
+				"nueva": true
+			},
+			"pista_2_agachado": {
+				"texto": "En {zona} hay algo cerca del suelo, Nya.",
+				"nueva": true
+			},
+			"pista_2_agua": {
+				"texto": "En {zona}, fíjate en el agua, Nya.",
+				"nueva": true
+			},
+			"pista_2_cerrado": {
+				"texto": "En {zona} hay algo, pero está cerrado con llave, Nya.",
+				"nueva": true
+			},
+			"candado_1": {
+				"texto": "{quien} todavía te esconde algo, Nya.",
+				"nueva": true
+			},
+			"candado_2": {
+				"texto": "Lo que dijo {quien} («{frase}») choca con algo de tu diario, Nya.",
+				"nueva": true
+			}
+		},
+		"fijas": {
+			"llavero": [
+				{
+					"texto": "Porky tenía llaves de todo el campamento, Nya.",
+					"nueva": true
+				},
+				{
+					"texto": "Su cocina, Nya: revisa lo que dejó colgado.",
+					"nueva": true
+				},
+				{
+					"texto": "El llavero de Porky está en su delantal, en la cocina, Nya.",
+					"nueva": true
+				}
+			],
+			"armar": [
+				{
+					"texto": "Ya tienes todo, Nya. Falta contarlo.",
+					"nueva": true
+				},
+				{
+					"texto": "Háblame cuando quieras armar el caso, Nya.",
+					"nueva": true
+				},
+				{
+					"texto": "Elige «Armar el caso» conmigo: oportunidad, medio y motivo, Nya.",
+					"nueva": true
+				}
+			]
+		},
+		"nivel3": {
+			"libro_guardia_quemado": {
+				"texto": "Entre las cenizas de la fogata hay papeles a medio quemar. Agáchate con la linterna prendida, Nya.",
+				"nueva": true
+			},
+			"lena_intacta": {
+				"texto": "Mira la leña apilada junto a la fogata, Nya: nadie la tocó.",
+				"nueva": true
+			},
+			"baul_disfraces": {
+				"texto": "Abre el baúl del almacén de los cuentos, Nya.",
+				"nueva": true
+			},
+			"taza_delantal": {
+				"texto": "En la cocina están la taza de Porky y su delantal colgado, Nya.",
+				"nueva": true
+			},
+			"nota_porky": {
+				"texto": "Levanta la almohada de la cama de Porky, en su cabaña, Nya.",
+				"nueva": true
+			},
+			"foto_grupo": {
+				"texto": "Hay una foto vieja en la pared de la cabaña de Porky, Nya.",
+				"nueva": true
+			},
+			"recorte_periodico": {
+				"texto": "En el corcho de la cabaña de Porky hay un recorte de periódico, Nya.",
+				"nueva": true
+			},
+			"oferta_compra": {
+				"texto": "Revisa la papelera de la cabaña de Porky, agachado, Nya.",
+				"nueva": true
+			},
+			"botas_tony": {
+				"texto": "Detrás de la cabaña del director, con la linterna prendida, hay unas botas, Nya.",
+				"nueva": true
+			},
+			"registro_enfermeria": {
+				"texto": "Abre el cajón del escritorio de la enfermería, Nya.",
+				"nueva": true
+			},
+			"interruptor_generador": {
+				"texto": "Revisa el interruptor de la caseta del generador, Nya.",
+				"nueva": true
+			},
+			"candado_caseta": {
+				"texto": "Fíjate en el candado de la puerta de la caseta del generador, Nya.",
+				"nueva": true
+			},
+			"registro_llamadas": {
+				"texto": "El carro de Miawrio, en el estacionamiento, tiene su registro de llamadas, Nya.",
+				"nueva": true
+			},
+			"huellas_pezuna": {
+				"texto": "Agáchate en el sendero del lago y mira las huellas, Nya.",
+				"nueva": true
+			},
+			"huellas_detenidas": {
+				"texto": "Sigue agachado las huellas del sendero hacia el embarcadero, hasta donde se acaban, Nya.",
+				"nueva": true
+			},
+			"altavoz": {
+				"texto": "Hay una bocina amarrada en un árbol del bosque, Nya. Sigue la estática.",
+				"nueva": true
+			},
+			"cornamenta_zancos": {
+				"texto": "Busca dentro del tronco hueco del bosque, Nya.",
+				"nueva": true
+			},
+			"cuaderno_eriz": {
+				"texto": "La mochila de Eriz está en la orilla, Nya: ábrela.",
+				"nueva": true
+			},
+			"remo_sangre": {
+				"texto": "Agáchate entre los juncos de la orilla, cerca del embarcadero, Nya.",
+				"nueva": true
+			},
+			"silbato_ts": {
+				"texto": "Hay algo atorado en un clavo del embarcadero, Nya.",
+				"nueva": true
+			},
+			"linterna_porky": {
+				"texto": "Mira el agua junto al embarcadero, Nya: algo brilla en el fondo.",
+				"nueva": true
+			},
+			"hueco_remo": {
+				"texto": "Falta un remo en el soporte del cobertizo, Nya. Ábrelo con el llavero de Porky.",
+				"nueva": true
+			},
+			"JC-1": {
+				"texto": "Enséñale a Juan Carlos la leña intacta de la fogata, Nya.",
+				"nueva": true
+			},
+			"JC-2": {
+				"texto": "Enséñale a Juan Carlos la cornamenta y los zancos del tronco hueco, Nya.",
+				"nueva": true
+			},
+			"JC-3": {
+				"texto": "Enséñale a Juan Carlos las huellas que se detienen antes del embarcadero, Nya.",
+				"nueva": true
+			},
+			"AY-1": {
+				"texto": "Enséñale a Aya la bocina del bosque, Nya.",
+				"nueva": true
+			},
+			"AY-2": {
+				"texto": "Cuéntale a Aya lo que confesó Juan Carlos, Nya.",
+				"nueva": true
+			},
+			"MI-1": {
+				"texto": "Enséñale a Miawrio su oferta de compra rota, Nya.",
+				"nueva": true
+			},
+			"MI-2": {
+				"texto": "Enséñale a Miawrio su registro de llamadas, Nya.",
+				"nueva": true
+			},
+			"ER-1": {
+				"texto": "Enséñale a Eriz su cuaderno, Nya.",
+				"nueva": true
+			},
+			"MM-1": {
+				"texto": "Enséñale a Mimita el registro de la enfermería, Nya.",
+				"nueva": true
+			},
+			"MM-2": {
+				"texto": "Enséñale a Mimita la foto de Aya de las 23:19, Nya.",
+				"nueva": true
+			},
+			"T1": {
+				"texto": "Enséñale a Tony la foto de Aya de las 23:12, Nya. El candado sin forzar y lo que vio Juan Carlos la respaldan.",
+				"nueva": true
+			},
+			"T2": {
+				"texto": "Enséñale a Tony sus botas con lodo, Nya.",
+				"nueva": true
+			},
+			"T3": {
+				"texto": "Enséñale a Tony el silbato «T. S.», Nya. La foto vieja y el silbido que oyó Mimita lo amarran.",
+				"nueva": true
+			},
+			"T4": {
+				"texto": "Enséñale a Tony el libro de guardia quemado, Nya. La nota de Porky y la cita que oyó Miawrio lo respaldan.",
+				"nueva": true
+			},
+			"T5": {
+				"texto": "Enséñale a Tony el soporte de remos vacío, Nya, ya con el remo con sangre en el diario.",
+				"nueva": true
+			}
+		},
+		"avisos": {
+			"desactivadas": {
+				"texto": "Activa las ayudas de investigación en Opciones para pedir una pista.",
+				"nueva": false
+			},
+			"repetida": {
+				"texto": "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.",
+				"nueva": false
+			},
+			"nueva": {
+				"texto": "Nueva pista añadida al cuaderno.",
+				"nueva": false
+			},
+			"experto": {
+				"texto": "En Experto, Hecdog solo da la primera pista de cada paso.",
+				"nueva": true
+			}
+		}
+	},
+	"dificultad": {
+		"pregunta": {
+			"texto": "¿Cómo quieres investigar este caso?",
+			"nueva": true
+		},
+		"historia": {
+			"texto": "Historia: instinto sin recarga, corazonada desde el primer error",
+			"nueva": true
+		},
+		"detective": {
+			"texto": "Detective: el equilibrio de siempre",
+			"nueva": true
+		},
+		"experto": {
+			"texto": "Experto: sin instinto ni corazonada, y una sola pista por paso",
+			"nueva": true
+		}
+	},
 	"secundarios": {
 		"pistas_campamento": { "texto": "Pistas del campamento {n}/{total}", "nueva": true },
 		"pistas_lago": { "texto": "Pistas del lago {n}/{total}", "nueva": true },
