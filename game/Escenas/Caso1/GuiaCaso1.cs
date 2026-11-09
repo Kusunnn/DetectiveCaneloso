@@ -34,6 +34,7 @@ public sealed class GuiaCaso1
 
 	public readonly List<Candado> Candados = new();
 	private readonly Dictionary<string, (string Escenario, string Zona, bool Llavero, string Tipo)> _pistas = new();
+	private readonly Dictionary<string, string> _areas = new();
 	private readonly Dictionary<string, List<string>> _frases = new();
 	private readonly Godot.Collections.Dictionary _sistema;
 	private readonly Func<string, bool> _tienePista, _tieneConclusion;
@@ -48,6 +49,7 @@ public sealed class GuiaCaso1
 		foreach (var (id, valor) in datos["pistas"].AsGodotDictionary())
 		{
 			var p = valor.AsGodotDictionary();
+			if (p.TryGetValue("area", out var area)) _areas[id.AsString()] = p["escenario"].AsString() + "/" + area.AsString();
 			_pistas[id.AsString()] = (p["escenario"].AsString(), p["zona"].AsString(), p.TryGetValue("llavero", out var ll) && ll.AsBool(), p.TryGetValue("tipo", out var tipo) ? tipo.AsString() : "");
 		}
 		foreach (Variant v in datos["candados"].AsGodotArray())
@@ -269,6 +271,35 @@ public sealed class GuiaCaso1
 		return Dato("general") + cuenta;
 	}
 
+	// ---------- Zonas ----------
+
+	private IEnumerable<string> PistasDeArea(Escenario donde, string area)
+	{
+		string clave = (donde == Escenario.Lago ? "lago" : "campamento") + "/" + area;
+		return _areas.Where(a => a.Value == clave).Select(a => a.Key);
+	}
+
+	// «Fogata · 2 pistas por descubrir», o null si no queda nada ahí
+	public string AvisoDeZona(Escenario donde, string area)
+	{
+		int faltan = PistasDeArea(donde, area).Count(p => !_tienePista(p));
+		if (faltan == 0) return null;
+		string zona = Texto("zonas", area);
+		return faltan == 1 ? Texto("zonas", "por_descubrir_una").Replace("{zona}", zona) : Texto("zonas", "por_descubrir").Replace("{zona}", zona).Replace("{n}", faltan.ToString());
+	}
+
+	public IEnumerable<string> ZonasDelDiario()
+	{
+		foreach (var (donde, nombre) in new[] { (Escenario.Campamento, "campamento"), (Escenario.Lago, "lago") })
+			foreach (string area in _areas.Where(a => a.Value.StartsWith(nombre + "/")).Select(a => a.Value.Split('/')[1]).Distinct())
+			{
+				var pistas = PistasDeArea(donde, area).ToList();
+				yield return Texto("zonas", "diario").Replace("{zona}", Texto("zonas", area)).Replace("{n}", pistas.Count(_tienePista).ToString()).Replace("{total}", pistas.Count.ToString());
+			}
+	}
+
+	public string AvisoInstinto() => Texto("zonas", "instinto").Replace("{tecla}", Teclas.Etiqueta("instinto"));
+
 	// Los objetivos secundarios del diario
 	public string TituloSecundarios => Texto("secundarios", "titulo");
 
@@ -277,7 +308,8 @@ public sealed class GuiaCaso1
 		Cuenta("pistas_campamento", PistasEncontradas("campamento"), PistasTotales("campamento")),
 		Cuenta("pistas_lago", PistasEncontradas("lago"), PistasTotales("lago")),
 		Cuenta("candados", CandadosRotos, CandadosTotales),
-	};
+		"",
+	}.Concat(ZonasDelDiario()).ToArray();
 
 	private string Cuenta(string id, int n, int total) => Texto("secundarios", id).Replace("{n}", n.ToString()).Replace("{total}", total.ToString());
 }

@@ -160,6 +160,7 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 
 	private void AlEntrarZona(string zona)
 	{
+		if (Guion != null && this is Caso1Lago && Guion.Guia.AvisoDeZona(GuiaCaso1.Escenario.Lago, zona) is string quedan && !EnDialogo) Jugador.MostrarAviso(quedan, 3.0);
 		if (!_zonasVistas.Add(zona)) return;
 		string texto = PensamientoDeZona(zona);
 		if (texto != null && !EnDialogo) Jugador.MostrarPensamiento(texto, 4.5);

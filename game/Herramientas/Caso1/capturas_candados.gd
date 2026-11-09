@@ -35,14 +35,7 @@ func _initialize() -> void:
 	await create_timer(1.5).timeout
 	_sala = current_scene.get_node("Caso1Sala")
 	_dialogo = current_scene.get_node("VentanaDialogo")
-	# La presentación del capítulo (IntroCaso) puede seguir encima: para las capturas se quita
-	for i in 200:
-		var intro = null
-		for hijo in root.get_children():
-			if String(hijo.name).contains("Intro"): intro = hijo
-		if intro == null: break
-		intro.queue_free()
-		await process_frame
+	await _saltar_intro()
 	_flujo.DarPistas(_sala)
 	await _jugar(["Seguir investigando"], func(): return not _flujo.EnDialogo(_sala))
 	_sala.Hecdog.Interactuar(current_scene.get_node("Jugador"))
@@ -110,3 +103,20 @@ func _devolver_respaldo() -> void:
 		elif FileAccess.file_exists(archivo): DirAccess.remove_absolute(archivo)
 	for f in DirAccess.get_files_at(RESPALDO + "partidas/"): DirAccess.remove_absolute(RESPALDO + "partidas/" + f)
 	for f in DirAccess.get_files_at(RESPALDO): DirAccess.remove_absolute(RESPALDO + f)
+
+func _saltar_intro() -> void:
+	for vez in 3:
+		var intro: Node = null
+		for hijo in root.get_children():
+			if hijo.get_script() and str(hijo.get_script().resource_path).ends_with("IntroCaso.cs") and not hijo.is_queued_for_deletion(): intro = hijo
+		if intro == null: return
+		var e := InputEventKey.new()
+		e.keycode = KEY_SPACE
+		e.physical_keycode = KEY_SPACE
+		e.pressed = true
+		Input.parse_input_event(e)
+		await create_timer(1.8).timeout
+		var s := e.duplicate()
+		s.pressed = false
+		Input.parse_input_event(s)
+		await create_timer(1.5).timeout

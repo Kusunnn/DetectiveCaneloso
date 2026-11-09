@@ -141,6 +141,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 			else Hud.Call("abrir_expediente");
 		}
 		_guion.AbrirExpediente = false;
+		if (IsInsideTree() && GuionCaso1.Dificultad != "experto") Jugador.MostrarAviso(_guion.Guia.AvisoInstinto(), 6.0);
 	}
 
 
@@ -224,6 +225,8 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 	private void AlEntrarZona(string zona)
 	{
+		// Cada vez que se entra, cuántas pistas quedan ahí (sin decir cuáles)
+		if (_guion.Guia.AvisoDeZona(GuiaCaso1.Escenario.Campamento, zona) is string quedan && !_enDialogo) Jugador.MostrarAviso(quedan, 3.0);
 		if (!_zonasVistas.Add(zona)) return;
 		string texto = zona switch
 		{

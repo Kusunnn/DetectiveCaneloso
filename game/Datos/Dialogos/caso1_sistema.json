@@ -287,6 +287,25 @@
 		"tony_falta": { "texto": "La noche cuadra, Nya. Ahora que Tony lo diga.", "nueva": true },
 		"rechazo_tony": { "texto": "Con eso se nos sale, Nya. Cuenta la noche completa.", "nueva": true }
 	},
+	"zonas": {
+		"Fogata": { "texto": "Fogata", "nueva": true },
+		"Almacen": { "texto": "Almacén de los cuentos", "nueva": true },
+		"Cocina": { "texto": "Cocina", "nueva": true },
+		"CabanaPorky": { "texto": "Cabaña de Porky", "nueva": true },
+		"Director": { "texto": "Cabaña del director", "nueva": true },
+		"Enfermeria": { "texto": "Enfermería", "nueva": true },
+		"Caseta": { "texto": "Caseta del generador", "nueva": true },
+		"Estacionamiento": { "texto": "Estacionamiento", "nueva": true },
+		"Sendero": { "texto": "Sendero del lago", "nueva": true },
+		"Bosque": { "texto": "Bosque", "nueva": true },
+		"Orilla": { "texto": "Orilla", "nueva": true },
+		"Embarcadero": { "texto": "Embarcadero", "nueva": true },
+		"Cobertizo": { "texto": "Cobertizo de botes", "nueva": true },
+		"por_descubrir": { "texto": "{zona} · {n} pistas por descubrir", "nueva": true },
+		"por_descubrir_una": { "texto": "{zona} · 1 pista por descubrir", "nueva": true },
+		"diario": { "texto": "{zona}: {n}/{total}", "nueva": true },
+		"instinto": { "texto": "[{tecla}] Instinto de detective: lo cercano brilla unos segundos", "nueva": true }
+	},
 	"secundarios": {
 		"pistas_campamento": { "texto": "Pistas del campamento {n}/{total}", "nueva": true },
 		"pistas_lago": { "texto": "Pistas del lago {n}/{total}", "nueva": true },

@@ -80,6 +80,7 @@ public partial class Configuracion : Node
 		("Interactuar", "interactuar"), ("Linterna", "linterna"),
 		("Diario", "diario"), ("Expediente", "expediente"),
 		("Tablero de deducción", "deducir"), ("Cambiar cámara", "cambiar_camara"),
+		("Instinto de detective", "instinto"),
 	};
 
 	// Atajos globales que no se pueden reasignar.

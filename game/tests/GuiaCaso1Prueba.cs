@@ -235,5 +235,12 @@ public partial class GuiaCaso1Prueba : RefCounted
 		Revisar(o == "La fogata del centro: ahí estaban todos cuando se fue la luz. (0/13 pistas)", "exploración: " + o);
 		Revisar(r.Guia.PistasTotales("lago") == 9 && r.Guia.PistasTotales("campamento") == 13, "13 y 9 pistas");
 		Revisar(r.Guia.Secundarios()[2] == "Candados rotos 0/15", "secundarios");
+		Revisar(r.Guia.AvisoDeZona(GuiaCaso1.Escenario.Campamento, "Fogata") == "Fogata · 2 pistas por descubrir", "zona: " + r.Guia.AvisoDeZona(GuiaCaso1.Escenario.Campamento, "Fogata"));
+		r.Pistas.Add("lena_intacta");
+		Revisar(r.Guia.AvisoDeZona(GuiaCaso1.Escenario.Campamento, "Fogata") == "Fogata · 1 pista por descubrir", "zona con una");
+		r.Pistas.Add("libro_guardia_quemado");
+		Revisar(r.Guia.AvisoDeZona(GuiaCaso1.Escenario.Campamento, "Fogata") == null, "zona completa no avisa");
+		Revisar(r.Guia.AvisoDeZona(GuiaCaso1.Escenario.Campamento, "Sendero") == null && r.Guia.AvisoDeZona(GuiaCaso1.Escenario.Lago, "Sendero") != null, "el sendero del campamento no es el del lago");
+		Revisar(r.Guia.ZonasDelDiario().Count() == 13 && r.Guia.ZonasDelDiario().First() == "Fogata: 2/2", "13 zonas en el diario: " + string.Join(", ", r.Guia.ZonasDelDiario()));
 	}
 }
