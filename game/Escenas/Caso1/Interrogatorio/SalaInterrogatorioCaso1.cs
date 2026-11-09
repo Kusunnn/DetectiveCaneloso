@@ -64,7 +64,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	};
 
 	public string ImplicadoActual { get; private set; }
-	public PanelArmarCaso Panel { get; private set; }
+	public PanelReconstruccion Panel { get; private set; }
 	public IEnumerable<string> NombresImplicados => Datos.Keys;
 	private bool _moviendo;
 
@@ -81,11 +81,10 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		if (Guion != null) // Sin guion cuando solo se filma el escenario (SoloVer)
 		{
 			PrepararPuestaEnEscena();
-			var panel = PanelArmarCaso.Crear(this, Guion, Dialogo);
+			var panel = PanelReconstruccion.Crear(this, Guion, Dialogo);
 			Panel = panel;
-			Guion.AbrirArmarCaso = panel.Abrir;
-			Guion.SelloDeCasilla = panel.Sello;
-			Guion.CerrarPanelCaso = panel.Cerrar;
+			Guion.AbrirReconstruccion = panel.Abrir;
+			Guion.CerrarReconstruccion = panel.Cerrar;
 		}
 		foreach (Node hijo in Implicados.GetChildren())
 		{

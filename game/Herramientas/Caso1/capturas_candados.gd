@@ -35,11 +35,25 @@ func _initialize() -> void:
 	await create_timer(1.5).timeout
 	_sala = current_scene.get_node("Caso1Sala")
 	_dialogo = current_scene.get_node("VentanaDialogo")
+	# La presentación del capítulo (IntroCaso) puede seguir encima: para las capturas se quita
+	for i in 200:
+		var intro = null
+		for hijo in root.get_children():
+			if String(hijo.name).contains("Intro"): intro = hijo
+		if intro == null: break
+		intro.queue_free()
+		await process_frame
 	_flujo.DarPistas(_sala)
 	await _jugar(["Seguir investigando"], func(): return not _flujo.EnDialogo(_sala))
 	_sala.Hecdog.Interactuar(current_scene.get_node("Jugador"))
 	await _jugar([], func(): return _dialogo.PruebasHayOpciones)
 	await _foto("01_menu_hecdog")
+	await _jugar(["Reconstruir la noche"], func(): return _sala.Panel.EsperandoJugador, 40.0)
+	for par in [["0.0.0", "paco"], ["0.0.1", "libro"], ["0.1.0", "nota"], ["0.1.1", "tony"], ["1.0.0", "h2300"], ["1.0.1", "aya"], ["1.1.0", "tony"], ["1.1.1", "sendero"], ["2.0.0", "h2320"]]:
+		_sala.Panel.Pruebas_Poner(par[0], par[1])
+	await _foto("07_reconstruccion")
+	_sala.Panel.Pruebas_Salir()
+	await _jugar([], func(): return _dialogo.PruebasOpciones().contains("Interrogar a Miawrio"))
 	await _jugar(["Interrogar a Miawrio"], func(): return _dialogo.PruebasHayOpciones and _flujo.EnEspera(_sala))
 	await _foto("02_frase")
 	await _jugar(["Confrontar", "Confrontar"], func(): return _flujo.Errores(_sala, "MI-1") == 2 and _dialogo.PruebasHayOpciones and _dialogo.PruebasAyuda.contains("Frase 3/"))

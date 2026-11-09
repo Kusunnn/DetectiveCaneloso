@@ -6,7 +6,7 @@
 		"falta_lago": { "texto": "Me falta algo del lago: {zona}.", "nueva": true },
 		"falta_campamento": { "texto": "Me falta algo del campamento: {zona}.", "nueva": true },
 		"falta_llavero": { "texto": "Me falta algo de {zona}, y está cerrado. Las llaves de Porky están en su cocina.", "nueva": true },
-		"armar_caso": { "texto": "Ya no le queda ni una excusa. Cuando estés listo, arma el caso con Hecdog.", "nueva": true },
+		"armar_caso": { "texto": "Ya no le queda ni una excusa. Cuenta la noche completa con Hecdog.", "nueva": true },
 		"escuchar_hecdog": { "texto": "Escucha a Hecdog: él tiene el expediente.", "nueva": false },
 		"sala_inicio": { "texto": "Sala de interrogatorio de la estación. Habla con Hecdog, o sal por la puerta para volver al lago o al campamento.", "nueva": false },
 		"cerrado": { "texto": "Caso cerrado.", "nueva": false }
@@ -84,11 +84,11 @@
 					"nueva": true
 				},
 				{
-					"texto": "Háblame cuando quieras armar el caso, Nya.",
+					"texto": "Háblame cuando quieras contar la noche completa, Nya.",
 					"nueva": true
 				},
 				{
-					"texto": "Elige «Armar el caso» conmigo: oportunidad, medio y motivo, Nya.",
+					"texto": "Elige «Reconstruir la noche» conmigo y llena los huecos, Nya.",
 					"nueva": true
 				}
 			]
@@ -279,6 +279,13 @@
 			"texto": "Experto: sin instinto ni corazonada, y una sola pista por paso",
 			"nueva": true
 		}
+	},
+	"reconstruccion": {
+		"explicacion": { "texto": "Cuéntame la noche completa, Caneloso: llena los huecos con lo que sabes, Nya.", "nueva": true },
+		"casi": { "texto": "Casi... algo no cuadra.", "nueva": true },
+		"no_cuadra": { "texto": "Todavía no me convences, Caneloso.", "nueva": false },
+		"tony_falta": { "texto": "La noche cuadra, Nya. Ahora que Tony lo diga.", "nueva": true },
+		"rechazo_tony": { "texto": "Con eso se nos sale, Nya. Cuenta la noche completa.", "nueva": true }
 	},
 	"secundarios": {
 		"pistas_campamento": { "texto": "Pistas del campamento {n}/{total}", "nueva": true },

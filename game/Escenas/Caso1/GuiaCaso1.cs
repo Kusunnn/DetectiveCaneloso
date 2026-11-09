@@ -214,6 +214,7 @@ public sealed class GuiaCaso1
 	public bool TieneNivel3(string id) => _sistema["ayudas"].AsGodotDictionary()["nivel3"].AsGodotDictionary().ContainsKey(id);
 
 	public string Objetivo(string id) => Texto("objetivos", id);
+	public string TextoSistema(string grupo, string id) => Texto(grupo, id);
 
 	public string ObjetivoInterrogatorios(Escenario donde)
 	{

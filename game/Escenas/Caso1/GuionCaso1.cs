@@ -79,6 +79,7 @@ public partial class GuionCaso1
 		foreach (string id in new[] { ArbolIntroduccion, ArbolSala, ArbolAcusacion }.Concat(Sospechosos.Select(s => "caso1_" + s)))
 			_arboles[id] = ArbolDialogo.Cargar(RutaDialogos + id + ".json");
 		CargarPistas();
+		CargarReconstruccion();
 		Guia = new GuiaCaso1(TienePista, Estado.TieneConclusion, () => TieneLlavero());
 	}
 
@@ -151,6 +152,12 @@ public partial class GuionCaso1
 		await Motor.Recorrer(_arboles["caso1_" + quien]);
 		Motor.Ventana.MostrarCandados(0, 0);
 		_frasesDichas.Clear();
+		// Con la noche ya reconstruida, el último candado de Tony lleva a su confesión
+		if (quien == Culpable && TonySinCandados && ReconstruccionCompleta && !Resuelto && sigue())
+		{
+			await ConfesionDeTony(sigue);
+			return;
+		}
 		if (sigue()) await DespuesDeInterrogar(quien);
 		AlTerminar?.Invoke("Diálogo: " + quien);
 	}
@@ -166,11 +173,17 @@ public partial class GuionCaso1
 			if (salida.StartsWith("interrogar:"))
 			{
 				await Interrogar(salida.Substring("interrogar:".Length), sigue);
+				if (Resuelto) return;
 				continue;
 			}
 			if (salida == "armar")
 			{
-				if (await ArmarCaso(sigue)) return;
+				if (await Reconstruir(sigue)) return;
+				continue;
+			}
+			if (salida == "acusar_ya")
+			{
+				if (await AcusarYa(sigue)) return;
 				continue;
 			}
 			if (salida == "pista")
@@ -300,9 +313,7 @@ public partial class GuionCaso1
 	public Diccionario Capturar()
 	{
 		var datos = Estado.Capturar();
-		var casillas = new Godot.Collections.Array();
-		foreach (var casilla in CasoPruebas) casillas.Add(new Godot.Collections.Array(casilla.Select(x => Variant.From(x))));
-		datos["caso_armado"] = new Diccionario { { "sospechoso", CasoSospechoso ?? "" }, { "casillas", casillas } };
+		datos["reconstruccion"] = CapturarReconstruccion();
 		datos["dificultad"] = Dificultad;
 		return datos;
 	}
@@ -312,18 +323,8 @@ public partial class GuionCaso1
 	{
 		var datos = estado.TryGetValue("dialogos", out Variant dialogos) ? dialogos.AsGodotDictionary() : null;
 		Estado.Restaurar(datos);
-		if (datos != null && datos.TryGetValue("caso_armado", out Variant caso))
-		{
-			var d = caso.AsGodotDictionary();
-			if (datos.TryGetValue("dificultad", out Variant dificultad) && Configuracion.Instancia != null) Configuracion.Instancia.Dificultad = dificultad.AsString();
-			CasoSospechoso = d["sospechoso"].AsString();
-			var casillas = d["casillas"].AsGodotArray();
-			for (int i = 0; i < CasoPruebas.Length && i < casillas.Count; i++)
-			{
-				CasoPruebas[i].Clear();
-				foreach (Variant v in casillas[i].AsGodotArray()) CasoPruebas[i].Add(v.AsString());
-			}
-		}
+		RestaurarReconstruccion(datos);
+		if (datos != null && datos.TryGetValue("dificultad", out Variant dificultad) && Configuracion.Instancia != null) Configuracion.Instancia.Dificultad = dificultad.AsString();
 		// Toda partida guardada ya pasó la presentación de Hecdog (las de antes del guion no la traen)
 		Estado.MarcarNodo(ArbolIntroduccion, "ir");
 	}

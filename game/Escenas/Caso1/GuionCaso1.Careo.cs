@@ -28,6 +28,15 @@ public partial class GuionCaso1
 		return true;
 	}
 
+	// Ya sentado frente a Caneloso y sin candados: oportunidad, medio y motivo, y el Final A
+	private async Task ConfesionDeTony(Func<bool> sigue)
+	{
+		Motor.DetenerEn = "final_a";
+		await Motor.Recorrer(_arboles[ArbolAcusacion], "a_tony");
+		Motor.DetenerEn = null;
+		if (sigue()) await TerminarAcusacion("final_a", sigue);
+	}
+
 	// Lo que le quede por romper a Tony, cuando ya se le presentó el caso. true = no le queda ninguno.
 	private async Task<bool> Careo(Func<bool> sigue)
 	{

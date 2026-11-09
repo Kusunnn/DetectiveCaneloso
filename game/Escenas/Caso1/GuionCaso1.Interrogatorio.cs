@@ -12,8 +12,6 @@ public partial class GuionCaso1
 	public static class LineasSistema
 	{
 		public const string TonyBurla = "Mmh... ¿eso es todo lo que trae, detective?";
-		public const string Explicacion = "Oportunidad, medio y motivo, Caneloso: llena las tres y me lo presentas, Nya.";
-		public const string NoConvence = "Todavía no me convences, Caneloso.";
 		public const string Confirmar = "Si me equivoco, un inocente irá a prisión.";
 		public static readonly (string Bien, string Mal)[] Casillas =
 		{
@@ -37,7 +35,7 @@ public partial class GuionCaso1
 	// La opción CONTAR del guion de Aya se llama distinto que la conclusión que pide
 	private static readonly Dictionary<string, string> OpcionDeTestimonio = new() { ["juan_carlos_3"] = "juan_carlos" };
 
-	// Las tres casillas: cada grupo se cumple con cualquiera de sus pruebas (ids de escena)
+	// Las pruebas mínimas de la historia (oportunidad, medio y motivo): la Reconstrucción las pide con sus fichas
 	public static readonly (string Nombre, string[][] Pide)[] Casillas =
 	{
 		("OPORTUNIDAD", new[] { new[] { "cuaderno_eriz" }, new[] { "jc_vio_tony_sendero", "foto_aya_2312" }, new[] { "botas_tony" } }),
@@ -53,18 +51,11 @@ public partial class GuionCaso1
 	private static int ErroresParaTresPruebas => Dificultad switch { "historia" => 2, "experto" => int.MaxValue, _ => 3 };
 	private const int MinimoRelacionadas = 4;
 
-	// El caso que el jugador va armando: viaja en la partida
-	public string CasoSospechoso = "";
-	public readonly List<string>[] CasoPruebas = { new(), new(), new() };
-
 	// El juego está esperando al jugador (frases, pruebas, armar el caso): ahí se puede guardar
 	public bool EnEspera { get; private set; }
-	public Func<Task<bool>> AbrirArmarCaso;      // Lo pone la sala: true si el jugador presentó el caso
 	public Action<string, string> AnimoDe;        // quien, ánimo: lo que se le ve en la cara
 	public Func<Task> AlAcertar;                  // Golpe de sonido y push-in
 	public Func<int, Task> AlTumbarExcusa;        // Tony: cuántas excusas lleva tumbadas
-	public Action<int, bool> SelloDeCasilla;      // Revisión: casilla y si encaja
-	public Action Revisar;                        // Revisión: empieza
 	private string _ultimoGuardado;
 	private readonly HashSet<string> _frasesDichas = new();
 	private Func<ArbolDialogo, NodoDialogo, LineaDialogo, bool> _omitirNormal;

@@ -17,6 +17,7 @@ public partial class GuiaCaso1Prueba : RefCounted
 		for (ulong semilla = 1; semilla <= 300; semilla++) AlAzar(semilla);
 		Declaraciones();
 		Ayudas();
+		Reconstruccion();
 		Textos();
 		GD.Print($"GuiaCaso1Prueba: {_fallos} fallos");
 		return _fallos == 0;
@@ -172,6 +173,40 @@ public partial class GuiaCaso1Prueba : RefCounted
 			if (s.Clase == GuiaCaso1.Clase.TodoRoto) break;
 			Aplicar(r, s);
 		}
+	}
+
+	// 15 huecos; cada respuesta es una ficha del tipo del hueco, y las pruebas mínimas de la historia están en las fichas
+	private void Reconstruccion()
+	{
+		var datos = (Godot.Collections.Dictionary)Json.ParseString(FileAccess.GetFileAsString("res://Datos/Caso1/caso1_reconstruccion.json"));
+		var fichas = datos["fichas"].AsGodotDictionary();
+		var origenes = new HashSet<string>();
+		int huecos = 0;
+		foreach (Variant v in datos["vinetas"].AsGodotArray())
+			foreach (Variant f in v.AsGodotDictionary()["frases"].AsGodotArray())
+			{
+				var frase = f.AsGodotDictionary();
+				var tipos = frase["huecos"].AsGodotArray();
+				var respuestas = frase["respuestas"].AsGodotArray();
+				Revisar(tipos.Count == respuestas.Count, "huecos y respuestas");
+				for (int h = 0; h < tipos.Count; h++)
+				{
+					huecos++;
+					Revisar(frase["texto"].AsString().Contains("{" + h + "}"), $"falta {{{h}}} en «{frase["texto"]}»");
+					string id = respuestas[h].AsString();
+					Revisar(fichas.ContainsKey(id), $"no existe la ficha {id}");
+					if (!fichas.ContainsKey(id)) continue;
+					var ficha = fichas[id].AsGodotDictionary();
+					Revisar(ficha["tipo"].AsString() == tipos[h].AsString(), $"{id} no es {tipos[h]}");
+					foreach (Variant o in ficha["origen"].AsGodotArray()) origenes.Add(o.AsString());
+				}
+			}
+		Revisar(huecos == 15, $"son {huecos} huecos, no 15");
+		foreach (var (nombre, pide) in GuionCaso1.Casillas)
+			foreach (var grupo in pide)
+				Revisar(grupo.Any(origenes.Contains), $"{nombre}: ninguna ficha pide {string.Join(" o ", grupo)}");
+		foreach (string quien in GuionCaso1.Sospechosos)
+			Revisar(fichas.ContainsKey(quien) && fichas[quien].AsGodotDictionary()["origen"].AsGodotArray()[0].AsString() == "siempre", $"{quien} siempre disponible");
 	}
 
 	private void Textos()

@@ -105,8 +105,13 @@
 				},
 				{
 					"id": "acusar",
-					"texto": "Armar el caso",
+					"texto": "Reconstruir la noche",
 					"destino": "armar"
+				},
+				{
+					"id": "acusar_ya",
+					"texto": "Acusar ya",
+					"destino": "acusar_ya"
 				},
 				{
 					"id": "salir",
@@ -271,6 +276,10 @@
 		"pista": {
 			"fin": true,
 			"salida": "pista"
+		},
+		"acusar_ya": {
+			"fin": true,
+			"salida": "acusar_ya"
 		}
 	}
 }

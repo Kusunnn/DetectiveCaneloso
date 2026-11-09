@@ -27,21 +27,29 @@ public partial class FlujoCaso1Prueba : Node
 	public int Errores(Node escenario, string candado) => Guion(escenario).Estado.Contador("errores:" + candado);
 	public int ValorCredibilidad(Node escenario) => Guion(escenario).Estado.Contador("credibilidad");
 	public bool EnEspera(Node escenario) => Guion(escenario).EnEspera;
-	public string Sospechoso(Node escenario) => Guion(escenario).CasoSospechoso;
-	public bool CasoTiene(Node escenario, int casilla, string id) => Guion(escenario).CasoPruebas[casilla].Contains(id);
 	public bool TieneConclusion(Node escenario, string id) => Guion(escenario).Estado.TieneConclusion(id);
 	public bool EnDialogo(Node escenario) => (bool)typeof(EscenarioCaso1).GetField("EnDialogo", Privado).GetValue(escenario);
+	public string Hueco(Node escenario, string id) => Guion(escenario).Huecos.TryGetValue(id, out string ficha) ? ficha : "";
+	public bool Sellada(Node escenario, int vineta) => Guion(escenario).Selladas.Contains(vineta);
 
-	public void CasoCompletoYPrimeraExcusa(Node escenario)
+	// La noche ya reconstruida y la primera excusa de Tony tumbada
+	public void ReconstruccionCompletaYPrimeraExcusa(Node escenario)
 	{
 		var guion = Guion(escenario);
 		guion.Estado.DesbloquearConclusion("tony_1");
 		guion.Estado.MarcarNodo("caso1_tony", "excusa_1");
-		guion.CasoSospechoso = GuionCaso1.Culpable;
-		foreach (var casilla in guion.CasoPruebas) casilla.Clear();
-		guion.CasoPruebas[0].AddRange(new[] { "cuaderno_eriz", "foto_aya_2312", "botas_tony" });
-		guion.CasoPruebas[1].AddRange(new[] { "remo_sangre", "hueco_remo" });
-		guion.CasoPruebas[2].AddRange(new[] { "libro_guardia_quemado", "nota_porky", "recorte_periodico" });
+		for (int v = 0; v < guion.Vinetas.Count; v++)
+		{
+			foreach (var (id, correcta) in guion.HuecosDe(v)) guion.Huecos[id] = correcta;
+			guion.Selladas.Add(v);
+		}
+	}
+
+	public void DarConclusion(Node escenario, string id) => Guion(escenario).Estado.DesbloquearConclusion(id);
+
+	public void RomperTony(Node escenario)
+	{
+		for (int i = 1; i <= 5; i++) Guion(escenario).Estado.DesbloquearConclusion("tony_" + i);
 	}
 
 	// Todas las pistas en el diario (el título es su id) y todas las confesiones de los cinco

@@ -8,9 +8,9 @@ const PARTIDAS := "user://partidas/"
 const ARCHIVOS := ["user://progreso.json", "user://progreso.json.bak", "user://cinematicas.cfg"]
 const RESPALDO := "user://respaldo_pruebas/"
 const SALA := "res://Escenas/Caso1/Interrogatorio/sala_interrogatorio_caso1.tscn"
-const CASO_OPORTUNIDAD := ["cuaderno_eriz", "foto_aya_2312", "botas_tony"]
-const CASO_MEDIO := ["remo_sangre", "hueco_remo"]
-const CASO_MOTIVO := ["libro_guardia_quemado", "nota_porky", "recorte_periodico"]
+const SOLUCION := {"0.0.0": "paco", "0.0.1": "libro", "0.1.0": "nota", "0.1.1": "tony", "1.0.0": "h2300", "1.0.1": "juan_carlos",
+	"1.1.0": "tony", "1.1.1": "sendero", "2.0.0": "h2320", "2.0.1": "tony", "2.0.2": "remo", "2.0.3": "cobertizo",
+	"3.0.0": "tony", "3.0.1": "libro", "3.0.2": "botas"}
 
 var _fallos := 0
 var _gestor
@@ -33,6 +33,9 @@ func _initialize() -> void:
 	if solo == "" or solo == "guardar": await _guardar_en_medio()
 	if solo == "" or solo == "final-b": await _caso_incompleto_acusar()
 	if solo == "" or solo == "final-a": await _caso_completo()
+	if solo == "" or solo == "directo": await _final_a_directo()
+	if solo == "" or solo == "ultimo": await _ultimo_candado()
+	if solo == "" or solo == "rechazo": await _rechazo_tony()
 	if solo == "" or solo == "desorden": await _tony_en_desorden()
 	print("Fallos: %d" % _fallos)
 	_devolver_respaldo()
@@ -71,9 +74,8 @@ func _jugar(plan: Array, fin: Callable, segundos := 90.0) -> bool:
 		if root.get_node_or_null("CinematicaCaso1") != null:
 			_flujo.SaltarCinematica(root.get_node("CinematicaCaso1"))
 		elif panel != null and panel.EsperandoJugador:
-			if resto.is_empty(): return fin.call()
-			var paso = resto.pop_front()
-			if paso is Callable: paso.call(panel)
+			# La Reconstrucción se cierra sola al sellar la última viñeta: mientras, se espera
+			if not resto.is_empty() and resto[0] is Callable: resto.pop_front().call(panel)
 		elif _dialogo.PruebasHayOpciones:
 			if resto.is_empty():
 				if fin.call(): return true
@@ -128,41 +130,49 @@ func _caso_vacio() -> void:
 	_revisar(pidio and _flujo.UsosAyudas(_sala) == antes + 2, "Hecdog da dos niveles de pista y quedan en el cuaderno")
 	_hablar_con_hecdog()
 	var c: int = _flujo.ValorCredibilidad(_sala)
-	var ok := await _jugar(["Armar el caso", func(p): p.Pruebas_Salir(), "Seguir investigando"], _libre)
+	var ok := await _jugar(["Reconstruir la noche", func(p): p.Pruebas_Salir(), "Seguir investigando"], _libre)
 	_revisar(ok and not _flujo.Resuelto(_sala), "sale sin final")
 	_revisar(_flujo.ValorCredibilidad(_sala) == c, "salir sin presentar no cuesta credibilidad")
 
+func _llenar(p, cuales: Dictionary) -> void:
+	for h in cuales: p.Pruebas_Poner(h, cuales[h])
+
 func _caso_incompleto_seguir() -> void:
-	print("== Caso incompleto y seguir investigando")
+	print("== Una viñeta con un error y otra bien")
 	await _nueva()
 	_hablar_con_hecdog()
-	var c: int = _flujo.ValorCredibilidad(_sala)
-	var ok := await _jugar(["Armar el caso", func(p): p.Pruebas_Sospechoso("tony"); p.Pruebas_Agregar(0, "cuaderno_eriz"); p.Pruebas_Presentar(), "Seguir investigando", "Seguir investigando"], _libre)
-	_revisar(ok and not _flujo.Resuelto(_sala), "sigue sin final")
-	_revisar(_flujo.ValorCredibilidad(_sala) == c - 1, "una revisión con errores cuesta 1 de credibilidad")
-	_revisar(_flujo.CasoTiene(_sala, 0, "cuaderno_eriz"), "lo que puso en el caso se queda")
+	var mensaje := [""]
+	var llenar := func(p):
+		_llenar(p, {"1.0.0": "h2300", "1.0.1": "aya", "1.1.0": "tony", "1.1.1": "sendero"})
+		mensaje[0] = p.Pruebas_Mensaje(1)
+		_llenar(p, {"0.0.0": "paco", "0.0.1": "libro", "0.1.0": "nota", "0.1.1": "tony"})
+		p.Pruebas_Salir()
+	var ok := await _jugar(["Reconstruir la noche", llenar, "Seguir investigando"], _libre)
+	_revisar(ok and mensaje[0].begins_with("Casi"), "con un error avisa sin decir cuál: «%s»" % mensaje[0])
+	_revisar(_flujo.Sellada(_sala, 0) and not _flujo.Sellada(_sala, 1), "la viñeta correcta se sella y la otra no")
+	_revisar(_flujo.Hueco(_sala, "1.0.1") == "aya", "lo que puso se queda")
+	_revisar(not _flujo.Resuelto(_sala), "sigue sin final")
 
 func _caso_incompleto_acusar() -> void:
-	print("== Caso incompleto y acusar de todos modos (Final B)")
+	print("== «Acusar ya» a un inocente (Final B)")
 	await _nueva()
 	_hablar_con_hecdog()
-	var ok := await _jugar(["Armar el caso", func(p): p.Pruebas_Sospechoso("aya"); p.Pruebas_Presentar(), "Acusar de todos modos", "Acusar a Aya"], func(): return _flujo.Resuelto(_sala) and root.get_node_or_null("CinematicaCaso1") == null, 120.0)
+	var ok := await _jugar(["Acusar ya", "Acusar a Aya", "Acusar a Aya"], func(): return _flujo.Resuelto(_sala) and root.get_node_or_null("CinematicaCaso1") == null, 120.0)
 	_revisar(ok and _flujo.Final(_sala) == "B", "llega al Final B con Aya")
 	await create_timer(0.5).timeout
 
-func _caso_completo() -> void:
-	print("== Caso completo, careo con un error y Final A")
+func _rechazo_tony() -> void:
+	print("== «Acusar ya» a Tony sin la noche completa")
 	await _nueva()
 	_hablar_con_hecdog()
-	var c: Array = [0]
-	var armar := func(p):
-		p.Pruebas_Sospechoso("tony")
-		for id in CASO_OPORTUNIDAD: p.Pruebas_Agregar(0, id)
-		for id in CASO_MEDIO: p.Pruebas_Agregar(1, id)
-		for id in CASO_MOTIVO: p.Pruebas_Agregar(2, id)
-		c[0] = _flujo.ValorCredibilidad(_sala)
-		p.Pruebas_Presentar()
-	var plan := ["Armar el caso", armar,
+	var ok := await _jugar(["Acusar ya", "Acusar a Tony", "Acusar a Tony", "Seguir investigando"], _libre)
+	_revisar(ok and not _flujo.Resuelto(_sala) and not _flujo.PasoPorAcusacion(_sala), "Hecdog lo frena, sin final ni castigo")
+
+func _caso_completo() -> void:
+	print("== Noche completa con candados de Tony: careo con un error y Final A")
+	await _nueva()
+	_hablar_con_hecdog()
+	var plan := ["Reconstruir la noche", func(p): _llenar(p, SOLUCION),
 		"Confrontar", "oferta_compra",        # Error: Tony se burla y baja la credibilidad
 		"Confrontar", "Foto de Aya de las 23:12",
 		"Confrontar", "botas_tony",
@@ -174,6 +184,25 @@ func _caso_completo() -> void:
 	_revisar(_flujo.TieneConclusion(_sala, "tony_5"), "cayeron los cinco candados de Tony")
 	_revisar(_flujo.ValorCredibilidad(_sala) >= 1, "con un error, la credibilidad no llegó a 0")
 	_revisar(_gestor.CinematicaVista("caso1_2320") and _gestor.CinematicaVista("caso1_2320_revelacion"), "se vieron la escena de las 23:20 y la revelación")
+	await create_timer(0.5).timeout
+
+func _final_a_directo() -> void:
+	print("== Tony ya sin candados: sellar la noche lleva directo al Final A")
+	await _nueva()
+	_flujo.RomperTony(_sala)
+	_hablar_con_hecdog()
+	var ok := await _jugar(["Reconstruir la noche", func(p): _llenar(p, SOLUCION)], func(): return _flujo.Resuelto(_sala) and root.get_node_or_null("CinematicaCaso1") == null, 200.0)
+	_revisar(ok and _flujo.Final(_sala) == "A", "llega al Final A sin careo")
+	await create_timer(0.5).timeout
+
+func _ultimo_candado() -> void:
+	print("== Con la noche completa, el último candado de Tony lleva al Final A")
+	await _nueva()
+	_flujo.ReconstruccionCompletaYPrimeraExcusa(_sala)
+	for id in ["tony_2", "tony_3", "tony_4"]: _flujo.DarConclusion(_sala, id)
+	_hablar_con_hecdog()
+	var ok := await _jugar(["Interrogar a Tony", "hueco_remo"], func(): return _flujo.Resuelto(_sala) and root.get_node_or_null("CinematicaCaso1") == null, 200.0)
+	_revisar(ok and _flujo.Final(_sala) == "A", "romper el último candado en el interrogatorio llega al Final A")
 	await create_timer(0.5).timeout
 
 ## Los candados de Tony caen en cualquier orden: primero el remo (5.º), luego las botas (2.º), y al final los demás
@@ -215,18 +244,18 @@ func _guardar_en_medio() -> void:
 	_revisar(ok, "llega al menú del interrogatorio")
 	await _guardar_cargar()
 	_revisar(_flujo.ValorCredibilidad(_sala) == 4 and _sala.ImplicadoActual == "", "al cargar vuelve a la sala con su credibilidad")
-	# En «Armar el caso»
+	# En la Reconstrucción
 	_flujo.DarTodo(_sala)
 	_hablar_con_hecdog()
-	ok = await _jugar(["Armar el caso", func(p): p.Pruebas_Sospechoso("eriz"); p.Pruebas_Agregar(1, "remo_sangre")], func(): return _sala.Panel.EsperandoJugador and _flujo.Sospechoso(_sala) == "eriz")
-	_revisar(ok, "llega a la pantalla del caso")
+	ok = await _jugar(["Reconstruir la noche", func(p): p.Pruebas_Poner("0.0.0", "paco")], func(): return _sala.Panel.EsperandoJugador and _flujo.Hueco(_sala, "0.0.0") == "paco")
+	_revisar(ok, "llega a la Reconstrucción")
 	await _guardar_cargar()
-	_revisar(_flujo.Sospechoso(_sala) == "eriz" and _flujo.CasoTiene(_sala, 1, "remo_sangre"), "al cargar el caso sigue como estaba")
+	_revisar(_flujo.Hueco(_sala, "0.0.0") == "paco", "al cargar la Reconstrucción sigue como estaba")
 	# En el careo: se conserva lo tumbado
 	_flujo.DarTodo(_sala)
-	_flujo.CasoCompletoYPrimeraExcusa(_sala)
+	_flujo.ReconstruccionCompletaYPrimeraExcusa(_sala)
 	_hablar_con_hecdog()
-	ok = await _jugar(["Armar el caso", func(p): p.Pruebas_Presentar()], func(): return _dialogo.PruebasHayOpciones and _flujo.EnEspera(_sala) and _dialogo.PruebasOpciones().contains("Confrontar"), 80.0)
+	ok = await _jugar(["Reconstruir la noche"], func(): return _dialogo.PruebasHayOpciones and _flujo.EnEspera(_sala) and _dialogo.PruebasOpciones().contains("Confrontar"), 80.0)
 	_revisar(ok, "llega al careo")
 	await _guardar_cargar()
 	_revisar(_flujo.TieneConclusion(_sala, "tony_1") and not _flujo.Resuelto(_sala), "al cargar conserva la excusa tumbada y no hay final")
