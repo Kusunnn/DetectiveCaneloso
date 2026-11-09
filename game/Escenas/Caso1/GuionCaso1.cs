@@ -68,6 +68,8 @@ public partial class GuionCaso1
 		};
 		Estado.Predeterminados["credibilidad"] = CredibilidadInicial;
 		PrepararInterrogatorios();
+		// HU-29: el diario pide las fichas de los sospechosos al abrirse
+		hud.Set("proveedor_sospechosos", Callable.From(FichasSospechosos));
 
 		foreach (string id in new[] { ArbolIntroduccion, ArbolSala, ArbolAcusacion }.Concat(Sospechosos.Select(s => "caso1_" + s)))
 			_arboles[id] = ArbolDialogo.Cargar(RutaDialogos + id + ".json");

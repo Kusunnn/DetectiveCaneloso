@@ -112,14 +112,29 @@ const ZONA_CARPETA := Rect2(48, 36, 300, 96)
 const TECLAS := [["diario", "Libreta"], ["linterna", "Linterna"], ["deducir", "Tablero"], ["expediente", "Expediente"]]
 const ROJO_AVISO := Color("e0463c")
 var linterna_encendida: bool = false
-## Diario del caso (Q): pistas, deducciones, testimonios y personas.
+## Diario del caso (Q): pistas, deducciones y sospechosos.
 var notas: Array[String] = []
 var personas: Array[Dictionary] = []
 const PISTAS_POR_HOJA := 9
 var _pista_diario: int = -1
 var _seccion: String = "PISTAS"
-var _hojas_seccion: Dictionary = {"PISTAS": 0, "DEDUCCIONES": 0, "PERSONAS": 0}
-const COLORES_SECCION := {"PISTAS": Color("dbb64f"), "DEDUCCIONES": Color("876348"), "PERSONAS": Color("993f40")}
+var _hojas_seccion: Dictionary = {"PISTAS": 0, "DEDUCCIONES": 0, "SOSPECHOSOS": 0}
+const COLORES_SECCION := {"PISTAS": Color("dbb64f"), "DEDUCCIONES": Color("876348"), "SOSPECHOSOS": Color("3d5b63")}
+## HU-29: fichas de sospechosos. Cada caso pone un proveedor que las arma con lo que el jugador ya sabe;
+## el diario se lo pide al abrirse. Cada ficha: id, nombre, retrato, datos, relacion, presencia, vinculo,
+## pruebas [{titulo}], pruebas_faltan, contradicciones [{dicho, prueba, estado}], estado y consejo.
+## Lo que llega vacío se muestra como pendiente.
+var proveedor_sospechosos: Callable
+var sospechosos: Array = []
+var _sospechoso_diario: int = 0
+var _diario_antes: bool = false
+const ESTADOS_SOSPECHA := {
+	"sin": ["○", "SIN INTERROGAR", Color("7d838b")],
+	"sospecha": ["●", "BAJO SOSPECHA", Color("a8322d")],
+	"confeso": ["◆", "SECRETO CONFESADO", Color("9c6f05")],
+	"coartada": ["✓", "COARTADA CONFIRMADA", Color("4d7a4a")],
+	"principal": ["★", "PRINCIPAL SOSPECHOSO", Color("a8322d")],
+}
 var _papeles_libro: Array[ImageTexture] = []
 var _hoja: int = 0
 var _giro: float = 0.0
@@ -154,17 +169,33 @@ func _paginas_libro() -> Array[Dictionary]:
 	for nota in notas:
 		if not nota.begins_with("Deducción: "):
 			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
-	for persona in personas:
-		paginas.append({"seccion": "PERSONAS", "titulo": persona.nombre, "texto": persona.resumen, "imagen": persona.imagen, "persona": persona.nombre})
-	if personas.is_empty():
-		paginas.append({"seccion": "PERSONAS", "titulo": "Personas del caso", "texto": "Habla con las personas del caso para añadir sus fichas al diario."})
+	if sospechosos.is_empty():
+		paginas.append({"seccion": "SOSPECHOSOS", "titulo": "Sospechosos del caso", "texto": "En este caso todavía no hay sospechosos."})
+	else:
+		_sospechoso_diario = clampi(_sospechoso_diario, 0, sospechosos.size() - 1)
+		paginas.append({"seccion": "SOSPECHOSOS", "titulo": "Fichas de sospechosos", "galeria_sospechosos": true})
+		paginas.append({"seccion": "SOSPECHOSOS", "etiqueta": "FICHA DEL SOSPECHOSO", "titulo": str(sospechosos[_sospechoso_diario].get("nombre", "")), "ficha": _sospechoso_diario})
 	return paginas.filter(func(pagina: Dictionary) -> bool: return pagina.seccion == _seccion)
+
+## Pide al caso las fichas al día (al abrir el diario o entrar a la sección)
+func _refrescar_sospechosos() -> void:
+	if proveedor_sospechosos.is_valid():
+		sospechosos = proveedor_sospechosos.call()
+
+func _cambiar_sospechoso(paso: int) -> void:
+	if sospechosos.is_empty():
+		return
+	_sospechoso_diario = wrapi(_sospechoso_diario + paso, 0, sospechosos.size())
+	_direccion = 1 if paso > 0 else -1
+	_giro = 0.6
 
 func _cambiar_seccion(seccion: String) -> void:
 	if seccion == _seccion or not COLORES_SECCION.has(seccion):
 		return
 	_hojas_seccion[_seccion] = _hoja
 	_seccion = seccion
+	if seccion == "SOSPECHOSOS":
+		_refrescar_sospechosos()
 	_hoja = clampi(_hojas_seccion[seccion], 0, (_paginas_libro().size() - 1) / 2)
 	_direccion = 1
 	_giro = 1.0
@@ -349,6 +380,10 @@ func _process(delta: float) -> void:
 	_ayuda_alpha = move_toward(_ayuda_alpha, destino, delta / 0.18)
 	_aviso = maxf(0.0, _aviso - delta)
 	_oferta_examen = maxf(0.0, _oferta_examen - delta)
+	# El diario se puede abrir desde varios sitios (Q, el pizarrón): al abrirse, las fichas se ponen al día
+	if diario_abierto and not _diario_antes:
+		_refrescar_sospechosos()
+	_diario_antes = diario_abierto
 	_lienzo.queue_redraw()
 
 func _input(event: InputEvent) -> void:
@@ -386,8 +421,14 @@ func _input(event: InputEvent) -> void:
 						_examinar(zona.examinar)
 					elif zona.has("pista"):
 						_pista_diario = zona.pista
+					elif zona.has("sospechoso"):
+						_sospechoso_diario = zona.sospechoso
+					elif zona.has("paso_sospechoso"):
+						_cambiar_sospechoso(zona.paso_sospechoso)
 					elif zona.has("seccion"):
 						_cambiar_seccion(zona.seccion)
+					elif not zona.has("destino"):
+						pass
 					elif zona.destino == -1:
 						diario_abierto = false
 						panel_cambiado.emit(false, false)
@@ -395,7 +436,10 @@ func _input(event: InputEvent) -> void:
 						_pasar_hoja(zona.destino)
 					break
 		elif event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN]:
-			_pasar_hoja(_hoja + (-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1))
+			if _seccion == "SOSPECHOSOS":
+				_cambiar_sospechoso(-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1)
+			else:
+				_pasar_hoja(_hoja + (-1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else 1))
 		get_viewport().set_input_as_handled()
 		return
 	if diario_abierto and _pista_diario >= 0 and event is InputEventJoypadButton and event.pressed and event.button_index == JOY_BUTTON_A:
@@ -408,7 +452,11 @@ func _input(event: InputEvent) -> void:
 			get_viewport().set_input_as_handled()
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode in [KEY_UP, KEY_LEFT, KEY_DOWN, KEY_RIGHT]:
-			if diario_abierto:
+			if diario_abierto and _seccion == "SOSPECHOSOS":
+				# Una sola doble página: las flechas pasan de un sospechoso al siguiente
+				_cambiar_sospechoso(-1 if event.keycode in [KEY_UP, KEY_LEFT] else 1)
+				get_viewport().set_input_as_handled()
+			elif diario_abierto:
 				_pasar_hoja(_hoja + (-1 if event.keycode in [KEY_UP, KEY_LEFT] else 1))
 				get_viewport().set_input_as_handled()
 			elif pistas.size() > 1:
@@ -692,8 +740,8 @@ func _dibujar_libro(w: float, h: float) -> void:
 		var x := 580.0 if _direccion > 0 else 580.0 - ancho
 		_lienzo.draw_rect(Rect2(origen + Vector2(x, 3), Vector2(ancho, 642)), Color("f3eddf"))
 		_lienzo.draw_rect(Rect2(origen + Vector2(x, 3), Vector2(5, 642)), Color(0.2, 0.13, 0.06, 0.2))
-	for i in range(3):
-		var seccion: String = ["PISTAS", "DEDUCCIONES", "PERSONAS"][i]
+	for i in range(COLORES_SECCION.size()):
+		var seccion: String = COLORES_SECCION.keys()[i]
 		var activa := seccion == _seccion
 		var rect := Rect2(origen + Vector2(i * 210, -68 if activa else -56), Vector2(198, 52 if activa else 40))
 		var color: Color = COLORES_SECCION[seccion]
@@ -706,16 +754,36 @@ func _dibujar_libro(w: float, h: float) -> void:
 			_lienzo.draw_rect(Rect2(rect.position + Vector2(16, 36), Vector2(30, 3)), TINTA if seccion == "PISTAS" else Color("fff5e8"))
 		_zonas_libro.append({"rect": rect, "seccion": seccion})
 	_boton_libro("CERRAR [%s]" % nombre_tecla("diario"), Rect2(origen + Vector2(1000, -60), Vector2(160, 42)), -1)
+	if _seccion == "SOSPECHOSOS" and sospechosos.size() > 1:
+		# Una sola doble página: abajo se pasa de un sospechoso a otro
+		_boton_libro("← ANTERIOR", Rect2(origen + Vector2(0, 686), Vector2(174, 42)), 0)
+		_zonas_libro[-1] = {"rect": _zonas_libro[-1].rect, "paso_sospechoso": -1}
+		var nombre := str(sospechosos[_sospechoso_diario].get("nombre", "")).to_upper()
+		_texto("%s  ·  %s  ·  %d / %d  ·  ← / →" % [_seccion, nombre, _sospechoso_diario + 1, sospechosos.size()], origen + Vector2(310, 714), MONO, 14, BLANCO)
+		_boton_libro("SIGUIENTE →", Rect2(origen + Vector2(976, 686), Vector2(184, 42)), 0)
+		_zonas_libro[-1] = {"rect": _zonas_libro[-1].rect, "paso_sospechoso": 1}
+		return
 	_boton_libro("← ANTERIOR", Rect2(origen + Vector2(0, 686), Vector2(174, 42)), _hoja - 1, _hoja > 0)
 	_texto("%s  ·  %02d / %02d  ·  ← / →" % [_seccion, _hoja + 1, ceili(paginas.size() / 2.0)], origen + Vector2(310, 714), MONO, 14, BLANCO)
 	_boton_libro("SIGUIENTE →", Rect2(origen + Vector2(976, 686), Vector2(184, 42)), _hoja + 1, (_hoja + 1) * 2 < paginas.size())
 
 func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
-	_texto(pagina.seccion, p + Vector2(38, 89), MONO, 14, Color("866134"))
-	_texto_ajustado(pagina.titulo, p + Vector2(38, 134), _bold, 36, TINTA, 504)
+	_texto(pagina.get("etiqueta", pagina.seccion), p + Vector2(38, 89), MONO, 14, Color("866134"))
+	_texto_ajustado(pagina.titulo, p + Vector2(38, 134), _bold, 36, TINTA, 380 if pagina.has("ficha") else 504)
 	_lienzo.draw_rect(Rect2(p + Vector2(38, 152), Vector2(70, 3)), COLORES_SECCION[_seccion])
 	if pagina.has("galeria"):
 		_dibujar_galeria_pistas(p, pagina.galeria)
+		return
+	if pagina.has("galeria_sospechosos"):
+		_dibujar_galeria_sospechosos(p)
+		return
+	if pagina.has("ficha") and pagina.ficha < sospechosos.size():
+		var sospechoso: Dictionary = sospechosos[pagina.ficha]
+		_dibujar_ficha_sospechoso(p, sospechoso)
+		for persona in personas:
+			if persona.nombre == sospechoso.get("nombre", ""):
+				_zonas_libro.append({"rect": Rect2(p + Vector2(38, 165), Vector2(504, 405)), "persona": persona.nombre})
+				break
 		return
 	var imagen: Texture2D = pagina.get("imagen")
 	var texto_y := 188.0
@@ -727,8 +795,6 @@ func _dibujar_pagina(p: Vector2, pagina: Dictionary) -> void:
 		medida *= minf(264.0 / medida.x, 192.0 / medida.y)
 		_lienzo.draw_texture_rect(imagen, Rect2(marco.get_center() - medida / 2, medida), false)
 		texto_y = 422.0
-	if pagina.has("persona"):
-		_zonas_libro.append({"rect": Rect2(p + Vector2(38, 165), Vector2(504, 405)), "persona": pagina.persona})
 	_parrafo(pagina.texto, p + Vector2(38, texto_y), 504, 17, TINTA, 6 if imagen else 14)
 	if pagina.has("pista") and pagina.pista < pistas.size():
 		var pista: Pista = pistas[pagina.pista]
@@ -765,6 +831,177 @@ func _dibujar_galeria_pistas(p: Vector2, inicio: int) -> void:
 	var cuenta := contar_examinadas()
 	_texto("%02d PISTAS  ·  EXAMINADAS %d/%d  ·  CLIC PARA INSPECCIONAR" % [pistas.size(), cuenta.x, cuenta.y], p + Vector2(38, 574), MONO, 12, Color("75654e"))
 	_texto("○ SIN REVISAR   ● EXAMINADA   ◆ DETALLE", p + Vector2(38, 552), MONO, 11, Color("75654e"))
+
+## HU-29: los sospechosos en tarjetas, con su estado (símbolo y texto, no solo color). Clic para ver la ficha.
+func _dibujar_galeria_sospechosos(p: Vector2) -> void:
+	var raton := _raton_libro()
+	var interrogados := 0
+	for k in range(mini(sospechosos.size(), 6)):
+		var s: Dictionary = sospechosos[k]
+		var rect := Rect2(p + Vector2(38 + (k % 3) * 172, 172 + (k / 3) * 182), Vector2(160, 168))
+		var elegido := k == _sospechoso_diario
+		_lienzo.draw_rect(Rect2(rect.position + Vector2(3, 4), rect.size), Color(0, 0, 0, 0.15))
+		_lienzo.draw_rect(rect, Color("e0c48d") if elegido or rect.has_point(raton) else Color("f5efdf"))
+		var retrato: Texture2D = s.get("retrato")
+		var foto := Rect2(rect.position + Vector2(30, 10), Vector2(100, 100))
+		if retrato:
+			_lienzo.draw_texture_rect(retrato, foto, false)
+		else:
+			_lienzo.draw_rect(foto, Color("d8ccb4"))
+		_texto_centrado(str(s.get("nombre", "")), rect.position.x + 80, rect.position.y + 132, _bold, 20, TINTA, 148)
+		var estado: Array = ESTADOS_SOSPECHA.get(s.get("estado", "sin"), ESTADOS_SOSPECHA.sin)
+		_texto_centrado("%s %s" % [estado[0], estado[1]], rect.position.x + 80, rect.position.y + 155, MONO, 11, estado[2], 152)
+		if elegido:
+			_lienzo.draw_rect(rect, Color("a77e3e"), false, 2.0)
+		if s.get("estado", "sin") != "sin":
+			interrogados += 1
+		_zonas_libro.append({"rect": rect, "sospechoso": k})
+	_texto_ajustado("○ SIN INTERROGAR  ● BAJO SOSPECHA  ◆ CONFESÓ  ✓ COARTADA  ★ PRINCIPAL", p + Vector2(38, 552), MONO, 11, Color("75654e"), 504)
+	_texto_ajustado("%02d SOSPECHOSOS  ·  INTERROGADOS %d/%d  ·  CLIC PARA VER SU FICHA" % [sospechosos.size(), interrogados, sospechosos.size()], p + Vector2(38, 574), MONO, 12, Color("75654e"), 504)
+
+## HU-29: la ficha del sospechoso elegido. Lo que el jugador aún no sabe se ve como pendiente.
+func _dibujar_ficha_sospechoso(p: Vector2, s: Dictionary) -> void:
+	var gris := Color("75654e")
+	var estado: Array = ESTADOS_SOSPECHA.get(s.get("estado", "sin"), ESTADOS_SOSPECHA.sin)
+	_texto_ajustado(str(s.get("datos", "")), p + Vector2(38, 183), MONO, 13, gris, 380)
+	# Foto tipo polaroid y sello del estado, ladeados como pegados a mano
+	_polaroid(p + Vector2(486, 146), s.get("retrato"), 0.05)
+	_sello_texto(p + Vector2(478, 232), estado[1], estado[2], -0.16)
+	var y := 214.0
+	y = _campo_ficha(p, y, "RELACIÓN CON LA VÍCTIMA", str(s.get("relacion", "")), 340, "Interroga a alguien que la conozca.")
+	y = _campo_ficha(p, y, "MOTIVO DE SU PRESENCIA", str(s.get("presencia", "")), 504 if y > 250 else 340, "Pendiente.")
+	y = _campo_ficha(p, y, "VÍNCULO CON EL HECHO", str(s.get("vinculo", "")), 504, "Aún no hay nada que lo relacione con el crimen.")
+	# Pruebas que lo atan al hecho (y un hueco si todavía falta alguna)
+	var x := 0.0
+	var etiquetas: Array = []
+	for prueba in s.get("pruebas", []):
+		etiquetas.append([str(prueba.get("titulo", "")), true])
+	if s.get("pruebas_faltan", false):
+		etiquetas.append(["??? sin descubrir", false])
+	if not etiquetas.is_empty():
+		for etiqueta in etiquetas:
+			var ancho := MONO.get_string_size(etiqueta[0], HORIZONTAL_ALIGNMENT_LEFT, -1, _tam(11)).x + 18
+			if x > 0 and x + ancho > 504:
+				x = 0
+				y += 26
+			var chip := Rect2(p + Vector2(38 + x, y - 4), Vector2(ancho, 22))
+			if etiqueta[1]:
+				_lienzo.draw_rect(chip, Color("e6d9bd"))
+				_lienzo.draw_rect(Rect2(chip.position, Vector2(3, 22)), COLORES_SECCION.SOSPECHOSOS)
+			else:
+				_rayado(chip, Color("b8ab94"))
+			_texto(etiqueta[0], chip.position + Vector2(10, 15), MONO, 11, TINTA if etiqueta[1] else Color("9a8e7b"))
+			x += ancho + 6
+		y += 40
+	# CA-04: contradicciones que dijo y si ya se cayeron con una prueba
+	var filas: Array = s.get("contradicciones", [])
+	var detectadas := filas.filter(func(f): return f.get("estado") == "detectada").size()
+	_texto("CONTRADICCIONES DETECTADAS  ·  %d" % detectadas, p + Vector2(38, y), MONO, 12, Color("866134"))
+	y += 6
+	if filas.is_empty():
+		_pendiente(p + Vector2(38, y + 18), "Ninguna todavía. Interrógalo y compara lo que dice con tus pistas.", 504)
+	else:
+		# Con espacio, cada una con la prueba que la tumbó; si son muchas (Tony), una línea por contradicción
+		var disponible := 572.0 - y
+		var doble := filas.size() * 42.0 <= disponible
+		var alto_fila := 42.0 if doble else 24.0
+		var caben := mini(filas.size(), int(disponible / alto_fila))
+		for i in range(caben):
+			_fila_contradiccion(p + Vector2(38, y + i * alto_fila), filas[i], doble, i < caben - 1)
+		if caben < filas.size():
+			_texto("+ %d más" % (filas.size() - caben), p + Vector2(470, 572), MONO, 11, gris)
+	# Estado y si ya tiene con qué presionarlo
+	_texto_ajustado("%s %s  ·  %s" % [estado[0], estado[1], str(s.get("consejo", ""))], p + Vector2(38, 584), MONO, 12, estado[2], 504)
+
+## Un campo de la ficha (etiqueta y texto); vacío = pendiente. Devuelve dónde empieza el siguiente.
+func _campo_ficha(p: Vector2, y: float, etiqueta: String, texto: String, ancho: float, si_falta: String) -> float:
+	_texto(etiqueta, p + Vector2(38, y), MONO, 12, Color("866134"))
+	if texto.is_empty():
+		_pendiente(p + Vector2(38, y + 21), si_falta, ancho)
+		return y + 44
+	return y + 10 + _parrafo_medido(texto, p + Vector2(38, y + 6), ancho, 14, TINTA, 2) + 13
+
+func _fila_contradiccion(p: Vector2, fila: Dictionary, doble: bool, separador: bool) -> void:
+	var estado: String = fila.get("estado", "pendiente")
+	var color := Color("a8322d") if estado == "detectada" else (Color("4d7a4a") if estado == "comprobada" else Color("9a8e7b"))
+	var marca := "✗" if estado == "detectada" else ("✓" if estado == "comprobada" else "?")
+	var prueba: String = fila.get("prueba", "")
+	_texto(marca, p + Vector2(0, 17), MONO, 15, color)
+	_texto_ajustado(str(fila.get("dicho", "")), p + Vector2(18, 17), MONO, 13, TINTA if estado != "pendiente" else Color("9a8e7b"), 390)
+	if doble:
+		var detalle := ("↳ %s: %s." % [prueba, fila.get("resultado", "")]) if prueba != "" else "↳ Pendiente: falta una prueba que lo contradiga."
+		_texto_ajustado(detalle, p + Vector2(18, 34), MONO, 12, Color("75654e"), 400)
+	var tag: String = {"detectada": "DETECTADA", "comprobada": "COMPROBADA", "pendiente": "PENDIENTE"}.get(estado, "PENDIENTE")
+	var marco := Rect2(p + Vector2(412, 3), Vector2(92, 20))
+	_lienzo.draw_rect(marco, color, false, 1.0)
+	_texto_centrado(tag, marco.get_center().x, marco.position.y + 15, MONO, 11, color, 86)
+	if separador:
+		_rayado_linea(p + Vector2(0, (40.0 if doble else 23.0)), 504, Color("cdbfa6"))
+
+## Texto gris con una raya punteada delante: algo que el jugador todavía no descubre (CA-02)
+func _pendiente(p: Vector2, texto: String, ancho: float) -> void:
+	_rayado_linea(p + Vector2(0, -5), 60, Color("cfc4b0"), 3.0)
+	_parrafo(texto, p + Vector2(70, -15), ancho - 70, 13, Color("9a8e7b"), 2)
+
+func _rayado_linea(p: Vector2, ancho: float, color: Color, grosor: float = 1.0) -> void:
+	var x := 0.0
+	while x < ancho:
+		_lienzo.draw_line(p + Vector2(x, 0), p + Vector2(minf(x + 5, ancho), 0), color, grosor)
+		x += 8
+
+func _rayado(rect: Rect2, color: Color) -> void:
+	_rayado_linea(rect.position, rect.size.x, color)
+	_rayado_linea(rect.position + Vector2(0, rect.size.y), rect.size.x, color)
+	for y in [rect.position.y, rect.end.y - 5]:
+		_lienzo.draw_line(Vector2(rect.position.x, y), Vector2(rect.position.x, y + 5), color)
+		_lienzo.draw_line(Vector2(rect.end.x, y), Vector2(rect.end.x, y + 5), color)
+
+func _texto_centrado(texto: String, centro_x: float, y: float, fuente: Font, tam: int, color: Color, ancho: float) -> void:
+	var t := _tam(tam)
+	while t > int(tam * 0.6) and fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x > ancho:
+		t -= 1
+	var medida := fuente.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x
+	_lienzo.draw_string(fuente, Vector2(centro_x - medida / 2, y), texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t, color)
+
+## Como _parrafo, pero devuelve su alto para acomodar lo que sigue debajo
+func _parrafo_medido(texto: String, p: Vector2, ancho: float, tam: int, color: Color, max_lineas: int = 4) -> float:
+	var parrafo := TextParagraph.new()
+	parrafo.add_string(texto, MONO, _tam(tam))
+	parrafo.width = ancho
+	parrafo.max_lines_visible = max_lineas
+	parrafo.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	parrafo.draw(_lienzo.get_canvas_item(), p, color)
+	return parrafo.get_size().y
+
+## Transformación del lienzo para el diario (también cuando se ve pequeño sobre el pizarrón)
+func _base_diario() -> Transform2D:
+	var escala := minf(_lienzo.size.x / 1600.0, _lienzo.size.y / 900.0)
+	if tablero_abierto and diario_abierto:
+		return Transform2D(0.0, Vector2.ONE * escala * ESCALA_DIARIO_TABLERO, 0.0, _origen_diario_tablero() * escala)
+	return Transform2D(0.0, Vector2.ONE * escala, 0.0, Vector2.ZERO)
+
+func _polaroid(centro: Vector2, retrato: Texture2D, giro: float) -> void:
+	var base := _base_diario()
+	_lienzo.draw_set_transform_matrix(base * Transform2D(giro, centro))
+	_lienzo.draw_rect(Rect2(-52, -64, 112, 134), Color(0, 0, 0, 0.17))
+	_lienzo.draw_rect(Rect2(-56, -68, 112, 134), Color("f8f3e6"))
+	if retrato:
+		_lienzo.draw_texture_rect(retrato, Rect2(-48, -60, 96, 96), false)
+	_lienzo.draw_set_transform_matrix(base)
+
+## Sello de tinta con el texto que se le pase (como el de «EXAMINADA»)
+func _sello_texto(centro: Vector2, texto: String, color: Color, giro: float) -> void:
+	var base := _base_diario()
+	# Los estados largos («PRINCIPAL SOSPECHOSO») bajan de tamaño para no tapar la ficha
+	var t := _tam(19)
+	while t > 12 and _bold.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x > 138:
+		t -= 1
+	var ancho := _bold.get_string_size(texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t).x + 24
+	_lienzo.draw_set_transform_matrix(base * Transform2D(giro, centro))
+	_lienzo.draw_rect(Rect2(-ancho / 2, -17, ancho, 34), Color(color, 0.85), false, 2.5)
+	_lienzo.draw_rect(Rect2(-ancho / 2 + 5, -12, ancho - 10, 24), Color(color, 0.5), false, 1.0)
+	_lienzo.draw_string(_bold, Vector2(-ancho / 2 + 12, 7), texto, HORIZONTAL_ALIGNMENT_LEFT, -1, t, Color(color, 0.85))
+	_lienzo.draw_set_transform_matrix(base)
 
 ## Línea de estado con símbolo y texto (no depende solo del color).
 func _dibujar_estado(pista: Pista, p: Vector2, libreta: bool) -> void:
