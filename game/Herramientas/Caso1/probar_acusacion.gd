@@ -5,7 +5,7 @@ extends SceneTree
 ## Respalda en disco (user://respaldo_pruebas/) las ranuras y el progreso, y los devuelve al final.
 
 const PARTIDAS := "user://partidas/"
-const ARCHIVOS := ["user://progreso.json", "user://progreso.json.bak", "user://cinematicas.cfg"]
+const ARCHIVOS := ["user://progreso.json", "user://progreso.json.bak", "user://cinematicas.cfg", "user://configuracion.cfg"]
 const RESPALDO := "user://respaldo_pruebas/"
 const SALA := "res://Escenas/Caso1/Interrogatorio/sala_interrogatorio_caso1.tscn"
 const SOLUCION := {"0.0.0": "paco", "0.0.1": "libro", "0.1.0": "nota", "0.1.1": "tony", "1.0.0": "h2300", "1.0.1": "juan_carlos",
@@ -23,6 +23,10 @@ func _initialize() -> void:
 	_respaldar()
 	await process_frame
 	_gestor = root.get_node("GestorPartida")
+	# Las cuentas de errores son las de Detective, sin importar lo que el jugador eligió
+	var config = root.get_node("Configuracion")
+	var dificultad: String = config.Dificultad
+	config.Dificultad = "detective"
 	_flujo = load("res://tests/FlujoCaso1Prueba.cs").new()
 	root.add_child(_flujo)
 	var args := OS.get_cmdline_user_args()
@@ -39,6 +43,7 @@ func _initialize() -> void:
 	if solo == "" or solo == "rechazo": await _rechazo_tony()
 	if solo == "" or solo == "desorden": await _tony_en_desorden()
 	print("Fallos: %d" % _fallos)
+	config.Dificultad = dificultad
 	_devolver_respaldo()
 	quit(1 if _fallos > 0 else 0)
 
@@ -290,20 +295,27 @@ func _guardar_en_medio() -> void:
 
 func _respaldar() -> void:
 	DirAccess.make_dir_recursive_absolute(RESPALDO + "partidas/")
-	for archivo in ARCHIVOS:
-		if FileAccess.file_exists(archivo): DirAccess.copy_absolute(archivo, RESPALDO + archivo.get_file())
 	if DirAccess.dir_exists_absolute(PARTIDAS):
 		for f in DirAccess.get_files_at(PARTIDAS): DirAccess.copy_absolute(PARTIDAS + f, RESPALDO + "partidas/" + f)
+	for archivo in ARCHIVOS:
+		if FileAccess.file_exists(archivo): DirAccess.copy_absolute(archivo, RESPALDO + archivo.get_file())
+	# La marca va al final y dice qué archivos no existían: solo esos se borran al devolver. Sin marca no se toca nada.
 	var marca := FileAccess.open(RESPALDO + "completo", FileAccess.WRITE)
-	if marca: marca.store_string("ok")
+	if marca: marca.store_string("\n".join(ARCHIVOS.filter(func(a): return not FileAccess.file_exists(a))))
 
+## Deja las ranuras y el progreso como estaban antes de la prueba y borra el respaldo (carpetas incluidas)
 func _devolver_respaldo() -> void:
 	if not FileAccess.file_exists(RESPALDO + "completo"): return
+	var faltaban := FileAccess.get_file_as_string(RESPALDO + "completo").split("\n")
 	if DirAccess.dir_exists_absolute(PARTIDAS):
 		for f in DirAccess.get_files_at(PARTIDAS): DirAccess.remove_absolute(PARTIDAS + f)
+	else:
+		DirAccess.make_dir_recursive_absolute(PARTIDAS)
 	for f in DirAccess.get_files_at(RESPALDO + "partidas/"): DirAccess.copy_absolute(RESPALDO + "partidas/" + f, PARTIDAS + f)
 	for archivo in ARCHIVOS:
 		if FileAccess.file_exists(RESPALDO + archivo.get_file()): DirAccess.copy_absolute(RESPALDO + archivo.get_file(), archivo)
-		elif FileAccess.file_exists(archivo): DirAccess.remove_absolute(archivo)
+		elif FileAccess.file_exists(archivo) and archivo in faltaban: DirAccess.remove_absolute(archivo)
 	for f in DirAccess.get_files_at(RESPALDO + "partidas/"): DirAccess.remove_absolute(RESPALDO + "partidas/" + f)
+	DirAccess.remove_absolute(RESPALDO + "partidas")
 	for f in DirAccess.get_files_at(RESPALDO): DirAccess.remove_absolute(RESPALDO + f)
+	DirAccess.remove_absolute(RESPALDO)

@@ -89,20 +89,27 @@ func _saltar_intro() -> void:
 
 func _respaldar() -> void:
 	DirAccess.make_dir_recursive_absolute(RESPALDO + "partidas/")
-	for archivo in ARCHIVOS:
-		if FileAccess.file_exists(archivo): DirAccess.copy_absolute(archivo, RESPALDO + archivo.get_file())
 	if DirAccess.dir_exists_absolute(PARTIDAS):
 		for f in DirAccess.get_files_at(PARTIDAS): DirAccess.copy_absolute(PARTIDAS + f, RESPALDO + "partidas/" + f)
+	for archivo in ARCHIVOS:
+		if FileAccess.file_exists(archivo): DirAccess.copy_absolute(archivo, RESPALDO + archivo.get_file())
+	# La marca va al final y dice qué archivos no existían: solo esos se borran al devolver. Sin marca no se toca nada.
 	var marca := FileAccess.open(RESPALDO + "completo", FileAccess.WRITE)
-	if marca: marca.store_string("ok")
+	if marca: marca.store_string("\n".join(ARCHIVOS.filter(func(a): return not FileAccess.file_exists(a))))
 
+## Deja las ranuras y el progreso como estaban antes de la prueba y borra el respaldo (carpetas incluidas)
 func _devolver_respaldo() -> void:
 	if not FileAccess.file_exists(RESPALDO + "completo"): return
+	var faltaban := FileAccess.get_file_as_string(RESPALDO + "completo").split("\n")
 	if DirAccess.dir_exists_absolute(PARTIDAS):
 		for f in DirAccess.get_files_at(PARTIDAS): DirAccess.remove_absolute(PARTIDAS + f)
+	else:
+		DirAccess.make_dir_recursive_absolute(PARTIDAS)
 	for f in DirAccess.get_files_at(RESPALDO + "partidas/"): DirAccess.copy_absolute(RESPALDO + "partidas/" + f, PARTIDAS + f)
 	for archivo in ARCHIVOS:
 		if FileAccess.file_exists(RESPALDO + archivo.get_file()): DirAccess.copy_absolute(RESPALDO + archivo.get_file(), archivo)
-		elif FileAccess.file_exists(archivo): DirAccess.remove_absolute(archivo)
+		elif FileAccess.file_exists(archivo) and archivo in faltaban: DirAccess.remove_absolute(archivo)
 	for f in DirAccess.get_files_at(RESPALDO + "partidas/"): DirAccess.remove_absolute(RESPALDO + "partidas/" + f)
+	DirAccess.remove_absolute(RESPALDO + "partidas")
 	for f in DirAccess.get_files_at(RESPALDO): DirAccess.remove_absolute(RESPALDO + f)
+	DirAccess.remove_absolute(RESPALDO)
