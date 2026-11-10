@@ -99,6 +99,8 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 		Salida.Usado += () => _ = Conversar(AlUsarSalida);
 		PrepararDialogos();
+		// Rediseño (paso 7): cada uno en su lugar, con su actividad y su objeto
+		if (GetParent().GetNodeOrNull<Node3D>("Personajes") is { } personajes) ActividadesCaso1.Colocar(personajes, ActividadesCaso1.Campamento);
 		foreach (var zona in Zonas)
 		{
 			var area = zona;
