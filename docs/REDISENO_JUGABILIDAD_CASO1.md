@@ -2,6 +2,26 @@
 
 **Estado: aprobado por Takeshi el 5 nov con cambios.** Esta sección manda sobre el resto del documento cuando se contradicen.
 
+## Estado al 10 de noviembre
+
+Los 7 pasos están hechos, en commits locales de `claude/funny-mestorf-5a148a`, sin subir. También está integrado `main` con HU-29 (fichas de sospechoso).
+
+| Paso | Commit |
+|---|---|
+| 1 · GuiaCaso1 y objetivos | 644bc33 |
+| Ajustes de guion aprobados (silbato «T. S.», pelo café, notas) | ab140e1 |
+| 2 · Candados, confrontar, Relacionadas, corazonada | 12db9cd |
+| 3 · Ayudas de 3 niveles y dificultad | 9d725bb |
+| 4 · Reconstrucción de la noche | 4dd941f |
+| 5 · Instinto y pistas por zona | 1f14659 |
+| Merge de `main` (HU-29) | 5c3d62b |
+| 6 · Actos y «Caso cerrado» | ae13a23 |
+| 7 · Personajes en su lugar con su objeto; Eriz y Aya en el Lago | 6f320d9 |
+
+**Fuera de alcance:** las rutinas de caminar quedaron fuera (no hubo tiempo) y tampoco hay shader de desaturación.
+
+**Líneas para revisar:** todas las líneas nuevas para el equipo están en `game/Datos/Dialogos/caso1_sistema.json` (`"nueva": true`) y en `game/Datos/Caso1/caso1_reconstruccion.json`.
+
 ## 0. Lo que se aprobó el 5 de noviembre
 
 | Tema | Decisión |
