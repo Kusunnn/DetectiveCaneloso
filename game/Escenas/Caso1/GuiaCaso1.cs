@@ -218,13 +218,25 @@ public sealed class GuiaCaso1
 	public string Objetivo(string id) => Texto("objetivos", id);
 	public string TextoSistema(string grupo, string id) => Texto(grupo, id);
 
+	// A quién se puede interrogar en cada escenario: en el Lago solo están Eriz y Aya
+	public static bool Presente(Escenario donde, string quien) => donde != Escenario.Lago || quien == "eriz" || quien == "aya";
+
+	// Antes de la sala: si ya tienes con qué romper un candado de alguien que está aquí, lo dice; si no, el recorrido
+	public string ObjetivoAntesDeSala(Escenario donde)
+	{
+		var paso = Siguiente();
+		if (paso.Clase == Clase.Listo && Presente(donde, paso.Candado.Quien))
+			return Objetivo("tengo_algo").Replace("{quien}", GuionCaso1.NombreDe(paso.Candado.Quien));
+		return ObjetivoExploracion(donde);
+	}
+
 	public string ObjetivoInterrogatorios(Escenario donde)
 	{
 		var paso = Siguiente();
 		switch (paso.Clase)
 		{
 			case Clase.Listo:
-				return Objetivo(donde == Escenario.Sala ? "tengo_algo" : "tengo_algo_fuera").Replace("{quien}", GuionCaso1.NombreDe(paso.Candado.Quien));
+				return Objetivo(Presente(donde, paso.Candado.Quien) ? "tengo_algo" : "tengo_algo_fuera").Replace("{quien}", GuionCaso1.NombreDe(paso.Candado.Quien));
 			case Clase.FaltaLlavero:
 				return Objetivo("falta_llavero").Replace("{zona}", paso.Zona);
 			case Clase.FaltaPista:

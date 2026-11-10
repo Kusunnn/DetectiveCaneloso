@@ -86,6 +86,7 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 			Panel = panel;
 			Guion.AbrirReconstruccion = panel.Abrir;
 			Guion.CerrarReconstruccion = panel.Cerrar;
+			Guion.EnSala = true;
 			var capa = new CanvasLayer { Layer = 30, ProcessMode = ProcessModeEnum.Always };
 			AddChild(capa);
 			Cierre = new PantallaCasoCerrado();

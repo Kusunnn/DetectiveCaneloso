@@ -96,7 +96,7 @@ public partial class Caso1Lago : EscenarioCaso1
 		foreach (var (nodo, quien) in new[] { ("Eriz", "eriz"), ("Aya", "aya") })
 		{
 			if (personajes.GetNodeOrNull<Npc>(nodo + "/Colision") is not { } npc) continue;
-			npc.Usado += () => Conversar(() => Guion.Charla(quien));
+			npc.Usado += () => Conversar(() => Guion.Interrogar(quien, Sigue));
 			var signo = new Label3D
 			{
 				Text = "!", FontSize = 96, Modulate = new Color("efca08"), OutlineSize = 16,

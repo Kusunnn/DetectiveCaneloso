@@ -57,6 +57,8 @@ public partial class GuionCaso1
 	public Func<Task> AlAcertar;                  // Golpe de sonido y push-in
 	public Func<int, Task> AlTumbarExcusa;        // Tony: cuántas excusas lleva tumbadas
 	private string _ultimoGuardado;
+	// Lo pone la sala de la estación; en el campamento y el lago se interroga ahí mismo
+	public bool EnSala;
 	private readonly HashSet<string> _frasesDichas = new();
 	private Func<ArbolDialogo, NodoDialogo, LineaDialogo, bool> _omitirNormal;
 
@@ -75,7 +77,10 @@ public partial class GuionCaso1
 		Motor.AntesDeNodo = AntesDeNodoInterrogatorio;
 		Motor.DecorarOpcion = DecorarOpcionDeSala;
 		// «Ya nada más falta usted» solo es cierto cuando ya faltaba solo él
-		_omitirNormal = (arbol, nodo, linea) => arbol.Id == "caso1_" + Culpable && nodo.Id == "excusa_1" && linea.Habla == "Caneloso" && !TonyDisponible;
+		// Fuera de la sala, «siéntate, por favor» no tiene sentido: se interroga de pie, ahí mismo
+		_omitirNormal = (arbol, nodo, linea) =>
+			(arbol.Id == "caso1_" + Culpable && nodo.Id == "excusa_1" && linea.Habla == "Caneloso" && !TonyDisponible)
+			|| (!EnSala && arbol.Id == "caso1_miawrio" && nodo.Id == "mentira" && linea.Habla == "Caneloso");
 		Motor.OmitirLinea = _omitirNormal;
 	}
 

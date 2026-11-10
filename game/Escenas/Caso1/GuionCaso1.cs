@@ -260,7 +260,7 @@ public partial class GuionCaso1
 		if (Resuelto) return Guia.Objetivo("cerrado");
 		if (!IntroduccionVista) return Guia.Objetivo("escuchar_hecdog");
 		if (SalaVista) return Guia.ObjetivoInterrogatorios(donde);
-		return donde == GuiaCaso1.Escenario.Sala ? Guia.Objetivo("sala_inicio") : Guia.ObjetivoExploracion(donde);
+		return donde == GuiaCaso1.Escenario.Sala ? Guia.Objetivo("sala_inicio") : Guia.ObjetivoAntesDeSala(donde);
 	}
 
 	public string Objetivo() => ObjetivoEn(GuiaCaso1.Escenario.Sala);

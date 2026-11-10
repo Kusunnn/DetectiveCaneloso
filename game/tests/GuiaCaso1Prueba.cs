@@ -218,7 +218,9 @@ public partial class GuiaCaso1Prueba : RefCounted
 		p.Pistas.Add("lena_intacta");
 		o = p.Guia.ObjetivoInterrogatorios(Sala);
 		Revisar(o == "Tengo algo para Juan Carlos.", "listo en sala: " + o);
-		Revisar(p.Guia.ObjetivoInterrogatorios(GuiaCaso1.Escenario.Lago).EndsWith("Vamos a la estación."), "listo fuera de la sala");
+		Revisar(p.Guia.ObjetivoInterrogatorios(GuiaCaso1.Escenario.Lago).EndsWith("Vamos a la estación."), "listo, y Juan Carlos no está en el lago");
+		Revisar(p.Guia.ObjetivoInterrogatorios(GuiaCaso1.Escenario.Campamento) == "Tengo algo para Juan Carlos.", "listo, y Juan Carlos está en el campamento");
+		Revisar(p.Guia.ObjetivoAntesDeSala(GuiaCaso1.Escenario.Campamento) == "Tengo algo para Juan Carlos.", "antes de la sala también");
 		Revisar(p.Guia.Brilla("juan_carlos") && !p.Guia.Brilla("aya"), "brilla solo quien tiene prueba");
 		p.Romper("JC-1");
 		o = p.Guia.ObjetivoInterrogatorios(Sala);
