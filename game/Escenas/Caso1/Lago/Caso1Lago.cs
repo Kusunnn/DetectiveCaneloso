@@ -49,8 +49,6 @@ public partial class Caso1Lago : EscenarioCaso1
 		VolverCampamento.Usado += () => Conversar(AlVolverCampamento);
 		IrEstacion.Usado += () => Conversar(AlIrEstacion);
 		_muelle = Array.FindAll(Zonas, z => z.Name == "Embarcadero" || z.Name == "Lago");
-		// La escena todavía se está armando: se agregan al cuadro siguiente
-		Callable.From(PonerPersonajes).CallDeferred();
 		_tablado = new AudioStreamPlayer3D { Bus = Sonidos.BusEfectos, UnitSize = 3f, MaxDistance = 14f };
 		AddChild(_tablado);
 		ActualizarObjetivo();
@@ -79,32 +77,6 @@ public partial class Caso1Lago : EscenarioCaso1
 			"El agua todavía brilla.",
 		}));
 		if (Sigue()) EnDialogo = false;
-	}
-
-	// ---------- Personajes (D7: Eriz en la orilla y Aya en el bosque) ----------
-
-	private readonly System.Collections.Generic.Dictionary<string, Label3D> _signos = new();
-
-	private void PonerPersonajes()
-	{
-		var personajes = GD.Load<PackedScene>("res://Escenas/Caso1/personajes_vista_previa.tscn").Instantiate<Node3D>();
-		foreach (Node hijo in personajes.GetChildren())
-			if (hijo.Name != "Eriz" && hijo.Name != "Aya") { personajes.RemoveChild(hijo); hijo.QueueFree(); }
-		personajes.Name = "Personajes";
-		GetParent().AddChild(personajes);
-		ActividadesCaso1.Colocar(personajes, ActividadesCaso1.Lago);
-		foreach (var (nodo, quien) in new[] { ("Eriz", "eriz"), ("Aya", "aya") })
-		{
-			if (personajes.GetNodeOrNull<Npc>(nodo + "/Colision") is not { } npc) continue;
-			npc.Usado += () => Conversar(() => Guion.HablarCon(quien, Sigue));
-			var signo = new Label3D
-			{
-				Text = "!", FontSize = 96, Modulate = new Color("efca08"), OutlineSize = 16,
-				Billboard = BaseMaterial3D.BillboardModeEnum.Enabled, NoDepthTest = true, Position = new Vector3(0, 2.3f, 0),
-			};
-			npc.GetParent().AddChild(signo);
-			_signos[quien] = signo;
-		}
 	}
 
 	// ---------- Pistas ----------
@@ -168,7 +140,6 @@ public partial class Caso1Lago : EscenarioCaso1
 	protected override void ActualizarObjetivo()
 	{
 		Guion.PublicarObjetivo(GuiaCaso1.Escenario.Lago);
-		foreach (var (quien, signo) in _signos) signo.Visible = !Guion.DioDeclaracion(quien);
 	}
 
 	// ---------- Zonas ----------

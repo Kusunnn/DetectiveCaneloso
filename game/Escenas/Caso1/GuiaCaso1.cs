@@ -218,8 +218,8 @@ public sealed class GuiaCaso1
 	public string Objetivo(string id) => Texto("objetivos", id);
 	public string TextoSistema(string grupo, string id) => Texto(grupo, id);
 
-	// A quién se puede interrogar en cada escenario: en el Lago solo están Eriz y Aya
-	public static bool Presente(Escenario donde, string quien) => donde != Escenario.Lago || quien == "eriz" || quien == "aya";
+	// A quién se puede interrogar en cada escenario: en el Lago no hay nadie
+	public static bool Presente(Escenario donde, string quien) => donde != Escenario.Lago;
 
 	// Antes de la sala: si ya tienes con qué romper un candado de alguien que está aquí, lo dice; si no, el recorrido
 	public string ObjetivoAntesDeSala(Escenario donde)

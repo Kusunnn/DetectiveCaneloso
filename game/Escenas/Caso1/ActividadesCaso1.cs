@@ -22,12 +22,6 @@ public static class ActividadesCaso1
 		new("Eriz", new(-2.6f, 0, 1.6f), new(-2f, 0, -4f), () => Prefab("saco_extendido"), 1.7f, false, new(0, 0.01f, 0.2f)),
 	};
 
-	// Lago (D7): Eriz en la orilla, donde dejó su mochila; Aya en el bosque, con la cámara hacia el embarcadero
-	public static readonly Lugar[] Lago =
-	{
-		new("Eriz", new(-18.4f, 0, -1.2f), new(8f, 0, -14f), () => Prefab("saco_extendido"), 1.7f, false, new(0, 0.01f, 0.2f)),
-		new("Aya", new(-14f, 0, 26f), new(8f, 0, -14f), Camara, 0.16f, true, Vector3.Zero),
-	};
 
 	// Espera un cuadro de física: así se puede buscar el piso y un hueco libre (nada de quedar hundido o dentro de un mueble)
 	public static async void Colocar(Node3D personajes, IEnumerable<Lugar> lugares)
