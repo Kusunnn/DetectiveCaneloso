@@ -75,6 +75,8 @@ public partial class GuionCaso1
 		};
 		Estado.Predeterminados["credibilidad"] = CredibilidadInicial;
 		PrepararInterrogatorios();
+		// HU-29: el diario pide las fichas de los sospechosos al abrirse
+		hud.Set("proveedor_sospechosos", Callable.From(FichasSospechosos));
 
 		foreach (string id in new[] { ArbolIntroduccion, ArbolSala, ArbolAcusacion }.Concat(Sospechosos.Select(s => "caso1_" + s)))
 			_arboles[id] = ArbolDialogo.Cargar(RutaDialogos + id + ".json");
@@ -267,12 +269,6 @@ public partial class GuionCaso1
 	{
 		_hud.Set("objetivo", ObjetivoEn(donde));
 		_hud.Call("poner_objetivos", Guia.TituloSecundarios, new Godot.Collections.Array(Guia.Secundarios().Select(s => Variant.From(s))));
-		foreach (string quien in Sospechosos.Where(DioDeclaracion))
-		{
-			var propios = Guia.Candados.Where(c => c.Quien == quien).ToList();
-			var frases = Guia.FrasesDe(quien).Where((_, i) => !propios.Any(c => c.Frase == i && c.Oculta && !Guia.Roto(Guia.Buscar(c.Previo))));
-			_hud.Call("poner_persona", NombreDe(quien), string.Join(" ", frases), Motor.Ventana.Retrato(NombreDe(quien)), propios.Count(Guia.Roto), propios.Count, Guia.Brilla(quien));
-		}
 	}
 
 	// ---------- Ayudas ----------

@@ -35,6 +35,7 @@ func _initialize() -> void:
 	if solo == "" or solo == "final-a": await _caso_completo()
 	if solo == "" or solo == "directo": await _final_a_directo()
 	if solo == "" or solo == "ultimo": await _ultimo_candado()
+	if solo == "" or solo == "fichas": await _fichas_sospechosos()
 	if solo == "" or solo == "rechazo": await _rechazo_tony()
 	if solo == "" or solo == "desorden": await _tony_en_desorden()
 	print("Fallos: %d" % _fallos)
@@ -194,6 +195,20 @@ func _final_a_directo() -> void:
 	var ok := await _jugar(["Reconstruir la noche", func(p): _llenar(p, SOLUCION)], func(): return _flujo.Resuelto(_sala) and root.get_node_or_null("CinematicaCaso1") == null, 200.0)
 	_revisar(ok and _flujo.Final(_sala) == "A", "llega al Final A sin careo")
 	await create_timer(0.5).timeout
+
+## HU-29 con los candados: la ficha de cada sospechoso trae sus candados y Tony no pide «escuchar a los demás»
+func _fichas_sospechosos() -> void:
+	print("== Fichas de sospechoso con candados")
+	await _nueva()
+	var fichas: Array = _flujo.Fichas(_sala)
+	var tony: Dictionary = fichas.filter(func(f): return f.id == "tony")[0]
+	_revisar(fichas.size() == 6 and tony.candados[1] == 5, "seis fichas; Tony con 5 candados")
+	_revisar(not str(tony.consejo).contains("ESCUCHA A LOS DEM"), "Tony no pide escuchar a los demás: " + str(tony.consejo))
+	_hablar_con_hecdog()
+	await _jugar(["Interrogar a Tony", "Terminar"], func(): return _flujo.Declaro(_sala, "tony") and _dialogo.PruebasOpciones().contains("Interrogar a Juan Carlos"), 60.0)
+	tony = _flujo.Fichas(_sala).filter(func(f): return f.id == "tony")[0]
+	_revisar(tony.contradicciones.size() == 5, "tras hablar con él, sus cinco excusas están en la ficha")
+	_revisar(str(tony.consejo) == "TIENES CON QUÉ ROMPER UN CANDADO", "con las pistas, la ficha avisa que tienes con qué: " + str(tony.consejo))
 
 func _ultimo_candado() -> void:
 	print("== Con la noche completa, el último candado de Tony lleva al Final A")

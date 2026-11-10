@@ -235,7 +235,7 @@ public partial class PanelReconstruccion : CanvasLayer
 						continue;
 					}
 					string id = GuionCaso1.IdHueco(v, f, int.Parse(partes[i]));
-					string puesta = _guion.Huecos.TryGetValue(id, out string ficha) ? _guion.Fichas[ficha].Texto : "________";
+					string puesta = _guion.Huecos.TryGetValue(id, out string ficha) ? _guion.FichasReconstruccion[ficha].Texto : "________";
 					var boton = Boton(puesta, 21, hueco: true);
 					boton.Disabled = sellada;
 					if (id == _huecoActivo) boton.Modulate = new Color(1f, 0.9f, 0.45f);
@@ -271,7 +271,7 @@ public partial class PanelReconstruccion : CanvasLayer
 
 	private void Poner(string ficha)
 	{
-		if (_huecoActivo == null || !_guion.Fichas.ContainsKey(ficha)) return;
+		if (_huecoActivo == null || !_guion.FichasReconstruccion.ContainsKey(ficha)) return;
 		int vineta = int.Parse(_huecoActivo.Split('.')[0]);
 		if (_guion.Selladas.Contains(vineta)) return;
 		_guion.Huecos[_huecoActivo] = ficha;

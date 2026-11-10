@@ -45,6 +45,8 @@ public partial class FlujoCaso1Prueba : Node
 		}
 	}
 
+	public bool Declaro(Node escenario, string quien) => Guion(escenario).DioDeclaracion(quien);
+	public Godot.Collections.Array Fichas(Node escenario) => Guion(escenario).FichasSospechosos();
 	public void DarConclusion(Node escenario, string id) => Guion(escenario).Estado.DesbloquearConclusion(id);
 
 	public void RomperTony(Node escenario)

@@ -143,9 +143,10 @@ func probar() -> void:
 	caso_prueba.Configurar(tablero, hud)
 	hud.registrar_persona("Eriz", "Volvió a las tres.", null)
 	relaciones.sincronizar()
-	# Arrastrar una persona desde la página del diario, incluso sin retrato.
+	# Arrastrar una persona desde su ficha de sospechoso, incluso sin retrato.
+	hud.proveedor_sospechosos = func(): return [{"nombre": "Eriz"}]
 	tecla(KEY_Q)
-	hud._cambiar_seccion("PERSONAS")
+	hud._cambiar_seccion("SOSPECHOSOS")
 	espacial.desplazar(Vector2(0, -1.05))
 	espacial._actualizar_vista(1.0)
 	await process_frame

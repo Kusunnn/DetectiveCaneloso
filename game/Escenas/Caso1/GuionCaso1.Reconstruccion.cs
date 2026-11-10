@@ -14,10 +14,10 @@ public partial class GuionCaso1
 
 	public sealed class Frase { public string Texto; public string[] Huecos, Respuestas; }
 	public sealed class Vineta { public string Titulo; public List<Frase> Frases = new(); }
-	public sealed class Ficha { public string Id, Texto, Tipo; public string[] Origen; }
+	public sealed class FichaReconstruccion { public string Id, Texto, Tipo; public string[] Origen; }
 
 	public readonly List<Vineta> Vinetas = new();
-	public readonly Dictionary<string, Ficha> Fichas = new();
+	public readonly Dictionary<string, FichaReconstruccion> FichasReconstruccion = new();
 	// Lo que va armando el jugador: viaja en la partida
 	public readonly Dictionary<string, string> Huecos = new();   // "v.f.h" → id de ficha
 	public readonly HashSet<int> Selladas = new();
@@ -54,15 +54,15 @@ public partial class GuionCaso1
 		foreach (var (id, valor) in datos["fichas"].AsGodotDictionary())
 		{
 			var d = valor.AsGodotDictionary();
-			Fichas[id.AsString()] = new Ficha { Id = id.AsString(), Texto = d["texto"].AsString(), Tipo = d["tipo"].AsString(), Origen = Lista(d["origen"]) };
+			FichasReconstruccion[id.AsString()] = new FichaReconstruccion { Id = id.AsString(), Texto = d["texto"].AsString(), Tipo = d["tipo"].AsString(), Origen = Lista(d["origen"]) };
 		}
 	}
 
 	public static string IdHueco(int vineta, int frase, int hueco) => $"{vineta}.{frase}.{hueco}";
 
 	// Las fichas que ya juntó: los implicados siempre; lo demás, cuando tiene la pista o la confesión
-	public bool TieneFicha(Ficha f) => f.Origen.Any(o => o == "siempre" || TienePista(o) || Estado.TieneConclusion(o));
-	public IEnumerable<Ficha> FichasDe(string tipo) => Fichas.Values.Where(f => f.Tipo == tipo && TieneFicha(f));
+	public bool TieneFicha(FichaReconstruccion f) => f.Origen.Any(o => o == "siempre" || TienePista(o) || Estado.TieneConclusion(o));
+	public IEnumerable<FichaReconstruccion> FichasDe(string tipo) => FichasReconstruccion.Values.Where(f => f.Tipo == tipo && TieneFicha(f));
 
 	public bool VinetaLlena(int v) => HuecosDe(v).All(h => Huecos.ContainsKey(h.Id));
 
