@@ -245,6 +245,10 @@ public partial class PantallaCasoCerrado : Control
 		return await _eleccion.Task;
 	}
 
+	// Para las pruebas: elegir sin esperar las animaciones
+	public bool EsperandoEleccion => _eleccion != null;
+	public void Pruebas_Elegir(Eleccion e) { _animando = false; Elegir(e); }
+
 	private void Elegir(Eleccion e)
 	{
 		if (_animando) return;

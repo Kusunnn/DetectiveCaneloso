@@ -306,6 +306,24 @@
 		"diario": { "texto": "{zona}: {n}/{total}", "nueva": true },
 		"instinto": { "texto": "[{tecla}] Instinto de detective: lo cercano brilla unos segundos", "nueva": true }
 	},
+	"actos": {
+		"acto_1": { "texto": "ACTO 1|EL CAMPAMENTO", "nueva": true },
+		"acto_2": { "texto": "ACTO 2|EL LAGO Y EL BOSQUE", "nueva": true },
+		"acto_3": { "texto": "ACTO 3|LA SALA", "nueva": true },
+		"acto_4": { "texto": "ACTO 4|LA RECONSTRUCCIÓN", "nueva": true },
+		"resumen_1": { "texto": "El apagón lo provocaron a mano y el ciervo era un disfraz.\nPorky se fue con prisa y tenía un libro que alguien quemó.\nLo que me falta está en el lago.", "nueva": true },
+		"resumen_2": { "texto": "Las huellas no llegan al embarcadero: el ciervo no la mató.\nTengo un remo con sangre y un silbato sin dueño.\nAhora sí: a la estación, a ver quién miente.", "nueva": true },
+		"resumen_3": { "texto": "Todos soltaron lo suyo; las excusas de Tony ya no dan para más.\nTengo la hora, el arma y el motivo.\nFalta contar la noche completa.", "nueva": true },
+		"resumen_3_sin_tony": { "texto": "Ya escuché a todos, y lo que dicen no cuadra con lo que encontré.\nTengo la hora, el arma y el motivo... o casi.\nToca contar la noche completa.", "nueva": true }
+	},
+	"calificacion": {
+		"felicitacion_a": { "texto": "Caso cerrado, detective. El lago por fin descansa.", "nueva": true },
+		"felicitacion_b": { "texto": "El caso se cerró... con el acusado equivocado.", "nueva": true },
+		"frase_A": { "texto": "Así se resuelve un caso, Caneloso. Nya.", "nueva": true },
+		"frase_B": { "texto": "Bien hecho, aunque nos costó, Nya.", "nueva": true },
+		"frase_C": { "texto": "Lo cerramos... pero hay que afinar el olfato, Nya.", "nueva": true },
+		"frase_final_b": { "texto": "Algo me dice que nos equivocamos, Nya.", "nueva": true }
+	},
 	"secundarios": {
 		"pistas_campamento": { "texto": "Pistas del campamento {n}/{total}", "nueva": true },
 		"pistas_lago": { "texto": "Pistas del lago {n}/{total}", "nueva": true },

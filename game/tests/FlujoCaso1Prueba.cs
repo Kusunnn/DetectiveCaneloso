@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -44,6 +45,18 @@ public partial class FlujoCaso1Prueba : Node
 			guion.Selladas.Add(v);
 		}
 	}
+
+	public bool ActoVisto(Node escenario, int acto) => Guion(escenario).ActoVisto(acto);
+
+	// La pantalla de «Caso cerrado» de la sala: sus líneas y elegir volver al menú
+	public string LineasCierre(Node escenario)
+	{
+		var cierre = ((SalaInterrogatorioCaso1)escenario).Cierre;
+		return cierre == null ? "" : string.Join(" | ", cierre.FindChildren("*", "Label", true, false).OfType<Label>().Where(l => l.IsVisibleInTree()).Select(l => l.Text));
+	}
+
+	public bool CierreEsperando(Node escenario) => ((SalaInterrogatorioCaso1)escenario).Cierre?.EsperandoEleccion ?? false;
+	public void CierreAlMenu(Node escenario) => ((SalaInterrogatorioCaso1)escenario).Cierre?.Pruebas_Elegir(PantallaCasoCerrado.Eleccion.Menu);
 
 	public bool Declaro(Node escenario, string quien) => Guion(escenario).DioDeclaracion(quien);
 	public Godot.Collections.Array Fichas(Node escenario) => Guion(escenario).FichasSospechosos();

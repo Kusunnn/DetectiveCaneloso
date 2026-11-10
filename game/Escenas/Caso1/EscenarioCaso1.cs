@@ -68,6 +68,7 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
 			TieneLlavero = () => Jugador.TieneObjeto("llavero_porky"),
 			Ayudas = Cuaderno,
+			TiempoCaso = () => _tiempoCaso,
 			NodoEscena = this,
 		};
 

@@ -237,6 +237,7 @@ public partial class GuionCaso1
 		}
 		_hud.Call("avisar", final == "A" ? "FINAL A" : "FINAL B", final == "A" ? "LA CONFESIÓN" : "EL ERROR TRÁGICO");
 		AlTerminar?.Invoke("Fin del caso");
+		await CerrarCaso(final == "A");
 	}
 
 	// La credibilidad no se ve en pantalla y tiene piso: solo cuenta para la calificación

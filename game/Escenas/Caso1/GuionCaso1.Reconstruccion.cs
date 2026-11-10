@@ -89,6 +89,7 @@ public partial class GuionCaso1
 	public async Task<bool> Reconstruir(Func<bool> sigue)
 	{
 		var sala = _arboles[ArbolSala];
+		await LlegarAlActo(4);
 		if (!Estado.NodoCompletado(ArbolSala, "explico_caso"))
 		{
 			Estado.MarcarNodo(ArbolSala, "explico_caso");

@@ -141,6 +141,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 			else Hud.Call("abrir_expediente");
 		}
 		_guion.AbrirExpediente = false;
+		if (IsInsideTree()) await _guion.LlegarAlActo(1);
 		if (IsInsideTree() && GuionCaso1.Dificultad != "experto") Jugador.MostrarAviso(_guion.Guia.AvisoInstinto(), 6.0);
 	}
 
@@ -296,6 +297,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
 			TieneLlavero = () => Jugador.TieneObjeto(Llavero),
 			Ayudas = _ayudasInvestigacion,
+			TiempoCaso = () => _tiempoCaso,
 		};
 		foreach (var (nodo, id) in Sospechosos)
 		{

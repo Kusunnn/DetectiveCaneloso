@@ -58,6 +58,13 @@ public partial class Caso1Lago : EscenarioCaso1
 	{
 		AbrirSiTieneLlavero(false);
 		ActualizarObjetivo();
+		if (!Guion.ActoVisto(2) && !Guion.SalaVista && Sigue() && !EnDialogo)
+		{
+			EnDialogo = true;
+			await Guion.LlegarAlActo(2);
+			if (!Sigue()) return;
+			EnDialogo = false;
+		}
 		// Lo que piensa al llegar sale una sola vez (antes se repetía cada vez que volvía sin pistas del lago)
 		if (Pistas.Count > 0 || !Sigue() || !PrimeraVez("_llegada")) return;
 		await ToSignal(GetTree().CreateTimer(0.3), SceneTreeTimer.SignalName.Timeout);

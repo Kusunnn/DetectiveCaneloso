@@ -135,6 +135,18 @@ func _caso_vacio() -> void:
 	_revisar(ok and not _flujo.Resuelto(_sala), "sale sin final")
 	_revisar(_flujo.ValorCredibilidad(_sala) == c, "salir sin presentar no cuesta credibilidad")
 
+## La pantalla de «Caso cerrado»: rango, frase de Hecdog y volver al menú
+func _cierre(final: String) -> void:
+	var limite := Time.get_ticks_msec() + 90000
+	while Time.get_ticks_msec() < limite and not _flujo.CierreEsperando(_sala):
+		await create_timer(0.2).timeout
+	var lineas: String = _flujo.LineasCierre(_sala)
+	_revisar(_flujo.CierreEsperando(_sala) and lineas.contains("Candados rotos al primer intento") and lineas.contains("Pistas encontradas"), "pantalla de caso cerrado con sus datos")
+	if final == "B": _revisar(lineas.contains("equivocado"), "el Final B se califica como error: " + lineas.left(160))
+	_flujo.CierreAlMenu(_sala)
+	await create_timer(1.5).timeout
+	paused = false
+
 func _llenar(p, cuales: Dictionary) -> void:
 	for h in cuales: p.Pruebas_Poner(h, cuales[h])
 
@@ -160,7 +172,7 @@ func _caso_incompleto_acusar() -> void:
 	_hablar_con_hecdog()
 	var ok := await _jugar(["Acusar ya", "Acusar a Aya", "Acusar a Aya"], func(): return _flujo.Resuelto(_sala) and root.get_node_or_null("CinematicaCaso1") == null, 120.0)
 	_revisar(ok and _flujo.Final(_sala) == "B", "llega al Final B con Aya")
-	await create_timer(0.5).timeout
+	await _cierre("B")
 
 func _rechazo_tony() -> void:
 	print("== «Acusar ya» a Tony sin la noche completa")
@@ -185,7 +197,8 @@ func _caso_completo() -> void:
 	_revisar(_flujo.TieneConclusion(_sala, "tony_5"), "cayeron los cinco candados de Tony")
 	_revisar(_flujo.ValorCredibilidad(_sala) >= 1, "con un error, la credibilidad no llegó a 0")
 	_revisar(_gestor.CinematicaVista("caso1_2320") and _gestor.CinematicaVista("caso1_2320_revelacion"), "se vieron la escena de las 23:20 y la revelación")
-	await create_timer(0.5).timeout
+	_revisar(_flujo.ActoVisto(_sala, 3) and _flujo.ActoVisto(_sala, 4), "se anunciaron los actos 3 y 4")
+	await _cierre("A")
 
 func _final_a_directo() -> void:
 	print("== Tony ya sin candados: sellar la noche lleva directo al Final A")

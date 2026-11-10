@@ -178,11 +178,12 @@ public partial class PanelReconstruccion : CanvasLayer
 		columnas.AddChild(pie);
 		_salir = Boton("Seguir investigando", 22);
 		_salir.Pressed += () => _espera?.TrySetResult("salir");
-		pie.AddChild(_salir);
 		var ayuda = Texto("Elige un hueco y luego la ficha que va ahí. Cada viñeta se revisa sola al llenarla.", _mono, 18, new Color(Tinta, 0.75f));
 		ayuda.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
 		ayuda.HorizontalAlignment = HorizontalAlignment.Center;
 		pie.AddChild(ayuda);
+		// A la derecha: el aviso de «Autoguardado» sale abajo a la izquierda y lo tapaba
+		pie.AddChild(_salir);
 		_acusar = Boton("Acusar ya", 22);
 		_acusar.Pressed += () => _espera?.TrySetResult("acusar");
 		pie.AddChild(_acusar);
