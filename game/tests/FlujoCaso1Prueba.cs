@@ -47,6 +47,7 @@ public partial class FlujoCaso1Prueba : Node
 	}
 
 	// El Campamento (Caso1) no es un EscenarioCaso1: su guion se pide aparte
+	public bool DeclaroCampamento(Node caso1, string quien) => ((GuionCaso1)typeof(Caso1).GetField("_guion", Privado).GetValue(caso1)).DioDeclaracion(quien);
 	public bool TieneConclusionCampamento(Node caso1, string id) => ((GuionCaso1)typeof(Caso1).GetField("_guion", Privado).GetValue(caso1)).Estado.TieneConclusion(id);
 
 	public bool ActoVisto(Node escenario, int acto) => Guion(escenario).ActoVisto(acto);

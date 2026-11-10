@@ -277,6 +277,28 @@ public partial class GuionCaso1
 	public bool DioDeclaracion(string quien) => Estado.NodoCompletado("caso1_" + quien, NodoDeclaracion(quien));
 	private static string NodoDeclaracion(string quien) => quien == Culpable ? "excusa_1" : "mentira";
 
+	// Fuera de la sala: primero la conversación del guion (su versión, sin pruebas). Las pruebas son solo para el
+	// interrogatorio, que se abre ahí mismo cuando el jugador lo elige.
+	public async Task HablarCon(string quien, Func<bool> sigue)
+	{
+		bool sinSecretos = Guia.Candados.Where(c => c.Quien == quien).All(Guia.Roto);
+		if (!DioDeclaracion(quien) || sinSecretos)
+		{
+			await Charla(quien);
+			return;
+		}
+		var arbol = _arboles["caso1_" + quien];
+		var opciones = new List<OpcionVista>
+		{
+			new(Guia.Interrogatorio("interrogar").Replace("{quien}", NombreDe(quien)), "INTERROGAR"),
+			new(Guia.Interrogatorio("seguir")),
+		};
+		if (Guia.Brilla(quien)) opciones[0].Texto += "  ·  " + Guia.Interrogatorio("brilla");
+		string pregunta = Guia.Interrogatorio("que_hago").Replace("{quien}", NombreDe(quien));
+		int elegida = await Motor.Ventana.Elegir(Motor.HablanteDe(arbol, "Caneloso"), pregunta, opciones, 1);
+		if (elegida == 0 && sigue()) await Interrogar(quien, sigue);
+	}
+
 	// Charla en el campamento: su versión, sin pruebas. Lo que ya dijo no se repite.
 	public async Task Charla(string quien)
 	{

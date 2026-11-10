@@ -29,17 +29,21 @@ func _initialize() -> void:
 	var caso = current_scene.get_node("Caso1")
 	var jugador = current_scene.get_node("Jugador")
 	var jc = current_scene.get_node("Personajes/JuanCarlos/Colision")
-	# Sin pruebas: dice su versión y se puede confrontar o terminar
+	# La primera vez es solo conversación: su versión, sin pruebas
 	jc.Interactuar(jugador)
-	var ok := await _jugar([], func(): return _dialogo.PruebasOpciones().contains("Confrontar esta frase"), 40.0)
-	_revisar(ok, "hablar con Juan Carlos en el campamento abre su interrogatorio: " + _dialogo.PruebasOpciones())
+	var ok := await _jugar([], func(): return not _dialogo.Abierto and flujo.DeclaroCampamento(caso, "juan_carlos"), 40.0)
+	_revisar(ok and not _dialogo.PruebasOpciones().contains("Confrontar"), "la primera charla con Juan Carlos es su versión, sin pruebas")
+	# Después se elige interrogarlo ahí mismo
+	jc.Interactuar(jugador)
+	ok = await _jugar(["Interrogar a Juan Carlos"], func(): return _dialogo.PruebasOpciones().contains("Confrontar esta frase"), 40.0)
+	_revisar(ok, "luego se puede elegir interrogarlo ahí mismo: " + _dialogo.PruebasOpciones())
 	ok = await _jugar(["Terminar"], func(): return not _dialogo.Abierto, 30.0)
 	_revisar(ok, "se puede terminar y seguir explorando")
 	# Con la leña: confrontar la frase y romper el candado ahí mismo
 	jugador.RegistrarEvidencia("lena_intacta", "lena_intacta", "", null, false)
 	await create_timer(0.3).timeout
 	jc.Interactuar(jugador)
-	ok = await _jugar(["Confrontar", "lena_intacta"], func(): return flujo.TieneConclusionCampamento(caso, "juan_carlos_1"), 60.0)
+	ok = await _jugar(["Interrogar a Juan Carlos", "Confrontar", "lena_intacta"], func(): return flujo.TieneConclusionCampamento(caso, "juan_carlos_1"), 60.0)
 	_revisar(ok, "con la leña se rompe el primer candado de Juan Carlos en el campamento")
 	await _jugar(["Terminar"], func(): return not _dialogo.Abierto, 30.0)
 	print("Fallos: %d" % _fallos)
