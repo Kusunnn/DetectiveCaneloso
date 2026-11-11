@@ -185,7 +185,10 @@ func _paginas_libro() -> Array[Dictionary]:
 	for conclusion in conclusiones:
 		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Una conexión confirmada", "texto": conclusion.trim_prefix("Deducción: ")})
 	if conclusiones.is_empty():
-		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Todo está por conectar", "texto": "Organiza las pistas en el pizarrón [R] para explorar tus ideas."})
+		var instruccion := "Organiza las pistas en el pizarrón [R] para explorar tus ideas."
+		if caso == "01":
+			instruccion = "Abre el pizarrón [R] y el diario [Q]. Arrastra dos pistas o una pista y la ficha de un sospechoso, y únelas con hilo. Para contrastar una declaración, primero habla con el sospechoso."
+		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Todo está por conectar", "texto": instruccion})
 	for nota in notas:
 		if not nota.begins_with("Deducción: "):
 			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
