@@ -66,6 +66,9 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 		Guion = new GuionCaso1(Dialogo, Hud, Caneloso, Cambio)
 		{
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
+			TieneLlavero = () => Jugador.TieneObjeto("llavero_porky"),
+			Ayudas = Cuaderno,
+			TiempoCaso = () => _tiempoCaso,
 			NodoEscena = this,
 		};
 
@@ -122,15 +125,9 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
         ("estacion_" + Guion.FaseActual(), Guion.Objetivo() ?? "Habla con los implicados y contrasta sus relatos con las pruebas del diario.");
     public string PedirPista()
     {
-        if (!(Configuracion.Instancia?.AyudasInvestigacion ?? true))
-            return "Activa las ayudas de investigación en Opciones para pedir una pista.";
         if (_restaurando || EnDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando || Guion.Resuelto)
             return "Continúa la investigación antes de pedir otra pista.";
-        var (id, texto) = OrientacionInvestigacion();
-        if (!Cuaderno.Agregar("caso1:" + id, texto))
-            return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
-        Cambio();
-        return "Nueva pista añadida al cuaderno.";
+        return Guion.PedirPista(this is Caso1Lago ? GuiaCaso1.Escenario.Lago : GuiaCaso1.Escenario.Sala);
     }
 
 	// ---------- Pistas y zonas ----------
@@ -164,6 +161,7 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 
 	private void AlEntrarZona(string zona)
 	{
+		if (Guion != null && this is Caso1Lago && Guion.Guia.AvisoDeZona(GuiaCaso1.Escenario.Lago, zona) is string quedan && !EnDialogo) Jugador.MostrarAviso(quedan, 3.0);
 		if (!_zonasVistas.Add(zona)) return;
 		string texto = PensamientoDeZona(zona);
 		if (texto != null && !EnDialogo) Jugador.MostrarPensamiento(texto, 4.5);

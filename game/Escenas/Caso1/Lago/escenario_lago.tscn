@@ -1127,4 +1127,5 @@ Zonas = [NodePath("../Sendero/Sendero"), NodePath("../Bosque/Bosque"), NodePath(
 
 [node name="ContornoPistas" type="Node" parent="."]
 script = ExtResource("contorno_pistas")
+Instinto = true
 DistanciaMaxima = 5.5

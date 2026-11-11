@@ -286,7 +286,7 @@ func _doc_foto_arte(c: Control) -> void:
 	c.draw_texture_rect(_foto, rect, false)
 	# Iniciales en el silbato: solo se leen acercándose
 	var silbato := rect.position + Vector2(0.186, 0.513) * rect.size
-	c.draw_string(IMPRESO, silbato + Vector2(-16, 6), "G.S.", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.15, 0.11, 0.07))
+	c.draw_string(IMPRESO, silbato + Vector2(-16, 6), "T.S.", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, Color(0.15, 0.11, 0.07))
 
 func _doc_foto_reverso(c: Control) -> void:
 	c.draw_rect(Rect2(0, 0, 1536, 1024), Color(0.62, 0.5, 0.36, 0.55))

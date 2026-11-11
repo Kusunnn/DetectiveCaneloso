@@ -82,6 +82,120 @@ public partial class VentanaDialogo : CanvasLayer
 	private readonly Dictionary<string, AudioStream> _voces = new Dictionary<string, AudioStream>();
 
 	public bool Abierto => _caja.Visible;
+	private CadenasRetrato _cadenas;
+	private string _cadenasDe;
+	private bool _modoFrases;
+
+	// Cadenas con candados sobre el retrato de quien se interroga (0, 0: sin cadenas)
+	public void MostrarCandados(int total, int rotos, string de = null)
+	{
+		_cadenasDe = de;
+		if (_cadenas == null)
+		{
+			_cadenas = new CadenasRetrato();
+			_marcoRetrato.AddChild(_cadenas);
+		}
+		_cadenas.Mostrar(total, rotos);
+	}
+
+	public void RomperCandado() => _cadenas?.Romper();
+
+	// Declaración frase por frase. Devuelve la frase confrontada o -1 si se termina. pista: lo que dice bajo una frase (o null).
+	public async Task<int> ElegirFrase(Hablante hablante, IList<string> frases, int inicio, int marcada, Func<int, string> pista = null)
+	{
+		Abrir();
+		LiberarRaton();
+		int actual = Mathf.Clamp(inicio, 0, frases.Count - 1);
+		string tecla = Teclas.Etiqueta("interactuar");
+		int resultado = -2;
+		_modoFrases = true;
+		while (resultado == -2)
+		{
+			MostrarHablante(hablante);
+			Escribir((actual == marcada ? "★ " : "") + frases[actual]);
+			string nota = pista?.Invoke(actual);
+			_ayuda.Text = $"Frase {actual + 1}/{frases.Count}   ·   [←][→] cambiar   ·   [{tecla}] Confrontar   ·   [Esc] terminar"
+				+ (string.IsNullOrEmpty(nota) ? "" : "\n" + nota);
+			_indiceSalir = 3;
+			_espera = new TaskCompletionSource<int>();
+			string[] textos = { "Confrontar esta frase", "Siguiente frase", "Frase anterior", "Terminar por ahora" };
+			for (int i = 0; i < textos.Length; i++)
+			{
+				int indice = i;
+				var boton = CrearBoton((i + 1) + ". " + textos[i], false);
+				boton.Pressed += () => _espera?.TrySetResult(indice);
+				_opciones.AddChild(boton);
+			}
+			PrimeraDisponible()?.GrabFocus();
+			int elegida = await _espera.Task;
+			LimpiarOpciones();
+			if (elegida == 0) resultado = actual;
+			else if (elegida == 1) actual = (actual + 1) % frases.Count;
+			else if (elegida == 2) actual = (actual + frases.Count - 1) % frases.Count;
+			else resultado = -1;
+		}
+		_modoFrases = false;
+		_indiceSalir = -1;
+		RestaurarRaton();
+		Cerrar();
+		return resultado;
+	}
+
+	// Selector con dos pestañas: primero lo relacionado. Sin «todas», solo se ven las relacionadas.
+	public async Task<string> ElegirEvidencia(Hablante hablante, IList<(string Id, string Titulo, Texture2D Imagen)> relacionadas, IList<(string Id, string Titulo, Texture2D Imagen)> todas)
+	{
+		Abrir();
+		LiberarRaton();
+		var lista = relacionadas;
+		string resultado = null;
+		while (true)
+		{
+			MostrarHablante(hablante);
+			Escribir(lista.Count == 0 ? "Todavía no tengo pruebas que mostrar." : "¿Qué prueba le muestro?", instantaneo: true);
+			_ayuda.Text = "Elige una pista del diario   ·   [Esc] o clic derecho: volver";
+			_espera = new TaskCompletionSource<int>();
+			if (todas != null)
+			{
+				bool enRelacionadas = lista == relacionadas;
+				var pestana = CrearBoton(enRelacionadas ? $"Ver todas ({todas.Count})" : $"Ver solo las relacionadas ({relacionadas.Count})", true);
+				pestana.Pressed += () => _espera?.TrySetResult(-2);
+				_evidencias.AddChild(pestana);
+			}
+			for (int i = 0; i < lista.Count; i++)
+			{
+				int indice = i;
+				var tarjeta = CrearBoton(lista[i].Titulo, false);
+				tarjeta.Icon = lista[i].Imagen;
+				tarjeta.ExpandIcon = true;
+				tarjeta.IconAlignment = HorizontalAlignment.Left;
+				tarjeta.CustomMinimumSize = new Vector2(330, 74);
+				tarjeta.Pressed += () => _espera?.TrySetResult(indice);
+				_evidencias.AddChild(tarjeta);
+			}
+			var cancelar = CrearBoton("Mejor no mostrarle nada", true);
+			cancelar.Pressed += () => _espera?.TrySetResult(-1);
+			_evidencias.AddChild(cancelar);
+			int cuantos = _evidencias.GetChildCount();
+			_evidencias.Columns = cuantos > 8 ? 3 : 4;
+			_marcoEvidencias.CustomMinimumSize = new Vector2(0, Mathf.Min((cuantos + _evidencias.Columns - 1) / _evidencias.Columns * 82, 410));
+			_marcoEvidencias.Visible = true;
+			((Button)_evidencias.GetChild(todas != null && lista.Count > 0 ? 1 : 0)).GrabFocus();
+
+			int elegida = await _espera.Task;
+			foreach (Node n in _evidencias.GetChildren()) { _evidencias.RemoveChild(n); n.QueueFree(); }
+			if (elegida == -2)
+			{
+				lista = lista == relacionadas ? todas : relacionadas;
+				continue;
+			}
+			if (elegida >= 0) resultado = lista[elegida].Id;
+			break;
+		}
+		_marcoEvidencias.Visible = false;
+		RestaurarRaton();
+		Cerrar();
+		return resultado;
+	}
 
 	public override void _Ready()
 	{
@@ -354,6 +468,8 @@ public partial class VentanaDialogo : CanvasLayer
 
 	// ---------- Para las pruebas ----------
 
+	public string PruebasAyuda => _ayuda.Text;
+
 	public bool PruebasHayOpciones => _opciones.GetChildCount() > 0 || _evidencias.GetChildCount() > 0;
 
 	public string PruebasOpciones()
@@ -428,6 +544,7 @@ public partial class VentanaDialogo : CanvasLayer
 
 	private void MostrarHablante(Hablante h)
 	{
+		if (_cadenas != null) _cadenas.Visible = _cadenasDe == h.Nombre;
 		_nombre.Text = h.Nombre.ToUpper();
 		_animo.Text = string.IsNullOrEmpty(h.Animo) ? "" : "· " + h.Animo.ToUpper();
 		_animo.AddThemeColorOverride("font_color", h.ColorAnimo);
@@ -598,6 +715,18 @@ public partial class VentanaDialogo : CanvasLayer
 			if (_evidencias.GetChildCount() > 0) { GetViewport().SetInputAsHandled(); _espera?.TrySetResult(-1); }
 			else if (_indiceSalir >= 0) { GetViewport().SetInputAsHandled(); _espera?.TrySetResult(_indiceSalir); }
 			return;
+		}
+
+		// Declaración: flechas para cambiar de frase e [interactuar] para confrontar
+		if (_modoFrases && _opciones.GetChildCount() > 0)
+		{
+			int atajo = evento.IsActionPressed("ui_right") ? 1 : evento.IsActionPressed("ui_left") ? 2 : evento.IsActionPressed("interactuar") ? 0 : -1;
+			if (atajo >= 0)
+			{
+				GetViewport().SetInputAsHandled();
+				_espera?.TrySetResult(atajo);
+				return;
+			}
 		}
 
 		// Teclas 1-9 para elegir opción

@@ -91,17 +91,12 @@
 				{
 					"id": "tony",
 					"texto": "Interrogar a Tony",
-					"destino": "a_tony",
-					"requiere": {
-						"conclusiones": [
-							"juan_carlos_3",
-							"aya_2",
-							"miawrio_2",
-							"eriz_1",
-							"mimita_2"
-						]
-					},
-					"motivo": "Tony se abre cuando los otros cinco ya confesaron."
+					"destino": "a_tony"
+				},
+				{
+					"id": "pista",
+					"texto": "Pedirle una pista a Hecdog",
+					"destino": "pista"
 				},
 				{
 					"id": "repasar",
@@ -110,8 +105,13 @@
 				},
 				{
 					"id": "acusar",
-					"texto": "Armar el caso",
+					"texto": "Reconstruir la noche",
 					"destino": "armar"
+				},
+				{
+					"id": "acusar_ya",
+					"texto": "Acusar ya",
+					"destino": "acusar_ya"
 				},
 				{
 					"id": "salir",
@@ -272,6 +272,14 @@
 			],
 			"fin": true,
 			"salida": "armar"
+		},
+		"pista": {
+			"fin": true,
+			"salida": "pista"
+		},
+		"acusar_ya": {
+			"fin": true,
+			"salida": "acusar_ya"
 		}
 	}
 }

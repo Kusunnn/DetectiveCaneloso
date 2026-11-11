@@ -67,6 +67,9 @@ public partial class Configuracion : Node
 	private float _escalaTexto = 1f;
 	public float EscalaTexto { get => _escalaTexto; set => _escalaTexto = Mathf.Clamp(value, 1f, 1.3f); }
 	public bool AyudasInvestigacion { get; set; } = true;
+	// Caso 1: historia, detective o experto (también se guarda en la partida)
+	public static readonly (string Id, string Nombre)[] Dificultades = { ("historia", "Historia"), ("detective", "Detective"), ("experto", "Experto") };
+	public string Dificultad { get; set; } = "detective";
 
 	// Teclas que el jugador puede cambiar en Opciones > Controles (nombre visible, acción del InputMap)
 	public static readonly (string Nombre, string Accion)[] TeclasConfigurables =
@@ -77,6 +80,7 @@ public partial class Configuracion : Node
 		("Interactuar", "interactuar"), ("Linterna", "linterna"),
 		("Diario", "diario"), ("Expediente", "expediente"),
 		("Tablero de deducción", "deducir"), ("Cambiar cámara", "cambiar_camara"),
+		("Instinto de detective", "instinto"),
 	};
 
 	// Atajos globales que no se pueden reasignar.
@@ -237,6 +241,7 @@ public partial class Configuracion : Node
 		AyudasVisuales = true;
 		EscalaTexto = 1f;
 		AyudasInvestigacion = true;
+		Dificultad = "detective";
 		RestaurarTeclas();
 		Guardar();
 	}
@@ -274,6 +279,7 @@ public partial class Configuracion : Node
 		AgacharseAlternar = archivo.GetValue("controles", "agacharse_alternar", AgacharseAlternar).AsBool();
 		SensibilidadRaton = archivo.GetValue("controles", "sensibilidad_raton", SensibilidadRaton).AsSingle();
 		AyudasInvestigacion = archivo.GetValue("controles", "ayudas_investigacion", true).AsBool();
+		Dificultad = archivo.GetValue("controles", "dificultad", "detective").AsString();
 		AyudasVisuales = archivo.GetValue("controles", "ayudas_visuales", AyudasVisuales).AsBool();
 		EscalaTexto = archivo.GetValue("accesibilidad", "escala_texto", EscalaTexto).AsSingle();
 		CargarTeclas(archivo);
@@ -353,6 +359,7 @@ public partial class Configuracion : Node
 			if (tecla != TeclaOriginal(accion)) archivo.SetValue("teclas", accion, (long)tecla);
 		}
 		archivo.SetValue("controles", "ayudas_investigacion", AyudasInvestigacion);
+		archivo.SetValue("controles", "dificultad", Dificultad);
 
 		Error error = archivo.Save(RutaConfiguracion);
 		if (error != Error.Ok)

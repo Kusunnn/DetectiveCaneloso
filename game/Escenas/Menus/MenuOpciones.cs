@@ -38,6 +38,7 @@ public partial class MenuOpciones : PanelMenu
 	private readonly List<FilaTecla> _filasTecla = new();
 	private PanelTeclas _panelTeclas;
 	private OptionButton _tamanoTexto;
+	private OptionButton _dificultad;
 
 	private Label _ayuda;
 	private Button _botonRestaurar;
@@ -200,7 +201,18 @@ public partial class MenuOpciones : PanelMenu
 		_ayudasInvestigacion = new FilaInterruptor("Ayudas de investigación", "Permite solicitar orientación si te estancas");
 		_ayudasInvestigacion.Cambiado += activado => Configuracion.Instancia.AyudasInvestigacion = activado;
 		lista.AddChild(_ayudasInvestigacion);
-		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas, _ayudasInvestigacion };
+		var filaDificultad = EstiloMenus.Fila(40);
+		var tituloDificultad = EstiloMenus.Etiqueta("Dificultad del caso", EstiloMenus.Display(800, 42, 0.02f), 42, EstiloMenus.Texto);
+		tituloDificultad.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+		filaDificultad.AddChild(tituloDificultad);
+		_dificultad = new OptionButton { Name = "Dificultad", CustomMinimumSize = new Vector2(300, 64) };
+		_dificultad.AddThemeFontOverride("font", EstiloMenus.Mono(26));
+		_dificultad.AddThemeFontSizeOverride("font_size", 26);
+		foreach (var (_, nombre) in Configuracion.Dificultades) _dificultad.AddItem(nombre);
+		_dificultad.ItemSelected += indice => Configuracion.Instancia.Dificultad = Configuracion.Dificultades[indice].Id;
+		filaDificultad.AddChild(_dificultad);
+		lista.AddChild(filaDificultad);
+		_enfocables["pantalla"] = new List<Control> { _pantallaCompleta, _ayudas, _tamanoTexto, _ayudasInvestigacion, _dificultad };
 		var contenedor = new Control { MouseFilter = MouseFilterEnum.Ignore };
 		contenedor.AddChild(lista);
 		return contenedor;
@@ -338,6 +350,7 @@ public partial class MenuOpciones : PanelMenu
 		_tamanoTexto.Select(Math.Max(escala, 0));
 		_panelTeclas.Refrescar();
 		_ayudasInvestigacion.Fijar(config.AyudasInvestigacion);
+		_dificultad.Select(Math.Max(Array.FindIndex(Configuracion.Dificultades, d => d.Id == config.Dificultad), 0));
 		foreach (var fila in _filasTecla) fila.MostrarTecla(Teclas.EtiquetaTeclado(fila.Accion));
 	}
 

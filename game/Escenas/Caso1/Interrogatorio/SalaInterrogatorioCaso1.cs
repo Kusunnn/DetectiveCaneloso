@@ -64,7 +64,8 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 	};
 
 	public string ImplicadoActual { get; private set; }
-	public PanelArmarCaso Panel { get; private set; }
+	public PanelReconstruccion Panel { get; private set; }
+	public PantallaCasoCerrado Cierre { get; private set; }
 	public IEnumerable<string> NombresImplicados => Datos.Keys;
 	private bool _moviendo;
 
@@ -81,11 +82,16 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		if (Guion != null) // Sin guion cuando solo se filma el escenario (SoloVer)
 		{
 			PrepararPuestaEnEscena();
-			var panel = PanelArmarCaso.Crear(this, Guion, Dialogo);
+			var panel = PanelReconstruccion.Crear(this, Guion, Dialogo);
 			Panel = panel;
-			Guion.AbrirArmarCaso = panel.Abrir;
-			Guion.SelloDeCasilla = panel.Sello;
-			Guion.CerrarPanelCaso = panel.Cerrar;
+			Guion.AbrirReconstruccion = panel.Abrir;
+			Guion.CerrarReconstruccion = panel.Cerrar;
+			Guion.EnSala = true;
+			var capa = new CanvasLayer { Layer = 30, ProcessMode = ProcessModeEnum.Always };
+			AddChild(capa);
+			Cierre = new PantallaCasoCerrado();
+			capa.AddChild(Cierre);
+			Guion.MostrarCierre = Cierre.Mostrar;
 		}
 		foreach (Node hijo in Implicados.GetChildren())
 		{
@@ -117,13 +123,17 @@ public partial class SalaInterrogatorioCaso1 : EscenarioCaso1
 		if (Guion.SalaVista || Guion.Resuelto) return;
 		// La primera vez, Hecdog recibe al detective y presenta a los seis
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
+		if (!Sigue()) return;
+		EnDialogo = true;
+		await Guion.LlegarAlActo(3);
+		if (!Sigue()) return;
+		EnDialogo = false;
 		if (Sigue()) Conversar(() => Guion.Sala(Sigue));
 	}
 
 	protected override void AlRestaurar() => AcomodarPruebas();
 
-	protected override void ActualizarObjetivo() =>
-		Objetivo(Guion.Objetivo() ?? "Sala de interrogatorio de la estación. Habla con Hecdog, o sal por la puerta para volver al lago o al campamento.");
+	protected override void ActualizarObjetivo() => Guion.PublicarObjetivo(GuiaCaso1.Escenario.Sala);
 
 	protected override string PensamientoDeZona(string zona) => null;
 	protected override string NombreZona(string zona) => zona;

@@ -1,0 +1,53 @@
+{
+	"_ayuda": "Tabla de candados del Caso 1 (ver docs/REDISENO_JUGABILIDAD_CASO1.md). Los ids de pista son los de la escena. Un candado se rompe cuando existe el primer id de 'da'; 'da' es lo que deja al romperse. El orden de la lista es el orden en que GuiaCaso1 propone seguir.",
+	"pistas": {
+		"libro_guardia_quemado": { "escenario": "campamento", "area": "Fogata", "zona": "la fogata", "tipo": "linterna" },
+		"lena_intacta": { "escenario": "campamento", "area": "Fogata", "zona": "la fogata" },
+		"baul_disfraces": { "escenario": "campamento", "area": "Almacen", "zona": "el almacén", "tipo": "dentro" },
+		"taza_delantal": { "escenario": "campamento", "area": "Cocina", "zona": "la cocina" },
+		"nota_porky": { "escenario": "campamento", "area": "CabanaPorky", "zona": "la cabaña de Porky", "tipo": "dentro", "llavero": true },
+		"foto_grupo": { "escenario": "campamento", "area": "CabanaPorky", "zona": "la cabaña de Porky", "llavero": true },
+		"recorte_periodico": { "escenario": "campamento", "area": "CabanaPorky", "zona": "la cabaña de Porky", "llavero": true },
+		"oferta_compra": { "escenario": "campamento", "area": "CabanaPorky", "zona": "la cabaña de Porky", "tipo": "dentro", "llavero": true },
+		"botas_tony": { "escenario": "campamento", "area": "Director", "zona": "la cabaña del director", "tipo": "linterna" },
+		"registro_enfermeria": { "escenario": "campamento", "area": "Enfermeria", "zona": "la enfermería", "tipo": "dentro" },
+		"interruptor_generador": { "escenario": "campamento", "area": "Caseta", "zona": "la caseta del generador" },
+		"candado_caseta": { "escenario": "campamento", "area": "Caseta", "zona": "la caseta del generador" },
+		"registro_llamadas": { "escenario": "campamento", "area": "Estacionamiento", "zona": "el estacionamiento" },
+		"huellas_pezuna": { "escenario": "lago", "area": "Sendero", "zona": "el sendero", "tipo": "agachado" },
+		"huellas_detenidas": { "escenario": "lago", "area": "Sendero", "zona": "el sendero", "tipo": "agachado" },
+		"altavoz": { "escenario": "lago", "area": "Bosque", "zona": "el bosque" },
+		"cornamenta_zancos": { "escenario": "lago", "area": "Bosque", "zona": "el bosque", "tipo": "dentro" },
+		"cuaderno_eriz": { "escenario": "lago", "area": "Orilla", "zona": "la orilla", "tipo": "dentro" },
+		"remo_sangre": { "escenario": "lago", "area": "Orilla", "zona": "la orilla", "tipo": "agachado" },
+		"silbato_ts": { "escenario": "lago", "area": "Embarcadero", "zona": "el embarcadero" },
+		"linterna_porky": { "escenario": "lago", "area": "Embarcadero", "zona": "el embarcadero", "tipo": "agua" },
+		"hueco_remo": { "escenario": "lago", "area": "Cobertizo", "zona": "el cobertizo", "llavero": true }
+	},
+	"_frases": "Las declaraciones son el texto del guion dividido en frases; tests/GuiaCaso1Prueba.cs revisa que coincidan.",
+	"declaraciones": {
+		"juan_carlos": ["Fíjate que fui por leña al montón de la fogata cuando se fue la luz, bro. Estaba sacando leña de ahí cuando pasó lo de Porky.", "Y sí, vi al ciervo en la colina, bien brillante.", "Pero eso no quiere decir que bajé al lago."],
+		"aya": ["Oh... estaba en el bosque tomando fotos cuando pasó lo de Porky, detective.", "La luna, los pinos... bien bonito todo.", "La neta del planeta, no vi nada raro."],
+		"miawrio": ["Eh... cuando pasó lo de Porky estuve en mi carro, en el estacionamiento, haciendo llamadas.", "Cerrando pendientes.", "A la cocinera casi no la conocía."],
+		"eriz": ["Mira... cuando pasó lo de Porky yo apenas estaba llegando a la orilla.", "Fue justo antes de encontrar el cuerpo.", "Y ya sé lo que van a pensar por mi pasado, pero yo ya no soy ese, simón."],
+		"mimita": ["Mmm... estuve toda la noche en la enfermería, también cuando pasó lo de Porky.", "Tenía que estar al pendiente de los campistas, y además estaba acomodando el botiquín, y ni señal había, literal modo avión...", "No vi nada. ¿Sí?"],
+		"tony": ["Mmh... solo salí de la fogata para revisar el generador. Me quedé en la caseta hasta después de lo de Porky. Alguien tenía que hacerlo.", "No me acerqué al lago. Después de... lo que pasó con Paco, no piso esa orilla. Hace años.", "¿Ese silbato? No es mío. «T. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?", "¡No tenía nada contra Porky! Era como una hermana chica para todos.", "¿El remo? Cualquiera pudo agarrar un remo de ese cobertizo. ¿En serio?"]
+	},
+	"candados": [
+		{ "id": "JC-1", "nodo": "prueba_1", "frase": 0, "quien": "juan_carlos", "da": ["juan_carlos_1"], "pistas": ["lena_intacta"] },
+		{ "id": "JC-2", "nodo": "prueba_2", "frase": 1, "quien": "juan_carlos", "previo": "JC-1", "da": ["juan_carlos_2"], "pistas": ["cornamenta_zancos"] },
+		{ "id": "JC-3", "nodo": "prueba_3", "frase": 2, "oculta": true, "quien": "juan_carlos", "previo": "JC-2", "da": ["juan_carlos_3", "jc_vio_tony_sendero", "jc_vio_linterna"], "pistas": ["huellas_detenidas"] },
+		{ "id": "AY-1", "nodo": "prueba_1", "frase": 0, "quien": "aya", "da": ["aya_1"], "pistas": ["altavoz"] },
+		{ "id": "AY-2", "nodo": "prueba_2", "frase": 2, "quien": "aya", "previo": "AY-1", "da": ["aya_2", "foto_aya_2319", "foto_aya_2312"], "conclusiones": ["juan_carlos_3"] },
+		{ "id": "MI-1", "nodo": "prueba_1", "frase": 2, "quien": "miawrio", "da": ["miawrio_1"], "pistas": ["oferta_compra"] },
+		{ "id": "MI-2", "nodo": "prueba_2", "frase": 0, "quien": "miawrio", "previo": "MI-1", "da": ["miawrio_2", "miawrio_coartada", "miawrio_oyo_cita"], "pistas": ["registro_llamadas"] },
+		{ "id": "ER-1", "nodo": "prueba_1", "frase": 1, "quien": "eriz", "da": ["eriz_1", "eriz_hora_crimen"], "pistas": ["cuaderno_eriz"] },
+		{ "id": "MM-1", "nodo": "prueba_1", "frase": 2, "quien": "mimita", "da": ["mimita_1"], "pistas": ["registro_enfermeria"] },
+		{ "id": "MM-2", "nodo": "prueba_2", "frase": 0, "quien": "mimita", "previo": "MM-1", "da": ["mimita_2", "mimita_oyo_silbido"], "conclusiones": ["foto_aya_2319"] },
+		{ "id": "T2", "nodo": "hub_2", "frase": 1, "quien": "tony", "da": ["tony_2"], "pistas": ["botas_tony"] },
+		{ "id": "T5", "nodo": "hub_5", "frase": 4, "quien": "tony", "da": ["tony_5"], "pistas": ["hueco_remo", "remo_sangre"] },
+		{ "id": "T1", "nodo": "hub_1", "frase": 0, "quien": "tony", "da": ["tony_1"], "pistas": ["candado_caseta"], "conclusiones": ["foto_aya_2312", "jc_vio_tony_sendero"] },
+		{ "id": "T3", "nodo": "hub_3", "frase": 2, "quien": "tony", "da": ["tony_3"], "pistas": ["silbato_ts", "foto_grupo"], "conclusiones": ["mimita_oyo_silbido"] },
+		{ "id": "T4", "nodo": "hub_4", "frase": 3, "quien": "tony", "da": ["tony_4"], "pistas": ["libro_guardia_quemado", "nota_porky"], "conclusiones": ["miawrio_oyo_cita"] }
+	]
+}

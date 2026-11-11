@@ -44,6 +44,13 @@ public partial class GuionCaso1
 	public bool AbrirExpediente;
 
 	public EstadoDialogos Estado => Motor.Estado;
+	// El «qué sigue» del caso: lo pregunta cada escenario para su objetivo
+	public readonly GuiaCaso1 Guia;
+	// El cuaderno de ayudas del escenario (HU-10): Hecdog anota ahí lo que dice
+	public SistemaAyudas Ayudas;
+	public static string Dificultad => Configuracion.Instancia?.Dificultad ?? "detective";
+	// Lo pone el escenario: el llavero viaja con el jugador
+	public Func<bool> TieneLlavero = () => false;
 	public bool IntroduccionVista => Estado.NodoCompletado(ArbolIntroduccion, "ir");
 	public bool SalaVista => Estado.NodoCompletado(ArbolSala, "llegada");
 	public bool TonyDisponible => Confesiones.All(Estado.TieneConclusion);
@@ -74,6 +81,8 @@ public partial class GuionCaso1
 		foreach (string id in new[] { ArbolIntroduccion, ArbolSala, ArbolAcusacion }.Concat(Sospechosos.Select(s => "caso1_" + s)))
 			_arboles[id] = ArbolDialogo.Cargar(RutaDialogos + id + ".json");
 		CargarPistas();
+		CargarReconstruccion();
+		Guia = new GuiaCaso1(TienePista, Estado.TieneConclusion, () => TieneLlavero());
 	}
 
 	// Las pistas del diario valen en cualquier escenario (las del Lago sirven en la sala)
@@ -137,14 +146,20 @@ public partial class GuionCaso1
 		AlTerminar?.Invoke("Introducción");
 	}
 
-	// Un interrogatorio. Si se agota la credibilidad, Hecdog lo corta y se puede volver a intentar: nunca lleva a acusar.
+	// Un interrogatorio: se sale con «Seguir investigando» o cuando ya no queda nada que decir
 	public async Task Interrogar(string quien, Func<bool> sigue)
 	{
 		await AntesDeInterrogar(quien);
 		if (!sigue()) return;
-		var arbol = _arboles["caso1_" + quien];
-		string salida = await Motor.Recorrer(arbol);
-		if (salida == "paciencia" && sigue()) await CortarInterrogatorio(arbol);
+		await Motor.Recorrer(_arboles["caso1_" + quien]);
+		Motor.Ventana.MostrarCandados(0, 0);
+		_frasesDichas.Clear();
+		// Con la noche ya reconstruida, el último candado de Tony lleva a su confesión
+		if (quien == Culpable && TonySinCandados && ReconstruccionCompleta && !Resuelto && sigue())
+		{
+			await ConfesionDeTony(sigue);
+			return;
+		}
 		if (sigue()) await DespuesDeInterrogar(quien);
 		AlTerminar?.Invoke("Diálogo: " + quien);
 	}
@@ -160,11 +175,23 @@ public partial class GuionCaso1
 			if (salida.StartsWith("interrogar:"))
 			{
 				await Interrogar(salida.Substring("interrogar:".Length), sigue);
+				if (Resuelto) return;
 				continue;
 			}
 			if (salida == "armar")
 			{
-				if (await ArmarCaso(sigue)) return;
+				if (await Reconstruir(sigue)) return;
+				continue;
+			}
+			if (salida == "acusar_ya")
+			{
+				if (await AcusarYa(sigue)) return;
+				continue;
+			}
+			if (salida == "pista")
+			{
+				var (_, texto) = PedirAyuda(GuiaCaso1.Escenario.Sala);
+				await Motor.Hablar(_arboles[ArbolSala], "Hecdog", "serio", texto);
 				continue;
 			}
 			return;
@@ -210,12 +237,13 @@ public partial class GuionCaso1
 		}
 		_hud.Call("avisar", final == "A" ? "FINAL A" : "FINAL B", final == "A" ? "LA CONFESIÓN" : "EL ERROR TRÁGICO");
 		AlTerminar?.Invoke("Fin del caso");
+		await CerrarCaso(final == "A");
 	}
 
+	// La credibilidad no se ve en pantalla y tiene piso: solo cuenta para la calificación
 	private void AlCambiarContador(string id, int valor)
 	{
-		if (id == "credibilidad")
-			_hud.Call("avisar", "CREDIBILIDAD", $"{Math.Max(valor, 0)} / {CredibilidadInicial}");
+		if (id == "credibilidad" && valor < CredibilidadMinima) Estado.Sumar(id, CredibilidadMinima - valor);
 	}
 
 	// Ids de fase de capitulos.json, según hasta dónde llegó el guion
@@ -226,15 +254,55 @@ public partial class GuionCaso1
 		: IntroduccionVista ? "investigacion"
 		: "introduccion";
 
-	// Objetivo que manda el guion (o null para que el escenario ponga el suyo)
-	public string Objetivo()
+	// El objetivo principal del HUD en cada escenario
+	public string ObjetivoEn(GuiaCaso1.Escenario donde)
 	{
-		if (Resuelto) return "Caso cerrado.";
-		if (!IntroduccionVista) return "Escucha a Hecdog: él tiene el expediente.";
-		if (!SalaVista) return null;
-		return TonyDisponible
-			? "Todos confesaron su secreto... menos uno. Cuando estés listo, arma el caso con Hecdog."
-			: "Interroga a los seis y enséñales la prueba que les tumbe la historia.";
+		if (Resuelto) return Guia.Objetivo("cerrado");
+		if (!IntroduccionVista) return Guia.Objetivo("escuchar_hecdog");
+		if (SalaVista) return Guia.ObjetivoInterrogatorios(donde);
+		return donde == GuiaCaso1.Escenario.Sala ? Guia.Objetivo("sala_inicio") : Guia.ObjetivoAntesDeSala(donde);
+	}
+
+	public string Objetivo() => ObjetivoEn(GuiaCaso1.Escenario.Sala);
+
+	// Pone el objetivo en el HUD y los secundarios en el diario
+	public void PublicarObjetivo(GuiaCaso1.Escenario donde)
+	{
+		_hud.Set("objetivo", ObjetivoEn(donde));
+		_hud.Call("poner_objetivos", Guia.TituloSecundarios, new Godot.Collections.Array(Guia.Secundarios().Select(s => Variant.From(s))));
+	}
+
+	// ---------- Ayudas ----------
+
+	// La siguiente pista para donde está el jugador. Texto: lo que dice Hecdog (o por qué no puede).
+	public (bool Nueva, string Texto) PedirAyuda(GuiaCaso1.Escenario donde)
+	{
+		if (!(Configuracion.Instancia?.AyudasInvestigacion ?? true)) return (false, Guia.Aviso("desactivadas"));
+		if (Ayudas == null) return (false, Guia.Aviso("repetida"));
+		var paso = SalaVista || donde == GuiaCaso1.Escenario.Sala ? Guia.Siguiente() : Guia.SiguienteExploracion(donde);
+		var resultado = Guia.PedirAyuda(paso, Ayudas, Dificultad == "experto" ? 1 : 3);
+		if (resultado.Nueva) Motor.Cambio?.Invoke();
+		return resultado;
+	}
+
+	// Mensaje corto para Pausa → Pistas
+	public string PedirPista(GuiaCaso1.Escenario donde)
+	{
+		if (!(Configuracion.Instancia?.AyudasInvestigacion ?? true)) return Guia.Aviso("desactivadas");
+		var (nueva, _) = PedirAyuda(donde);
+		return nueva ? Guia.Aviso("nueva") : Dificultad == "experto" ? Guia.Aviso("experto") : Guia.Aviso("repetida");
+	}
+
+	// Al empezar el capítulo: cómo se quiere investigar
+	public async Task ElegirDificultad(Hablante caneloso)
+	{
+		// Las herramientas de prueba (--script) juegan sin elegir: se quedan con la dificultad que haya
+		if (OS.GetCmdlineArgs().Contains("--script")) return;
+		var opciones = Configuracion.Dificultades.Select(d => new OpcionVista(Guia.TextoDificultad(d.Id))).ToList();
+		int actual = Math.Max(Array.FindIndex(Configuracion.Dificultades, d => d.Id == Dificultad), 0);
+		int elegida = await Motor.Ventana.Elegir(caneloso, Guia.TextoDificultad("pregunta"), opciones, actual);
+		if (Configuracion.Instancia != null) Configuracion.Instancia.Dificultad = Configuracion.Dificultades[elegida].Id;
+		Motor.Cambio?.Invoke();
 	}
 
 	// ---------- Guardado ----------
@@ -242,9 +310,8 @@ public partial class GuionCaso1
 	public Diccionario Capturar()
 	{
 		var datos = Estado.Capturar();
-		var casillas = new Godot.Collections.Array();
-		foreach (var casilla in CasoPruebas) casillas.Add(new Godot.Collections.Array(casilla.Select(x => Variant.From(x))));
-		datos["caso_armado"] = new Diccionario { { "sospechoso", CasoSospechoso ?? "" }, { "casillas", casillas } };
+		datos["reconstruccion"] = CapturarReconstruccion();
+		datos["dificultad"] = Dificultad;
 		return datos;
 	}
 
@@ -253,17 +320,8 @@ public partial class GuionCaso1
 	{
 		var datos = estado.TryGetValue("dialogos", out Variant dialogos) ? dialogos.AsGodotDictionary() : null;
 		Estado.Restaurar(datos);
-		if (datos != null && datos.TryGetValue("caso_armado", out Variant caso))
-		{
-			var d = caso.AsGodotDictionary();
-			CasoSospechoso = d["sospechoso"].AsString();
-			var casillas = d["casillas"].AsGodotArray();
-			for (int i = 0; i < CasoPruebas.Length && i < casillas.Count; i++)
-			{
-				CasoPruebas[i].Clear();
-				foreach (Variant v in casillas[i].AsGodotArray()) CasoPruebas[i].Add(v.AsString());
-			}
-		}
+		RestaurarReconstruccion(datos);
+		if (datos != null && datos.TryGetValue("dificultad", out Variant dificultad) && Configuracion.Instancia != null) Configuracion.Instancia.Dificultad = dificultad.AsString();
 		// Toda partida guardada ya pasó la presentación de Hecdog (las de antes del guion no la traen)
 		Estado.MarcarNodo(ArbolIntroduccion, "ir");
 	}

@@ -1,0 +1,68 @@
+{
+	"_ayuda": "Reconstrucción de la noche (docs/REDISENO_JUGABILIDAD_CASO1.md, 0.1). Frases NUEVAS para que el equipo las revise. {0}, {1}... son los huecos, en orden; 'respuestas' dice qué ficha va en cada uno. Una ficha aparece cuando se tiene cualquiera de sus 'origen' (pistas o conclusiones; 'siempre' = desde el inicio).",
+	"vinetas": [
+		{
+			"titulo": "1 · LA FOGATA",
+			"frases": [
+				{ "texto": "Hace 10 años murió {0} en el lago, y el {1} decía quién estaba de guardia.", "huecos": ["persona", "objeto"], "respuestas": ["paco", "libro"] },
+				{ "texto": "Porky escribió en {0} que esa noche lo diría todo, y citó a {1} en el embarcadero.", "huecos": ["objeto", "persona"], "respuestas": ["nota", "tony"] }
+			]
+		},
+		{
+			"titulo": "2 · EL APAGÓN",
+			"frases": [
+				{ "texto": "A las {0}, la luz se fue porque {1} bajó el interruptor del generador.", "huecos": ["hora", "persona"], "respuestas": ["h2300", "juan_carlos"] },
+				{ "texto": "{0} caminó por el {1} en lugar de ir a la caseta.", "huecos": ["persona", "lugar"], "respuestas": ["tony", "sendero"] }
+			]
+		},
+		{
+			"titulo": "3 · EL EMBARCADERO",
+			"frases": [
+				{ "texto": "A las {0}, en el embarcadero, {1} golpeó a Porky con el {2} del {3}.", "huecos": ["hora", "persona", "objeto", "lugar"], "respuestas": ["h2320", "tony", "remo", "cobertizo"] }
+			]
+		},
+		{
+			"titulo": "4 · DESPUÉS",
+			"frases": [
+				{ "texto": "Después, {0} quemó el {1} en la fogata y escondió sus {2}.", "huecos": ["persona", "objeto", "objeto"], "respuestas": ["tony", "libro", "botas"] }
+			]
+		}
+	],
+	"fichas": {
+		"tony": { "texto": "Tony", "tipo": "persona", "origen": ["siempre"] },
+		"juan_carlos": { "texto": "Juan Carlos", "tipo": "persona", "origen": ["siempre"] },
+		"aya": { "texto": "Aya", "tipo": "persona", "origen": ["siempre"] },
+		"miawrio": { "texto": "Miawrio", "tipo": "persona", "origen": ["siempre"] },
+		"eriz": { "texto": "Eriz", "tipo": "persona", "origen": ["siempre"] },
+		"mimita": { "texto": "Mimita", "tipo": "persona", "origen": ["siempre"] },
+		"porky": { "texto": "Porky", "tipo": "persona", "origen": ["siempre"] },
+		"paco": { "texto": "Paco", "tipo": "persona", "origen": ["recorte_periodico"] },
+		"h1800": { "texto": "18:00", "tipo": "hora", "origen": ["miawrio_oyo_cita"] },
+		"h2300": { "texto": "23:00", "tipo": "hora", "origen": ["siempre"] },
+		"h2312": { "texto": "23:12", "tipo": "hora", "origen": ["foto_aya_2312"] },
+		"h2315": { "texto": "23:15", "tipo": "hora", "origen": ["jc_vio_linterna"] },
+		"h2319": { "texto": "23:19", "tipo": "hora", "origen": ["foto_aya_2319"] },
+		"h2320": { "texto": "23:20", "tipo": "hora", "origen": ["cuaderno_eriz", "eriz_hora_crimen"] },
+		"h2340": { "texto": "23:40", "tipo": "hora", "origen": ["siempre"] },
+		"h2347": { "texto": "23:47", "tipo": "hora", "origen": ["siempre"] },
+		"libro": { "texto": "libro de guardia", "tipo": "objeto", "origen": ["libro_guardia_quemado"] },
+		"nota": { "texto": "su nota", "tipo": "objeto", "origen": ["nota_porky"] },
+		"lena": { "texto": "leña", "tipo": "objeto", "origen": ["lena_intacta"] },
+		"remo": { "texto": "remo", "tipo": "objeto", "origen": ["remo_sangre"] },
+		"botas": { "texto": "botas", "tipo": "objeto", "origen": ["botas_tony"] },
+		"disfraz": { "texto": "disfraz", "tipo": "objeto", "origen": ["cornamenta_zancos", "baul_disfraces"] },
+		"bocina": { "texto": "bocina", "tipo": "objeto", "origen": ["altavoz"] },
+		"silbato": { "texto": "silbato", "tipo": "objeto", "origen": ["silbato_ts"] },
+		"linterna": { "texto": "linterna", "tipo": "objeto", "origen": ["linterna_porky"] },
+		"oferta": { "texto": "oferta de compra", "tipo": "objeto", "origen": ["oferta_compra"] },
+		"cuaderno": { "texto": "cuaderno", "tipo": "objeto", "origen": ["cuaderno_eriz"] },
+		"sendero": { "texto": "sendero del lago", "tipo": "lugar", "origen": ["jc_vio_tony_sendero", "foto_aya_2312"] },
+		"cobertizo": { "texto": "cobertizo", "tipo": "lugar", "origen": ["hueco_remo"] },
+		"caseta": { "texto": "caseta", "tipo": "lugar", "origen": ["candado_caseta", "interruptor_generador"] },
+		"colina": { "texto": "colina", "tipo": "lugar", "origen": ["siempre"] },
+		"fogata": { "texto": "fogata", "tipo": "lugar", "origen": ["siempre"] },
+		"juncos": { "texto": "juncos", "tipo": "lugar", "origen": ["remo_sangre"] },
+		"enfermeria": { "texto": "enfermería", "tipo": "lugar", "origen": ["registro_enfermeria"] },
+		"bosque": { "texto": "bosque", "tipo": "lugar", "origen": ["altavoz"] }
+	}
+}

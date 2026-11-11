@@ -115,6 +115,8 @@ var linterna_encendida: bool = false
 ## Diario del caso (Q): pistas, deducciones y sospechosos.
 var notas: Array[String] = []
 var personas: Array[Dictionary] = []
+var _titulo_objetivos := ""
+var _objetivos_secundarios: Array = []
 const PISTAS_POR_HOJA := 9
 var _pista_diario: int = -1
 var _seccion: String = "PISTAS"
@@ -123,6 +125,7 @@ const COLORES_SECCION := {"PISTAS": Color("dbb64f"), "DEDUCCIONES": Color("87634
 ## HU-29: fichas de sospechosos. Cada caso pone un proveedor que las arma con lo que el jugador ya sabe;
 ## el diario se lo pide al abrirse. Cada ficha: id, nombre, retrato, datos, relacion, presencia, vinculo,
 ## pruebas [{titulo}], pruebas_faltan, contradicciones [{dicho, prueba, estado}], estado y consejo.
+## coartada {zona, declaracion, estado} aparece al oír su versión.
 ## Lo que llega vacío se muestra como pendiente.
 var proveedor_sospechosos: Callable
 var sospechosos: Array = []
@@ -133,6 +136,7 @@ const ESTADOS_SOSPECHA := {
 	"sospecha": ["●", "BAJO SOSPECHA", Color("a8322d")],
 	"confeso": ["◆", "SECRETO CONFESADO", Color("9c6f05")],
 	"coartada": ["✓", "COARTADA CONFIRMADA", Color("4d7a4a")],
+	"refutada": ["✗", "COARTADA REFUTADA", Color("a8322d")],
 	"principal": ["★", "PRINCIPAL SOSPECHOSO", Color("a8322d")],
 }
 var _papeles_libro: Array[ImageTexture] = []
@@ -150,6 +154,20 @@ func registrar_persona(nombre: String, resumen: String, retrato: Texture2D) -> v
 			return
 	personas.append({"nombre": nombre, "resumen": resumen, "imagen": retrato})
 
+# Objetivos secundarios del diario (los pone el caso; sin ellos no hay página)
+func poner_objetivos(titulo: String, lineas: Array) -> void:
+	_titulo_objetivos = titulo
+	_objetivos_secundarios = lineas
+
+func _dibujar_candados(p: Vector2, candados: Array) -> void:
+	for i in candados[1]:
+		var centro := p + Vector2(i * 34.0, 0)
+		var color := Color("8a8a8a") if i < candados[0] else Color("b58f1f")
+		_lienzo.draw_arc(centro + Vector2(10 if i < candados[0] else 0, -6), 7.0, PI, TAU, 10, color, 3.0, true)
+		_lienzo.draw_rect(Rect2(centro + Vector2(-11, -6), Vector2(22, 16)), color)
+	if candados[2]:
+		_texto("TENGO ALGO", p + Vector2(candados[1] * 34.0 + 6, 8), MONO, 14, Color("866134"))
+
 func _paginas_libro() -> Array[Dictionary]:
 	var paginas: Array[Dictionary] = []
 	# Cada hoja de fotos comparte una sola página de detalle.
@@ -161,6 +179,8 @@ func _paginas_libro() -> Array[Dictionary]:
 			paginas.append({"seccion": "PISTAS", "titulo": pista.titulo, "texto": pista.descripcion, "imagen": pista.imagen, "pista": _pista_diario})
 		else:
 			paginas.append({"seccion": "PISTAS", "titulo": "Una mirada más de cerca", "texto": "Haz clic en una fotografía para consultar la pista." if not pistas.is_empty() else "Las pistas que encuentres aparecerán en la hoja de al lado."})
+	if not _objetivos_secundarios.is_empty():
+		paginas.append({"seccion": "DEDUCCIONES", "titulo": _titulo_objetivos, "texto": objetivo + "\n\n" + "\n".join(_objetivos_secundarios)})
 	var conclusiones := notas.filter(func(n: String) -> bool: return n.begins_with("Deducción: "))
 	for conclusion in conclusiones:
 		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Una conexión confirmada", "texto": conclusion.trim_prefix("Deducción: ")})
@@ -856,7 +876,7 @@ func _dibujar_galeria_sospechosos(p: Vector2) -> void:
 		if s.get("estado", "sin") != "sin":
 			interrogados += 1
 		_zonas_libro.append({"rect": rect, "sospechoso": k})
-	_texto_ajustado("○ SIN INTERROGAR  ● BAJO SOSPECHA  ◆ CONFESÓ  ✓ COARTADA  ★ PRINCIPAL", p + Vector2(38, 552), MONO, 11, Color("75654e"), 504)
+	_texto_ajustado("○ SIN INTERROGAR  ● BAJO SOSPECHA  ◆ CONFESÓ  ✓ CONFIRMADA  ✗ REFUTADA  ★ PRINCIPAL", p + Vector2(38, 552), MONO, 11, Color("75654e"), 504)
 	_texto_ajustado("%02d SOSPECHOSOS  ·  INTERROGADOS %d/%d  ·  CLIC PARA VER SU FICHA" % [sospechosos.size(), interrogados, sospechosos.size()], p + Vector2(38, 574), MONO, 12, Color("75654e"), 504)
 
 ## HU-29: la ficha del sospechoso elegido. Lo que el jugador aún no sabe se ve como pendiente.
@@ -866,6 +886,9 @@ func _dibujar_ficha_sospechoso(p: Vector2, s: Dictionary) -> void:
 	_texto_ajustado(str(s.get("datos", "")), p + Vector2(38, 183), MONO, 13, gris, 380)
 	# Foto tipo polaroid y sello del estado, ladeados como pegados a mano
 	_polaroid(p + Vector2(486, 146), s.get("retrato"), 0.05)
+	# Rediseño del Caso 1: sus candados (rotos de gris) y si ya tienes con qué romper el siguiente
+	if not s.get("candados", []).is_empty():
+		_dibujar_candados(p + Vector2(130, 162), s.candados)
 	_sello_texto(p + Vector2(478, 232), estado[1], estado[2], -0.16)
 	var y := 214.0
 	y = _campo_ficha(p, y, "RELACIÓN CON LA VÍCTIMA", str(s.get("relacion", "")), 340, "Interroga a alguien que la conozca.")
@@ -892,6 +915,17 @@ func _dibujar_ficha_sospechoso(p: Vector2, s: Dictionary) -> void:
 				_rayado(chip, Color("b8ab94"))
 			_texto(etiqueta[0], chip.position + Vector2(10, 15), MONO, 11, TINTA if etiqueta[1] else Color("9a8e7b"))
 			x += ancho + 6
+		y += 40
+	var coartada: Dictionary = s.get("coartada", {})
+	if not coartada.is_empty():
+		var estado_coartada: String = coartada.estado
+		var color_coartada: Color = gris
+		if estado_coartada == "refutada":
+			color_coartada = ESTADOS_SOSPECHA.refutada[2]
+		elif estado_coartada == "confirmada":
+			color_coartada = ESTADOS_SOSPECHA.coartada[2]
+		_texto_ajustado("COARTADA %s  ·  %s" % [estado_coartada.to_upper(), coartada.zona], p + Vector2(38, y), MONO, 12, color_coartada, 504)
+		_texto_ajustado(coartada.declaracion, p + Vector2(38, y + 19), MONO, 13, TINTA, 504)
 		y += 40
 	# CA-04: contradicciones que dijo y si ya se cayeron con una prueba
 	var filas: Array = s.get("contradicciones", [])

@@ -55,12 +55,16 @@ func probar() -> void:
 		quit(1)
 		return
 	comprobar("fogata" in str(caso.CapturarEstado().ayudas.entradas[0].texto), "La orientación apunta a la fogata")
+	# Rediseño del Caso 1: cada pedido da el siguiente de los 3 niveles del mismo paso; el cuarto ya no cuenta
 	caso.PedirPista()
-	comprobar(caso.CapturarEstado().ayudas.usos == 1, "Releer no consume otra ayuda")
+	caso.PedirPista()
+	comprobar(caso.CapturarEstado().ayudas.usos == 3, "Tres niveles por paso")
+	caso.PedirPista()
+	comprobar(caso.CapturarEstado().ayudas.usos == 3, "Pedir otra vez el mismo paso no consume otra ayuda")
 	var estado = caso.CapturarEstado()
-	comprobar(estado.ayudas.entradas.size() == 1, "El historial se incluye en el guardado real")
+	comprobar(estado.ayudas.entradas.size() == 3, "El historial se incluye en el guardado real")
 	configuracion.AyudasInvestigacion = false
-	comprobar("Opciones" in caso.PedirPista() and caso.CapturarEstado().ayudas.usos == 1, "Desactivar impide solicitar, conserva el cuaderno")
+	comprobar("Opciones" in caso.PedirPista() and caso.CapturarEstado().ayudas.usos == 3, "Desactivar impide solicitar, conserva el cuaderno")
 	comprobar("fogata" in str(caso.CapturarEstado().ayudas.entradas[0].texto), "Se puede releer con las ayudas desactivadas")
 	paused = false
 	print("HU-10 campamento: %d fallos" % fallos)

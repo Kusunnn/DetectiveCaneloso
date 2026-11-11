@@ -28,30 +28,26 @@ public partial class GuionCaso1
 		return true;
 	}
 
-	// Tony suelta sus excusas una por una. true = cayó la última. Si no, se conserva lo tumbado y se puede volver
+	// Ya sentado frente a Caneloso y sin candados: oportunidad, medio y motivo, y el Final A
+	private async Task ConfesionDeTony(Func<bool> sigue)
+	{
+		Motor.DetenerEn = "final_a";
+		await Motor.Recorrer(_arboles[ArbolAcusacion], "a_tony");
+		Motor.DetenerEn = null;
+		if (sigue()) await TerminarAcusacion("final_a", sigue);
+	}
+
+	// Lo que le quede por romper a Tony, cuando ya se le presentó el caso. true = no le queda ninguno.
 	private async Task<bool> Careo(Func<bool> sigue)
 	{
-		if (Estado.TieneConclusion("tony_5")) return true; // Partidas de antes, donde ya cayeron en el interrogatorio
-		var arbol = _arboles["caso1_" + Culpable];
-		_enCareo = true;
-		int tumbadas = ExcusasTumbadas();
-		var antes = Motor.AntesDeNodo;
-		Motor.AntesDeNodo = async (a, nodo) =>
-		{
-			await antes(a, nodo);
-			if (nodo.ConclusionesAlCompletar.Any(c => c.StartsWith("tony_")))
-			{
-				tumbadas++;
-				if (AlTumbarExcusa != null) await AlTumbarExcusa(tumbadas);
-			}
-		};
-		string salida = await Motor.Recorrer(arbol);
-		Motor.AntesDeNodo = antes;
-		_enCareo = false;
-		if (salida == "paciencia" && sigue()) await CortarInterrogatorio(arbol);
+		if (TonySinCandados) return true;
+		await Motor.Recorrer(_arboles["caso1_" + Culpable]);
+		Motor.Ventana.MostrarCandados(0, 0);
 		AlTerminar?.Invoke("Careo");
-		return Estado.TieneConclusion("tony_5");
+		return TonySinCandados;
 	}
+
+	public bool TonySinCandados => ExcusasTumbadas() == 5;
 
 	private int ExcusasTumbadas() => Enumerable.Range(1, 5).Count(i => Estado.TieneConclusion("tony_" + i));
 }

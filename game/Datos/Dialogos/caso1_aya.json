@@ -39,18 +39,18 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "Aya, tengo unas preguntas sobre tus fotos."
+					"texto": "¿Dónde estabas cuando pasó lo de Porky?"
 				},
 				{
 					"habla": "Aya",
 					"animo": "nerviosa",
-					"texto": "Oh... yo estaba tomando fotos del bosque, detective. La luna, los pinos... bien bonito todo. La neta del planeta, no vi nada raro."
+					"texto": "Oh... estaba en el bosque tomando fotos cuando pasó lo de Porky, detective. La luna, los pinos... bien bonito todo. La neta del planeta, no vi nada raro."
 				}
 			],
 			"siguiente": "prueba_1",
 			"al_completar": {
 				"notas": [
-					"Aya dice que estaba tomando fotos del bosque y que no vio nada raro."
+					"Aya dice que estaba tomando fotos en el bosque cuando pasó lo de Porky."
 				]
 			}
 		},

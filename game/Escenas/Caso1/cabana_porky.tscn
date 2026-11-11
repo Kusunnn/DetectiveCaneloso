@@ -131,6 +131,9 @@ edge_fade = 0.2
 [sub_resource type="BoxShape3D" id="BoxShape3D_23"]
 size = Vector3(0.32, 0.45, 0.26)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_almohada"]
+size = Vector3(0.7, 0.36, 0.45)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_24"]
 size = Vector3(0.7, 0.2, 0.42)
 
@@ -534,8 +537,8 @@ TipoMovimiento = 1
 Desplazamiento = Vector3(0.0, 0.0, 0.55)
 
 [node name="Forma" type="CollisionShape3D" parent="Almohada"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.08, 0.0)
-shape = SubResource("BoxShape3D_24")
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.25, 0.0)
+shape = SubResource("BoxShape3D_almohada")
 
 [node name="Funda" type="MeshInstance3D" parent="Almohada"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.075, 0.0)

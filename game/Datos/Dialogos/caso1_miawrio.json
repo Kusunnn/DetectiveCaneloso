@@ -39,19 +39,19 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "Miawrio, siéntate, por favor."
+					"texto": "¿Dónde estabas cuando pasó lo de Porky?"
 				},
 				{
 					"habla": "Miawrio",
 					"animo": "impaciente",
 					"gesto": "Mira su reloj",
-					"texto": "Eh... estuve en mi carro, haciendo llamadas. Cerrando pendientes. A la cocinera casi no la conocía."
+					"texto": "Eh... cuando pasó lo de Porky estuve en mi carro, en el estacionamiento, haciendo llamadas. Cerrando pendientes. A la cocinera casi no la conocía."
 				}
 			],
 			"siguiente": "prueba_1",
 			"al_completar": {
 				"notas": [
-					"Miawrio dice que estuvo en su carro haciendo llamadas y que casi no conocía a Porky."
+					"Miawrio dice que estaba haciendo llamadas en su carro, en el estacionamiento, cuando pasó lo de Porky."
 				]
 			}
 		},

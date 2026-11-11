@@ -21,16 +21,6 @@ public partial class Caso1Lago : EscenarioCaso1
 
 	private const string Llavero = "llavero_porky";
 
-	// Pasos en el orden de la historia: el «ciervo» que no era un ciervo, quién estaba en la orilla, el crimen en el
-	// embarcadero y de dónde salió el remo. Se puede recoger todo en cualquier orden; el objetivo propone el primero que falte.
-	private static readonly (string Texto, string[] Pistas)[] Pasos =
-	{
-		("El sendero baja al lago: ¿por dónde caminó el «ciervo»?", new[] { HuellasPezuna, HuellasDetenidas }),
-		("Los bramidos salían del bosque, al oeste del sendero.", new[] { Altavoz, Cornamenta }),
-		("En la orilla oeste alguien pasó un buen rato sentado.", new[] { CuadernoEriz }),
-		("El embarcadero: ahí terminó todo. El agua aún brilla.", new[] { Silbato, Linterna, RemoSangre }),
-		("¿De dónde salió el remo? El cobertizo de botes, al este del muelle.", new[] { HuecoRemo }),
-	};
 	// Sin estas, el embarcadero queda sin revisar: Hecdog lo recuerda antes de irse a la estación
 	private static readonly string[] PruebasEmbarcadero = { RemoSangre, Silbato, Linterna, CuadernoEriz };
 
@@ -68,6 +58,13 @@ public partial class Caso1Lago : EscenarioCaso1
 	{
 		AbrirSiTieneLlavero(false);
 		ActualizarObjetivo();
+		if (!Guion.ActoVisto(2) && !Guion.SalaVista && Sigue() && !EnDialogo)
+		{
+			EnDialogo = true;
+			await Guion.LlegarAlActo(2);
+			if (!Sigue()) return;
+			EnDialogo = false;
+		}
 		// Lo que piensa al llegar sale una sola vez (antes se repetía cada vez que volvía sin pistas del lago)
 		if (Pistas.Count > 0 || !Sigue() || !PrimeraVez("_llegada")) return;
 		await ToSignal(GetTree().CreateTimer(0.3), SceneTreeTimer.SignalName.Timeout);
@@ -142,20 +139,7 @@ public partial class Caso1Lago : EscenarioCaso1
 
 	protected override void ActualizarObjetivo()
 	{
-		if (Guion.Resuelto) { Objetivo("Caso cerrado."); return; }
-		string cuenta = $" ({Pistas.Count}/{PistasTotales} pistas del lago)";
-		if (Pistas.Count >= PistasTotales) { Objetivo("Ya revisé el lago. Hecdog espera en la patrulla para ir a la estación."); return; }
-		if (!Jugador.TieneObjeto(Llavero) && !Pistas.Contains(HuecoRemo) && Pistas.Count >= 5)
-		{ Objetivo("El cobertizo está cerrado. Porky tenía las llaves: búscalas en el Campamento." + cuenta); return; }
-		foreach (var (texto, ids) in Pasos)
-		{
-			if (Array.TrueForAll(ids, Pistas.Contains)) continue;
-			// El cobertizo está cerrado: con el llavero se abre; sin él, hay que volver por él
-			if (ids[0] == HuecoRemo && Jugador.TieneObjeto(Llavero)) { Objetivo("Abre el cobertizo de botes con el llavero de Porky." + cuenta); return; }
-			Objetivo(texto + cuenta);
-			return;
-		}
-		Objetivo("Revisa el sendero, el bosque, la colina, la orilla y el embarcadero." + cuenta);
+		Guion.PublicarObjetivo(GuiaCaso1.Escenario.Lago);
 	}
 
 	// ---------- Zonas ----------

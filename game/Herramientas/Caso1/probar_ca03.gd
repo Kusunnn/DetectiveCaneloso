@@ -394,12 +394,20 @@ func _hablar_con_implicados() -> void:
 			for linea in _eventos["linea"]:
 				if _eventos["linea"][linea] > antes.get(linea, 0):
 					if vez == 0: primera[linea] = true
-					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS): repetidas[linea] = true
+					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS) and not _es_declaracion(linea): repetidas[linea] = true
 		_revisar(sentados.has(clave), "%s se sienta en la silla al hablar con él" % clave)
 		_revisar(not _en_pose_t(implicado), "%s no está en pose T en la sala" % clave)
 		await _retirar(caso)
 	print("    líneas repetidas al hablar dos veces: %s" % [repetidas.keys()])
 	_revisar(repetidas.is_empty(), "hablar dos veces con cada implicado no repite ninguna línea suya")
+
+## En la sala el sospechoso repite su declaración a propósito, para poder confrontarla
+func _es_declaracion(linea: String) -> bool:
+	var datos: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://Datos/Caso1/caso1_candados.json"))
+	for frases in datos["declaraciones"].values():
+		for frase in frases:
+			if linea.ends_with(frase): return true
+	return false
 
 ## Habla con alguien y espera a que empiece su primera línea (puede venir caminando) y a que termine la conversación
 func _hablar(punto, espera: float) -> void:
@@ -444,7 +452,7 @@ func _acercarse_a_npc(personajes: Node3D) -> void:
 			for linea in _eventos["linea"]:
 				if _eventos["linea"][linea] > antes.get(linea, 0):
 					if vez == 0: primera[linea] = true
-					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS): repetidas[linea] = true
+					elif primera.has(linea) and not linea.begins_with("CANELOSO") and not linea.ends_with(MENU_EVIDENCIAS) and not _es_declaracion(linea): repetidas[linea] = true
 	print("    líneas repetidas en el Campamento: %s" % [repetidas.keys()])
 	_revisar(repetidas.is_empty(), "hablar dos veces con cada NPC del Campamento no repite sus líneas")
 
@@ -774,24 +782,28 @@ func _revisar(ok: bool, que: String) -> void:
 	if not ok: _fallos += 1
 
 func _respaldar() -> void:
-	DirAccess.make_dir_recursive_absolute(RESPALDO + "partidas")
-	for archivo in DirAccess.get_files_at(PARTIDAS):
-		DirAccess.copy_absolute(PARTIDAS + archivo, RESPALDO + "partidas/" + archivo)
+	DirAccess.make_dir_recursive_absolute(RESPALDO + "partidas/")
+	if DirAccess.dir_exists_absolute(PARTIDAS):
+		for f in DirAccess.get_files_at(PARTIDAS): DirAccess.copy_absolute(PARTIDAS + f, RESPALDO + "partidas/" + f)
 	for archivo in ARCHIVOS:
-		if FileAccess.file_exists(archivo):
-			DirAccess.copy_absolute(archivo, RESPALDO + archivo.get_file())
+		if FileAccess.file_exists(archivo): DirAccess.copy_absolute(archivo, RESPALDO + archivo.get_file())
+	# La marca va al final y dice qué archivos no existían: solo esos se borran al devolver. Sin marca no se toca nada.
+	var marca := FileAccess.open(RESPALDO + "completo", FileAccess.WRITE)
+	if marca: marca.store_string("\n".join(ARCHIVOS.filter(func(a): return not FileAccess.file_exists(a))))
 
-## Deja las ranuras y el progreso como estaban antes de la prueba y borra el respaldo
+## Deja las ranuras y el progreso como estaban antes de la prueba y borra el respaldo (carpetas incluidas)
 func _devolver_respaldo() -> void:
-	for archivo in DirAccess.get_files_at(PARTIDAS):
-		DirAccess.remove_absolute(PARTIDAS + archivo)
+	if not FileAccess.file_exists(RESPALDO + "completo"): return
+	var faltaban := FileAccess.get_file_as_string(RESPALDO + "completo").split("\n")
+	if DirAccess.dir_exists_absolute(PARTIDAS):
+		for f in DirAccess.get_files_at(PARTIDAS): DirAccess.remove_absolute(PARTIDAS + f)
+	else:
+		DirAccess.make_dir_recursive_absolute(PARTIDAS)
+	for f in DirAccess.get_files_at(RESPALDO + "partidas/"): DirAccess.copy_absolute(RESPALDO + "partidas/" + f, PARTIDAS + f)
 	for archivo in ARCHIVOS:
-		DirAccess.remove_absolute(archivo)
-	for archivo in DirAccess.get_files_at(RESPALDO + "partidas"):
-		DirAccess.copy_absolute(RESPALDO + "partidas/" + archivo, PARTIDAS + archivo)
-		DirAccess.remove_absolute(RESPALDO + "partidas/" + archivo)
-	for archivo in DirAccess.get_files_at(RESPALDO):
-		DirAccess.copy_absolute(RESPALDO + archivo, "user://" + archivo)
-		DirAccess.remove_absolute(RESPALDO + archivo)
+		if FileAccess.file_exists(RESPALDO + archivo.get_file()): DirAccess.copy_absolute(RESPALDO + archivo.get_file(), archivo)
+		elif FileAccess.file_exists(archivo) and archivo in faltaban: DirAccess.remove_absolute(archivo)
+	for f in DirAccess.get_files_at(RESPALDO + "partidas/"): DirAccess.remove_absolute(RESPALDO + "partidas/" + f)
 	DirAccess.remove_absolute(RESPALDO + "partidas")
+	for f in DirAccess.get_files_at(RESPALDO): DirAccess.remove_absolute(RESPALDO + f)
 	DirAccess.remove_absolute(RESPALDO)

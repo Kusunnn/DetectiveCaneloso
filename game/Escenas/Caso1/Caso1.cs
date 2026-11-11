@@ -33,29 +33,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 	// Cuántas pistas hacen falta para que el sendero del lago "se abra"
 	private const int PistasParaSalir = 8;
 
-	// Pasos de la investigación en el orden en que se entiende la historia: el apagón, el «ciervo», lo que hizo
-	// Porky esa noche y los testigos. Se puede recoger todo en cualquier orden; el objetivo propone el primer
-	// paso que falte.
-	private static readonly (string Texto, string[] Pistas)[] Pasos =
-	{
-		("La fogata del centro: ahí estaban todos cuando se fue la luz.", new[] { LibroQuemado, Lena }),
-		("¿Quién apagó la luz? La caseta del generador, al oeste.", new[] { Interruptor, Candado }),
-		("El «ciervo»: los disfraces se guardan en el almacén de los cuentos, al oeste de la fogata.", new[] { Baul }),
-		("Porky se fue de la fogata antes del apagón. Su cocina, al sur.", new[] { TazaDelantal }),
-		("La cabaña de Porky, al este: ¿qué sabía ella?", new[] { NotaPorky, FotoGrupo, Recorte, Oferta }),
-		("La enfermería mira directo al lago. ¿Alguien vio algo?", new[] { RegistroEnfermeria }),
-		("Tony dice que no bajó al lago. Detrás de la cabaña del director, al noroeste.", new[] { BotasTony }),
-		("Un solo coche en el estacionamiento, junto a la entrada.", new[] { RegistroLlamadas }),
-	};
-
 	private const string Llavero = "llavero_porky";
-
-	// HU-07: detalles que solo aparecen examinando la evidencia (entradas nuevas del diario)
-	private const string LibroAntonio = "libro_guardia_quemado.antonio";
-	private const string FotoDedicatoria = "foto_grupo.dedicatoria";
-	private const string FotoSilbato = "foto_grupo.silbato";
-	private const string RegistroTachon = "registro_enfermeria.tachon";
-	private const string BotasJuncos = "botas_tony.juncos";
 
 	private readonly SistemaAyudas _ayudasInvestigacion = new();
 	private bool AyudasHabilitadas => Configuracion.Instancia?.AyudasInvestigacion ?? true;
@@ -121,6 +99,8 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 		Salida.Usado += () => _ = Conversar(AlUsarSalida);
 		PrepararDialogos();
+		// Rediseño (paso 7): cada uno en su lugar, con su actividad y su objeto
+		if (GetParent().GetNodeOrNull<Node3D>("Personajes") is { } personajes) ActividadesCaso1.Colocar(personajes, ActividadesCaso1.Campamento);
 		foreach (var zona in Zonas)
 		{
 			var area = zona;
@@ -152,6 +132,8 @@ public partial class Caso1 : Node, ICuadernoPistas
 		if (!IsInstanceValid(this) || !IsInsideTree()) return;
 		bool vioExpediente = gestor?.PresentoConCinematica ?? false;
 		await ToSignal(GetTree().CreateTimer(0.8), SceneTreeTimer.SignalName.Timeout);
+		await Conversar(() => _guion.ElegirDificultad(_caneloso));
+		if (!IsInsideTree()) return;
 		await Conversar(_guion.Introduccion);
 		// Hecdog le da el expediente. Si la cinemática ya lo mostró hoja por hoja, no se abre otra vez:
 		// basta con recordar la tecla. Si no, se abre en cuanto se cierra la conversación.
@@ -161,6 +143,8 @@ public partial class Caso1 : Node, ICuadernoPistas
 			else Hud.Call("abrir_expediente");
 		}
 		_guion.AbrirExpediente = false;
+		if (IsInsideTree()) await _guion.LlegarAlActo(1);
+		if (IsInsideTree() && GuionCaso1.Dificultad != "experto") Jugador.MostrarAviso(_guion.Guia.AvisoInstinto(), 6.0);
 	}
 
 
@@ -202,16 +186,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 	// HU-07: lo que se descubre examinando una evidencia queda anotado en la libreta
 	private void AlDescubrirDetalle(string origen, string id)
 	{
-		string nota = id switch
-		{
-			LibroAntonio => "Reverso del libro de guardia: «De guardia: monitor auxiliar Antonio R.»",
-			FotoDedicatoria => "Detrás de la foto: «Cabaña 4, 14 de agosto. Para Daniel... — A. R.»",
-			FotoSilbato => "En la foto, el silbato del monitor lleva grabado «A. R.»: es Tony.",
-			RegistroTachon => "Bajo el tachón del registro de la enfermería: «23:20, ruido en el lago».",
-			BotasJuncos => "En la suela de las botas hay juncos del lago: quien las usó bajó a la orilla.",
-			_ => null,
-		};
-		if (nota != null) Hud.Call("agregar_nota", nota);
+		if (_guion.NotaDeDetalle(id) is string nota) Hud.Call("agregar_nota", nota);
 		Cambio();
 		Autoguardar("Detalle: " + id);
 	}
@@ -228,20 +203,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 	private void ActualizarObjetivo()
 	{
-		if (_guion.Objetivo() is string delGuion) { Objetivo(delGuion); return; }
-		string cuenta = $" ({_pistas.Count}/{PistasTotales} pistas)";
-		if (_pistas.Count >= PistasTotales && Jugador.TieneObjeto(Llavero)) { Objetivo("Ya revisé todo el campamento. El sendero del lago, al norte."); return; }
-		foreach (var (texto, ids) in Pasos)
-		{
-			if (ids.Contains(TazaDelantal) && _pistas.Contains(TazaDelantal) && !Jugador.TieneObjeto(Llavero))
-			{ Objetivo("Revisa el delantal de Porky en la cocina." + cuenta); return; }
-			if (ids.Contains(NotaPorky) && Jugador.TieneObjeto(Llavero) && !_pistas.Contains(NotaPorky))
-			{ Objetivo("Abre la cabaña de Porky, al este." + cuenta); return; }
-			if (ids.All(id => _pistas.Contains(id) || (id == RegistroLlamadas && !RegistroLlamadasConfirmado))) continue;
-			Objetivo(texto + cuenta);
-			return;
-		}
-		Objetivo("Revisa el campamento: fogata, cocina, cabañas, enfermería y caseta." + cuenta);
+		_guion.PublicarObjetivo(GuiaCaso1.Escenario.Campamento);
 	}
 
 	// El llavero de Porky también abre el cobertizo del lago: sin él, allá abajo no se podría seguir
@@ -262,6 +224,8 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 	private void AlEntrarZona(string zona)
 	{
+		// Cada vez que se entra, cuántas pistas quedan ahí (sin decir cuáles)
+		if (_guion.Guia.AvisoDeZona(GuiaCaso1.Escenario.Campamento, zona) is string quedan && !_enDialogo) Jugador.MostrarAviso(quedan, 3.0);
 		if (!_zonasVistas.Add(zona)) return;
 		string texto = zona switch
 		{
@@ -329,6 +293,9 @@ public partial class Caso1 : Node, ICuadernoPistas
 		_guion = new GuionCaso1(Dialogo, Hud, _caneloso, Cambio)
 		{
 			AlTerminar = motivo => { if (!IsInsideTree()) return; ActualizarObjetivo(); Autoguardar(motivo); },
+			TieneLlavero = () => Jugador.TieneObjeto(Llavero),
+			Ayudas = _ayudasInvestigacion,
+			TiempoCaso = () => _tiempoCaso,
 		};
 		foreach (var (nodo, id) in Sospechosos)
 		{
@@ -368,15 +335,9 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 	public string PedirPista()
 	{
-		if (!AyudasHabilitadas) return "Activa las ayudas de investigación en Opciones para pedir una pista.";
 		if (_guion.Resuelto || _restaurando || _enDialogo || Dialogo.Abierto || Tablero.Abierto || Jugador.Examinando)
 			return "Continúa la investigación antes de pedir otra pista.";
-		var (id, texto) = OrientacionInvestigacion();
-		if (id == null) return "No hay más orientaciones disponibles aquí.";
-		if (!_ayudasInvestigacion.Agregar("caso1:" + id, texto))
-			return "La pista para este paso ya está en tu cuaderno. Puedes volver a leerla abajo.";
-		Cambio();
-		return "Nueva pista añadida al cuaderno.";
+		return _guion.PedirPista(GuiaCaso1.Escenario.Campamento);
 	}
 
 	public override void _UnhandledInput(InputEvent evento)
