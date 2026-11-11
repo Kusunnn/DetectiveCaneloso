@@ -39,18 +39,18 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "Mimita, ¿qué se alcanza a ver desde la enfermería?"
+					"texto": "¿Dónde estabas cuando pasó lo de Porky?"
 				},
 				{
 					"habla": "Mimita",
 					"animo": "nerviosa",
-					"texto": "Mmm... estuve toda la noche en la enfermería. Tenía que estar al pendiente de los campistas, y además estaba acomodando el botiquín, y ni señal había, literal modo avión... No vi nada. ¿Sí?"
+					"texto": "Mmm... estuve toda la noche en la enfermería, también cuando pasó lo de Porky. Tenía que estar al pendiente de los campistas, y además estaba acomodando el botiquín, y ni señal había, literal modo avión... No vi nada. ¿Sí?"
 				}
 			],
 			"siguiente": "prueba_1",
 			"al_completar": {
 				"notas": [
-					"Mimita dice que estuvo toda la noche en la enfermería y que no vio nada."
+					"Mimita dice que estaba en la enfermería cuando pasó lo de Porky y que no vio nada."
 				]
 			}
 		},

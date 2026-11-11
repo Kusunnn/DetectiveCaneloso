@@ -26,12 +26,12 @@
 	},
 	"_frases": "Las declaraciones son el texto del guion dividido en frases; tests/GuiaCaso1Prueba.cs revisa que coincidan.",
 	"declaraciones": {
-		"juan_carlos": ["Fíjate que fui por leña cuando se fue la luz, bro.", "Y sí, vi al ciervo, ¿eh? ¿Yo? Ahí estaba en la colina, bien brillante.", "Pero eso no quiere decir que bajé al lago."],
-		"aya": ["Oh... yo estaba tomando fotos del bosque, detective.", "La luna, los pinos... bien bonito todo.", "La neta del planeta, no vi nada raro."],
-		"miawrio": ["Eh... estuve en mi carro, haciendo llamadas.", "Cerrando pendientes.", "A la cocinera casi no la conocía."],
-		"eriz": ["Mira... yo encontré el cuerpo y ya.", "Llegué al lago justo antes.", "Y ya sé lo que van a pensar por mi pasado, pero yo ya no soy ese, simón."],
-		"mimita": ["Mmm... estuve toda la noche en la enfermería.", "Tenía que estar al pendiente de los campistas, y además estaba acomodando el botiquín, y ni señal había, literal modo avión...", "No vi nada. ¿Sí?"],
-		"tony": ["Mmh... no me moví de la fogata. Solo salí un momento a revisar el generador. Alguien tenía que hacerlo.", "No me acerqué al lago. Después de... lo que pasó con Paco, no piso esa orilla. Hace años.", "¿Ese silbato? No es mío. «T. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?", "¡No tenía nada contra Porky! Era como una hermana chica para todos.", "¿El remo? Cualquiera pudo agarrar un remo de ese cobertizo. ¿En serio?"]
+		"juan_carlos": ["Fíjate que fui por leña al montón de la fogata cuando se fue la luz, bro. Estaba sacando leña de ahí cuando pasó lo de Porky.", "Y sí, vi al ciervo en la colina, bien brillante.", "Pero eso no quiere decir que bajé al lago."],
+		"aya": ["Oh... estaba en el bosque tomando fotos cuando pasó lo de Porky, detective.", "La luna, los pinos... bien bonito todo.", "La neta del planeta, no vi nada raro."],
+		"miawrio": ["Eh... cuando pasó lo de Porky estuve en mi carro, en el estacionamiento, haciendo llamadas.", "Cerrando pendientes.", "A la cocinera casi no la conocía."],
+		"eriz": ["Mira... cuando pasó lo de Porky yo apenas estaba llegando a la orilla.", "Fue justo antes de encontrar el cuerpo.", "Y ya sé lo que van a pensar por mi pasado, pero yo ya no soy ese, simón."],
+		"mimita": ["Mmm... estuve toda la noche en la enfermería, también cuando pasó lo de Porky.", "Tenía que estar al pendiente de los campistas, y además estaba acomodando el botiquín, y ni señal había, literal modo avión...", "No vi nada. ¿Sí?"],
+		"tony": ["Mmh... solo salí de la fogata para revisar el generador. Me quedé en la caseta hasta después de lo de Porky. Alguien tenía que hacerlo.", "No me acerqué al lago. Después de... lo que pasó con Paco, no piso esa orilla. Hace años.", "¿Ese silbato? No es mío. «T. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?", "¡No tenía nada contra Porky! Era como una hermana chica para todos.", "¿El remo? Cualquiera pudo agarrar un remo de ese cobertizo. ¿En serio?"]
 	},
 	"candados": [
 		{ "id": "JC-1", "nodo": "prueba_1", "frase": 0, "quien": "juan_carlos", "da": ["juan_carlos_1"], "pistas": ["lena_intacta"] },

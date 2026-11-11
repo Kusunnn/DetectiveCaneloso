@@ -221,12 +221,23 @@ func _fichas_sospechosos() -> void:
 	var fichas: Array = _flujo.Fichas(_sala)
 	var tony: Dictionary = fichas.filter(func(f): return f.id == "tony")[0]
 	_revisar(fichas.size() == 6 and tony.candados[1] == 5, "seis fichas; Tony con 5 candados")
+	_revisar(tony.coartada.is_empty(), "la coartada no aparece antes de la declaración")
 	_revisar(not str(tony.consejo).contains("ESCUCHA A LOS DEM"), "Tony no pide escuchar a los demás: " + str(tony.consejo))
 	_hablar_con_hecdog()
-	await _jugar(["Interrogar a Tony", "Terminar"], func(): return _flujo.Declaro(_sala, "tony") and _dialogo.PruebasOpciones().contains("Interrogar a Juan Carlos"), 60.0)
+	var declaro := await _jugar(["Interrogar a Tony"],
+		func(): return _flujo.Declaro(_sala, "tony") and _dialogo.PruebasOpciones().contains("Confrontar"), 60.0)
+	_revisar(declaro, "Tony declara antes de elegir con qué confrontarlo")
 	tony = _flujo.Fichas(_sala).filter(func(f): return f.id == "tony")[0]
 	_revisar(tony.contradicciones.size() == 5, "tras hablar con él, sus cinco excusas están en la ficha")
 	_revisar(str(tony.consejo) == "TIENES CON QUÉ ROMPER UN CANDADO", "con las pistas, la ficha avisa que tienes con qué: " + str(tony.consejo))
+
+	_revisar(tony.coartada.get("zona") == "Campamento · Caseta del generador" and tony.coartada.get("estado") == "pendiente",
+		"la declaración registra la zona y deja la coartada pendiente")
+	var ok := await _jugar(["Confrontar", "Foto de Aya de las 23:12"],
+		func(): return _flujo.TieneConclusion(_sala, "tony_1"))
+	var despues: Dictionary = _flujo.Fichas(_sala).filter(func(f): return f.id == "tony")[0]
+	_revisar(ok and despues.coartada.get("estado") == "refutada" and despues.estado != tony.estado,
+		"al confrontar a Tony cambia la coartada y su estado de sospecha")
 
 func _ultimo_candado() -> void:
 	print("== Con la noche completa, el último candado de Tony lleva al Final A")

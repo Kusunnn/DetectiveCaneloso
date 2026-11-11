@@ -47,19 +47,19 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "Juan Carlos, platícame de anoche."
+					"texto": "¿Dónde estabas cuando pasó lo de Porky?"
 				},
 				{
 					"habla": "Juan Carlos",
 					"animo": "nervioso",
 					"gesto": "Truena los dedos",
-					"texto": "Fíjate que fui por leña cuando se fue la luz, bro. Y sí, vi al ciervo, ¿eh? ¿Yo? Ahí estaba en la colina, bien brillante."
+					"texto": "Fíjate que fui por leña al montón de la fogata cuando se fue la luz, bro. Estaba sacando leña de ahí cuando pasó lo de Porky. Y sí, vi al ciervo en la colina, bien brillante."
 				}
 			],
 			"siguiente": "prueba_1",
 			"al_completar": {
 				"notas": [
-					"Juan Carlos dice que fue por leña cuando se fue la luz y que vio al ciervo en la colina."
+					"Juan Carlos dice que estaba en el montón de leña de la fogata cuando pasó lo de Porky."
 				]
 			}
 		},
@@ -184,7 +184,7 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "Dijiste que fuiste por leña. El montón de la fogata está intacto: anoche nadie trajo nada."
+					"texto": "Dijiste que estabas sacando leña. El montón de la fogata está intacto: de ahí no sacó nada nadie."
 				},
 				{
 					"habla": "Juan Carlos",
@@ -199,7 +199,7 @@
 					"juan_carlos_1"
 				],
 				"notas": [
-					"Juan Carlos no fue por leña: la leña de la fogata está intacta."
+					"El montón de leña de la fogata está intacto. Juan Carlos admite que se entretuvo en el bosque."
 				]
 			}
 		},

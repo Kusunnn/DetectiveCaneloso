@@ -125,6 +125,7 @@ const COLORES_SECCION := {"PISTAS": Color("dbb64f"), "DEDUCCIONES": Color("87634
 ## HU-29: fichas de sospechosos. Cada caso pone un proveedor que las arma con lo que el jugador ya sabe;
 ## el diario se lo pide al abrirse. Cada ficha: id, nombre, retrato, datos, relacion, presencia, vinculo,
 ## pruebas [{titulo}], pruebas_faltan, contradicciones [{dicho, prueba, estado}], estado y consejo.
+## coartada {zona, declaracion, estado} aparece al oír su versión.
 ## Lo que llega vacío se muestra como pendiente.
 var proveedor_sospechosos: Callable
 var sospechosos: Array = []
@@ -135,6 +136,7 @@ const ESTADOS_SOSPECHA := {
 	"sospecha": ["●", "BAJO SOSPECHA", Color("a8322d")],
 	"confeso": ["◆", "SECRETO CONFESADO", Color("9c6f05")],
 	"coartada": ["✓", "COARTADA CONFIRMADA", Color("4d7a4a")],
+	"refutada": ["✗", "COARTADA REFUTADA", Color("a8322d")],
 	"principal": ["★", "PRINCIPAL SOSPECHOSO", Color("a8322d")],
 }
 var _papeles_libro: Array[ImageTexture] = []
@@ -874,7 +876,7 @@ func _dibujar_galeria_sospechosos(p: Vector2) -> void:
 		if s.get("estado", "sin") != "sin":
 			interrogados += 1
 		_zonas_libro.append({"rect": rect, "sospechoso": k})
-	_texto_ajustado("○ SIN INTERROGAR  ● BAJO SOSPECHA  ◆ CONFESÓ  ✓ COARTADA  ★ PRINCIPAL", p + Vector2(38, 552), MONO, 11, Color("75654e"), 504)
+	_texto_ajustado("○ SIN INTERROGAR  ● BAJO SOSPECHA  ◆ CONFESÓ  ✓ CONFIRMADA  ✗ REFUTADA  ★ PRINCIPAL", p + Vector2(38, 552), MONO, 11, Color("75654e"), 504)
 	_texto_ajustado("%02d SOSPECHOSOS  ·  INTERROGADOS %d/%d  ·  CLIC PARA VER SU FICHA" % [sospechosos.size(), interrogados, sospechosos.size()], p + Vector2(38, 574), MONO, 12, Color("75654e"), 504)
 
 ## HU-29: la ficha del sospechoso elegido. Lo que el jugador aún no sabe se ve como pendiente.
@@ -913,6 +915,17 @@ func _dibujar_ficha_sospechoso(p: Vector2, s: Dictionary) -> void:
 				_rayado(chip, Color("b8ab94"))
 			_texto(etiqueta[0], chip.position + Vector2(10, 15), MONO, 11, TINTA if etiqueta[1] else Color("9a8e7b"))
 			x += ancho + 6
+		y += 40
+	var coartada: Dictionary = s.get("coartada", {})
+	if not coartada.is_empty():
+		var estado_coartada: String = coartada.estado
+		var color_coartada: Color = gris
+		if estado_coartada == "refutada":
+			color_coartada = ESTADOS_SOSPECHA.refutada[2]
+		elif estado_coartada == "confirmada":
+			color_coartada = ESTADOS_SOSPECHA.coartada[2]
+		_texto_ajustado("COARTADA %s  ·  %s" % [estado_coartada.to_upper(), coartada.zona], p + Vector2(38, y), MONO, 12, color_coartada, 504)
+		_texto_ajustado(coartada.declaracion, p + Vector2(38, y + 19), MONO, 13, TINTA, 504)
 		y += 40
 	# CA-04: contradicciones que dijo y si ya se cayeron con una prueba
 	var filas: Array = s.get("contradicciones", [])

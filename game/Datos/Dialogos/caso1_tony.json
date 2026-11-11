@@ -195,18 +195,18 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "Tony. Ya nada más falta usted."
+					"texto": "¿Dónde estaba usted cuando pasó lo de Porky?"
 				},
 				{
 					"habla": "Tony",
 					"animo": "tranquilo",
-					"texto": "Mmh... no me moví de la fogata. Solo salí un momento a revisar el generador. Alguien tenía que hacerlo."
+					"texto": "Mmh... solo salí de la fogata para revisar el generador. Me quedé en la caseta hasta después de lo de Porky. Alguien tenía que hacerlo."
 				}
 			],
 			"siguiente": "hub",
 			"al_completar": {
 				"notas": [
-					"Tony dice que no se movió de la fogata y que solo salió un momento a revisar el generador."
+					"Tony dice que estaba en la caseta del generador cuando pasó lo de Porky."
 				]
 			}
 		},

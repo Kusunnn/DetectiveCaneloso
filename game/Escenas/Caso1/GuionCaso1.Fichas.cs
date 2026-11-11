@@ -12,8 +12,10 @@ public partial class GuionCaso1
 	// Se oye al completar Nodo en su interrogatorio; queda resuelta con Conclusion. Comprobada = lo que dijo era cierto.
 	private sealed record Dicho(string Texto, string Nodo, string Conclusion, string Prueba, string Pide, string Resultado, bool Comprobada = false);
 
+	private sealed record Coartada(string Zona, string Declaracion, string Conclusion = null, bool Confirmada = false);
+
 	private sealed record Ficha(string Id, string Nombre, string Datos, string Relacion, string Presencia,
-		string Vinculo, string[] PruebasVinculo, string NodoInicio, string Confesion, string Coartada, Dicho[] Dichos);
+		string Vinculo, string[] PruebasVinculo, string NodoInicio, string Confesion, Coartada Coartada, Dicho[] Dichos);
 
 	// Textos del expediente (caso_01.tres) y del guion de los interrogatorios (Datos/Dialogos/caso1_*.json)
 	private static readonly Ficha[] Fichas =
@@ -22,9 +24,10 @@ public partial class GuionCaso1
 			"Amigo de Porky desde niños. Era el otro mejor amigo de Paco.",
 			"Trabaja de monitor en el campamento; contó la leyenda del Ciervo de Luz en la fogata.",
 			"Se fue «por leña» justo antes del apagón y nadie lo volvió a ver hasta que regresó la luz.",
-			new[] { "lena_intacta", "baul_disfraces" }, "mentira", "juan_carlos_3", null, new Dicho[]
+			new[] { "lena_intacta", "baul_disfraces" }, "mentira", "juan_carlos_3",
+			new("Campamento · Fogata", "Estaba sacando leña del montón.", "juan_carlos_1"), new Dicho[]
 			{
-				new("«Fui por leña cuando se fue la luz.»", "mentira", "juan_carlos_1", "Leña intacta", "lena_intacta", "nadie trajo leña anoche"),
+				new("«Estaba sacando leña del montón de la fogata.»", "mentira", "juan_carlos_1", "Leña intacta", "lena_intacta", "nadie sacó leña del montón"),
 				new("«Yo también vi al ciervo en la colina.»", "mentira", "juan_carlos_2", "Cornamenta y zancos", "cornamenta_zancos", "el ciervo era él"),
 				new("«No bajé al lago. Ni toqué a Porky.»", "p2_disfraz", "juan_carlos_3", "Las huellas se detienen", "huellas_detenidas", "los zancos nunca llegaron al embarcadero", true),
 			}),
@@ -32,7 +35,8 @@ public partial class GuionCaso1
 			"Fue campista con Porky aquel verano, hace 10 años.",
 			"Invitada para la temporada; esa noche fotografiaba el bosque.",
 			"Estaba en el bosque con la cámara lista justo cuando sonaron los bramidos.",
-			new[] { "altavoz" }, "mentira", "aya_2", null, new Dicho[]
+			new[] { "altavoz" }, "mentira", "aya_2",
+			new("Lago · Bosque", "Estaba tomando fotos en el bosque."), new Dicho[]
 			{
 				new("«Solo fotografiaba el bosque. No vi nada raro.»", "mentira", "aya_1", "Altavoz escondido", "altavoz", "tenía la cámara lista para los bramidos"),
 				new("«Mucha gente toma fotos de noche.»", "p1_bocina", "aya_2", "Testimonio de Juan Carlos", "juan_carlos_3", "sabía del ciervo: lo estaba grabando"),
@@ -41,7 +45,8 @@ public partial class GuionCaso1
 			"Fue campista con Porky; era el mejor amigo de Paco.",
 			"Negocia la compra del terreno para construir un hotel.",
 			"Quería el campamento y Porky se negó a dejar su cabaña.",
-			new[] { "oferta_compra" }, "mentira", null, "miawrio_2", new Dicho[]
+			new[] { "oferta_compra" }, "mentira", null,
+			new("Campamento · Estacionamiento", "Estaba en su carro haciendo llamadas.", "miawrio_2", true), new Dicho[]
 			{
 				new("«Casi no conocía a Porky.»", "mentira", "miawrio_1", "Oferta de compra rota", "oferta_compra", "le ofreció dinero por su cabaña"),
 				new("«Estuve en mi carro haciendo llamadas.»", "mentira", "miawrio_2", "Registro de llamadas", "registro_llamadas", "habló de 23:00 a 23:40 sin cortes", true),
@@ -50,15 +55,17 @@ public partial class GuionCaso1
 			"Fue campista con Porky aquel verano, hace 10 años.",
 			"Volvió al antiguo campamento por nostalgia; anoche estaba en la orilla.",
 			"Encontró el cuerpo. Estaba en el lago, sin permiso, a la hora del crimen.",
-			new[] { "cuaderno_eriz" }, "mentira", "eriz_1", null, new Dicho[]
+			new[] { "cuaderno_eriz" }, "mentira", "eriz_1",
+			new("Lago · Orilla", "Apenas estaba llegando a la orilla.", "eriz_1"), new Dicho[]
 			{
-				new("«Llegué al lago justo antes de encontrarla.»", "mentira", "eriz_1", "Cuaderno de Eriz", "cuaderno_eriz", "estaba en el lago desde las 23:00"),
+				new("«Apenas estaba llegando a la orilla.»", "mentira", "eriz_1", "Cuaderno de Eriz", "cuaderno_eriz", "estaba en el lago desde las 23:00"),
 			}),
 		new("mimita", "Mimita", "24 años  ·  Enfermera del campamento",
 			"Fue campista con Porky aquel verano, hace 10 años.",
 			"Estaba de guardia en la enfermería, que mira directo al lago.",
 			"En su registro de guardia alguien tachó la hora del crimen.",
-			new[] { "registro_enfermeria" }, "mentira", "mimita_2", null, new Dicho[]
+			new[] { "registro_enfermeria" }, "mentira", "mimita_2",
+			new("Campamento · Enfermería", "Estaba de guardia y no salió en toda la noche.", "mimita_2"), new Dicho[]
 			{
 				new("«Estuve toda la noche en la enfermería.»", "mentira", "mimita_1", "Registro de la enfermería", "registro_enfermeria", "tachó la línea de las 23:20"),
 				new("«Me equivoqué al anotar. No salí.»", "p1_registro", "mimita_2", "Foto de Aya de las 23:19", "foto_aya_2319", "salió a la orilla y oyó un silbido"),
@@ -67,9 +74,10 @@ public partial class GuionCaso1
 			"La conoce desde niña: era el monitor auxiliar del grupo de Paco, su hermano.",
 			"Director del campamento; organizó el reencuentro antes del cierre.",
 			"Tiene llave de la caseta del generador y del cobertizo de los remos.",
-			new[] { "candado_caseta", "botas_tony", "silbato_ts", "hueco_remo" }, "excusa_1", null, null, new Dicho[]
+			new[] { "candado_caseta", "botas_tony", "silbato_ts", "hueco_remo" }, "excusa_1", null,
+			new("Campamento · Caseta del generador", "Estaba revisando el generador.", "tony_1"), new Dicho[]
 			{
-				new("«Solo salí a revisar el generador.»", "excusa_1", "tony_1", "Foto de Aya de las 23:12", "foto_aya_2312", "tomó el sendero del lago"),
+				new("«Estaba en la caseta revisando el generador.»", "excusa_1", "tony_1", "Foto de Aya de las 23:12", "foto_aya_2312", "tomó el sendero del lago"),
 				new("«No me acerqué al lago.»", "excusa_2", "tony_2", "Botas con barro", "botas_tony", "lodo y juncos de la orilla"),
 				// [AJUSTE] Silbato «T. S.» (aprobado el 5 nov): ya no «era de su abuelo»
 				new("«Ese silbato no es mío.»", "excusa_3", "tony_3", "Silbato del embarcadero", "silbato_ts", "es suyo, «T. S.»; se le cayó"),
@@ -128,17 +136,23 @@ public partial class GuionCaso1
 				{
 					{ "dicho", d.Texto },
 					{ "prueba", resuelto ? d.Prueba : "" },
-				{ "resultado", resuelto ? d.Resultado : "" },
+					{ "resultado", resuelto ? d.Resultado : "" },
 					{ "estado", !resuelto ? "pendiente" : d.Comprobada ? "comprobada" : "detectada" },
 				});
 			}
 
+			bool coartadaResuelta = interrogado && f.Coartada.Conclusion != null
+				&& Estado.TieneConclusion(f.Coartada.Conclusion);
+			string estadoCoartada = !coartadaResuelta ? "pendiente"
+				: f.Coartada.Confirmada ? "confirmada" : "refutada";
+
 			string estado = !interrogado ? "sin"
-				: f.Coartada != null && Estado.TieneConclusion(f.Coartada) ? "coartada"
+				: estadoCoartada == "confirmada" ? "coartada"
 				: f.Confesion != null && Estado.TieneConclusion(f.Confesion) ? "confeso"
+				: estadoCoartada == "refutada" ? "refutada"
 				: f.Id == Culpable ? "principal"
 				: "sospecha";
-			if (f.Id == Culpable && TonyDisponible) estado = "principal";
+			if (f.Id == Culpable && TonyDisponible && estado != "refutada") estado = "principal";
 
 			// Con qué presionarlo: no se dice qué prueba, solo si ya la tiene (como «Presionar» en el interrogatorio)
 			// [AJUSTE] Tony se puede interrogar desde el inicio: ya no «PRIMERO ESCUCHA A LOS DEMÁS»
@@ -160,6 +174,12 @@ public partial class GuionCaso1
 				{ "pruebas", pruebas },
 				{ "pruebas_faltan", encontradas < f.PruebasVinculo.Length },
 				{ "contradicciones", dichos },
+				{ "coartada", interrogado ? new Diccionario
+					{
+						{ "zona", f.Coartada.Zona },
+						{ "declaracion", f.Coartada.Declaracion },
+						{ "estado", estadoCoartada },
+					} : new Diccionario() },
 				{ "estado", estado },
 				{ "consejo", consejo },
 				{ "candados", Candados(f.Id) },

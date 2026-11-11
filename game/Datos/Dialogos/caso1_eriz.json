@@ -31,18 +31,18 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "Eriz, tú encontraste el cuerpo. Cuéntamelo otra vez."
+					"texto": "¿Dónde estabas cuando pasó lo de Porky?"
 				},
 				{
 					"habla": "Eriz",
 					"animo": "nervioso",
-					"texto": "Mira... yo encontré el cuerpo y ya. Llegué al lago justo antes. Y ya sé lo que van a pensar por mi pasado, pero yo ya no soy ese, simón."
+					"texto": "Mira... cuando pasó lo de Porky yo apenas estaba llegando a la orilla. Fue justo antes de encontrar el cuerpo. Y ya sé lo que van a pensar por mi pasado, pero yo ya no soy ese, simón."
 				}
 			],
 			"siguiente": "prueba_1",
 			"al_completar": {
 				"notas": [
-					"Eriz dice que llegó al lago justo antes de encontrar el cuerpo."
+					"Eriz dice que apenas estaba llegando a la orilla cuando pasó lo de Porky."
 				]
 			}
 		},

@@ -219,7 +219,7 @@ public partial class GuionCaso1
 				await CinematicaCaso1.Reproducir(NodoEscena, LibretosCaso1.IdRevelacion, LibretosCaso1.Revelacion());
 		};
 		string final = await Motor.Recorrer(acusacion, desde);
-		Motor.OmitirLinea = _omitirNormal;
+		Motor.OmitirLinea = null;
 		Motor.AntesDeNodo = antes;
 		Motor.AntesDeLinea = null;
 		if (!sigue()) return;

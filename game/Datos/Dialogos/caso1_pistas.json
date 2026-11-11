@@ -26,8 +26,8 @@
 			"titulo": "Montón de leña intacto",
 			"escenario": "Campamento",
 			"donde": "Junto a la fogata",
-			"comentario": "La leña sigue apilada. Juan Carlos dijo que iba por leña y no trajo ni una rama. ¿A dónde fue, entonces?",
-			"nota": "La leña junto a la fogata está intacta: nadie trajo leña anoche."
+			"comentario": "El montón junto a la fogata sigue intacto. No falta ni una rama.",
+			"nota": "El montón de leña junto a la fogata está intacto."
 		},
 		"libro_guardia_quemado": {
 			"titulo": "Libro de guardia quemado",
