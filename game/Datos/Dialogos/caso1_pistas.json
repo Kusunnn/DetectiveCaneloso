@@ -5,8 +5,8 @@
 			"titulo": "Interruptor del generador",
 			"escenario": "Campamento",
 			"donde": "Caseta del generador",
-			"comentario": "Lo bajaron a mano... El generador está perfecto: el apagón no fue una falla, alguien lo provocó.",
-			"nota": "Caseta del generador: el interruptor se bajó a mano. El apagón fue provocado."
+			"comentario": "Lo bajaron a mano... El generador está perfecto.",
+			"nota": "Caseta del generador: el interruptor estaba en la posición de apagado."
 		},
 		"candado_caseta": {
 			"titulo": "Candado sin forzar",
@@ -75,7 +75,7 @@
 			"titulo": "Registro de la enfermería",
 			"escenario": "Campamento",
 			"donde": "Enfermería",
-			"comentario": "«23:20, se escuchó algo en el lago». Y luego lo tacharon con fuerza. Mimita oyó algo y no quiere que se sepa.",
+			"comentario": "Alguien tachó con fuerza la anotación de las 23:20. La pluma dejó surcos en el papel.",
 			"nota": "Enfermería: alguien tachó la línea de las 23:20 del registro de guardia."
 		},
 		"botas_tony": {
@@ -131,8 +131,8 @@
 			"titulo": "Remo con sangre",
 			"escenario": "Lago y bosque",
 			"donde": "Entre los juncos, abajo del embarcadero",
-			"comentario": "Entre los juncos, abajo del embarcadero: un remo lleno de sangre. Un objeto largo y duro. El arma.",
-			"nota": "Remo con sangre entre los juncos, abajo del embarcadero: el arma."
+			"comentario": "Entre los juncos, abajo del embarcadero: un remo con sangre en la pala.",
+			"nota": "Remo con sangre entre los juncos, abajo del embarcadero."
 		},
 		"silbato_gs": {
 			"titulo": "Silbato «T. S.»",
@@ -152,7 +152,7 @@
 			"titulo": "Cuaderno de Eriz",
 			"escenario": "Lago y bosque",
 			"donde": "Mochila de Eriz, en la orilla",
-			"comentario": "«23:20: perturbación luminosa fuerte junto al embarcadero». Eriz no llegó justo antes: ya estaba aquí. Y esta línea marca la hora del crimen.",
+			"comentario": "«23:20: perturbación luminosa fuerte junto al embarcadero». Eriz apuntó la hora exacta de lo que vio.",
 			"nota": "Cuaderno de Eriz: «23:20: perturbación luminosa fuerte junto al embarcadero»."
 		}
 	},

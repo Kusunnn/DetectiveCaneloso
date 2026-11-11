@@ -80,9 +80,8 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 		Jugador.EvidenciaExaminada += _ => Cambio();
 		Jugador.DetalleDescubierto += (origen, id) => { AlDescubrirDetalle(origen, id); Cambio(); Autoguardar("Detalle: " + id); };
 
-		Tablero.ObtenerCartas = Cartas;
-		Tablero.ObtenerConclusiones = () => Array.Empty<string>();
-		Tablero.Probar = (_, _) => null; // Las deducciones llegan con los interrogatorios
+		Guion.PrepararTablero(Tablero);
+		Hud.Connect("tablero_modificado", Callable.From(Cambio));
 
 		for (int i = 0; i < ContenedoresConPista.Length && i < PistasDentro.Length; i++)
 		{
@@ -137,17 +136,6 @@ public abstract partial class EscenarioCaso1 : Node, IEstadoPartida, ICuadernoPi
 		if (pista.Encontrada && pista.SeRecoge) return;
 		pista.Visible = !escondida;
 		pista.CollisionLayer = escondida ? 0 : CapaInteractuable;
-	}
-
-	private IList<Carta> Cartas()
-	{
-		var cartas = new List<Carta>();
-		foreach (Variant pista in Hud.Get("pistas").AsGodotArray())
-		{
-			var recurso = pista.As<Resource>();
-			cartas.Add(new Carta(recurso.Get("id").AsStringName().ToString(), recurso.Get("titulo").AsString(), "PISTA", recurso.Get("imagen").As<Texture2D>()));
-		}
-		return cartas;
 	}
 
 	// true solo la primera vez en la partida (se guarda con las zonas vistas de este escenario): para lo que se

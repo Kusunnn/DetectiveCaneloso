@@ -40,6 +40,7 @@ func _initialize() -> void:
 	if solo == "" or solo == "directo": await _final_a_directo()
 	if solo == "" or solo == "ultimo": await _ultimo_candado()
 	if solo == "" or solo == "fichas": await _fichas_sospechosos()
+	if solo == "" or solo == "deducciones": await _deducciones()
 	if solo == "" or solo == "rechazo": await _rechazo_tony()
 	if solo == "" or solo == "desorden": await _tony_en_desorden()
 	print("Fallos: %d" % _fallos)
@@ -238,6 +239,46 @@ func _fichas_sospechosos() -> void:
 	var despues: Dictionary = _flujo.Fichas(_sala).filter(func(f): return f.id == "tony")[0]
 	_revisar(ok and despues.coartada.get("estado") == "refutada" and despues.estado != tony.estado,
 		"al confrontar a Tony cambia la coartada y su estado de sospecha")
+
+func _deducciones() -> void:
+	print("== Deducciones del Caso 1")
+	await _nueva()
+	var hud = current_scene.get_node("HUD")
+	var tablero = hud.gestor_tablero
+	tablero.Abrir()
+	var relaciones = hud.relaciones_pizarron
+	_revisar(relaciones.tarjetas.has(&"persona:Tony"), "la ficha de Tony se puede llevar al pizarrón")
+	var ids := [&"cuaderno_eriz", &"registro_enfermeria", &"taza_delantal", &"botas_tony", &"persona:Tony"]
+	for i in ids.size():
+		hud._tarjetas_tablero[ids[i]] = Vector2(280 + i * 240, 500)
+	relaciones.conectar(&"registro_enfermeria", &"cuaderno_eriz")
+	var hora: Dictionary = relaciones.conexiones.back()
+	var texto_hora := str(relaciones.tarjetas.get(hora.resultado, {}).get("titulo", ""))
+	_revisar(texto_hora.contains("23:20"), "dos pistas generan la deducción sobre la hora del ataque")
+	relaciones.conectar(&"cuaderno_eriz", &"registro_enfermeria")
+	_revisar(hud.notas.count("Deducción: " + texto_hora) == 1, "la deducción se registra una sola vez")
+	relaciones.conectar(&"cuaderno_eriz", &"taza_delantal")
+	_revisar(relaciones.conexiones.back().resultado == &"", "una pareja sin relación se queda como hipótesis")
+	relaciones.conectar(&"persona:Tony", &"botas_tony")
+	_revisar(relaciones.conexiones.back().resultado == &"", "falta escuchar la versión de Tony")
+	tablero.Cerrar()
+
+	_hablar_con_hecdog()
+	var declaro := await _jugar(["Interrogar a Tony", "Terminar", "Seguir investigando"], _libre)
+	_revisar(declaro and _flujo.Declaro(_sala, "tony"), "Tony dio su declaración")
+	tablero.Abrir()
+	relaciones.conectar(&"botas_tony", &"persona:Tony")
+	var mixta: Dictionary = relaciones.conexiones.back()
+	var texto_mixta := str(relaciones.tarjetas.get(mixta.resultado, {}).get("titulo", ""))
+	_revisar(texto_mixta.contains("juncos") and hud.notas.has("Deducción: " + texto_mixta),
+		"tras declarar, la ficha y la pista generan una deducción")
+	tablero.Cerrar()
+	await _guardar_cargar()
+	hud = current_scene.get_node("HUD")
+	_revisar(hud.notas.has("Deducción: " + texto_hora) and hud.notas.has("Deducción: " + texto_mixta),
+		"las deducciones del diario sobreviven al guardado")
+	_revisar(hud.relaciones_pizarron.tarjetas.has(hora.resultado) and hud.relaciones_pizarron.tarjetas.has(mixta.resultado),
+		"las tarjetas de deducción se restauran en el pizarrón")
 
 func _ultimo_candado() -> void:
 	print("== Con la noche completa, el último candado de Tony lleva al Final A")

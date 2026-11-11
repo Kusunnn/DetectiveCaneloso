@@ -22,7 +22,7 @@ public class Carta
 // Pizarrón físico con cámara dedicada; el HUD superpone el diario para arrastrar pistas.
 public partial class TableroDeduccion : CanvasLayer
 {
-	// Se conserva el contrato del caso para la futura formulación de ideas.
+	// Cada caso resuelve sus combinaciones de pistas, testimonios o personas.
 	public Func<string, string, string> Probar;
 	public Func<IList<Carta>> ObtenerCartas;
 	public Func<IList<string>> ObtenerConclusiones;
@@ -61,6 +61,10 @@ public partial class TableroDeduccion : CanvasLayer
 	}
 	public string ProbarRelacion(string a, string b)
 	{
+		string directa = Probar?.Invoke(a, b);
+		if (!string.IsNullOrEmpty(directa)) return directa;
+		if (!a.StartsWith("persona:") && !b.StartsWith("persona:")) return "";
+
 		foreach (string x in Identidades(a))
 			foreach (string y in Identidades(b))
 			{

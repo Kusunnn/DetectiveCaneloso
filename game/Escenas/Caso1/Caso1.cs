@@ -83,10 +83,6 @@ public partial class Caso1 : Node, ICuadernoPistas
 		Jugador.EvidenciaExaminada += _ => Cambio();
 		Jugador.DetalleDescubierto += AlDescubrirDetalle;
 
-		Tablero.ObtenerCartas = Cartas;
-		Tablero.ObtenerConclusiones = () => Array.Empty<string>();
-		Tablero.Probar = (_, _) => null; // Las deducciones llegan con los interrogatorios
-
 		PuertaPorky.Bloqueada = true;
 		PuertaPorky.MensajeBloqueada = "Cabaña 4: la de Porky. Cerrada con llave... y ella nunca dejaba la llave lejos de la cocina.";
 
@@ -99,6 +95,7 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 		Salida.Usado += () => _ = Conversar(AlUsarSalida);
 		PrepararDialogos();
+		_guion.PrepararTablero(Tablero);
 		// Rediseño (paso 7): cada uno en su lugar, con su actividad y su objeto
 		if (GetParent().GetNodeOrNull<Node3D>("Personajes") is { } personajes) ActividadesCaso1.Colocar(personajes, ActividadesCaso1.Campamento);
 		foreach (var zona in Zonas)
@@ -208,17 +205,6 @@ public partial class Caso1 : Node, ICuadernoPistas
 
 	// El llavero de Porky también abre el cobertizo del lago: sin él, allá abajo no se podría seguir
 	private bool PuedeSalir => _pistas.Count >= PistasParaSalir && Jugador.TieneObjeto(Llavero);
-
-	private IList<Carta> Cartas()
-	{
-		var cartas = new List<Carta>();
-		foreach (Variant pista in Hud.Get("pistas").AsGodotArray())
-		{
-			var recurso = pista.As<Resource>();
-			cartas.Add(new Carta(recurso.Get("id").AsStringName().ToString(), recurso.Get("titulo").AsString(), "PISTA", recurso.Get("imagen").As<Texture2D>()));
-		}
-		return cartas;
-	}
 
 	// ---------- Zonas ----------
 
