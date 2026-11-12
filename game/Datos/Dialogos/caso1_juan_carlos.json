@@ -208,6 +208,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Esta oferta de compra estaba rota en el bote de basura de Porky."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "a la defensiva",
+					"texto": "¿Y eso qué, wey? Eso es bronca de Miawrio con Porky. Yo de negocios ni sé, bro. Yo te estoy hablando de la leña."
 				}
 			],
 			"siguiente": "error"
@@ -217,6 +222,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Porky dejó la taza de chocolate a medias. ¿La viste salir?"
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "nervioso",
+					"texto": "Sí la vi irse de la fogata, toda apurada. Pero eso no tiene nada que ver con mi leña, wey."
 				}
 			],
 			"siguiente": "error"
@@ -292,6 +302,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "La linterna de Porky estaba en el fondo del lago, prendida."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "nervioso",
+					"texto": "¿Una linterna en el lago? Yo andaba en el bosque, wey, no en el agua."
 				}
 			],
 			"siguiente": "error"
@@ -301,6 +316,12 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Este recorte habla de la muerte de Paco."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "dolido",
+					"gesto": "Se le quiebra la voz",
+					"texto": "Paco era mi mejor amigo, wey. No me lo pongas así... eso no tiene nada que ver con lo de anoche."
 				}
 			],
 			"siguiente": "error"
@@ -390,6 +411,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "El remo con sangre estaba entre los juncos, abajo del embarcadero."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "asustado",
+					"texto": "¿Y yo qué, wey? Yo no bajé al embarcadero. Ese remo ni lo toqué, te lo juro."
 				}
 			],
 			"siguiente": "error"
@@ -399,6 +425,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Este silbato estaba atorado en un clavo del embarcadero."
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "a la defensiva",
+					"texto": "Ese silbato no es mío, wey. Fíjate en las letras: yo no soy «T. S.»."
 				}
 			],
 			"siguiente": "error"
@@ -505,6 +536,154 @@
 		"paciencia": {
 			"fin": true,
 			"salida": "paciencia"
+		},
+		"desestima": {
+			"variantes": [
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "confundido",
+						"texto": "¿Y eso qué, wey? No tiene nada que ver conmigo."
+					}
+				],
+				[
+					{
+						"habla": "Juan Carlos",
+						"animo": "a la defensiva",
+						"texto": "Fíjate que con eso no me agarras, bro. Ni sé qué tiene que ver."
+					}
+				]
+			],
+			"siguiente": "error"
+		},
+		"q_salida": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿A qué hora te fuiste de la fogata?"
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "nervioso",
+					"gesto": "Truena los dedos",
+					"texto": "Como cinco minutos antes de que se fuera la luz, wey. Dije que iba por leña y me fui pal montón, ahí junto a la fogata."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Juan Carlos: se fue de la fogata unos cinco minutos antes del apagón. Dijo que iba por leña al montón de junto a la fogata."
+				]
+			}
+		},
+		"q_porky_fogata": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Viste a Porky en la fogata?"
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "triste",
+					"texto": "Sí, wey. Yo estaba contando la leyenda del Ciervo de Luz y ella andaba repartiendo chocolate. A media historia se fue, bien apurada."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Juan Carlos: Porky repartió chocolate en la fogata y se fue con prisa mientras él contaba la leyenda."
+				]
+			}
+		},
+		"q_paco": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Qué tan cercano eras a Paco?"
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "dolido",
+					"gesto": "Se le quiebra la voz",
+					"texto": "Era mi mejor amigo, wey. Yo tenía catorce y él doce. Le encantaban las leyendas del campamento... la del Ciervo de Luz era su favorita."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Juan Carlos: era el mejor amigo de Paco. La leyenda del Ciervo de Luz era la favorita de Paco."
+				]
+			}
+		},
+		"q_generador": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "El interruptor del generador lo bajaron a mano. ¿Fuiste tú?"
+				},
+				{
+					"habla": "Juan Carlos",
+					"animo": "apenado",
+					"texto": "Sí, wey, fui yo. Como soy monitor, tengo llave de la caseta. A las once lo bajé pa' que todo quedara a oscuras, y a las once cuarenta lo volví a subir, cuando ya había escondido el disfraz."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Juan Carlos: él bajó el interruptor del generador a las 23:00 con su llave de monitor y lo volvió a subir a las 23:40, después de esconder el disfraz."
+				]
+			}
+		},
+		"preguntas": {
+			"pregunta": "¿Qué le pregunto?",
+			"opciones": [
+				{
+					"id": "salida",
+					"tipo": "PREGUNTAR",
+					"texto": "¿A qué hora te fuiste de la fogata?",
+					"destino": "q_salida",
+					"una_vez": true,
+					"requiere": {
+						"sin_conclusiones": [
+							"juan_carlos_1"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "porky_fogata",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Qué hizo Porky en la fogata?",
+					"destino": "q_porky_fogata",
+					"una_vez": true,
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "paco",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Qué tan cercano eras a Paco?",
+					"destino": "q_paco",
+					"una_vez": true,
+					"requiere": {
+						"pistas": [
+							"recorte_periodico"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "generador",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Quién bajó el interruptor del generador?",
+					"destino": "q_generador",
+					"una_vez": true,
+					"requiere": {
+						"pistas": [
+							"interruptor_generador"
+						],
+						"conclusiones": [
+							"juan_carlos_3"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				}
+			]
 		},
 		"despedida": {
 			"variantes": [

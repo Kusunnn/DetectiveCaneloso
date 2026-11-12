@@ -160,6 +160,9 @@ public partial class GuionCaso1
 			await ConfesionDeTony(sigue);
 			return;
 		}
+		// HU-30: sin candados que romper, todavía contesta las preguntas nuevas (Tony ya no dice nada más)
+		if (quien != Culpable && sigue() && Guia.Candados.Where(c => c.Quien == quien).All(Guia.Roto) && TienePreguntas(quien))
+			await HacerPreguntas(_arboles["caso1_" + quien], sigue);
 		if (sigue()) await DespuesDeInterrogar(quien);
 		AlTerminar?.Invoke("Diálogo: " + quien);
 	}

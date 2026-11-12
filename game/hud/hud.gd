@@ -190,7 +190,10 @@ func _paginas_libro() -> Array[Dictionary]:
 			instruccion = "Abre el pizarrón [R] y el diario [Q]. Arrastra dos pistas o una pista y la ficha de un sospechoso, y únelas con hilo. Para contrastar una declaración, primero habla con el sospechoso."
 		paginas.append({"seccion": "DEDUCCIONES", "titulo": "Todo está por conectar", "texto": instruccion})
 	for nota in notas:
-		if not nota.begins_with("Deducción: "):
+		if nota.begins_with("Declaración de "):
+			# HU-30: lo que contestó un sospechoso a una pregunta queda como su declaración
+			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Declaración registrada", "texto": nota})
+		elif not nota.begins_with("Deducción: "):
 			paginas.append({"seccion": "DEDUCCIONES", "titulo": "Notas de investigación", "texto": nota})
 	if sospechosos.is_empty():
 		paginas.append({"seccion": "SOSPECHOSOS", "titulo": "Sospechosos del caso", "texto": "En este caso todavía no hay sospechosos."})

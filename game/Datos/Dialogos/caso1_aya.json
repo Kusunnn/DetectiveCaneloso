@@ -180,6 +180,12 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Alguien bajó el interruptor del generador a mano."
+				},
+				{
+					"habla": "Aya",
+					"animo": "a la defensiva",
+					"gesto": "Pone las manos en la cadera y ladea la cabeza",
+					"texto": "Oh... ¿y eso a mí qué? Yo estaba en el bosque con mi cámara, detective, no en la caseta."
 				}
 			],
 			"siguiente": "error"
@@ -189,6 +195,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Las botas de Tony estaban escondidas, llenas de lodo."
+				},
+				{
+					"habla": "Aya",
+					"animo": "nerviosa",
+					"texto": "Oh... pues pregúntele a Tony por sus botas, detective. Yo nomás tomo fotos."
 				}
 			],
 			"siguiente": "error"
@@ -272,6 +283,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "El cuaderno de Eriz marca algo a las 23:20."
+				},
+				{
+					"habla": "Aya",
+					"animo": "a la defensiva",
+					"texto": "Oh... ¿y eso qué tiene que ver conmigo? Lo que apunte Eriz es cosa de Eriz, detective."
 				}
 			],
 			"siguiente": "error"
@@ -378,6 +394,122 @@
 		"paciencia": {
 			"fin": true,
 			"salida": "paciencia"
+		},
+		"desestima": {
+			"variantes": [
+				[
+					{
+						"habla": "Aya",
+						"animo": "confundida",
+						"texto": "Oh... no sé qué quiere que le diga de eso, detective."
+					}
+				],
+				[
+					{
+						"habla": "Aya",
+						"animo": "a la defensiva",
+						"gesto": "Pone las manos en la cadera y ladea la cabeza",
+						"texto": "Chécate, detective: eso no tiene nada que ver conmigo."
+					}
+				]
+			],
+			"siguiente": "error"
+		},
+		"q_lugar": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Desde dónde tomabas las fotos?"
+				},
+				{
+					"habla": "Aya",
+					"animo": "nerviosa",
+					"texto": "Oh... desde el bosque, detective, entre los pinos. De ahí se ve la colina y, abajito, el lago con el embarcadero. Bien bonito todo."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Aya: tomaba fotos desde el bosque. Desde ahí se ven la colina y el lago con el embarcadero."
+				]
+			}
+		},
+		"q_bramidos": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Oíste los bramidos del ciervo?"
+				},
+				{
+					"habla": "Aya",
+					"animo": "nerviosa",
+					"texto": "Oh... sí. Poquito después de que se fue la luz. Sonaban ahí mismo, en el bosque, bien cerquita de donde yo estaba."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Aya: oyó los bramidos poco después del apagón, en el bosque, cerca de donde estaba."
+				]
+			}
+		},
+		"q_mimita": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "En tu foto de las 23:19 sale Mimita en la orilla. ¿La viste salir de la enfermería?"
+				},
+				{
+					"habla": "Aya",
+					"animo": "seria",
+					"texto": "Oh... no, detective. Yo estaba viendo la colina por el lente. Ni cuenta me di hasta que revisé la foto. Pero ahí está, en la orilla, junto a la enfermería. Pregúntele a ella qué andaba haciendo ahí."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Aya: no vio salir a Mimita. La notó al revisar su foto de las 23:19, en la orilla, junto a la enfermería."
+				]
+			}
+		},
+		"preguntas": {
+			"pregunta": "¿Qué le pregunto?",
+			"opciones": [
+				{
+					"id": "lugar",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Desde dónde tomabas las fotos?",
+					"destino": "q_lugar",
+					"una_vez": true,
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "bramidos",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Oíste los bramidos del ciervo?",
+					"destino": "q_bramidos",
+					"una_vez": true,
+					"requiere": {
+						"sin_pistas": [
+							"altavoz"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "mimita",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Viste salir a Mimita de la enfermería?",
+					"destino": "q_mimita",
+					"una_vez": true,
+					"requiere": {
+						"conclusiones": [
+							"foto_aya_2319"
+						],
+						"sin_conclusiones": [
+							"mimita_2"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				}
+			]
 		},
 		"despedida": {
 			"variantes": [

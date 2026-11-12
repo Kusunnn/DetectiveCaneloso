@@ -158,6 +158,7 @@ public partial class GuionCaso1
 			// [AJUSTE] Tony se puede interrogar desde el inicio: ya no «PRIMERO ESCUCHA A LOS DEMÁS»
 			string consejo = !interrogado ? "AÚN NO LO INTERROGAS"
 				: Guia.Brilla(f.Id) ? "TIENES CON QUÉ ROMPER UN CANDADO"
+				: TienePreguntas(f.Id) ? "TIENES PREGUNTAS NUEVAS PARA HACERLE"
 				: siguiente == null ? (estado == "coartada" ? "SU HISTORIA SE SOSTIENE" : "YA DIJO LO QUE SABÍA")
 				: Tiene(siguiente.Pide) ? "TIENES CON QUÉ PRESIONARLO"
 				: "TE FALTA UNA PRUEBA PARA PRESIONARLO";

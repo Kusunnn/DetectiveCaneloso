@@ -140,12 +140,13 @@ public class MotorDialogos
 	private bool Cumple(ArbolDialogo arbol, CondicionDialogo condicion) =>
 		condicion.Cumple(TienePista, ConclusionDisponible, n => Estado.NodoCompletado(arbol.Id, n), Estado.Contador);
 
-	// Cómo se ve cada opción del nodo ahora mismo (sin las ocultas)
+	// Cómo se ve cada opción del nodo ahora mismo (sin las ocultas ni las de "una_vez" ya elegidas)
 	public List<(OpcionDialogo Opcion, OpcionVista Vista)> OpcionesVisibles(ArbolDialogo arbol, NodoDialogo nodo)
 	{
 		var lista = new List<(OpcionDialogo, OpcionVista)>();
 		foreach (var opcion in nodo.Opciones)
 		{
+			if (opcion.UnaVez && Estado.OpcionVisitada(arbol.Id, nodo.Id, opcion.Id)) continue;
 			bool cumple = Cumple(arbol, opcion.Requiere);
 			if (!cumple && opcion.OcultarSiNoCumple) continue;
 			lista.Add((opcion, new OpcionVista(DecorarOpcion?.Invoke(arbol, opcion) ?? opcion.Texto, opcion.Tipo, Estado.OpcionVisitada(arbol.Id, nodo.Id, opcion.Id))

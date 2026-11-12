@@ -101,7 +101,10 @@ public partial class VentanaDialogo : CanvasLayer
 	public void RomperCandado() => _cadenas?.Romper();
 
 	// Declaración frase por frase. Devuelve la frase confrontada o -1 si se termina. pista: lo que dice bajo una frase (o null).
-	public async Task<int> ElegirFrase(Hablante hablante, IList<string> frases, int inicio, int marcada, Func<int, string> pista = null)
+	// HU-30: con «preguntar» (el texto del botón) se ofrece también hacerle preguntas; elegirlo devuelve PedirPreguntas.
+	public const int PedirPreguntas = -3;
+
+	public async Task<int> ElegirFrase(Hablante hablante, IList<string> frases, int inicio, int marcada, Func<int, string> pista = null, string preguntar = null)
 	{
 		Abrir();
 		LiberarRaton();
@@ -116,10 +119,12 @@ public partial class VentanaDialogo : CanvasLayer
 			string nota = pista?.Invoke(actual);
 			_ayuda.Text = $"Frase {actual + 1}/{frases.Count}   ·   [←][→] cambiar   ·   [{tecla}] Confrontar   ·   [Esc] terminar"
 				+ (string.IsNullOrEmpty(nota) ? "" : "\n" + nota);
-			_indiceSalir = 3;
+			var textos = new List<string> { "Confrontar esta frase", "Siguiente frase", "Frase anterior" };
+			if (!string.IsNullOrEmpty(preguntar)) textos.Add(preguntar);
+			textos.Add("Terminar por ahora");
+			_indiceSalir = textos.Count - 1;
 			_espera = new TaskCompletionSource<int>();
-			string[] textos = { "Confrontar esta frase", "Siguiente frase", "Frase anterior", "Terminar por ahora" };
-			for (int i = 0; i < textos.Length; i++)
+			for (int i = 0; i < textos.Count; i++)
 			{
 				int indice = i;
 				var boton = CrearBoton((i + 1) + ". " + textos[i], false);
@@ -132,6 +137,7 @@ public partial class VentanaDialogo : CanvasLayer
 			if (elegida == 0) resultado = actual;
 			else if (elegida == 1) actual = (actual + 1) % frases.Count;
 			else if (elegida == 2) actual = (actual + frases.Count - 1) % frases.Count;
+			else if (elegida < _indiceSalir) resultado = PedirPreguntas;
 			else resultado = -1;
 		}
 		_modoFrases = false;

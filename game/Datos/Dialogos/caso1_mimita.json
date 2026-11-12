@@ -166,6 +166,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "En el sendero hay huellas de pezuña enormes."
+				},
+				{
+					"habla": "Mimita",
+					"animo": "nerviosa",
+					"texto": "Mmm... ¿huellas en el sendero? Yo no salí de la enfermería, ¿sí? No sé nada de eso."
 				}
 			],
 			"siguiente": "error"
@@ -175,6 +180,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Porky salió de la cocina con prisa: dejó el chocolate a medias."
+				},
+				{
+					"habla": "Mimita",
+					"animo": "nerviosa",
+					"texto": "Mmm... yo no estaba en la cocina, estaba de guardia. ¿Sí?"
 				}
 			],
 			"siguiente": "error"
@@ -251,6 +261,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "El candado de la caseta no estaba forzado."
+				},
+				{
+					"habla": "Mimita",
+					"animo": "a la defensiva",
+					"texto": "Mmm... ¿la caseta? Yo no tengo nada que ver con el generador, ¿sí?"
 				}
 			],
 			"siguiente": "error"
@@ -357,6 +372,120 @@
 		"paciencia": {
 			"fin": true,
 			"salida": "paciencia"
+		},
+		"desestima": {
+			"variantes": [
+				[
+					{
+						"habla": "Mimita",
+						"animo": "confundida",
+						"texto": "Mmm... no entiendo qué tiene que ver eso conmigo. ¿Sí?"
+					}
+				],
+				[
+					{
+						"habla": "Mimita",
+						"animo": "nerviosa",
+						"gesto": "Se mueve de un lado a otro",
+						"texto": "Literal no sé nada de eso, ¿sí?"
+					}
+				]
+			],
+			"siguiente": "error"
+		},
+		"q_vista": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Mimita, ¿qué se alcanza a ver desde la enfermería?"
+				},
+				{
+					"habla": "Mimita",
+					"animo": "nerviosa",
+					"texto": "Mmm... el lago, literal está enfrente. Y el embarcadero. Pero con el apagón no se veía nada, ¿sí?"
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Mimita: desde la enfermería se ven el lago y el embarcadero. Dice que con el apagón no se veía nada."
+				]
+			}
+		},
+		"q_registro": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Llevas un registro de lo que pasa en tu guardia?"
+				},
+				{
+					"habla": "Mimita",
+					"animo": "nerviosa",
+					"gesto": "Se mueve de un lado a otro",
+					"texto": "Mmm... sí, el registro de guardia. Ahí apunto todo lo que pasa en la noche. Está en la enfermería, pero no tiene nada interesante, ¿sí?"
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Mimita: lleva un registro de guardia en la enfermería. Dice que no tiene nada interesante."
+				]
+			}
+		},
+		"q_tony_monitor": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "En esta foto de hace diez años, Tony sale de monitor. ¿Cómo era?"
+				},
+				{
+					"habla": "Mimita",
+					"animo": "triste",
+					"texto": "Mmm... era el monitor auxiliar. Nos cuidaba, nos regañaba... y traía su silbato pa' todo. Literal lo oíamos hasta en sueños."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Mimita: de niños, Tony era el monitor auxiliar y usaba su silbato para todo."
+				]
+			}
+		},
+		"preguntas": {
+			"pregunta": "¿Qué le pregunto?",
+			"opciones": [
+				{
+					"id": "vista",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Qué se alcanza a ver desde la enfermería?",
+					"destino": "q_vista",
+					"una_vez": true,
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "registro",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Llevas un registro de tu guardia?",
+					"destino": "q_registro",
+					"una_vez": true,
+					"requiere": {
+						"sin_pistas": [
+							"registro_enfermeria"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "tony_monitor",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Cómo era Tony de monitor?",
+					"destino": "q_tony_monitor",
+					"una_vez": true,
+					"requiere": {
+						"pistas": [
+							"foto_grupo"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				}
+			]
 		},
 		"despedida": {
 			"variantes": [

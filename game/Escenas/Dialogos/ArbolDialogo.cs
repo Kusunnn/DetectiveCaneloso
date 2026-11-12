@@ -34,6 +34,7 @@ using Diccionario = Godot.Collections.Dictionary;
 //   opciones     las muestra; si no hay, regresa al nodo de antes (o al de "volver") y muestra
 //                sus opciones sin repetir sus líneas
 // Una opción con "fin" termina la conversación; si trae "destino", antes se dicen las líneas de ese nodo.
+// Una opción con "una_vez": true deja de verse en cuanto se elige (las preguntas del interrogatorio, HU-30).
 public class ArbolDialogo
 {
 	public string Id = "";
@@ -239,6 +240,7 @@ public class OpcionDialogo
 	public bool Fin;                  // Termina la conversación (también la eligen Esc y clic derecho)
 	public CondicionDialogo Requiere = new();
 	public bool OcultarSiNoCumple;    // "si_no_cumple": "ocultar"; por defecto se muestra bloqueada como «???»
+	public bool UnaVez;               // "una_vez": true; ya elegida, no se vuelve a ver
 	public string Motivo = "";        // Nota para quien escribe: qué falta. No se muestra (daría la pista)
 
 	public static OpcionDialogo DesdeDatos(Diccionario datos) => new()
@@ -250,6 +252,7 @@ public class OpcionDialogo
 		Fin = datos.TryGetValue("fin", out Variant fin) && fin.AsBool(),
 		Requiere = datos.TryGetValue("requiere", out Variant requiere) ? CondicionDialogo.DesdeDatos(requiere.AsGodotDictionary()) : new CondicionDialogo(),
 		OcultarSiNoCumple = ArbolDialogo.Texto(datos, "si_no_cumple") == "ocultar",
+		UnaVez = datos.TryGetValue("una_vez", out Variant unaVez) && unaVez.AsBool(),
 		Motivo = ArbolDialogo.Texto(datos, "motivo"),
 	};
 }

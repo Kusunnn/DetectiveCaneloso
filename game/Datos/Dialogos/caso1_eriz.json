@@ -149,6 +149,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "La nota de Porky dice: «Esta noche se lo digo»."
+				},
+				{
+					"habla": "Eriz",
+					"animo": "nervioso",
+					"texto": "Mira... yo no sé qué le quería decir Porky ni a quién. Yo nomás la encontré, simón."
 				}
 			],
 			"siguiente": "error"
@@ -158,6 +163,12 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Las huellas se quedan antes del embarcadero."
+				},
+				{
+					"habla": "Eriz",
+					"animo": "nervioso",
+					"gesto": "Mueve mucho las manos",
+					"texto": "Mira, de huellas no sé nada. Esas no son mías, simón."
 				}
 			],
 			"siguiente": "error"
@@ -264,6 +275,123 @@
 		"paciencia": {
 			"fin": true,
 			"salida": "paciencia"
+		},
+		"desestima": {
+			"variantes": [
+				[
+					{
+						"habla": "Eriz",
+						"animo": "nervioso",
+						"texto": "Mira... eso no tiene nada que ver conmigo, simón."
+					}
+				],
+				[
+					{
+						"habla": "Eriz",
+						"animo": "confundido",
+						"gesto": "Mueve mucho las manos",
+						"texto": "Mira, no sé qué quieres que te diga de eso."
+					}
+				]
+			],
+			"siguiente": "error"
+		},
+		"q_hallazgo": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Cómo encontraste el cuerpo?"
+				},
+				{
+					"habla": "Eriz",
+					"animo": "nervioso",
+					"texto": "Mira... el agua estaba brillando azul junto al embarcadero, y ahí estaba ella, flotando boca abajo. Eran como las doce menos cuarto, simón."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Eriz: encontró a Porky flotando boca abajo junto al embarcadero, hacia las 23:47. El agua brillaba azul."
+				]
+			}
+		},
+		"q_brillo": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Por qué brillaba así el agua?"
+				},
+				{
+					"habla": "Eriz",
+					"animo": "serio",
+					"texto": "Mira... son unas algas. Cuando algo mueve el agua, se prenden de azul. Se ve bien bonito... nomás que anoche no tanto, simón."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Eriz: el lago brilla por unas algas que se encienden de azul cuando algo mueve el agua."
+				]
+			}
+		},
+		"q_ciervo": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "En el sendero hay huellas de pezuña. ¿Viste al ciervo desde la orilla?"
+				},
+				{
+					"habla": "Eriz",
+					"animo": "nervioso",
+					"gesto": "Mueve mucho las manos",
+					"texto": "Mira... yo llegué después, cuando ya había pasado todo. No vi ningún ciervo, simón."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Eriz: dice que no vio al ciervo porque llegó al lago después."
+				]
+			}
+		},
+		"preguntas": {
+			"pregunta": "¿Qué le pregunto?",
+			"opciones": [
+				{
+					"id": "hallazgo",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Cómo encontraste el cuerpo?",
+					"destino": "q_hallazgo",
+					"una_vez": true,
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "brillo",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Por qué brillaba así el agua?",
+					"destino": "q_brillo",
+					"una_vez": true,
+					"requiere": {
+						"nodos_completados": [
+							"q_hallazgo"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "ciervo",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Viste al ciervo desde la orilla?",
+					"destino": "q_ciervo",
+					"una_vez": true,
+					"requiere": {
+						"pistas": [
+							"huellas_pezuna"
+						],
+						"sin_conclusiones": [
+							"eriz_1"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				}
+			]
 		},
 		"despedida": {
 			"variantes": [
