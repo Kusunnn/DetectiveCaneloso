@@ -1,0 +1,22 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_am6vi"]
+colors = PackedColorArray(0.36925492, 0.23811767, 0.13458824, 1, 0.46139607, 0.3231059, 0.21392941, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7agr3"]
+seed = 953
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0upcq"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_7agr3")
+color_ramp = SubResource("Gradient_am6vi")
+seamless = true
+
+[resource]
+resource_name = "lob_zocalo"
+albedo_texture = SubResource("NoiseTexture2D_0upcq")
+roughness = 0.5
+uv1_scale = Vector3(1, 6, 1)

@@ -2,7 +2,7 @@
 
 [ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/sobre_eriz/sobre.res" id="1_3bwpo"]
 
-[node name="SobreEriz" type="Node3D" unique_id=12668516]
+[node name="SobreEriz" type="Node3D" unique_id=2093826739]
 
-[node name="Sobre" type="MeshInstance3D" parent="." unique_id=264198477]
+[node name="Sobre" type="MeshInstance3D" parent="." unique_id=281339693]
 mesh = ExtResource("1_3bwpo")

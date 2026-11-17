@@ -2,7 +2,7 @@
 
 [ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/invitacion_miawrio/tarjeta.res" id="1_2s6a1"]
 
-[node name="InvitacionMiawrio" type="Node3D" unique_id=1639323816]
+[node name="InvitacionMiawrio" type="Node3D" unique_id=615354354]
 
-[node name="Tarjeta" type="MeshInstance3D" parent="." unique_id=1976700449]
+[node name="Tarjeta" type="MeshInstance3D" parent="." unique_id=1965673357]
 mesh = ExtResource("1_2s6a1")

@@ -486,6 +486,59 @@ func vista_calle(padre: Node, base: Vector3, frente: float, largo := 40.0, semil
 		(g as GeometryInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	return v
 
+## Pantalla encendida (noticias, directorio, monitores): una cara plana con la imagen emisiva; mira a +Z local
+func pantalla(padre: Node, nombre: String, pos: Vector3, rot_y: float, tam: Vector2, textura: String, energia := 1.0, rot_x := 0.0) -> MeshInstance3D:
+	var m := StandardMaterial3D.new()
+	var tex: Texture2D = load(textura)
+	m.albedo_texture = tex
+	m.emission_enabled = true
+	m.emission_texture = tex
+	m.emission_energy_multiplier = energia
+	m.roughness = 0.2
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	st.set_material(m)
+	var a := Vector3(-tam.x / 2, -tam.y / 2, 0)
+	var b := Vector3(tam.x / 2, -tam.y / 2, 0)
+	var c := Vector3(tam.x / 2, tam.y / 2, 0)
+	var d := Vector3(-tam.x / 2, tam.y / 2, 0)
+	for v in [[a, Vector2(0, 1)], [c, Vector2(1, 0)], [b, Vector2(1, 1)], [a, Vector2(0, 1)], [d, Vector2(0, 0)], [c, Vector2(1, 0)]]:
+		st.set_normal(Vector3.BACK)
+		st.set_uv(v[1])
+		st.add_vertex(v[0])
+	var malla := st.commit()
+	var ruta := MALLAS + nombre_escena + "/" + _unico("pantalla_" + nombre.to_snake_case()) + ".res"
+	ResourceSaver.save(malla, ruta)
+	malla.take_over_path(ruta)
+	var n := MeshInstance3D.new()
+	n.name = nombre
+	n.mesh = malla
+	n.position = pos
+	n.rotation_degrees = Vector3(rot_x, rot_y, 0)
+	n.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	padre.add_child(n)
+	return n
+
+## Persona de fondo sin modelo propio: el maniquí de Quaternius pintado (FiguraFondo). MARCADOR TEMPORAL.
+func figura_fondo(padre: Node, nombre: String, pos: Vector3, rot_y: float, color: Color, animacion := "Idle", escala := 0.78, desfase := 0.0) -> Node3D:
+	var f := Node3D.new()
+	f.name = nombre
+	f.position = pos
+	f.rotation_degrees.y = rot_y
+	f.set_script(load("res://Escenas/Investigacion/FiguraFondo.cs"))
+	padre.add_child(f)
+	f.set("ColorCuerpo", color)
+	f.set("Animacion", animacion)
+	f.set("Desfase", desfase)
+	f.add_to_group("marcador_temporal", true)
+	f.add_to_group("auditoria_personaje", true)
+	var m: Node3D = load("res://Assets/Animaciones/Quaternius/UAL1_Standard.glb").instantiate()
+	m.name = "Maniqui"
+	m.scale = Vector3.ONE * escala
+	f.add_child(m)
+	colision("Cuerpo", f, Vector3(0, 0.75, 0), Vector3(0.55, 1.5, 0.45), CAPA_NPC).add_to_group("auditoria_invisible_ok", true)
+	return f
+
 ## Vapor de una taza: partículas suaves que suben y se desvanecen (no proyectan sombra)
 func vapor(padre: Node, pos: Vector3) -> CPUParticles3D:
 	var p := CPUParticles3D.new()

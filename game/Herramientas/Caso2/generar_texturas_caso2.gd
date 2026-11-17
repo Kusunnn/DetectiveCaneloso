@@ -22,6 +22,8 @@ func _documentos() -> void:
 	await _render("c2_invitacion_reverso", Vector2i(1400, 1000), PAPEL_BLANCO, _doc_invitacion_reverso, Color(1, 0.96, 0.86))
 	await _render("c2_sobre_eriz", Vector2i(1400, 1000), PAPEL_VIEJO, _doc_sobre_eriz, Color(0.93, 0.78, 0.55))
 	await _render("c2_registro_accesos", Vector2i(1600, 1000), null, _doc_registro_accesos)
+	await _render("c2_noticias", Vector2i(1600, 900), null, _doc_noticias)
+	await _render("c2_directorio", Vector2i(900, 1200), null, _doc_directorio)
 	await _render("c2_planos_clinica", Vector2i(2048, 1400), PAPEL_BLANCO, _doc_planos_clinica, Color(0.86, 0.92, 1.0))
 	await _render("c2_contrato", Vector2i(1024, 1434), PAPEL_BLANCO, _doc_contrato)
 	await _render("c2_contrato_reverso", Vector2i(1024, 1434), PAPEL_BLANCO, _doc_vacio)
@@ -204,6 +206,39 @@ func _doc_registro_accesos(c: Control) -> void:
 		c.draw_string(IMPRESO, Vector2(1430, y), f[3], HORIZONTAL_ALIGNMENT_LEFT, -1, 34, color)
 		y += 110.0
 	c.draw_string(IMPRESO, Vector2(50, 960), "Recepción · Planta baja", HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color(cab, 0.6))
+
+# Pantalla de noticias del lobby (de fondo): el video viral del ciervo, como cuenta Hecdog
+func _doc_noticias(c: Control) -> void:
+	c.draw_rect(Rect2(0, 0, 1600, 900), Color(0.1, 0.16, 0.28))
+	# «Imagen» del noticiero: el lago de noche con la silueta del ciervo de luz
+	c.draw_rect(Rect2(60, 60, 1480, 620), Color(0.05, 0.08, 0.14))
+	c.draw_rect(Rect2(60, 470, 1480, 210), Color(0.08, 0.13, 0.2))
+	for i in 10:
+		var x := 80.0 + i * 150.0
+		c.draw_colored_polygon(PackedVector2Array([Vector2(x - 60, 480), Vector2(x, 260 + (i % 3) * 30), Vector2(x + 60, 480)]), Color(0.03, 0.06, 0.07))
+	c.draw_circle(Vector2(800, 400), 70, Color(0.95, 0.9, 0.6, 0.25))
+	c.draw_circle(Vector2(800, 400), 34, Color(1, 0.95, 0.7, 0.8))
+	c.draw_line(Vector2(780, 360), Vector2(740, 300), Color(1, 0.95, 0.7, 0.8), 6)
+	c.draw_line(Vector2(820, 360), Vector2(860, 300), Color(1, 0.95, 0.7, 0.8), 6)
+	c.draw_rect(Rect2(60, 60, 170, 56), Color(0.85, 0.15, 0.12))
+	c.draw_string(PERIODICO_NEGRITA, Vector2(78, 102), "EN VIVO", HORIZONTAL_ALIGNMENT_LEFT, -1, 34, Color.WHITE)
+	c.draw_rect(Rect2(0, 690, 1600, 120), Color(0.92, 0.9, 0.84))
+	c.draw_string(PERIODICO_NEGRITA, Vector2(40, 768), "VIDEO DEL CIERVO DE LUZ: 4 MILLONES DE VISTAS", HORIZONTAL_ALIGNMENT_LEFT, -1, 54, Color(0.1, 0.12, 0.2))
+	c.draw_rect(Rect2(0, 810, 1600, 90), Color(0.75, 0.12, 0.1))
+	c.draw_string(IMPRESO, Vector2(40, 868), "Campamento Pino Lunar: rematado en subasta pública  ·  Clausura de la Fiscalía sigue vigente", HORIZONTAL_ALIGNMENT_LEFT, -1, 30, Color.WHITE)
+
+# Directorio de la torre junto a los elevadores
+func _doc_directorio(c: Control) -> void:
+	c.draw_rect(Rect2(0, 0, 900, 1200), Color(0.16, 0.11, 0.07))
+	c.draw_rect(Rect2(24, 24, 852, 1152), Color(0.85, 0.65, 0.28), false, 4)
+	c.draw_string(PERIODICO_NEGRITA, Vector2(90, 140), "TORRE MIAWRIO", HORIZONTAL_ALIGNMENT_LEFT, -1, 76, Color(0.9, 0.72, 0.36))
+	c.draw_line(Vector2(90, 180), Vector2(810, 180), Color(0.85, 0.65, 0.28), 3)
+	var pisos := [["30", "Miawrio Nyx · Dirección"], ["29", "Sala de juntas"], ["24 – 28", "Oficinas"], ["23", "Sistemas"], ["2 – 22", "Oficinas"], ["1", "Servicios"], ["PB", "Recepción"], ["E", "Estacionamiento"]]
+	var y := 290.0
+	for p in pisos:
+		c.draw_string(PERIODICO_NEGRITA, Vector2(90, y), p[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 48, Color(0.95, 0.85, 0.6))
+		c.draw_string(PERIODICO, Vector2(300, y), p[1], HORIZONTAL_ALIGNMENT_LEFT, -1, 44, Color(0.92, 0.88, 0.8))
+		y += 112.0
 
 # ---------- Despacho ----------
 

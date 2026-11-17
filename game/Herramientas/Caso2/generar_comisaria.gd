@@ -47,6 +47,7 @@ func _initialize() -> void:
 	var salida := _salida()
 	esc.set("Salidas", [salida])
 	esc.set("Destinos", PackedStringArray([LOBBY + "|Entrada_DesdeComisaria"]))
+	k.marcador("Entrada_DesdeTorre", k.raiz, Vector3(6.5, 0, 5.1), 0.0)
 	k.ambiente_sonoro("AmbienteComisaria", raiz, Vector3.ZERO, "res://Assets/Audio/Ambiente/zumbido_fluorescente.ogg", -24.0)
 	k.ambiente_sonoro("RelojPared", raiz, Vector3(4.0, 2.1, 0.1), "res://Assets/Audio/Ambiente/reloj_pared.wav", -16.0, 6.0)
 	k.guardar(ESCENA)

@@ -1,0 +1,22 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_l5fbk"]
+colors = PackedColorArray(0.83309805, 0.7962353, 0.7225098, 1, 0.89036864, 0.8525647, 0.77695686, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_i46fb"]
+seed = 483
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_jr76l"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_i46fb")
+color_ramp = SubResource("Gradient_l5fbk")
+seamless = true
+
+[resource]
+resource_name = "lob_marmol2"
+albedo_texture = SubResource("NoiseTexture2D_jr76l")
+roughness = 0.18
+uv1_scale = Vector3(2, 2, 1)

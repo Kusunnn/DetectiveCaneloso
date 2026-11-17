@@ -143,6 +143,92 @@ def vapor():
     m.objeto("vapor")
     exportar("vapor")
 
+MARMOL = lambda: mat("Marmol", (0.91, 0.87, 0.80), 0.18)
+NOGAL = lambda: mat("Nogal", (0.36, 0.22, 0.13), 0.5)
+DORADO = lambda: mat("Dorado", (0.85, 0.65, 0.28), 0.25, 1.0)
+ACERO = lambda: mat("Acero", (0.62, 0.64, 0.66), 0.3, 1.0)
+
+@pieza
+def mostrador():
+    """Mostrador de recepción de 3.2 × 1.1 m: frente de nogal con listones, cubierta de mármol y repisa interior."""
+    m = Malla()
+    m.caja((0, 0.53, 0), (3.2, 1.06, 0.7), NOGAL(), 0.01)                     # cuerpo
+    for i in range(9):                                                          # listones del frente
+        x = -1.4 + i * 0.35
+        m.caja((x, 0.53, 0.36), (0.06, 0.9, 0.03), mat("NogalClaro", (0.48, 0.31, 0.18), 0.5), 0.006)
+    m.caja((0, 1.08, 0.05), (3.32, 0.05, 0.86), MARMOL(), 0.008)               # cubierta
+    m.caja((0, 0.1, 0.37), (3.2, 0.08, 0.04), DORADO(), 0.004)                 # filo dorado abajo
+    m.caja((0, 0.76, -0.45), (3.0, 0.04, 0.4), MARMOL(), 0.006)                # repisa de trabajo (del lado de dentro)
+    m.objeto("mostrador")
+    exportar("mostrador")
+
+@pieza
+def logo_torre():
+    """Logo dorado de la Torre Miawrio para la pared: aro con una «M» de gato (orejas). Colgado: atrás en z = 0."""
+    m = Malla()
+    oro = DORADO()
+    for k in range(36):
+        a = math.radians(k * 10)
+        m.caja((math.cos(a) * 0.55, 0.6 + math.sin(a) * 0.55, 0.03), (0.1, 0.06, 0.06), oro, 0, ("z", k * 10 + 90))
+    # «M»: dos patas, dos diagonales y las orejas
+    m.caja((-0.25, 0.55, 0.04), (0.08, 0.5, 0.06), oro)
+    m.caja((0.25, 0.55, 0.04), (0.08, 0.5, 0.06), oro)
+    m.caja((-0.12, 0.62, 0.04), (0.07, 0.36, 0.06), oro, 0, ("z", 30))
+    m.caja((0.12, 0.62, 0.04), (0.07, 0.36, 0.06), oro, 0, ("z", -30))
+    m.caja((-0.27, 0.86, 0.04), (0.07, 0.16, 0.06), oro, 0, ("z", 20))
+    m.caja((0.27, 0.86, 0.04), (0.07, 0.16, 0.06), oro, 0, ("z", -20))
+    m.objeto("logo_torre")
+    exportar("logo_torre")
+
+@pieza
+def elevador():
+    """Puertas de elevador en su marco de acero (para un hueco de muro de 1 m): hojas cerradas e indicador de piso
+    encima con su pantallita (el número lo pone la escena). Cara hacia +Z, atrás en z = 0."""
+    m = Malla()
+    acero = ACERO()
+    m.caja((-0.47, 1.1, 0.02), (0.06, 2.2, 0.06), acero, 0.008)
+    m.caja((0.47, 1.1, 0.02), (0.06, 2.2, 0.06), acero, 0.008)
+    m.caja((0, 2.18, 0.02), (1.0, 0.08, 0.06), acero, 0.008)
+    hoja = mat("HojaElevador", (0.72, 0.70, 0.66), 0.25, 0.9)
+    m.caja((-0.22, 1.07, 0.0), (0.43, 2.12, 0.03), hoja, 0.004)
+    m.caja((0.22, 1.07, 0.0), (0.43, 2.12, 0.03), hoja, 0.004)
+    m.caja((0, 2.45, 0.02), (0.36, 0.16, 0.04), mat("Indicador", (0.1, 0.1, 0.11), 0.3), 0.01)
+    m.caja((0, 2.45, 0.041), (0.26, 0.1, 0.002), mat("PantallaPiso", (0.95, 0.55, 0.2), 0.3, 0, 3.0))
+    # Botonera a un lado
+    m.caja((0.62, 1.1, 0.01), (0.1, 0.24, 0.02), acero, 0.004)
+    m.cilindro((0.62, 1.15, 0.022), 0.018, 0.008, mat("Boton", (0.95, 0.85, 0.6), 0.3, 0, 1.5), 12, "z")
+    m.cilindro((0.62, 1.05, 0.022), 0.018, 0.008, mat("Boton", (0.95, 0.85, 0.6), 0.3, 0, 1.5), 12, "z")
+    m.objeto("elevador")
+    exportar("elevador")
+
+@pieza
+def maceta_grande():
+    """Maceta alta de cerámica con una planta de hojas grandes (monstera estilizada), 1.7 m."""
+    m = Malla()
+    m.cilindro((0, 0.3, 0), 0.26, 0.6, mat("Ceramica", (0.88, 0.85, 0.78), 0.4), 20, "y", 0.2)
+    m.cilindro((0, 0.6, 0), 0.24, 0.03, mat("Tierra", (0.25, 0.17, 0.1), 0.95), 20)
+    verde = mat("Hoja", (0.22, 0.48, 0.28), 0.6)
+    tallo = mat("Tallo", (0.3, 0.45, 0.2), 0.7)
+    for k in range(9):
+        a = math.radians(k * 40 + 10)
+        alto = 0.9 + (k % 3) * 0.25
+        r = 0.28 + (k % 2) * 0.12
+        x, z = math.cos(a) * r, math.sin(a) * r
+        m.caja((x * 0.5, 0.6 + alto / 2, z * 0.5), (0.02, alto, 0.02), tallo, 0, ("z", math.degrees(math.atan2(x, 1.0)) * 0.6))
+        m.esfera((x, 0.6 + alto, z), 0.2, verde, 10, (1.2, 0.18, 0.8))
+    m.objeto("maceta_grande")
+    exportar("maceta_grande")
+
+@pieza
+def marco_pantalla():
+    """Marco negro de pantalla plana de 1.7 × 1.0 m colgado de la pared (la imagen la pone la escena delante)."""
+    m = Malla()
+    negro = mat("Bisel", (0.05, 0.05, 0.06), 0.35)
+    m.caja((0, 0, 0.025), (1.7, 1.0, 0.05), negro, 0.01)
+    m.caja((0, -0.48, 0.055), (0.12, 0.02, 0.01), mat("Logo", (0.6, 0.6, 0.62), 0.3, 1.0))
+    m.objeto("marco_pantalla")
+    exportar("marco_pantalla")
+
 for nombre, f in PIEZAS.items():
     if SOLO and nombre not in SOLO: continue
     limpiar()

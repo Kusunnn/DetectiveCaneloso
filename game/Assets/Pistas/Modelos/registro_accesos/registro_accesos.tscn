@@ -4,16 +4,16 @@
 [ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/registro_accesos/pantalla.res" id="2_st3c2"]
 [ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/registro_accesos/pie.res" id="3_mero8"]
 
-[node name="RegistroAccesos" type="Node3D" unique_id=818655311]
+[node name="RegistroAccesos" type="Node3D" unique_id=2059634714]
 
-[node name="Marco" type="MeshInstance3D" parent="." unique_id=959435738]
+[node name="Marco" type="MeshInstance3D" parent="." unique_id=233619500]
 transform = Transform3D(1, 0, 0, 0, 0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0.27, 0)
 mesh = ExtResource("1_mjp7h")
 
-[node name="Pantalla" type="MeshInstance3D" parent="." unique_id=406989518]
+[node name="Pantalla" type="MeshInstance3D" parent="." unique_id=1536623834]
 transform = Transform3D(1, 0, 0, 0, 0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0.27, 0)
 mesh = ExtResource("2_st3c2")
 
-[node name="Pie" type="MeshInstance3D" parent="." unique_id=1158068159]
+[node name="Pie" type="MeshInstance3D" parent="." unique_id=752091407]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.04)
 mesh = ExtResource("3_mero8")

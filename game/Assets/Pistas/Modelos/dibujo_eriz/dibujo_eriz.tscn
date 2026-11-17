@@ -4,15 +4,15 @@
 [ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/dibujo_eriz/foto.res" id="2_q84el"]
 [ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/dibujo_eriz/clip.res" id="3_mrgag"]
 
-[node name="DibujoEriz" type="Node3D" unique_id=543266179]
+[node name="DibujoEriz" type="Node3D" unique_id=1003093939]
 
-[node name="Dibujo" type="MeshInstance3D" parent="." unique_id=1599787327]
+[node name="Dibujo" type="MeshInstance3D" parent="." unique_id=994766697]
 mesh = ExtResource("1_01jt5")
 
-[node name="Foto" type="MeshInstance3D" parent="." unique_id=753406686]
+[node name="Foto" type="MeshInstance3D" parent="." unique_id=318224886]
 transform = Transform3D(0.99026805, 0, -0.1391731, 0, 1, 0, 0.1391731, 0, 0.99026805, 0.035, 0.0045, -0.085)
 mesh = ExtResource("2_q84el")
 
-[node name="Clip" type="MeshInstance3D" parent="." unique_id=1020621196]
+[node name="Clip" type="MeshInstance3D" parent="." unique_id=1650753766]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06, 0.006, -0.135)
 mesh = ExtResource("3_mrgag")
