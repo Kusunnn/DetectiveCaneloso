@@ -727,7 +727,7 @@ cast_shadow = 0
 mesh = SubResource("Box_mancha_chica")
 
 [node name="CartelEmpleadoMes" type="Node3D" parent="." unique_id=1819350521]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 3.98, 2, -0.5)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 3.9965, 2.0, -0.5)
 script = ExtResource("14_rjx7o")
 Estilo = 3
 Texto = "EMPLEADO DEL MES
@@ -739,7 +739,7 @@ TamMinimo = 12
 ColorPapel = Color(0.74, 0.7, 0.58, 1)
 
 [node name="HojaLimpieza" type="Node3D" parent="." unique_id=1509272132]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -3.98, 1.5, 2.2)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -3.9965, 1.5, 2.2)
 script = ExtResource("14_rjx7o")
 Estilo = 3
 Texto = "SALA 1 · LIMPIEZA

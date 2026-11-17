@@ -93,7 +93,7 @@ TamPixel = 0.0025
 transform = Transform3D(0.866, 0.0, -0.5, 0.0, 1.0, 0.0, 0.5, 0.0, 0.866, 10.5, 0.0, -8.2)
 
 [node name="LetreroTexto1" type="Node3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(0.866, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866, 10.309408, 0.95, -7.8699155)
+transform = Transform3D(0.866, 0, -0.5, 0, 1, 0, 0.5, 0, 0.866, 10.4388, 0.95, -8.094)
 script = ExtResource("e8")
 Estilo = 1
 Texto = "ENFERMERÍA ↗
@@ -111,7 +111,7 @@ TamPixel = 0.0025
 transform = Transform3D(0.866, 0.0, 0.5, 0.0, 1.0, 0.0, -0.5, 0.0, 0.866, -6.5, 0.0, -13.0)
 
 [node name="LetreroTexto2" type="Node3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, -6.309408, 0.95, -12.669915)
+transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, -6.4388, 0.95, -12.894)
 script = ExtResource("e8")
 Estilo = 1
 Texto = "← DIRECCIÓN"

@@ -107,7 +107,7 @@ TamPixel = 0.004
 transform = Transform3D(0.9397, 0.0, -0.342, 0.0, 1.0, 0.0, 0.342, 0.0, 0.9397, 4.2, 0.0, 2.0)
 
 [node name="Prohibido" type="Node3D" parent="Arco" groups=["apoyar_pared"]]
-transform = Transform3D(0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, 0.9397, 4.2100005, 0.95, 2.202427)
+transform = Transform3D(0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, 0.9397, 4.2338, 0.95, 2.1372)
 script = ExtResource("e3")
 Estilo = 2
 Texto = "PROHIBIDO NADAR DE NOCHE"

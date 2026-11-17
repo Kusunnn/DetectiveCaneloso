@@ -366,7 +366,7 @@ omni_range = 6.0
 omni_attenuation = 1.4
 
 [node name="Letrero" type="Node3D" parent="Edificio"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 2.25, 2.68)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -1.3, 2.25, 3.131)
 script = ExtResource("e10")
 Estilo = 1
 Texto = "ALMACÉN

@@ -52,7 +52,7 @@ shape = SubResource("CylinderShape3D_2")
 transform = Transform3D(-0.342, 0.0, -0.9397, 0.0, 1.0, 0.0, 0.9397, 0.0, -0.342, 23.5, 2.4675, 23.0)
 
 [node name="Mirador" type="Node3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(-0.342, 0, -0.9397, 0, 1, 0, 0.9397, 0, -0.342, 23.18665, 3.4675, 22.885944)
+transform = Transform3D(-0.342, 0, -0.9397, 0, 1, 0, 0.9397, 0, -0.342, 23.385, 3.4675, 22.9581)
 script = ExtResource("e5")
 Estilo = 1
 Texto = "MIRADOR DEL CIERVO"

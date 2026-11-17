@@ -38,38 +38,6 @@ public partial class CartelPared : Node3D
 	public override void _Ready()
 	{
 		Construir();
-		// En el juego, un cartel colgado en una pared de troncos puede quedar medio metido en ella: se despega solo
-		if (!Engine.IsEditorHint() && ConFondo && Mathf.Abs(GlobalBasis.Z.Normalized().Y) < 0.7f)
-			Callable.From(Despegar).CallDeferred();
-	}
-
-	// Busca qué tanto sobresale la pared por delante del cartel y adelanta el dibujo eso más medio centímetro.
-	// Solo cuenta superficies paralelas al cartel (la pared), no lo que esté enfrente (un mueble, un personaje).
-	private async void Despegar()
-	{
-		await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
-		if (!IsInsideTree()) return;
-		var espacio = GetWorld3D().DirectSpaceState;
-		Vector3 frente = GlobalBasis.Z.Normalized();
-		float ancho = Ancho * GlobalBasis.X.Length(), alto = 0f;
-		foreach (Node hijo in GetChildren())
-			if (hijo is MeshInstance3D m && m.HasMeta("generado_cartel")) alto = m.GetAabb().Size.Y * GlobalBasis.Y.Length();
-		if (alto <= 0f) return;
-		float sobresale = -1f;
-		for (int i = 0; i < 5; i++)
-			for (int j = 0; j < 3; j++)
-			{
-				Vector3 punto = GlobalPosition + GlobalBasis.X.Normalized() * ancho * (i / 4f - 0.5f) * 0.9f
-					+ GlobalBasis.Y.Normalized() * alto * (j / 2f - 0.5f) * 0.9f;
-				var rayo = PhysicsRayQueryParameters3D.Create(punto + frente * 0.14f, punto - frente * 0.1f, 1u | 2u);
-				var golpe = espacio.IntersectRay(rayo);
-				if (golpe.Count == 0 || golpe["normal"].AsVector3().Dot(frente) < 0.8f) continue;
-				sobresale = Mathf.Max(sobresale, (golpe["position"].AsVector3() - GlobalPosition).Dot(frente));
-			}
-		if (sobresale <= -0.004f) return;
-		float empuje = Mathf.Min(sobresale + 0.006f, 0.13f) / Mathf.Max(0.01f, GlobalBasis.Z.Length());
-		foreach (Node hijo in GetChildren())
-			if (hijo is Node3D pieza && hijo.HasMeta("generado_cartel")) pieza.Position += new Vector3(0, 0, empuje);
 	}
 
 	public void Construir()
@@ -112,7 +80,7 @@ public partial class CartelPared : Node3D
 		float margen = estilo == EstiloCartel.Papel ? Margen * 0.6f : borde + Margen * 0.25f;
 		float anchoUtil = Mathf.Max(0.02f, Ancho - 2f * margen);
 		// La fuente del estilo puede ser más angosta: se permite crecer hasta llenar el mismo marco
-		int tamEstilo = AjustarAlMarco(fuente, anchoUtil, alto - 2f * margen, Mathf.RoundToInt(TamFuente * 2.2f));
+		var (tamEstilo, renglones) = AjustarAlMarco(fuente, anchoUtil, alto - 2f * margen, Mathf.RoundToInt(TamFuente * 2.2f));
 
 		var piezas = new Piezas();
 		float frente;
@@ -120,15 +88,15 @@ public partial class CartelPared : Node3D
 		{
 			case EstiloCartel.Madera:
 				frente = ArmarMadera(piezas, alto, borde);
-				Rotular(cuerpo, fuente, tamEstilo, anchoUtil, frente, ColorTexto.Lightened(0.25f), Mathf.Max(4, tamEstilo / 4), ColorPapel.Darkened(0.72f));
+				Rotular(cuerpo, fuente, tamEstilo, anchoUtil, frente, ColorTexto.Lightened(0.25f), Mathf.Max(4, tamEstilo / 4), ColorPapel.Darkened(0.72f), renglones);
 				break;
 			case EstiloCartel.Placa:
 				frente = ArmarPlaca(piezas, alto);
-				Rotular(cuerpo, fuente, tamEstilo, anchoUtil, frente, ColorTexto, 0, Colors.Black);
+				Rotular(cuerpo, fuente, tamEstilo, anchoUtil, frente, ColorTexto, 0, Colors.Black, renglones);
 				break;
 			case EstiloCartel.Pizarron:
 				frente = ArmarPizarron(piezas, alto, borde);
-				Rotular(cuerpo, fuente, tamEstilo, anchoUtil, frente, new Color(ColorTexto, 0.92f), 0, Colors.Black);
+				Rotular(cuerpo, fuente, tamEstilo, anchoUtil, frente, new Color(ColorTexto, 0.92f), 0, Colors.Black, renglones);
 				break;
 			default:
 				frente = ArmarPapel(piezas, alto);
@@ -136,7 +104,7 @@ public partial class CartelPared : Node3D
 				int suma = 0;
 				foreach (char letra in Texto) suma = (suma * 31 + letra) % 500;
 				inclinacion = (suma / 100f - 2.5f) * 1.2f;
-				Rotular(cuerpo, fuente, tamEstilo, anchoUtil, frente, ColorTexto, 0, Colors.Black);
+				Rotular(cuerpo, fuente, tamEstilo, anchoUtil, frente, ColorTexto, 0, Colors.Black, renglones);
 				break;
 		}
 		var malla = new MeshInstance3D { Name = "Malla", Mesh = piezas.Unir() };
@@ -241,37 +209,81 @@ public partial class CartelPared : Node3D
 		return (Mathf.Max(tam, TamMinimo), medida.Y * TamPixel);
 	}
 
-	// Para un marco de tamaño ya decidido: la fuente más grande que lo llena sin salirse
-	private int AjustarAlMarco(Font fuente, float anchoUtil, float altoUtil, int desde)
+	// Para un marco de tamaño ya decidido: la fuente más grande cuyos renglones (partidos aquí, palabra por palabra)
+	// caben a lo ancho y a lo alto. El renglón que se mide es el mismo que se dibuja: nunca se sale del marco.
+	private (int Tam, string Texto) AjustarAlMarco(Font fuente, float anchoUtil, float altoUtil, int desde)
 	{
-		// Con 8 % de holgura: las flechas salen de la fuente de respaldo y miden un poco distinto al dibujarse
-		int anchoPx = Mathf.Max(8, (int)(anchoUtil * 0.92f / TamPixel));
-		for (int tam = desde; tam > 8; tam -= 2)
-			if (PalabraMasLarga(fuente, tam) <= anchoPx && Medir(fuente, anchoPx, tam).Y * TamPixel <= altoUtil) return tam;
-		return 8;
+		float anchoPx = anchoUtil / TamPixel;
+		for (int tam = desde; tam > 8; tam -= 1)
+		{
+			var (renglones, cabe) = Partir(fuente, tam, anchoPx);
+			if (!cabe) continue;
+			float altoPx = renglones.Count * fuente.GetHeight(tam);
+			if (altoPx * TamPixel <= altoUtil) return (tam, string.Join("\n", renglones));
+		}
+		return (8, Partir(fuente, 8, anchoPx).Renglones is var r ? string.Join("\n", r) : Texto);
 	}
+
+	// Parte el texto en renglones que no pasan de «anchoPx». Respeta los saltos que trae y nunca deja una
+	// flecha sola en un renglón. «Cabe» es false si una sola palabra ya es más ancha que el marco.
+	private (List<string> Renglones, bool Cabe) Partir(Font fuente, int tam, float anchoPx)
+	{
+		var renglones = new List<string>();
+		bool cabe = true;
+		foreach (string parrafo in Texto.Split('\n'))
+		{
+			var palabras = new List<string>();
+			foreach (string p in parrafo.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+			{
+				// Una flecha suelta se pega a la palabra de al lado («← BOSQUE», «COLINA →»)
+				if (EsFlecha(p) && palabras.Count > 0 && EsFlecha(palabras[^1]) == false && p != "↑" && p != "←") palabras[^1] += " " + p;
+				else if (palabras.Count > 0 && EsFlecha(palabras[^1])) palabras[^1] += " " + p;
+				else palabras.Add(p);
+			}
+			string linea = "";
+			foreach (string palabra in palabras)
+			{
+				string prueba = linea.Length == 0 ? palabra : linea + " " + palabra;
+				if (linea.Length > 0 && Ancho_(fuente, prueba, tam) > anchoPx)
+				{
+					renglones.Add(linea);
+					linea = palabra;
+				}
+				else linea = prueba;
+				if (Ancho_(fuente, palabra, tam) > anchoPx) cabe = false;
+			}
+			renglones.Add(linea);
+		}
+		return (renglones, cabe);
+	}
+
+	private static bool EsFlecha(string s) => s.Length == 1 && "←→↑↓↗↖↘↙".Contains(s[0]);
+
+	private static float Ancho_(Font fuente, string s, int tam) => fuente.GetStringSize(s, HorizontalAlignment.Left, -1, tam).X;
 
 	private Vector2 Medir(Font fuente, int anchoPx, int tam) =>
 		fuente.GetMultilineStringSize(Texto, HorizontalAlignment.Center, anchoPx, tam,
 			-1, TextServer.LineBreakFlag.Mandatory | TextServer.LineBreakFlag.WordBound);
 
-	private void Rotular(Node3D padre, Font fuente, int tam, float anchoUtil, float z, Color color, int contorno, Color colorContorno)
+	private void Rotular(Node3D padre, Font fuente, int tam, float anchoUtil, float z, Color color, int contorno, Color colorContorno, string renglones = null)
 	{
-		// Una flecha nunca se queda sola en un renglón: va pegada a su palabra con espacio duro
-		string texto = fuente == ThemeDB.FallbackFont ? Texto
-			: System.Text.RegularExpressions.Regex.Replace(Texto, @"([←→↑↓↗↖↘↙]) +| +([←→↑↓↗↖↘↙])", m => m.Groups[1].Success ? m.Groups[1].Value + "\u00A0" : "\u00A0" + m.Groups[2].Value);
+		// Con renglones ya partidos (estilos nuevos) no se deja que Godot vuelva a partirlos
+		bool propio = renglones != null;
 		var etiqueta = new Label3D
 		{
-			Text = texto,
+			Text = propio ? renglones : Texto,
+			// Iluminadas como la tabla donde están pintadas: de noche no brillan solas
+			Shaded = propio,
+			AlphaCut = propio ? Label3D.AlphaCutMode.Discard : Label3D.AlphaCutMode.Disabled,
+			DoubleSided = !propio,
 			Font = fuente == ThemeDB.FallbackFont ? null : fuente,
 			FontSize = tam,
 			PixelSize = TamPixel,
 			Modulate = color,
 			OutlineSize = contorno,
 			OutlineModulate = colorContorno,
-			AutowrapMode = TextServer.AutowrapMode.WordSmart,
-			// Un poco más ancho que lo medido, para que el renglón que sí cabe no se parta al dibujarse (flechas)
-			Width = Mathf.Max(8, (int)(Mathf.Max(0.02f, anchoUtil) * (fuente == ThemeDB.FallbackFont ? 1f : 1.06f) / TamPixel)),
+			AutowrapMode = propio ? TextServer.AutowrapMode.Off : TextServer.AutowrapMode.WordSmart,
+			Width = Mathf.Max(8, (int)(Mathf.Max(0.02f, anchoUtil) / TamPixel)),
 			HorizontalAlignment = HorizontalAlignment.Center,
 			VerticalAlignment = VerticalAlignment.Center,
 			Position = new Vector3(0, 0, z + 0.0008f),

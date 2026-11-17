@@ -157,7 +157,7 @@ AltoMaximo = 1.2
 TamPixel = 0.004
 
 [node name="SeVende" type="Node3D" parent="Entrada"]
-transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 2.6, 1.6, -0.21)
+transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 2.6, 1.6, -0.2436)
 script = ExtResource("e5")
 Estilo = 2
 Texto = "SE VENDE
@@ -202,7 +202,7 @@ transform = Transform3D(0.9848, 0.0, 0.1736, 0.0, 1.0, 0.0, -0.1736, 0.0, 0.9848
 transform = Transform3D(-0.766, 0.0, 0.6428, 0.0, 1.0, 0.0, -0.6428, 0.0, -0.766, 17.8, 0.0, 30.8)
 
 [node name="IndicadorTexto" type="Node3D" parent="." groups=["auditoria_pared"]]
-transform = Transform3D(-0.766, 0.0, 0.6428, 0.0, 1.0, 0.0, -0.6428, 0.0, -0.766, 17.9286, 0.95, 30.6468)
+transform = Transform3D(-0.766, 0.0, 0.6428, 0.0, 1.0, 0.0, -0.6428, 0.0, -0.766, 17.8787, 0.95, 30.7063)
 script = ExtResource("e5")
 Estilo = 1
 Texto = "← COMEDOR · FOGATA"
