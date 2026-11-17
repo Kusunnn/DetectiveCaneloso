@@ -644,17 +644,17 @@ AltoMaximo = 1.2
 TamPixel = 0.0012
 
 [node name="FotoGrupo" type="StaticBody3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 32.08, 1.65, 2.8)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 31.995, 1.65, 2.8)
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("e18")
 Id = "foto_grupo"
 Titulo = "Foto del grupo de hace 10 años"
-Descripcion = "Los ocho junto al lago, hace diez años: siete campistas con Paco en el centro y, atrás, Tony de monitor."
+Descripcion = "Los campistas alrededor de la fogata, hace diez años: Paco en el centro y Tony de monitor."
 EsEvidencia = true
 ComentarioAlMirar = "Todos tan chiquitos... Una foto de hace diez años."
 Imagen = ExtResource("e32")
-DescripcionAmpliada = "Una foto vieja en un marco de madera: siete campistas junto al lago, con Paco en el centro y su gorra de marinero, y atrás Tony, de monitor, con un silbato colgado al cuello. El marco tiene polvo, menos en las orillas: alguien lo descolgó hace poco."
+DescripcionAmpliada = "Una foto vieja en un marco de madera: los campistas alrededor de una fogata en el bosque, con Paco en el centro, y Tony, de monitor, con un silbato colgado al cuello. El marco tiene polvo, menos en las orillas: alguien lo descolgó hace poco."
 Lugar = "Cabaña de Porky · pared de fotos"
 Detalles = Array[ExtResource("hu07_script_detalle")]([ExtResource("hu07_det_dedicatoria"), ExtResource("hu07_det_silbato")])
 

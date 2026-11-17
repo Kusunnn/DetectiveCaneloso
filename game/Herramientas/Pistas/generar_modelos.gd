@@ -567,7 +567,9 @@ func _materiales_poly_haven() -> void:
 	_papel("etiqueta_grabadora", "grabadora_etiqueta")
 	_papel("etiqueta_cinta", "cinta_etiqueta", {"roughness": 0.5, "roughness_texture": null})
 	_mat("reloj_grietas", {"albedo_texture": _gen("reloj_grietas"), "transparency": BaseMaterial3D.TRANSPARENCY_ALPHA, "roughness": 0.1, "metallic_specular": 0.8})
-	_mat("foto_arte", {"albedo_texture": _gen("foto_grupo_arte"), "roughness": 0.55, "texture_filter": BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC})
+	# La foto de los campistas (dibujo del equipo). El cuadro del marco solo usa u 0.0071–0.9931 y v 0.2233–0.8011
+	# de su textura: la escala y el desplazamiento la estiran a ese cuadro para que se vea completa, sin recortes
+	_mat("foto_arte", {"albedo_texture": load(BASE + "arte/foto_campistas.png"), "roughness": 0.55, "uv1_scale": Vector3(1.014198, 1.730547, 1), "uv1_offset": Vector3(-0.007203, -0.386403, 0), "texture_filter": BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC})
 	_mat("foto_reverso", {"albedo_texture": _gen("foto_grupo_reverso"), "roughness": 0.95, "normal_enabled": true, "normal_texture": _acg("Cork002", "NormalGL"), "normal_scale": 0.3})
 	# El vidrio del marco de Poly Haven es opaco en Godot: uno transparente deja ver la foto
 	_mat("vidrio_marco", {"albedo_color": Color(0.9, 0.95, 1.0, 0.08), "transparency": BaseMaterial3D.TRANSPARENCY_ALPHA, "roughness": 0.04, "metallic_specular": 0.9})
