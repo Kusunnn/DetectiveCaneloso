@@ -12,7 +12,7 @@ public partial class PantallaCarga : CanvasLayer
 	private const string ModeloCaneloso = "res://Assets/Models/Caneloso/Archivo/player.tscn";
 	private static readonly (string Texto, string Modelo)[] Curiosidades =
 	{
-		("A Miaurio le apasionan los videojuegos. Dicen que llegó a Challenger, el rango más alto de League of Legends.",
+		("A Miawrio le apasionan los videojuegos. Dicen que llegó a Challenger, el rango más alto de League of Legends.",
 			ModeloMiawrio),
 		("A Juan Carlos le apasiona la repostería. Sus chocoflanes son tan buenos que pueden volverse adictivos.",
 			"res://Assets/Models/Personajes/lala.glb"),
@@ -24,7 +24,7 @@ public partial class PantallaCarga : CanvasLayer
 			"res://Assets/Models/Personajes/eriz.glb"),
 		("Se rumorea que Aya y Eriz estuvieron saliendo. ¿Seguirán juntos?", ModeloCaneloso),
 		("Según dicen, de niños Juan Carlos y Eriz vivían en un lugar sin pavimento y con una fuente.", ModeloCaneloso),
-		("Se dice que Mimita ft. Miaurio compusieron la canción que dice: «Quítale lo aburrido, ponle lo divertido».", ModeloCaneloso),
+		("Se dice que Mimita ft. Miawrio compusieron la canción que dice: «Quítale lo aburrido, ponle lo divertido».", ModeloCaneloso),
 		("Corre el rumor de que hay una epidemia llamada Genshin. Quienes la tienen se ven obligados a hacer algo llamado «las diarias».", ModeloCaneloso),
 	};
 
