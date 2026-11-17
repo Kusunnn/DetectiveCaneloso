@@ -65,9 +65,43 @@ func _initialize() -> void:
 	raiz.free()
 	quit()
 
-# Para el estado hackeado (commit aparte)
+# Estado HACKEADO: luces apagadas, persianas metálicas abajo, pantallas con tres rayas rojas, luces de emergencia
+# rojas y las bocinas a la vista. Sigue legible: contraluz rojo, luz fría de las pantallas y la pecera encendida.
 func _extra(_esc: Node) -> void:
-	pass
+	var normal := k.nodo("SoloNormal")
+	var hack := k.nodo("SoloHackeado")
+	# Pantalla grande de la pared este: la gráfica del proyecto / las tres rayas
+	k.modelo(PROPS + "marco_pantalla.glb", k.raiz.get_node("Paredes"), Vector3(ANCHO, 1.9, 8.2), -90.0, 1.0, "PantallaPared").add_to_group("auditoria_pared", true)
+	k.pantalla(normal, "PantallaGrafica", Vector3(ANCHO - 0.056, 1.9, 8.2), -90.0, Vector2(1.6, 0.9), GEN + "c2_grafica.png", 0.7)
+	k.pantalla(hack, "PantallaTito", Vector3(ANCHO - 0.056, 1.9, 8.2), -90.0, Vector2(1.6, 0.9), GEN + "c2_tres_rayas.png", 1.6)
+	# El monitor del escritorio también: una cara emisiva delante de la pantalla
+	k.pantalla(hack, "MonitorTito", Vector3(7.36, 0.771 + 0.27, 1.93), 180.0, Vector2(0.5, 0.33), GEN + "c2_tres_rayas.png", 1.6)
+	# Persianas metálicas bajadas por fuera del ventanal
+	var lamina := {"Lamina": k.mat_color("des_lamina", Color("6d7278"), 0.45, Vector2(1, 1), 0.06, 0.7)}
+	for i in ANCHO:
+		var c := k.pieza_kit("cortina_metalica", hack, Vector3(i + 0.5, 0.1, -0.2), 0.0, lamina, "Cortina%d" % i)
+		c.scale = Vector3(1.0, 1.1, 1.0)
+	# Luces de emergencia rojas (las dos de las esquinas con sombra) y relleno frío de las pantallas
+	var luces := k.nodo("LucesHackeado", hack)
+	var puntos := [[Vector3(0.0, 2.9, 5.0), 90.0, true], [Vector3(ANCHO, 2.9, 4.0), -90.0, true], [Vector3(4.0, 2.9, FONDO), 180.0, false], [Vector3(10.0, 2.9, FONDO), 180.0, false]]
+	for p in puntos:
+		var pos: Vector3 = p[0]
+		k.modelo(PROPS + "luz_emergencia.glb", hack, pos, p[1], 1.0, "LuzEmergencia").add_to_group("auditoria_pared", true)
+		var dentro: Vector3 = pos + Basis(Vector3.UP, deg_to_rad(p[1])) * Vector3(0, -0.1, 0.4)
+		k.omni(luces, "Emergencia", dentro, Color("ff2a2a"), 1.4, 8.0, p[2])
+	k.omni(luces, "FrioPantalla", Vector3(ANCHO - 0.8, 1.9, 8.2), Color("7fa8ff"), 1.3, 7.0)
+	k.omni(luces, "FrioMonitor", Vector3(7.6, 1.3, 1.5), Color("7fa8ff"), 0.6, 3.5)
+	k.omni(luces, "Pecera", Vector3(13.2, 1.1, 3.6), Color("7fd6ff"), 0.8, 3.0)
+	k.omni(luces, "ContraluzVentanal", Vector3(7.0, 2.4, 0.5), Color("8fa0ff"), 0.8, 8.0)
+	var estado := Node.new()
+	estado.name = "EstadoLuces"
+	estado.set_script(load("res://Escenas/Investigacion/EstadoLuces.cs"))
+	k.raiz.add_child(estado)
+	estado.set("SoloNormal", [luces_normal, normal])
+	estado.set("SoloHackeado", [hack])
+	estado.set("Entorno", k.raiz.get_node("Entorno"))
+	estado.set("AmbienteHackeado", Color("4a4f6e"))
+	estado.set("EnergiaAmbienteHackeado", 0.4)
 
 func _escritorio() -> void:
 	var e := k.nodo("Escritorio")

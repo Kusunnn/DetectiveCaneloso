@@ -24,6 +24,8 @@ func _documentos() -> void:
 	await _render("c2_registro_accesos", Vector2i(1600, 1000), null, _doc_registro_accesos)
 	await _render("c2_noticias", Vector2i(1600, 900), null, _doc_noticias)
 	await _render("c2_directorio", Vector2i(900, 1200), null, _doc_directorio)
+	await _render("c2_tres_rayas", Vector2i(1600, 900), null, _doc_tres_rayas)
+	await _render("c2_grafica", Vector2i(1600, 900), null, _doc_grafica)
 	await _render("c2_planos_clinica", Vector2i(2048, 1400), PAPEL_BLANCO, _doc_planos_clinica, Color(0.86, 0.92, 1.0))
 	await _render("c2_contrato", Vector2i(1024, 1434), PAPEL_BLANCO, _doc_contrato)
 	await _render("c2_contrato_reverso", Vector2i(1024, 1434), PAPEL_BLANCO, _doc_vacio)
@@ -239,6 +241,35 @@ func _doc_directorio(c: Control) -> void:
 		c.draw_string(PERIODICO_NEGRITA, Vector2(90, y), p[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 48, Color(0.95, 0.85, 0.6))
 		c.draw_string(PERIODICO, Vector2(300, y), p[1], HORIZONTAL_ALIGNMENT_LEFT, -1, 44, Color(0.92, 0.88, 0.8))
 		y += 112.0
+
+# Las pantallas hackeadas: tres rayas rojas, como garras, sobre negro
+func _doc_tres_rayas(c: Control) -> void:
+	c.draw_rect(Rect2(0, 0, 1600, 900), Color(0.03, 0.02, 0.025))
+	for i in 3:
+		var x := 560.0 + i * 190.0
+		var pts := PackedVector2Array()
+		for k in 21:
+			var t := k / 20.0
+			pts.append(Vector2(x + sin(t * PI) * 60.0 - t * 120.0, 150.0 + t * 600.0))
+		for g in [[34.0, 0.25], [22.0, 0.5], [12.0, 1.0]]:
+			c.draw_polyline(pts, Color(1.0, 0.1, 0.08, g[1]), g[0], true)
+	for y in range(0, 900, 6):
+		c.draw_line(Vector2(0, y), Vector2(1600, y), Color(0, 0, 0, 0.18), 2)
+
+# Pantalla del despacho en estado normal: la gráfica del Proyecto Pino Lunar
+func _doc_grafica(c: Control) -> void:
+	c.draw_rect(Rect2(0, 0, 1600, 900), Color(0.08, 0.13, 0.12))
+	c.draw_string(PERIODICO_NEGRITA, Vector2(60, 90), "PROYECTO PINO LUNAR", HORIZONTAL_ALIGNMENT_LEFT, -1, 56, Color(0.9, 0.78, 0.45))
+	c.draw_string(IMPRESO, Vector2(60, 140), "Avance de obra · Hotel y clínica comunitaria", HORIZONTAL_ALIGNMENT_LEFT, -1, 28, Color(0.7, 0.8, 0.75))
+	var pts := PackedVector2Array()
+	for i in 12:
+		pts.append(Vector2(100 + i * 125, 760 - i * 40 - (i % 3) * 25))
+	for i in 12:
+		c.draw_rect(Rect2(80 + i * 125, 790 - (i * 30 + 60), 40, i * 30 + 60), Color(0.3, 0.55, 0.45, 0.6))
+	c.draw_polyline(pts, Color(0.95, 0.8, 0.4), 6, true)
+	for p in pts:
+		c.draw_circle(p, 9, Color(0.95, 0.8, 0.4))
+	c.draw_line(Vector2(60, 800), Vector2(1560, 800), Color(0.7, 0.8, 0.75, 0.6), 3)
 
 # ---------- Despacho ----------
 
