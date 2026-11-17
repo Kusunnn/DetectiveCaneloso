@@ -684,6 +684,7 @@ transform = Transform3D(2.4, 0.0, 0.0, 0.0, 2.4, 0.0, 0.0, 0.0, 11.0, -1.8, 4.2,
 [node name="Manta" type="Node3D" parent="Escenario"]
 transform = Transform3D(0.0, 0.0, 1.0, 0.0, 1.0, 0.0, -1.0, 0.0, 0.0, -1.7, 3.3, 0.0)
 script = ExtResource("e6")
+Estilo = 1
 Texto = "NOCHE DE CUENTOS
 «La leyenda del Ciervo de Luz»"
 Ancho = 4.2

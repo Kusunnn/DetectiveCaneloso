@@ -101,6 +101,7 @@ transform = Transform3D(0.0, 0.0, 7.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 0.0, 4.75,
 [node name="Letrero" type="Node3D" parent="Arco"]
 transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 4.1, -0.25)
 script = ExtResource("e3")
+Estilo = 1
 Texto = "CAMPAMENTO PINO LUNAR"
 Ancho = 3.6
 ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
@@ -196,6 +197,7 @@ transform = Transform3D(-0.9397, 0.0, -0.342, 0.0, 1.0, 0.0, 0.342, 0.0, -0.9397
 [node name="IndicadorTexto" type="Node3D" parent="." groups=["apoyar_pared"]]
 transform = Transform3D(-0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, -0.9397, 1.6859431, 0.9502, 29.68665)
 script = ExtResource("e3")
+Estilo = 1
 Texto = "↑ LAGO ESPEJO
 ← BOSQUE   COLINA →"
 Ancho = 0.66

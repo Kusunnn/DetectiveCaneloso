@@ -54,6 +54,7 @@ transform = Transform3D(-0.342, 0.0, -0.9397, 0.0, 1.0, 0.0, 0.9397, 0.0, -0.342
 [node name="Mirador" type="Node3D" parent="." groups=["apoyar_pared"]]
 transform = Transform3D(-0.342, 0, -0.9397, 0, 1, 0, 0.9397, 0, -0.342, 23.18665, 3.4675, 22.885944)
 script = ExtResource("e5")
+Estilo = 1
 Texto = "MIRADOR DEL CIERVO"
 Ancho = 0.66
 ColorPapel = Color(0.33, 0.22, 0.13, 1.0)

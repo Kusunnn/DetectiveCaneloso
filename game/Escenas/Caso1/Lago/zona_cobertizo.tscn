@@ -245,6 +245,7 @@ material = SubResource("FogMaterial_15")
 [node name="Letrero" type="Node3D" parent="Edificio"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 2.25, 2.68)
 script = ExtResource("e11")
+Estilo = 1
 Texto = "COBERTIZO DE BOTES"
 Ancho = 1.0
 ColorPapel = Color(0.33, 0.22, 0.13, 1.0)

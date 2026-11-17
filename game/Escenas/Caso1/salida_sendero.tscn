@@ -92,6 +92,7 @@ transform = Transform3D(0.0, 0.0, 7.6, 0.0, 2.6, 0.0, -2.6, 0.0, 0.0, 0.0, 4.75,
 [node name="Letrero" type="Node3D" parent="Arco"]
 transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 4.1, 0.25)
 script = ExtResource("e3")
+Estilo = 1
 Texto = "SENDERO AL LAGO ESPEJO"
 Ancho = 3.6
 ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
@@ -108,6 +109,7 @@ transform = Transform3D(0.9397, 0.0, -0.342, 0.0, 1.0, 0.0, 0.342, 0.0, 0.9397, 
 [node name="Prohibido" type="Node3D" parent="Arco" groups=["apoyar_pared"]]
 transform = Transform3D(0.9397, 0, -0.342, 0, 1, 0, 0.342, 0, 0.9397, 4.2100005, 0.95, 2.202427)
 script = ExtResource("e3")
+Estilo = 2
 Texto = "PROHIBIDO NADAR DE NOCHE"
 Ancho = 0.55
 ColorPapel = Color(0.85, 0.82, 0.7, 1.0)

@@ -245,6 +245,7 @@ transform = Transform3D(-0.9397, 0.0, 0.342, 0.0, 1.0, 0.0, -0.342, 0.0, -0.9397
 [node name="Prohibido" type="Node3D" parent="." groups=["apoyar_pared"]]
 transform = Transform3D(-0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, -0.9397, 5.307463, 0.8922, -5.895232)
 script = ExtResource("e14")
+Estilo = 2
 Texto = "PROHIBIDO NADAR DE NOCHE"
 Ancho = 0.6
 ColorPapel = Color(0.85, 0.82, 0.7, 1.0)

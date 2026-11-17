@@ -144,6 +144,7 @@ transform = Transform3D(0.0, 0.0, 8.4, 0.0, 2.4, 0.0, -2.4, 0.0, 0.0, 0.0, 3.5, 
 [node name="Bienvenida" type="Node3D" parent="Entrada"]
 transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 2.8, -0.15)
 script = ExtResource("e5")
+Estilo = 1
 Texto = "CAMPAMENTO PINO LUNAR
 Bienvenidos, campistas"
 Ancho = 3.6
@@ -158,6 +159,7 @@ TamPixel = 0.004
 [node name="SeVende" type="Node3D" parent="Entrada"]
 transform = Transform3D(-1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 2.6, 1.6, -0.21)
 script = ExtResource("e5")
+Estilo = 2
 Texto = "SE VENDE
 Inmobiliaria Lago Espejo"
 Ancho = 0.8
@@ -202,6 +204,7 @@ transform = Transform3D(-0.766, 0.0, 0.6428, 0.0, 1.0, 0.0, -0.6428, 0.0, -0.766
 [node name="IndicadorTexto" type="Node3D" parent="." groups=["auditoria_pared"]]
 transform = Transform3D(-0.766, 0.0, 0.6428, 0.0, 1.0, 0.0, -0.6428, 0.0, -0.766, 17.9286, 0.95, 30.6468)
 script = ExtResource("e5")
+Estilo = 1
 Texto = "← COMEDOR · FOGATA"
 Ancho = 0.62
 ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
