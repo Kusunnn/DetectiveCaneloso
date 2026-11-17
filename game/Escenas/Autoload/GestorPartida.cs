@@ -116,6 +116,8 @@ public partial class GestorPartida : Node
 	private Label _textoAviso;
 	private Control _sello;
 	private bool _saliendo;
+	private PantallaCarga _pantallaCarga;
+	private int _turnoCarga;
 
 	public override void _EnterTree()
 	{
@@ -137,6 +139,7 @@ public partial class GestorPartida : Node
 	// como omitido para que ese capítulo se desbloquee. Se puede jugar después desde el tablero de capítulos.
 	public void NuevaPartida(bool saltarTutorial = false)
 	{
+		if (_pantallaCarga != null) return;
 		RanuraActiva = RanuraAuto;
 		_cinematicasVistas.Clear();
 		var tutorial = Capitulos.Lista.FirstOrDefault();
@@ -153,6 +156,7 @@ public partial class GestorPartida : Node
 	// Empieza un capítulo desde el principio. rejugar = capítulo ya resuelto: no toca las ranuras.
 	public void IniciarCapitulo(string id, bool rejugar, bool saltarTutorial = false)
 	{
+		if (_pantallaCarga != null) return;
 		var capitulo = Capitulos.Obtener(id);
 		if (capitulo == null) return;
 		SaltarTutorial = saltarTutorial;
@@ -232,6 +236,7 @@ public partial class GestorPartida : Node
 	// Devuelve false si la ranura está dañada (el menú ofrece cargar el respaldo)
 	public bool CargarRanura(int ranura, bool desdeRespaldo = false)
 	{
+		if (_pantallaCarga != null) return false;
 		var datos = LeerArchivo(RutaJson(ranura) + (desdeRespaldo ? ".bak" : ""));
 		if (datos == null) return false;
 		// Partida guardada al cerrar un caso (fase Epílogo): ya no queda nada por hacer ahí, así que sigue el próximo capítulo
@@ -278,6 +283,7 @@ public partial class GestorPartida : Node
 	// aparece en el Marker3D «punto» de la escena nueva. No cuenta como cargar: no hay «Anteriormente…».
 	public void CambiarEscenaDelCapitulo(string escena, string punto)
 	{
+		if (_pantallaCarga != null) return;
 		var juego = EscenaDeJuego();
 		if (juego == null || !ResourceLoader.Exists(escena)) return;
 		EstadoPendiente = juego.CapturarEstado();
@@ -288,6 +294,7 @@ public partial class GestorPartida : Node
 
 	public void IrAlMenuInicio()
 	{
+		if (_pantallaCarga != null) return;
 		HayCambiosSinGuardar = false;
 		EstadoPendiente = null;
 		Rejugando = false;
@@ -305,8 +312,60 @@ public partial class GestorPartida : Node
 	{
 		_autoguardadoPendiente = null; // Un autoguardado pendiente no pasa a otra partida
 		_dialogoSalida.Cancelar();
-		GetTree().Paused = false;
-		GetTree().ChangeSceneToFile(ruta);
+		var capitulo = Capitulos.Obtener(CapituloActual);
+		if (ruta == EscenaMenuInicio || capitulo == null || DisplayServer.GetName() == "headless")
+		{
+			GetTree().Paused = false;
+			GetTree().ChangeSceneToFile(ruta);
+			return;
+		}
+		_ = CargarEscenaConPantalla(ruta, capitulo);
+	}
+
+	private async Task CargarEscenaConPantalla(string ruta, InfoCapitulo capitulo)
+	{
+		var arbol = GetTree();
+		bool estabaPausado = arbol.Paused;
+		var pantalla = new PantallaCarga(capitulo, ruta, _turnoCarga++);
+		_pantallaCarga = pantalla;
+		AddChild(pantalla);
+		arbol.Paused = true;
+		ulong inicio = Time.GetTicksMsec();
+
+		try
+		{
+			if (ResourceLoader.LoadThreadedRequest(ruta, "PackedScene") == Error.Ok)
+			{
+				var estado = ResourceLoader.LoadThreadedGetStatus(ruta);
+				while (estado == ResourceLoader.ThreadLoadStatus.InProgress)
+				{
+					await ToSignal(arbol, SceneTree.SignalName.ProcessFrame);
+					estado = ResourceLoader.LoadThreadedGetStatus(ruta);
+				}
+				if (estado == ResourceLoader.ThreadLoadStatus.Loaded &&
+					ResourceLoader.LoadThreadedGet(ruta) is PackedScene escena)
+				{
+					// Da tiempo a leer el dato en cargas rápidas. El carrusel no retrasa la entrada al nivel.
+					double espera = 2.0 - (Time.GetTicksMsec() - inicio) / 1000.0;
+					if (espera > 0) await ToSignal(arbol.CreateTimer(espera, ignoreTimeScale: true), SceneTreeTimer.SignalName.Timeout);
+					arbol.Paused = false;
+					if (arbol.ChangeSceneToPacked(escena) == Error.Ok)
+					{
+						await ToSignal(arbol, SceneTree.SignalName.SceneChanged);
+						return;
+					}
+				}
+			}
+
+			arbol.Paused = estabaPausado;
+			GD.PushError($"No se pudo cargar la escena {ruta}");
+			MostrarAviso("No se pudo cargar el escenario", sello: false);
+		}
+		finally
+		{
+			pantalla.QueueFree();
+			_pantallaCarga = null;
+		}
 	}
 
 	// ---------- Guardar ----------
@@ -348,7 +407,7 @@ public partial class GestorPartida : Node
 
 	public override void _Process(double delta)
 	{
-		if (_autoguardadoPendiente != null && PuedeGuardar
+		if (_pantallaCarga == null && _autoguardadoPendiente != null && PuedeGuardar
 			&& Time.GetTicksMsec() / 1000.0 - _ultimoAutoguardado >= PausaEntreAutoguardados)
 			Autoguardar(_autoguardadoPendiente);
 	}
@@ -514,6 +573,9 @@ public partial class GestorPartida : Node
 	{
 		if (_saliendo) return;
 		_saliendo = true;
+		var arbol = GetTree();
+		// La pantalla consume las teclas hasta que la nueva escena está lista.
+		while (_pantallaCarga != null) await ToSignal(arbol, SceneTree.SignalName.ProcessFrame);
 		bool pausado = GetTree().Paused;
 		GetTree().Paused = true;
 		var raton = Input.MouseMode;
