@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_o5el1"]
+colors = PackedColorArray(0.9146667, 0.88392156, 0.8070589, 1, 0.93413335, 0.90313727, 0.82564706, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1ndat"]
+seed = 38
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xna0h"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_1ndat")
+color_ramp = SubResource("Gradient_o5el1")
+seamless = true
+
+[resource]
+resource_name = "com_persiana"
+albedo_texture = SubResource("NoiseTexture2D_xna0h")
+roughness = 0.6

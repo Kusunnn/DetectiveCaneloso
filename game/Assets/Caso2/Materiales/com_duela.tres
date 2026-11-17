@@ -1,0 +1,22 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_qa2sr"]
+colors = PackedColorArray(0.46541178, 0.3035294, 0.17537256, 1, 0.5797177, 0.40729412, 0.27079216, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1e0vd"]
+seed = 430
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5mm0t"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_1e0vd")
+color_ramp = SubResource("Gradient_qa2sr")
+seamless = true
+
+[resource]
+resource_name = "com_duela"
+albedo_texture = SubResource("NoiseTexture2D_5mm0t")
+roughness = 0.7
+uv1_scale = Vector3(1, 8, 1)

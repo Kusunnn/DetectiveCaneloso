@@ -1,0 +1,8 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/planos_clinica/plano.res" id="1_kq1l8"]
+
+[node name="PlanosClinica" type="Node3D" unique_id=180934850]
+
+[node name="Plano" type="MeshInstance3D" parent="." unique_id=1625301321]
+mesh = ExtResource("1_kq1l8")

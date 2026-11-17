@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/registro_accesos/marco.res" id="1_mjp7h"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/registro_accesos/pantalla.res" id="2_st3c2"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/registro_accesos/pie.res" id="3_mero8"]
+
+[node name="RegistroAccesos" type="Node3D" unique_id=818655311]
+
+[node name="Marco" type="MeshInstance3D" parent="." unique_id=959435738]
+transform = Transform3D(1, 0, 0, 0, 0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0.27, 0)
+mesh = ExtResource("1_mjp7h")
+
+[node name="Pantalla" type="MeshInstance3D" parent="." unique_id=406989518]
+transform = Transform3D(1, 0, 0, 0, 0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0.27, 0)
+mesh = ExtResource("2_st3c2")
+
+[node name="Pie" type="MeshInstance3D" parent="." unique_id=1158068159]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.04)
+mesh = ExtResource("3_mero8")

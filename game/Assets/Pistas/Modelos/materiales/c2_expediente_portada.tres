@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/c2_expediente_portada.jpg" id="1_wacfr"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_f5qov"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_n40c7"]
+
+[resource]
+resource_name = "c2_expediente_portada"
+albedo_texture = ExtResource("1_wacfr")
+roughness_texture = ExtResource("3_n40c7")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_f5qov")
+texture_filter = 5

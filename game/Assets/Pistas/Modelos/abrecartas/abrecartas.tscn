@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/abrecartas/mango.res" id="1_hbgc0"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/abrecartas/puntas.res" id="2_yypf7"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/abrecartas/tarjeta.res" id="3_4ahsg"]
+
+[node name="Abrecartas" type="Node3D" unique_id=1866391066]
+
+[node name="Mango" type="MeshInstance3D" parent="." unique_id=201278080]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, -0.1, 0.011, 0)
+mesh = ExtResource("1_hbgc0")
+
+[node name="Puntas" type="MeshInstance3D" parent="." unique_id=477090689]
+mesh = ExtResource("2_yypf7")
+
+[node name="Tarjeta" type="MeshInstance3D" parent="." unique_id=866854360]
+transform = Transform3D(0.9781476, 0, 0.2079117, 0, 1, 0, -0.2079117, 0, 0.9781476, 0, 0, 0.065)
+mesh = ExtResource("3_4ahsg")

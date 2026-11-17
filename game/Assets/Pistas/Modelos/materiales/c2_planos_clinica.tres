@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/c2_planos_clinica.jpg" id="1_uerih"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_co3k7"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_yaqnt"]
+
+[resource]
+resource_name = "c2_planos_clinica"
+albedo_texture = ExtResource("1_uerih")
+roughness_texture = ExtResource("3_yaqnt")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_co3k7")
+texture_filter = 5

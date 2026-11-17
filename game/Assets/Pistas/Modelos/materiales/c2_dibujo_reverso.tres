@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/c2_dibujo_reverso.jpg" id="1_jds1o"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_ha3wu"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_a6xls"]
+
+[resource]
+resource_name = "c2_dibujo_reverso"
+albedo_texture = ExtResource("1_jds1o")
+roughness_texture = ExtResource("3_a6xls")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_ha3wu")
+texture_filter = 5

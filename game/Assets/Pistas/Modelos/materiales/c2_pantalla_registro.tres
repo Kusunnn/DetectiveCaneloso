@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/c2_registro_accesos.png" id="1_d03oc"]
+
+[resource]
+resource_name = "c2_pantalla_registro"
+albedo_texture = ExtResource("1_d03oc")
+roughness = 0.15
+emission_enabled = true
+emission_energy_multiplier = 0.9
+emission_texture = ExtResource("1_d03oc")

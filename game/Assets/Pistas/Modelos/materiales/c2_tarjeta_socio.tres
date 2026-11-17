@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/c2_tarjeta_socio.jpg" id="1_iuj7j"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_qgsit"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_v7iit"]
+
+[resource]
+resource_name = "c2_tarjeta_socio"
+albedo_texture = ExtResource("1_iuj7j")
+roughness_texture = ExtResource("3_v7iit")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_qgsit")
+texture_filter = 5

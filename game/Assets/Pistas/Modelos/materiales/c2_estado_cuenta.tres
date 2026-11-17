@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/c2_estado_cuenta.jpg" id="1_mrv3w"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_k8k05"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_i57i3"]
+
+[resource]
+resource_name = "c2_estado_cuenta"
+albedo_texture = ExtResource("1_mrv3w")
+roughness_texture = ExtResource("3_i57i3")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_k8k05")
+texture_filter = 5

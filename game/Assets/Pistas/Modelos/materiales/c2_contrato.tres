@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/c2_contrato.jpg" id="1_tetly"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_NormalGL.jpg" id="2_y74p8"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Paper005/Paper005_Roughness.jpg" id="3_y6vqg"]
+
+[resource]
+resource_name = "c2_contrato"
+albedo_texture = ExtResource("1_tetly")
+roughness_texture = ExtResource("3_y6vqg")
+normal_enabled = true
+normal_scale = 0.5
+normal_texture = ExtResource("2_y74p8")
+texture_filter = 5

@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/contrato_ixodes/contrato_ixodes.res" id="1_0f8rm"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/contrato_ixodes/debajo.res" id="2_ppn7l"]
+[ext_resource type="ArrayMesh" path="res://Assets/Pistas/Modelos/contrato_ixodes/grapa.res" id="3_2og3a"]
+
+[node name="ContratoIxodes" type="Node3D" unique_id=1060007833]
+
+[node name="Hoja" type="MeshInstance3D" parent="." unique_id=273537952]
+mesh = ExtResource("1_0f8rm")
+
+[node name="HojaDebajo" type="MeshInstance3D" parent="." unique_id=1534433374]
+transform = Transform3D(0.99939084, 0, 0.034899496, 0, 1, 0, -0.034899496, 0, 0.99939084, 0.002, -0.001, 0.002)
+mesh = ExtResource("2_ppn7l")
+
+[node name="Grapa" type="MeshInstance3D" parent="." unique_id=1670675077]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -0.09, 0.0005, -0.134)
+mesh = ExtResource("3_2og3a")

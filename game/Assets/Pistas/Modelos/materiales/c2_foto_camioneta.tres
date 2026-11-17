@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/generadas/c2_foto_camioneta.png" id="1_kwqme"]
+
+[resource]
+resource_name = "c2_foto_camioneta"
+albedo_texture = ExtResource("1_kwqme")
+metallic_specular = 0.6
+roughness = 0.25
+texture_filter = 5
