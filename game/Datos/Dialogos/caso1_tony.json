@@ -532,7 +532,7 @@
 					"habla": "Tony",
 					"animo": "nervioso",
 					"gesto": "Se queda callado un momento",
-					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años lo trae colgado mi abuelo. Sí. Me lo dejó a mí. Se me cayó."
+					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años lo trae colgado mi abuelo. Siempre lo usaba. Sí. Me lo dejó de recuerdo antes de morir. Se me cayó."
 				}
 			],
 			"siguiente": "hub",
@@ -1100,7 +1100,7 @@
 			],
 			"al_completar": {
 				"notas": [
-					"Declaración de Tony: Tras el incidente de hace diez años, el campamento cerró unos meses. Al reabrir, el abuelo de Tony se lo dejó a él."
+					"Declaración de Tony: Tras el incidente de hace diez años, el campamento cerró unos meses. Al reabrir, su abuelo, Guillermo Spínola, se lo dejó a él."
 				]
 			}
 		},

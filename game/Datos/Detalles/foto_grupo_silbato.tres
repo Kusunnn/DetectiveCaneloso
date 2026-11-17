@@ -5,9 +5,9 @@
 [resource]
 script = ExtResource("1_detalle")
 Id = "silbato"
-Titulo = "El silbato de Don Guillermo"
-Descripcion = "De cerca: Don Guillermo, el director, lleva al cuello un silbato con las iniciales «G. S.» grabadas."
-Pensamiento = "«G. S.»: ese silbato era de Don Guillermo, el abuelo de Tony."
+Titulo = "El silbato de Don Guillermo Spínola"
+Descripcion = "De cerca: Don Guillermo Spínola, el director, lleva al cuello un silbato con las iniciales «G. S.» grabadas."
+Pensamiento = "«G. S.»: Guillermo Spínola. Spínola... como Tony."
 Normal = Vector3(0, 0, 1)
 Tolerancia = 30.0
 ZoomMinimo = 2.4
