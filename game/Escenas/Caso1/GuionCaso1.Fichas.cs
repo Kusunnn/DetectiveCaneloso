@@ -79,8 +79,8 @@ public partial class GuionCaso1
 			{
 				new("«Estaba en la caseta revisando el generador.»", "excusa_1", "tony_1", "Foto de Aya de las 23:12", "foto_aya_2312", "tomó el sendero del lago"),
 				new("«No me acerqué al lago.»", "excusa_2", "tony_2", "Botas con barro", "botas_tony", "lodo y juncos de la orilla"),
-				// [AJUSTE] Silbato «T. S.» (aprobado el 5 nov): ya no «era de su abuelo»
-				new("«Ese silbato no es mío.»", "excusa_3", "tony_3", "Silbato del embarcadero", "silbato_ts", "es suyo, «T. S.»; se le cayó"),
+				// Silbato «G. S.»: era de Don Guillermo y lo heredó Tony (como en la foto de los campistas)
+				new("«Ese silbato no es mío.»", "excusa_3", "tony_3", "Silbato del embarcadero", "silbato_ts", "era de su abuelo, «G. S.»; se le cayó"),
 				new("«¡No tenía nada contra Porky!»", "excusa_4", "tony_4", "Libro de guardia quemado", "libro_guardia_quemado", "Porky lo citó por el libro de guardia"),
 				new("«Cualquiera pudo agarrar un remo.»", "excusa_5", "tony_5", "Hueco en el soporte de remos", "hueco_remo", "solo dos llaves abren el cobertizo"),
 			}),
@@ -158,6 +158,7 @@ public partial class GuionCaso1
 			// [AJUSTE] Tony se puede interrogar desde el inicio: ya no «PRIMERO ESCUCHA A LOS DEMÁS»
 			string consejo = !interrogado ? "AÚN NO LO INTERROGAS"
 				: Guia.Brilla(f.Id) ? "TIENES CON QUÉ ROMPER UN CANDADO"
+				: TienePreguntas(f.Id) ? "TIENES PREGUNTAS NUEVAS PARA HACERLE"
 				: siguiente == null ? (estado == "coartada" ? "SU HISTORIA SE SOSTIENE" : "YA DIJO LO QUE SABÍA")
 				: Tiene(siguiente.Pide) ? "TIENES CON QUÉ PRESIONARLO"
 				: "TE FALTA UNA PRUEBA PARA PRESIONARLO";

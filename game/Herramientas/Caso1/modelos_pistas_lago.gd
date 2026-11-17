@@ -109,7 +109,7 @@ func _texto(padre: Node3D, nombre: String, texto: String, pos: Vector3, giro: Ve
 
 # ---------- pistas ----------
 
-## Silbato metálico de monitor con «T. S.» grabado y el cordón rojo roto (unos 6 cm)
+## Silbato metálico de monitor con «G. S.» grabado y el cordón rojo roto (unos 6 cm)
 func _silbato() -> Node3D:
 	var r := Node3D.new()
 	var cromo := _mat(Color(0.86, 0.85, 0.8), 0.32, 0.55)
@@ -134,7 +134,7 @@ func _silbato() -> Node3D:
 		var hilo := _malla(r, "Hilo%d" % k, _cilindro(0.0004, 0.0004, 0.008, 4), cordon, Vector3(-0.104 - k * 0.0015, 0.002, 0.024 + k * 0.0018), Vector3(0, 0, 70 + k * 12))
 		hilo.name = "Hilo%d" % k
 	# Iniciales grabadas en el costado del cuerpo
-	var iniciales := _texto(r, "Iniciales", "T. S.", Vector3(-0.004, 0.0107, 0.0106), Vector3(0, 0, 0), 64, Color(0.12, 0.12, 0.12), 0.00011)
+	var iniciales := _texto(r, "Iniciales", "G. S.", Vector3(-0.004, 0.0107, 0.0106), Vector3(0, 0, 0), 64, Color(0.12, 0.12, 0.12), 0.00011)
 	iniciales.font = null
 	iniciales.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	var marcador := Marker3D.new()

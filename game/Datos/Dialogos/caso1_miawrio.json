@@ -182,6 +182,12 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Del baúl de disfraces falta la cornamenta."
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "molesto",
+					"gesto": "Mira su reloj",
+					"texto": "Eh... ¿un disfraz? ¿Me ves cara de andar disfrazado en el bosque? Pregúntale al que cuenta las historias, ¿sabes cómo?"
 				}
 			],
 			"siguiente": "error"
@@ -191,6 +197,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Las huellas del sendero son demasiado hondas para un ciervo."
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "impaciente",
+					"texto": "Eh... yo no me moví del estacionamiento. Mis zapatos ni se ensuciaron, ¿sabes cómo?"
 				}
 			],
 			"siguiente": "error"
@@ -269,6 +280,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Alguien quemó el libro de guardia en la fogata."
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "impaciente",
+					"texto": "Eh... ¿un libro de guardia? Eso es asunto del campamento, no mío. Yo vine a cerrar una compra."
 				}
 			],
 			"siguiente": "error"
@@ -375,6 +391,123 @@
 		"paciencia": {
 			"fin": true,
 			"salida": "paciencia"
+		},
+		"desestima": {
+			"variantes": [
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "impaciente",
+						"gesto": "Mira su reloj",
+						"texto": "Eh... ¿y eso qué tiene que ver conmigo? Mi tiempo vale, ¿sabes cómo?"
+					}
+				],
+				[
+					{
+						"habla": "Miawrio",
+						"animo": "serio",
+						"texto": "Eh... no sé de qué me hablas. Vamos al grano."
+					}
+				]
+			],
+			"siguiente": "error"
+		},
+		"q_negocio": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Qué te trae al campamento?"
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "serio",
+					"texto": "Eh... negocios. Estoy cerrando la compra del terreno para construir un hotel. Nomás falta la firma, ¿sabes cómo?"
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Miawrio: está cerrando la compra del terreno del campamento para construir un hotel. Solo falta la firma."
+				]
+			}
+		},
+		"q_con_quien": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Con quién negocias la compra?"
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "serio",
+					"texto": "Eh... con Tony. Es el director; el campamento era de su abuelo, Don Guillermo Spínola. Ahora el que decide es él."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Miawrio: negocia la compra con Tony, el director, que recibió el campamento de su abuelo, Don Guillermo Spínola."
+				]
+			}
+		},
+		"q_paco": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Conociste a Paco, el hermano de Porky?"
+				},
+				{
+					"habla": "Miawrio",
+					"animo": "incómodo",
+					"gesto": "Deja de mirar su reloj",
+					"texto": "Eh... era mi mejor amigo. Teníamos trece años. Eso fue hace mucho, ¿sabes cómo?"
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Miawrio: Paco, el hermano de Porky, era su mejor amigo de niño. Aun así dice que a Porky casi no la conocía."
+				]
+			}
+		},
+		"preguntas": {
+			"pregunta": "¿Qué le pregunto?",
+			"opciones": [
+				{
+					"id": "negocio",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Qué te trae al campamento?",
+					"destino": "q_negocio",
+					"una_vez": true,
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "con_quien",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Con quién negocias la compra?",
+					"destino": "q_con_quien",
+					"una_vez": true,
+					"requiere": {
+						"nodos_completados": [
+							"q_negocio"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "paco",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Conociste a Paco?",
+					"destino": "q_paco",
+					"una_vez": true,
+					"requiere": {
+						"pistas": [
+							"recorte_periodico"
+						],
+						"sin_conclusiones": [
+							"miawrio_1"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				}
+			]
 		},
 		"despedida": {
 			"variantes": [

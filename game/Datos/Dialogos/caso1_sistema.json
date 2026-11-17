@@ -17,7 +17,11 @@
 		"brilla": { "texto": "Tengo algo", "nueva": true },
 		"que_hago": { "texto": "¿Qué hago con {quien}?", "nueva": true },
 		"interrogar": { "texto": "Interrogar a {quien}", "nueva": true },
-		"seguir": { "texto": "Seguir investigando", "nueva": false }
+		"seguir": { "texto": "Seguir investigando", "nueva": false },
+		"preguntar": { "texto": "Preguntarle algo ({n})", "nueva": true },
+		"que_pregunto": { "texto": "¿Qué le pregunto a {quien}?", "nueva": true },
+		"volver": { "texto": "Volver", "nueva": true },
+		"preguntas_nuevas": { "texto": "Preguntas nuevas", "nueva": true }
 	},
 	"candados_tony": {
 		"T1": { "texto": "Necesito saber quién lo vio camino al lago. Juan Carlos y Aya saben algo, y el candado de la caseta también.", "nueva": true },
@@ -234,7 +238,7 @@
 				"nueva": true
 			},
 			"T3": {
-				"texto": "Enséñale a Tony el silbato «T. S.», Nya. La foto vieja y el silbido que oyó Mimita lo amarran.",
+				"texto": "Enséñale a Tony el silbato «G. S.», Nya. La foto vieja y el silbido que oyó Mimita lo amarran.",
 				"nueva": true
 			},
 			"T4": {

@@ -311,6 +311,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Del baúl de disfraces falta la cornamenta."
+				},
+				{
+					"habla": "Tony",
+					"animo": "molesto",
+					"texto": "Mmh... ¿un disfraz? Eso es cosa de Juan Carlos y sus leyendas, detective. No mía."
 				}
 			],
 			"siguiente": "error"
@@ -320,6 +325,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Miawrio quería comprar la cabaña de Porky."
+				},
+				{
+					"habla": "Tony",
+					"animo": "molesto",
+					"texto": "Mmh... los negocios de Miawrio con Porky no me tocan, detective. Yo estaba en el generador."
 				}
 			],
 			"siguiente": "error"
@@ -406,6 +416,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Las huellas del sendero son de zancos, no de un ciervo."
+				},
+				{
+					"habla": "Tony",
+					"animo": "frío",
+					"texto": "Mmh... entonces alguien se disfrazó. ¿Y eso qué tiene que ver con que yo pise o no esa orilla?"
 				}
 			],
 			"siguiente": "error"
@@ -415,6 +430,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Porky salió de la cocina con prisa."
+				},
+				{
+					"habla": "Tony",
+					"animo": "molesto",
+					"texto": "Porky siempre andaba con prisa, detective. La cocina, el mantenimiento... ¿Y eso qué?"
 				}
 			],
 			"siguiente": "error"
@@ -424,7 +444,7 @@
 				{
 					"habla": "Tony",
 					"animo": "molesto",
-					"texto": "¿Ese silbato? No es mío. «T. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?"
+					"texto": "¿Ese silbato? No es mío. «G. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?"
 				}
 			],
 			"siguiente": "hub_3"
@@ -435,7 +455,7 @@
 				{
 					"id": "silbato_gs",
 					"tipo": "MOSTRAR",
-					"texto": "Silbato «T. S.»",
+					"texto": "Silbato «G. S.»",
 					"destino": "e3_silbato",
 					"requiere": {
 						"pistas": [
@@ -477,7 +497,7 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "«T. S.»: Tony Spínola. Estaba atorado en un clavo del embarcadero, con el cordón roto. Y hoy trae uno nuevo."
+					"texto": "«G. S.»: Guillermo Spínola. Su abuelo. Usted heredó el campamento... y también su silbato. Estaba atorado en un clavo del embarcadero, con el cordón roto. Y hoy trae uno nuevo."
 				}
 			],
 			"ir_a": [
@@ -502,7 +522,7 @@
 				{
 					"habla": "Tony",
 					"animo": "sarcástico",
-					"texto": "¿En serio? Mi abuelo les regalaba silbatos a todos los monitores. Cualquiera pudo grabarle esas letras. Usted es muy chismoso, detective."
+					"texto": "¿En serio? Mi abuelo les regalaba silbatos a todos los monitores. Hay docenas así. Usted es muy chismoso, detective."
 				}
 			]
 		},
@@ -512,7 +532,7 @@
 					"habla": "Tony",
 					"animo": "nervioso",
 					"gesto": "Se queda callado un momento",
-					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años ya lo traigo colgado. Sí. Es mío. Se me cayó."
+					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años lo trae colgado mi abuelo. Siempre lo usaba. Sí. Me lo dejó de recuerdo antes de morir. Se me cayó."
 				}
 			],
 			"siguiente": "hub",
@@ -521,7 +541,7 @@
 					"tony_3"
 				],
 				"notas": [
-					"El silbato «T. S.» es de Tony Spínola. Lo traía anoche y se le cayó en el embarcadero."
+					"El silbato «G. S.» era de Guillermo Spínola, el abuelo de Tony. Tony lo traía anoche y se le cayó en el embarcadero."
 				]
 			}
 		},
@@ -530,6 +550,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "La linterna de Porky estaba en el fondo del lago."
+				},
+				{
+					"habla": "Tony",
+					"animo": "frío",
+					"texto": "Mmh... es la linterna de Porky, no un silbato. No mezcle las cosas, detective."
 				}
 			],
 			"siguiente": "error"
@@ -539,6 +564,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Juan Carlos apagó el generador a mano."
+				},
+				{
+					"habla": "Tony",
+					"animo": "sarcástico",
+					"texto": "Pues ahí lo tiene: pregúntele a él. Yo no apagué nada."
 				}
 			],
 			"siguiente": "error"
@@ -654,6 +684,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Miawrio le ofreció dinero a Porky por su cabaña."
+				},
+				{
+					"habla": "Tony",
+					"animo": "frío",
+					"texto": "Eso es entre Miawrio y Porky. Si quiere un motivo, ahí tiene uno, ¿no?"
 				}
 			],
 			"siguiente": "error"
@@ -663,6 +698,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Eriz estaba en el lago desde las 23:00."
+				},
+				{
+					"habla": "Tony",
+					"animo": "sarcástico",
+					"texto": "¿Eriz, en el lago, solo, a esa hora? Yo empezaría por ahí, detective."
 				}
 			],
 			"siguiente": "error"
@@ -775,6 +815,11 @@
 				{
 					"habla": "Caneloso",
 					"texto": "Los bramidos venían de una bocina."
+				},
+				{
+					"habla": "Tony",
+					"animo": "sarcástico",
+					"texto": "Mmh... una bocina. ¿Y eso qué tiene que ver con un remo?"
 				}
 			],
 			"siguiente": "error"
@@ -883,6 +928,312 @@
 			"fin": true,
 			"salida": "paciencia"
 		},
+		"q_campamento": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "Disculpa, Tony. ¿Desde hace cuándo operas todo este campamento?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "¿Este lugar? Uff... desde hace bastante. Bueno, técnicamente, no siempre fue mío."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "¿Ah, no?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "No. Era de mi abuelo: Guillermo Spínola. Él lo fundó hace muchísimos años. Yo prácticamente crecí aquí."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Mi abuelo era un hombre increíble. Tenía una paciencia que no sé de dónde sacaba. Podía pasar horas enseñándole a un niño a clavar un simple clavo sin perder los estribos."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Y si alguien no conseguía pescar nada en toda la mañana, él era el primero en sentarse a su lado para intentarlo otra vez."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "Parece que era bastante querido por aquí."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Lo era. Enseñaba carpintería, pesca, remo, natación... incluso supervivencia básica. Decía que un campamento no servía solamente para que los niños se divirtieran. Quería que aprendieran cosas que pudieran llevarse consigo cuando volvieran a casa."
+				},
+				{
+					"habla": "Tony",
+					"animo": "triste",
+					"texto": "Más que mi abuelo. Fue quien me crio, quien estuvo ahí cuando lo necesitaba. Supongo que... fue lo más parecido a un padre que tuve."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "¿Y siempre quisiste quedarte con el campamento?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "animado",
+					"texto": "Desde que tengo memoria. Jajajaj."
+				},
+				{
+					"habla": "Tony",
+					"animo": "animado",
+					"texto": "De niño decía que algún día sería exactamente como él. Que tendría sus mismas habilidades, que conocería cada rincón del bosque, que podría enseñar todas esas cosas tan bien como él. ¡Hasta llegué a pensar que debía aprenderme de memoria cada una de sus lecciones!"
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "Jajaja. Vaya, tenías las expectativas bastante altas."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Ni te imaginas. Quería que estuviera orgulloso de mí. Quería demostrarle que podía confiarme algo tan importante como este lugar."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"gesto": "Su sonrisa se vuelve un poco más discreta",
+					"texto": "Cuando cumplí veintiuno, me permitió trabajar como monitor. Era una especie de prueba, ¿sabes? Quería ver si estaba preparado para hacerme cargo algún día."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "¿Y qué tal te fue?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "serio",
+					"texto": "Bueno... no fue precisamente como lo había imaginado."
+				},
+				{
+					"habla": "Tony",
+					"animo": "serio",
+					"texto": "Tenía muchas responsabilidades encima. Quería hacerlo todo bien, estar pendiente de cada niño, cada actividad, cada turno..."
+				},
+				{
+					"habla": "Tony",
+					"animo": "serio",
+					"texto": "Pensaba que si cometía un solo error, significaría que no estaba preparado. Que no era suficiente para continuar con lo que él había construido."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "Debió ser bastante agotador."
+				},
+				{
+					"habla": "Tony",
+					"animo": "cansado",
+					"texto": "Sí... más de lo que quería admitir en aquel entonces."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Tony: Tony heredó el campamento de su abuelo, Guillermo Spínola, que lo fundó y lo crio. A los 21 años Tony empezó a trabajar ahí como monitor."
+				]
+			}
+		},
+		"q_hace_diez_anos": {
+			"lineas": [
+				{
+					"habla": "Tony",
+					"animo": "serio",
+					"texto": "Hubo un incidente durante aquella temporada. Algo bastante desafortunado. El campamento terminó cerrando durante unos meses y... bueno, las cosas cambiaron bastante después de eso."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "¿Qué pasó?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "triste",
+					"texto": "Digamos que no fue una buena época para nadie. Mi abuelo lo pasó especialmente mal. Había dedicado prácticamente toda su vida a este lugar y verlo así... fue duro."
+				},
+				{
+					"habla": "Tony",
+					"animo": "triste",
+					"gesto": "Baja un poco la mirada",
+					"texto": "Creo que nunca volvió a verlo de la misma manera."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "¿Y después qué ocurrió?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Con el tiempo, el campamento volvió a abrir. Mi abuelo terminó dejándomelo. Y aquí estamos, diez años después."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Supongo que ahora me toca a mí mantener viva la tradición, ¿no?..."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "Entonces, ¿quieres hacer lo mismo que él?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "No exactamente lo mismo."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Quiero que los niños que vengan aquí encuentren un lugar donde puedan sentirse seguros. Que aprendan cosas nuevas, que hagan amigos, que se ensucien las manos y que tengan historias que contar cuando vuelvan a casa."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Quiero que este lugar signifique para ellos, aunque sea un poquito, lo que significó para mí cuando era niño."
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"gesto": "Hace una pequeña pausa",
+					"texto": "Eso es lo que él habría querido, después de todo."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Tony: Tras el incidente de hace diez años, el campamento cerró unos meses. Al reabrir, su abuelo, Guillermo Spínola, se lo dejó a él."
+				]
+			}
+		},
+		"q_lago": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿También organizan actividades en el lago?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Sí, claro. Aunque ahora tenemos normas bastante estrictas para esas actividades."
+				},
+				{
+					"habla": "Caneloso",
+					"texto": "¿Por alguna razón en particular?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "serio",
+					"texto": "Digamos que aprendí hace mucho tiempo que no hay que tomarse esas cosas a la ligera."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Tony: Tony dice que ahora hay normas muy estrictas para las actividades del lago: «aprendí hace mucho tiempo que no hay que tomarse esas cosas a la ligera»."
+				]
+			}
+		},
+		"q_llave_caseta": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Quién tiene llave de la caseta del generador?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "tranquilo",
+					"texto": "Mmh... el director y los monitores. Yo tengo la mía, claro. Por eso fui a revisarlo."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Tony: el director y los monitores tienen llave de la caseta del generador. Él tiene una."
+				]
+			}
+		},
+		"q_llave_cobertizo": {
+			"lineas": [
+				{
+					"habla": "Caneloso",
+					"texto": "¿Quién tiene llave del cobertizo de botes?"
+				},
+				{
+					"habla": "Tony",
+					"animo": "incómodo",
+					"gesto": "Mueve la mano derecha",
+					"texto": "Mmh... Porky tenía el llavero de mantenimiento. Con ese se abría todo el campamento, detective."
+				}
+			],
+			"al_completar": {
+				"notas": [
+					"Declaración de Tony: Porky tenía el llavero de mantenimiento, que abre todo el campamento. De su propia llave no dice nada."
+				]
+			}
+		},
+		"preguntas": {
+			"pregunta": "¿Qué le pregunto?",
+			"opciones": [
+				{
+					"id": "campamento",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Desde cuándo opera este campamento?",
+					"destino": "q_campamento",
+					"una_vez": true,
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "hace_diez_anos",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Qué pasó hace 10 años?",
+					"destino": "q_hace_diez_anos",
+					"una_vez": true,
+					"requiere": {
+						"nodos_completados": [
+							"q_campamento"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "lago",
+					"tipo": "PREGUNTAR",
+					"texto": "¿También organizan actividades en el lago?",
+					"destino": "q_lago",
+					"una_vez": true,
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "llave_caseta",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Quién tiene llave de la caseta del generador?",
+					"destino": "q_llave_caseta",
+					"una_vez": true,
+					"requiere": {
+						"pistas": [
+							"candado_caseta"
+						],
+						"sin_conclusiones": [
+							"tony_1"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				},
+				{
+					"id": "llave_cobertizo",
+					"tipo": "PREGUNTAR",
+					"texto": "¿Quién tiene llave del cobertizo de botes?",
+					"destino": "q_llave_cobertizo",
+					"una_vez": true,
+					"requiere": {
+						"pistas": [
+							"soporte_remos"
+						],
+						"sin_conclusiones": [
+							"tony_5"
+						]
+					},
+					"si_no_cumple": "ocultar"
+				}
+			]
+		},
 		"despedida": {
 			"variantes": [
 				[
@@ -941,7 +1292,7 @@
 				{
 					"id": "silbato_gs",
 					"tipo": "MOSTRAR",
-					"texto": "Silbato «T. S.»",
+					"texto": "Silbato «G. S.»",
 					"destino": "e3_silbato",
 					"requiere": {
 						"pistas": [

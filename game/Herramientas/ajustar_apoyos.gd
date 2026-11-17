@@ -101,12 +101,24 @@ func _a_pared(n: Node3D, espacio: PhysicsDirectSpaceState3D) -> bool:
 	atras.y = 0; atras = atras.normalized()
 	var profundidad := absf(atras.x) * caja.size.x * 0.5 + absf(atras.z) * caja.size.z * 0.5
 	var centro := caja.get_center()
-	var q := PhysicsRayQueryParameters3D.create(centro, centro + atras * 1.5, CAPA, _propios(n))
-	var g := espacio.intersect_ray(q)
-	if g.is_empty():
+	# Se desliza una lámina del tamaño de la cara del objeto (no un solo rayo al centro): en una pared de troncos
+	# el centro puede caer entre dos troncos y el objeto quedaba hundido en el de arriba o el de abajo
+	var lado := Vector3.UP.cross(atras).normalized()
+	var lamina := BoxShape3D.new()
+	lamina.size = Vector3(absf(lado.x) * caja.size.x + absf(lado.z) * caja.size.z, caja.size.y, 0.002)
+	const ATRAS_DE_INICIO := 0.2  # Empieza un poco por delante, por si el objeto ya está metido en la pared
+	var q := PhysicsShapeQueryParameters3D.new()
+	q.shape = lamina
+	q.transform = Transform3D(Basis.looking_at(atras, Vector3.UP), centro - atras * ATRAS_DE_INICIO)
+	q.motion = atras * 1.7
+	q.collision_mask = CAPA
+	q.exclude = _propios(n)
+	var libre := espacio.cast_motion(q)
+	if libre.is_empty() or libre[0] >= 1.0:
 		push_warning("Sin pared detrás de " + str(n.get_path()))
 		return false
-	var d: float = centro.distance_to(g.position) - profundidad - 0.005
+	var distancia: float = libre[0] * 1.7 - ATRAS_DE_INICIO + 0.001
+	var d: float = distancia - profundidad - 0.005
 	if absf(d) < 0.002: return false
 	n.global_position += atras * d
 	return true

@@ -57,6 +57,8 @@ public partial class GuionCaso1
 	public Func<Task> AlAcertar;                  // Golpe de sonido y push-in
 	public Func<int, Task> AlTumbarExcusa;        // Tony: cuántas excusas lleva tumbadas
 	private string _ultimoGuardado;
+	// La prueba equivocada que se acaba de presentar ya tiene su respuesta escrita (nodo «e_...»)
+	private bool _pruebaConRespuesta;
 	// Lo pone la sala de la estación; en el campamento y el lago se interroga ahí mismo
 	public bool EnSala;
 	private readonly HashSet<string> _frasesDichas = new();
@@ -88,7 +90,8 @@ public partial class GuionCaso1
 			if (nodo.ConclusionesAlCompletar.Any(c => c.StartsWith("tony_")) && AlTumbarExcusa != null)
 				await AlTumbarExcusa(ExcusasTumbadas() + 1);
 		}
-		if (IdDe(arbol) == Culpable && nodo.Id == "error") await Motor.Hablar(arbol, "Tony", "sarcástico", LineasSistema.TonyBurla);
+		// HU-33: Tony desestima con su burla solo las pruebas que no tienen respuesta escrita
+		if (IdDe(arbol) == Culpable && nodo.Id == "error" && !_pruebaConRespuesta) await Motor.Hablar(arbol, "Tony", "sarcástico", LineasSistema.TonyBurla);
 	}
 
 	// ---------- Confrontar ----------
@@ -108,8 +111,10 @@ public partial class GuionCaso1
 			// Sin orden fijo (Tony) todas se pueden confrontar; los demás, solo la que sigue en su árbol
 			var abiertos = pendientes.Where(c => c.Previo == null || Guia.Roto(Guia.Buscar(c.Previo))).ToList();
 
+			// HU-30: con preguntas nuevas se ve su declaración entera, con el botón para preguntarle
+			string preguntar = TextoPreguntar(quien);
 			GuiaCaso1.Candado candado;
-			if (pendientes.Count == 1)
+			if (pendientes.Count == 1 && preguntar == null)
 			{
 				// Solo queda una frase falsa: directo a la prueba
 				candado = pendientes[0];
@@ -125,8 +130,13 @@ public partial class GuionCaso1
 				EnEspera = true;
 				Motor.Cambio?.Invoke();
 				GuardarEnEspera(arbol, nodo);
-				int elegida = await Motor.Ventana.ElegirFrase(personaje, visibles.Select(i => frases[i]).ToList(), inicio, visibles.IndexOf(marcada), i => PistaDeTony(visibles[i], propios));
+				int elegida = await Motor.Ventana.ElegirFrase(personaje, visibles.Select(i => frases[i]).ToList(), inicio, visibles.IndexOf(marcada), i => PistaDeTony(visibles[i], propios), preguntar);
 				EnEspera = false;
+				if (elegida == VentanaDialogo.PedirPreguntas)
+				{
+					await HacerPreguntas(arbol);
+					continue;
+				}
 				if (elegida < 0) return salir;
 				int frase = visibles[elegida];
 				candado = abiertos.FirstOrDefault(c => c.Frase == frase);
@@ -153,7 +163,8 @@ public partial class GuionCaso1
 				continue;
 			}
 			var resultado = OpcionDePrueba(arbol, nodoCandado, id);
-			if (resultado.Destino == "error" || resultado.Destino.StartsWith("e_"))
+			_pruebaConRespuesta = resultado.Destino.StartsWith("e_");
+			if (resultado.Destino == "error" || resultado.Destino == NodoDesestima || resultado.Destino.StartsWith("e_"))
 			{
 				Estado.Sumar(ClaveErrores(candado), 1);
 				Motor.Cambio?.Invoke();
@@ -231,14 +242,17 @@ public partial class GuionCaso1
 	// La opción correcta del paso: las equivocadas van a nodos «e_...»
 	private static OpcionDialogo Correcta(NodoDialogo nodo) => nodo.Opciones.FirstOrDefault(o => MotorDialogos.EsPrueba(o) && !o.Destino.StartsWith("e_"));
 
-	// Lo que el guion contempla sigue su ruta; lo demás va al regaño («error»)
+	// HU-33: lo que el guion contempla sigue su ruta (la correcta o su «e_...» con la respuesta del sospechoso).
+	// Lo demás: el sospechoso la desestima («desestima») y luego viene el regaño («error»).
+	public const string NodoDesestima = "desestima";
+
 	private OpcionDialogo OpcionDePrueba(ArbolDialogo arbol, NodoDialogo nodo, string id)
 	{
 		string enGuion = IdsEscena.FirstOrDefault(p => p.Value == id).Key ?? id;
 		if (OpcionDeTestimonio.TryGetValue(id, out string otra)) enGuion = otra;
 		var opcion = nodo.Opciones.FirstOrDefault(o => MotorDialogos.EsPrueba(o) && (o.Id == enGuion || o.Id == id));
 		if (opcion != null && Motor.Disponible(arbol, opcion)) return opcion;
-		return new OpcionDialogo { Id = id, Destino = "error" };
+		return new OpcionDialogo { Id = id, Destino = arbol.Nodo(NodoDesestima) != null ? NodoDesestima : "error" };
 	}
 
 	// Pistas del diario y testimonios conseguidos
@@ -264,7 +278,9 @@ public partial class GuionCaso1
 		if (arbol.Id != ArbolSala || !Sospechosos.Contains(opcion.Id)) return opcion.Texto;
 		var propios = Guia.Candados.Where(c => c.Quien == opcion.Id).ToList();
 		string texto = $"{opcion.Texto}  ({propios.Count(Guia.Roto)}/{propios.Count} candados)";
-		return Guia.Brilla(opcion.Id) ? texto + "  ·  " + Guia.Interrogatorio("brilla") : texto;
+		if (Guia.Brilla(opcion.Id)) texto += "  ·  " + Guia.Interrogatorio("brilla");
+		if (TienePreguntas(opcion.Id)) texto += "  ·  " + Guia.Interrogatorio("preguntas_nuevas");
+		return texto;
 	}
 
 	public bool DioDeclaracion(string quien) => Estado.NodoCompletado("caso1_" + quien, NodoDeclaracion(quien));
