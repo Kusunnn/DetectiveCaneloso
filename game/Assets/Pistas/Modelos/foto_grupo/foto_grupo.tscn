@@ -25,6 +25,6 @@ mesh = SubResource("QuadMesh_reverso")
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, -0.029, 0.0008)
 
 [node name="Detalle_silbato" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.228, -0.107, 0.012)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.212, -0.105, 0.012)
 
 [editable path="Modelo"]
