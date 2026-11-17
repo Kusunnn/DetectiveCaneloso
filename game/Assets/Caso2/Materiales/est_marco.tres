@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_knex3"]
+colors = PackedColorArray(0.27858824, 0.3011765, 0.33129412, 1, 0.3072314, 0.33019608, 0.3608157, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_drv7i"]
+seed = 10
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_gm78o"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_drv7i")
+color_ramp = SubResource("Gradient_knex3")
+seamless = true
+
+[resource]
+resource_name = "est_marco"
+albedo_texture = SubResource("NoiseTexture2D_gm78o")
+roughness = 0.5

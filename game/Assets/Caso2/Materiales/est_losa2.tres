@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_Color.jpg" id="1_uabwm"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_NormalGL.jpg" id="2_nmked"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_Roughness.jpg" id="3_keyno"]
+
+[resource]
+resource_name = "est_losa2"
+albedo_color = Color(0.8, 0.79, 0.75, 1)
+albedo_texture = ExtResource("1_uabwm")
+roughness_texture = ExtResource("3_keyno")
+normal_enabled = true
+normal_texture = ExtResource("2_nmked")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true

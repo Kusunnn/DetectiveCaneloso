@@ -272,7 +272,7 @@ def cortina_metalica(ancho=1.0, alto=3.0):
                                    material("Rollo", (0.30, 0.31, 0.33), 0.5, 0.6)])
     exportar("cortina_metalica")
 
-for alto in (2.8, 3.4, 4.0):
+for alto in (2.8, 3.0, 3.4, 4.0):
     muro(alto)
     muro_medio(alto)
     muro_ventana(alto)

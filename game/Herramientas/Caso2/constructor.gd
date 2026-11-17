@@ -682,6 +682,76 @@ func contenedor(padre: Node, nombre: String, nombre_visible: String, pos: Vector
 	c.set("SonidoAbrir", 1)
 	return c
 
+# ---------- Escape: puntos para las mecánicas (sin lógica) ----------
+
+## Puerta bloqueada con pantalla para «Tito pregunta»: la hoja, la pantalla con las tres rayas y su punto de
+## interacción. La pregunta y el desbloqueo son de otra tarea: el punto de la pantalla y la salida empiezan
+## apagados (capa 0) para que nada se resalte sin hacer nada; la puerta sí responde «Está cerrada.».
+## `pos_muro` es el pie del hueco en la cara del muro y `giro` hacia dónde mira esa cara.
+func puerta_tito(padre: Node, n: int, pos_muro: Vector3, giro: float) -> Node3D:
+	var b := Basis(Vector3.UP, deg_to_rad(giro))
+	var raiz_p := nodo("PuertaTito_%d" % n, padre)
+	pieza_kit("puerta_hoja_metal", raiz_p, pos_muro + b * Vector3(-0.43, 0.01, -0.06), giro, {}, "Hoja")
+	var puerta := StaticBody3D.new()
+	puerta.name = "Puerta"
+	puerta.set_script(load("res://Escenas/Investigacion/Puerta.cs"))
+	puerta.collision_layer = CAPA_INTERACTUABLE | CAPA_MUNDO
+	puerta.collision_mask = 0
+	puerta.position = pos_muro + b * Vector3(0, 1.05, 0.02)
+	puerta.rotation_degrees.y = giro
+	var f := CollisionShape3D.new()
+	f.name = "Forma"
+	var s := BoxShape3D.new()
+	s.size = Vector3(0.9, 2.1, 0.12)
+	f.shape = s
+	puerta.add_child(f)
+	raiz_p.add_child(puerta)
+	puerta.set("Bloqueada", true)
+	puerta.set("MensajeBloqueada", "Está cerrada.")
+	# Pantalla a un lado de la puerta, a la altura de los ojos
+	var pos_pantalla := pos_muro + b * Vector3(0.78, 1.5, 0.03)
+	modelo("res://Assets/Caso2/Modelos/props/marco_pantalla.glb", raiz_p, pos_muro + b * Vector3(0.78, 1.5, 0.0), giro, 0.28, "MarcoPantalla").add_to_group("auditoria_pared", true)
+	pantalla(raiz_p, "Pantalla", pos_pantalla + b * Vector3(0, 0, 0.016), giro, Vector2(0.45, 0.25), "res://Assets/Pistas/Modelos/generadas/c2_tres_rayas.png", 1.4)
+	var pregunta := punto(raiz_p, "PuntoPregunta", "Responder", pos_pantalla + b * Vector3(0, 0, 0.05), Vector3(0.5, 0.32, 0.1), giro)
+	pregunta.collision_layer = 0
+	omni(raiz_p, "BrilloPantalla", pos_pantalla + b * Vector3(0, 0, 0.4), Color("ff3a30"), 0.5, 2.0)
+	return raiz_p
+
+## Cruce del rastreo con olfato: el rastro visible y los dos caminos posibles (marcadores)
+func cruce(padre: Node, n: int, pos: Vector3, rot_y: float, rastro: String, camino_a: Vector3, camino_b: Vector3) -> Node3D:
+	var c := nodo("Cruce_%d" % n, padre, pos, rot_y)
+	if rastro != "":
+		modelo("res://Assets/Caso2/Modelos/props/" + rastro + ".glb", c, Vector3.ZERO, 0.0, 1.0, "Rastro")
+	else:
+		nodo("Rastro", c)
+	# Los caminos van en coordenadas del cruce (relativos a su posición y giro)
+	marcador("Camino_A", c, camino_a)
+	marcador("Camino_B", c, camino_b)
+	return c
+
+## Nodo EstadoLuces (normal / hackeado) con lo que se enciende en cada uno
+func estado_luces(solo_normal: Array, solo_hackeado: Array, entorno_nodo: WorldEnvironment, empieza_hackeado: bool, ambiente := Color("4a4f6e"), energia := 0.4) -> Node:
+	var e := Node.new()
+	e.name = "EstadoLuces"
+	e.set_script(load("res://Escenas/Investigacion/EstadoLuces.cs"))
+	raiz.add_child(e)
+	e.set("SoloNormal", solo_normal)
+	e.set("SoloHackeado", solo_hackeado)
+	e.set("Entorno", entorno_nodo)
+	e.set("EmpiezaHackeado", empieza_hackeado)
+	e.set("AmbienteHackeado", ambiente)
+	e.set("EnergiaAmbienteHackeado", energia)
+	return e
+
+## Techo de plafones sobre un rectángulo (x0, z0, ancho, fondo) a la altura `alto`
+func techo(padre: Node, nombre: String, x0: int, z0: int, ancho: int, fondo: int, alto: float, mats: Dictionary) -> void:
+	var t := []
+	for i in ancho:
+		for j in fondo:
+			t.append(Transform3D(Basis.IDENTITY, Vector3(x0 + i + 0.5, alto, z0 + j + 0.5)))
+	multimalla(nombre, padre, malla_kit("techo_panel", mats), t, false)
+	colision("Colision" + nombre, padre, Vector3(x0 + ancho / 2.0, alto + 0.1, z0 + fondo / 2.0), Vector3(ancho, 0.2, fondo), CAPA_LIMITES)
+
 # ---------- Lo común de una escena jugable ----------
 
 ## HUD, jugador, menú de pausa, ventana de diálogo, música, viñeta y el nodo EscenarioCaso2

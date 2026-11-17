@@ -1,0 +1,22 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_myy07"]
+colors = PackedColorArray(0.16188236, 0.17694117, 0.20329411, 1, 0.1885804, 0.2038902, 0.23068236, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_c501w"]
+seed = 523
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mulg0"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_c501w")
+color_ramp = SubResource("Gradient_myy07")
+seamless = true
+
+[resource]
+resource_name = "p23_marco"
+albedo_texture = SubResource("NoiseTexture2D_mulg0")
+metallic = 0.5
+roughness = 0.4

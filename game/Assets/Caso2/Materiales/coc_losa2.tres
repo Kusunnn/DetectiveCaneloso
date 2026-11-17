@@ -1,0 +1,22 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_vigmt"]
+colors = PackedColorArray(0.6229804, 0.5971765, 0.5418824, 1, 0.6748863, 0.64842355, 0.59171766, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ckbn7"]
+seed = 210
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_qdqqj"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_ckbn7")
+color_ramp = SubResource("Gradient_vigmt")
+seamless = true
+
+[resource]
+resource_name = "coc_losa2"
+albedo_texture = SubResource("NoiseTexture2D_qdqqj")
+roughness = 0.4
+uv1_scale = Vector3(2, 2, 1)

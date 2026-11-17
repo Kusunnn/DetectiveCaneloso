@@ -17,6 +17,19 @@ public partial class FiguraFondo : Node3D
 		var material = new StandardMaterial3D { AlbedoColor = ColorCuerpo, Roughness = 0.75f };
 		foreach (var malla in FindChildren("*", "MeshInstance3D", true, false).OfType<MeshInstance3D>())
 			malla.MaterialOverride = material;
+		// Accesorios (gorra, cubrebocas, tatuaje…): hijos con el metadato "hueso" se pegan a ese hueso del maniquí,
+		// con su transformación como desfase respecto al hueso.
+		var esqueleto = FindChildren("*", "Skeleton3D", true, false).OfType<Skeleton3D>().FirstOrDefault();
+		if (esqueleto != null)
+			foreach (var accesorio in GetChildren().OfType<Node3D>().Where(n => n.HasMeta("hueso")).ToList())
+			{
+				var union = new BoneAttachment3D { BoneName = accesorio.GetMeta("hueso").AsString() };
+				esqueleto.AddChild(union);
+				var desfase = accesorio.Transform;
+				RemoveChild(accesorio);
+				union.AddChild(accesorio);
+				accesorio.Transform = desfase;
+			}
 		var reproductor = FindChildren("*", "AnimationPlayer", true, false).OfType<AnimationPlayer>().FirstOrDefault();
 		if (reproductor == null) return;
 		var lista = reproductor.GetAnimationList();

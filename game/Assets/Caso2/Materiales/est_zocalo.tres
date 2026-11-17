@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_4p07l"]
+colors = PackedColorArray(0.8545882, 0.6701177, 0.22588235, 1, 0.8928314, 0.70528626, 0.25364706, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6pqp3"]
+seed = 416
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_kcipj"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_6pqp3")
+color_ramp = SubResource("Gradient_4p07l")
+seamless = true
+
+[resource]
+resource_name = "est_zocalo"
+albedo_texture = SubResource("NoiseTexture2D_kcipj")
+roughness = 0.6

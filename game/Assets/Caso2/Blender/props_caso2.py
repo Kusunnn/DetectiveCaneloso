@@ -445,6 +445,225 @@ def luz_emergencia():
     m.objeto("luz_emergencia")
     exportar("luz_emergencia")
 
+# ---------- Escape ----------
+
+CONCRETO = lambda: mat("Concreto", (0.62, 0.61, 0.58), 0.9)
+AMARILLO = lambda: mat("AmarilloSeguridad", (0.89, 0.7, 0.24), 0.6)
+
+@pieza
+def tramo_escalera():
+    """Tramo de escalera de concreto: 1.3 m de ancho, sube 1.5 m en 3.0 m (10 escalones de 15 × 30 cm) hacia -Z,
+    con nariz amarilla y barandal del lado +X. Pivote: abajo, al centro del primer escalón (z = 0)."""
+    m = Malla()
+    for i in range(10):
+        y = (i + 1) * 0.15
+        z = -i * 0.3
+        m.caja((0, y / 2, z - 0.15), (1.3, y, 0.3), CONCRETO())
+        m.caja((0, y - 0.01, z - 0.02), (1.3, 0.02, 0.04), AMARILLO())
+    # Barandal: postes y pasamanos inclinado
+    acero = mat("Barandal", (0.25, 0.27, 0.3), 0.4, 0.8)
+    for i in (0, 4, 9):
+        y = (i + 1) * 0.15
+        m.caja((0.62, y + 0.45, -i * 0.3 - 0.15), (0.04, 0.9, 0.04), acero)
+    largo = math.hypot(3.0, 1.5)
+    ang = math.degrees(math.atan2(1.5, 3.0))
+    m.caja((0.62, 0.15 + 0.9 + 0.75, -1.5), (0.05, 0.05, largo), acero, 0, ("x", ang))
+    m.objeto("tramo_escalera")
+    exportar("tramo_escalera")
+
+@pieza
+def descanso():
+    """Descanso de concreto de 3.0 × 1.5 m (losa de 20 cm); la cara de arriba en y = 0."""
+    m = Malla()
+    m.caja((0, -0.1, 0), (3.0, 0.2, 1.5), CONCRETO())
+    m.caja((0, -0.001, -0.74), (3.0, 0.004, 0.02), AMARILLO())
+    m.objeto("descanso")
+    exportar("descanso")
+
+@pieza
+def panel_tarjeta():
+    """Lector de tarjeta de pared con piloto (el color lo cambia la escena). Cara a +Z."""
+    m = Malla()
+    m.caja((0, 0, 0.02), (0.12, 0.18, 0.04), mat("PanelGris", (0.2, 0.21, 0.23), 0.4), 0.008)
+    m.caja((0, -0.02, 0.041), (0.08, 0.08, 0.002), mat("Lector", (0.08, 0.08, 0.09), 0.3))
+    m.objeto("panel_tarjeta")
+    exportar("panel_tarjeta")
+
+@pieza
+def mancha_aceite():
+    """Mancha de aceite de máquina en el piso (brillante y oscura), 0.5 m. Casi plana: 3 mm."""
+    m = Malla()
+    aceite = mat("Aceite", (0.05, 0.045, 0.04), 0.05, 0.3)
+    for (x, z, r) in ((0, 0, 0.16), (0.12, 0.06, 0.09), (-0.1, -0.05, 0.08), (0.2, -0.08, 0.05), (-0.18, 0.1, 0.04)):
+        m.cilindro((x, 0.0015, z), r, 0.003, aceite, 14)
+    m.objeto("mancha_aceite")
+    exportar("mancha_aceite")
+
+@pieza
+def huellas_mojadas():
+    """Rastro de huellas de bota mojadas (6 pasos, 1.8 m hacia -Z)."""
+    m = Malla()
+    agua = mat("Mojado", (0.08, 0.09, 0.1), 0.02, 0.2)
+    for i in range(6):
+        x = 0.12 if i % 2 else -0.12
+        z = -i * 0.32
+        m.caja((x, 0.0015, z), (0.1, 0.003, 0.24), agua, 0.02)
+        m.caja((x, 0.0015, z - 0.15), (0.09, 0.003, 0.06), agua, 0.02)
+    m.objeto("huellas_mojadas")
+    exportar("huellas_mojadas")
+
+@pieza
+def rack_servidor():
+    """Rack de servidores de 0.6 × 2.0 × 1.0 m con frentes de equipos y luces (verde/ámbar emisivo). Frente a +Z."""
+    m = Malla()
+    negro = mat("Rack", (0.08, 0.085, 0.1), 0.4, 0.5)
+    m.caja((0, 1.0, 0), (0.6, 2.0, 1.0), negro, 0.01)
+    equipo = mat("Equipo", (0.18, 0.19, 0.21), 0.4, 0.6)
+    verde = mat("LedVerde", (0.24, 0.86, 0.52), 0.3, 0, 5.0)
+    ambar = mat("LedAmbar", (1.0, 0.65, 0.2), 0.3, 0, 5.0)
+    for i in range(14):
+        y = 0.18 + i * 0.12
+        m.caja((0, y, 0.5), (0.54, 0.1, 0.02), equipo, 0.003)
+        for k in range(3):
+            m.caja((-0.22 + k * 0.03, y + 0.02, 0.512), (0.012, 0.012, 0.004), verde if (i + k) % 4 else ambar)
+        m.caja((0.15, y, 0.512), (0.18, 0.05, 0.004), mat("Rejilla", (0.1, 0.1, 0.11), 0.6))
+    m.objeto("rack_servidor")
+    exportar("rack_servidor")
+
+@pieza
+def rack_disco():
+    """El rack del servidor donde se conecta el disco: bahía abierta a la altura del pecho. Frente a +Z."""
+    m = Malla()
+    negro = mat("Rack", (0.08, 0.085, 0.1), 0.4, 0.5)
+    m.caja((0, 1.0, 0), (0.6, 2.0, 1.0), negro, 0.01)
+    equipo = mat("Equipo", (0.18, 0.19, 0.21), 0.4, 0.6)
+    for i in range(14):
+        if i in (8, 9): continue
+        m.caja((0, 0.18 + i * 0.12, 0.5), (0.54, 0.1, 0.02), equipo, 0.003)
+    m.caja((0, 1.2, 0.3), (0.54, 0.22, 0.4), mat("Hueco", (0.02, 0.02, 0.025), 0.9))
+    m.caja((0, 1.12, 0.48), (0.2, 0.01, 0.04), mat("LedRojo", (1.0, 0.15, 0.1), 0.3, 0, 5.0))
+    m.objeto("rack_disco")
+    exportar("rack_disco")
+
+@pieza
+def disco_duro():
+    """Disco duro externo (lo que se roba Pulgas)."""
+    m = Malla()
+    m.caja((0, 0.012, 0), (0.08, 0.024, 0.12), mat("Disco", (0.15, 0.16, 0.18), 0.4, 0.6), 0.004)
+    m.caja((0, 0.025, 0.04), (0.012, 0.002, 0.012), mat("LedAzul", (0.3, 0.6, 1.0), 0.3, 0, 4.0))
+    m.objeto("disco_duro")
+    exportar("disco_duro")
+
+@pieza
+def charola_cables():
+    """Charola de cables de 2 m colgada del techo, con cables de colores."""
+    m = Malla()
+    acero = ACERO()
+    m.caja((0, 0, 0), (0.3, 0.02, 2.0), acero)
+    m.caja((-0.15, 0.04, 0), (0.01, 0.08, 2.0), acero)
+    m.caja((0.15, 0.04, 0), (0.01, 0.08, 2.0), acero)
+    for k, col in enumerate(((0.2, 0.4, 0.85), (0.85, 0.75, 0.2), (0.2, 0.7, 0.4), (0.8, 0.2, 0.2))):
+        m.cilindro((-0.09 + k * 0.06, 0.03, 0), 0.015, 2.0, mat(f"Cable{k}", col, 0.5), 8, "z")
+    for z in (-0.9, 0.9):
+        m.caja((0, 0.4, z), (0.02, 0.8, 0.02), acero)
+    m.objeto("charola_cables")
+    exportar("charola_cables")
+
+@pieza
+def aire_acondicionado():
+    """Unidad de aire de precisión (0.8 × 1.9 × 0.6) con rejillas. Frente a +Z."""
+    m = Malla()
+    blanco = mat("AireBlanco", (0.88, 0.89, 0.9), 0.5)
+    m.caja((0, 0.95, 0), (0.8, 1.9, 0.6), blanco, 0.01)
+    rejilla = mat("Rejilla", (0.3, 0.32, 0.35), 0.6)
+    for i in range(10):
+        m.caja((0, 1.2 + i * 0.05, 0.302), (0.7, 0.012, 0.01), rejilla)
+    m.caja((0.25, 0.9, 0.302), (0.16, 0.08, 0.006), mat("PantallaAire", (0.3, 0.7, 1.0), 0.3, 0, 2.0))
+    m.objeto("aire_acondicionado")
+    exportar("aire_acondicionado")
+
+@pieza
+def mesa_acero():
+    """Mesa de trabajo de acero inoxidable de cocina (2.0 × 0.9 × 0.8) con entrepaño."""
+    m = Malla()
+    acero = mat("Inox", (0.78, 0.8, 0.82), 0.45, 0.35)
+    m.caja((0, 0.89, 0), (2.0, 0.03, 0.8), acero, 0.006)
+    m.caja((0, 0.25, 0), (1.9, 0.02, 0.72), acero)
+    for x in (-0.94, 0.94):
+        for z in (-0.36, 0.36):
+            m.caja((x, 0.44, z), (0.04, 0.88, 0.04), acero)
+    m.objeto("mesa_acero")
+    exportar("mesa_acero")
+
+@pieza
+def bolsa_basura():
+    """Bolsa de basura negra amarrada (0.5 m)."""
+    m = Malla()
+    negro = mat("Bolsa", (0.05, 0.05, 0.06), 0.25)
+    m.esfera((0, 0.22, 0), 0.25, negro, 12, (1.0, 0.9, 0.85))
+    m.esfera((0, 0.45, 0), 0.06, negro, 8, (0.8, 1.2, 0.8))
+    m.objeto("bolsa_basura")
+    exportar("bolsa_basura")
+
+@pieza
+def columna_estacionamiento():
+    """Columna de concreto de 0.6 × 3.0 m con franjas amarillas y negras abajo."""
+    m = Malla()
+    m.caja((0, 1.5, 0), (0.6, 3.0, 0.6), CONCRETO(), 0.01)
+    for i in range(4):
+        m.caja((0, 0.1 + i * 0.2, 0), (0.62, 0.1, 0.62), AMARILLO() if i % 2 == 0 else mat("NegroFranja", (0.08, 0.08, 0.08), 0.7))
+    m.objeto("columna_estacionamiento")
+    exportar("columna_estacionamiento")
+
+@pieza
+def lampara_tubo():
+    """Lámpara fluorescente de tubo para el techo (1.2 m); el tubo es emisivo."""
+    m = Malla()
+    m.caja((0, 0.03, 0), (0.14, 0.05, 1.22), mat("Carcasa", (0.85, 0.86, 0.86), 0.5), 0.005)
+    m.cilindro((0, 0.0, 0), 0.025, 1.18, mat("Tubo", (0.92, 0.96, 1.0), 0.2, 0, 3.0), 10, "z")
+    m.objeto("lampara_tubo")
+    exportar("lampara_tubo")
+
+@pieza
+def rampa():
+    """Rampa de estacionamiento de 4 × 10 m que sube 3 m hacia -Z, con guarnición a los lados."""
+    m = Malla()
+    ang = math.degrees(math.atan2(3.0, 10.0))
+    largo = math.hypot(10.0, 3.0)
+    m.caja((0, 1.5 - 0.15, -5.0), (4.0, 0.3, largo), CONCRETO(), 0, ("x", ang))
+    for x in (-2.1, 2.1):
+        m.caja((x, 1.5 + 0.1, -5.0), (0.2, 0.5, largo), mat("Guarnicion", (0.75, 0.74, 0.7), 0.8), 0, ("x", ang))
+    m.objeto("rampa")
+    exportar("rampa")
+
+@pieza
+def gorra():
+    """Gorra de técnico (azul grisáceo) para el marcador temporal de los técnicos de Servicios Pulgar."""
+    m = Malla()
+    tela = mat("Gorra", (0.24, 0.33, 0.42), 0.8)
+    m.esfera((0, 0.0, 0), 0.115, tela, 14, (1.0, 0.7, 1.05))
+    m.caja((0, -0.01, 0.12), (0.2, 0.012, 0.12), tela, 0.004)
+    m.objeto("gorra")
+    exportar("gorra")
+
+@pieza
+def cubrebocas():
+    """Cubrebocas azul claro (marcador temporal)."""
+    m = Malla()
+    m.esfera((0, 0, 0), 0.075, mat("Cubrebocas", (0.7, 0.82, 0.9), 0.9), 12, (1.3, 0.8, 0.5))
+    m.objeto("cubrebocas")
+    exportar("cubrebocas")
+
+@pieza
+def tatuaje_rayas():
+    """Tres rayas tatuadas para el dorso de la mano de Pulgas (calcomanía de 6 cm)."""
+    m = Malla()
+    tinta = mat("Tinta", (0.12, 0.1, 0.14), 0.6)
+    for i in range(3):
+        m.caja((-0.015 + i * 0.015, 0.001, 0), (0.005, 0.002, 0.05), tinta, 0, ("y", 12))
+    m.objeto("tatuaje_rayas")
+    exportar("tatuaje_rayas")
+
 for nombre, f in PIEZAS.items():
     if SOLO and nombre not in SOLO: continue
     limpiar()

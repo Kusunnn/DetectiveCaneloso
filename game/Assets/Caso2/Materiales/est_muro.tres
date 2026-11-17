@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_Color.jpg" id="1_48vmb"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_NormalGL.jpg" id="2_b3eny"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_Roughness.jpg" id="3_critk"]
+
+[resource]
+resource_name = "est_muro"
+albedo_color = Color(0.82, 0.81, 0.77, 1)
+albedo_texture = ExtResource("1_48vmb")
+roughness_texture = ExtResource("3_critk")
+normal_enabled = true
+normal_texture = ExtResource("2_b3eny")
+uv1_scale = Vector3(0.6, 0.6, 0.6)
+uv1_triplanar = true

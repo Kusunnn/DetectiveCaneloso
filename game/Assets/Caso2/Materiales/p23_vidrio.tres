@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[resource]
+resource_name = "p23_vidrio"
+transparency = 1
+albedo_color = Color(0.7, 0.85, 0.95, 0.22)
+metallic = 0.6
+roughness = 0.02
