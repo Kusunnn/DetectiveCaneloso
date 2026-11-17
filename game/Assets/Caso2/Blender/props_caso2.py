@@ -664,6 +664,82 @@ def tatuaje_rayas():
     m.objeto("tatuaje_rayas")
     exportar("tatuaje_rayas")
 
+# ---------- Cierre ----------
+
+@pieza
+def cinta_amarilla():
+    """Cinta amarilla de la Fiscalía entre dos postes (2.1 m), combada y rota de un lado: el extremo cuelga
+    deshilachado. Pivote en el poste izquierdo (x = 0) a la altura del amarre."""
+    m = Malla()
+    cinta = mat("CintaFiscalia", (0.95, 0.8, 0.12), 0.5)
+    negro = mat("LetraCinta", (0.08, 0.08, 0.08), 0.6)
+    n = 14
+    for i in range(n):
+        t0, t1 = i / n, (i + 1) / n
+        if t0 > 0.72: break                      # aquí se rompió
+        x0, x1 = t0 * 2.1, t1 * 2.1
+        y0 = -0.18 * math.sin(t0 * math.pi)
+        y1 = -0.18 * math.sin(t1 * math.pi)
+        tor = math.sin(t0 * 9) * 12
+        m.caja(((x0 + x1) / 2, (y0 + y1) / 2, 0), (x1 - x0 + 0.004, 0.05, 0.002), cinta, 0, ("x", tor))
+        if i % 2 == 0:
+            m.caja(((x0 + x1) / 2, (y0 + y1) / 2, 0.0015), (0.06, 0.012, 0.001), negro, 0, ("x", tor))
+    # Extremo suelto que cuelga del poste derecho, deshilachado en tiras
+    for k in range(4):
+        m.caja((2.1 - 0.01 * k, -0.25 - k * 0.02, 0.01 * k), (0.008, 0.5 - k * 0.08, 0.002), cinta, 0, ("z", 6 - k * 4))
+    for k in range(3):
+        m.caja((1.5 + k * 0.012, -0.24 - k * 0.03, 0), (0.006, 0.12, 0.002), cinta, 0, ("z", -10 + k * 9))
+    m.objeto("cinta_amarilla")
+    exportar("cinta_amarilla")
+
+@pieza
+def sello_roto():
+    """Sello rojo de clausura de la Fiscalía, roto a la mitad: dos pedazos de papel pegados al poste (cara a +Z)."""
+    m = Malla()
+    rojo = mat("SelloRojo", (0.75, 0.1, 0.08), 0.8)
+    blanco = mat("SelloLetra", (0.95, 0.92, 0.85), 0.8)
+    m.caja((0, 0.1, 0.004), (0.12, 0.2, 0.002), rojo, 0, ("z", 4))
+    m.caja((0, 0.13, 0.0055), (0.08, 0.02, 0.001), blanco)
+    m.caja((0.01, -0.13, 0.004), (0.12, 0.17, 0.002), rojo, 0, ("z", -12))
+    m.caja((0.0, -0.1, 0.0055), (0.08, 0.015, 0.001), blanco, 0, ("z", -12))
+    m.objeto("sello_roto")
+    exportar("sello_roto")
+
+@pieza
+def barrotes():
+    """Barrotes de acero para la ventana de la celda (0.8 × 1.3 m). Atrás en z = 0."""
+    m = Malla()
+    acero = mat("Barrote", (0.22, 0.23, 0.25), 0.5, 0.8)
+    for i in range(6):
+        m.cilindro((-0.35 + i * 0.14, 0.65, 0.02), 0.014, 1.3, acero, 8)
+    for y in (0.05, 0.65, 1.25):
+        m.caja((0, y, 0.02), (0.8, 0.04, 0.03), acero)
+    m.objeto("barrotes")
+    exportar("barrotes")
+
+@pieza
+def reja_celda():
+    """Reja de la celda para un hueco de puerta (0.9 × 2.1 m): marco y barrotes. Atrás en z = 0."""
+    m = Malla()
+    acero = mat("Barrote", (0.22, 0.23, 0.25), 0.5, 0.8)
+    for i in range(7):
+        m.cilindro((-0.39 + i * 0.13, 1.05, 0.02), 0.016, 2.08, acero, 8)
+    for y in (0.04, 1.0, 2.06):
+        m.caja((0, y, 0.02), (0.88, 0.06, 0.04), acero)
+    m.caja((0.32, 1.0, 0.05), (0.1, 0.16, 0.05), mat("Cerradura", (0.3, 0.3, 0.32), 0.4, 0.8))
+    m.objeto("reja_celda")
+    exportar("reja_celda")
+
+@pieza
+def libro():
+    """Libro de pasta dura cerrado (sin remitente), 0.15 × 0.03 × 0.22 m."""
+    m = Malla()
+    m.caja((0, 0.015, 0), (0.15, 0.03, 0.22), mat("Pasta", (0.42, 0.16, 0.12), 0.7), 0.003)
+    m.caja((0.004, 0.015, 0), (0.142, 0.024, 0.212), mat("Hojas", (0.95, 0.92, 0.84), 0.9))
+    m.caja((-0.074, 0.015, 0), (0.006, 0.03, 0.22), mat("Lomo", (0.3, 0.1, 0.08), 0.7))
+    m.objeto("libro")
+    exportar("libro")
+
 for nombre, f in PIEZAS.items():
     if SOLO and nombre not in SOLO: continue
     limpiar()

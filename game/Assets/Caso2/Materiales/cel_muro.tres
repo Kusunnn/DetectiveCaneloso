@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_Color.jpg" id="1_qs5ja"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_NormalGL.jpg" id="2_e8c2f"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/texturas/Concrete034/Concrete034_Roughness.jpg" id="3_d1okr"]
+
+[resource]
+resource_name = "cel_muro"
+albedo_color = Color(0.78, 0.8, 0.76, 1)
+albedo_texture = ExtResource("1_qs5ja")
+roughness_texture = ExtResource("3_d1okr")
+normal_enabled = true
+normal_texture = ExtResource("2_e8c2f")
+uv1_scale = Vector3(0.7, 0.7, 0.7)
+uv1_triplanar = true

@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_w5xy4"]
+colors = PackedColorArray(0.77117646, 0.73764706, 0.67058825, 1, 0.8174118, 0.7831765, 0.7147059, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0mjdn"]
+seed = 497
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_bav2w"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_0mjdn")
+color_ramp = SubResource("Gradient_w5xy4")
+seamless = true
+
+[resource]
+resource_name = "fac_muro"
+albedo_texture = SubResource("NoiseTexture2D_bav2w")
+roughness = 0.8

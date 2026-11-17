@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_vvhmo"]
+colors = PackedColorArray(0.7874118, 0.7874118, 0.7607843, 1, 0.81515294, 0.81515294, 0.7881961, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_qdxoh"]
+seed = 696
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1tkxa"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_qdxoh")
+color_ramp = SubResource("Gradient_vvhmo")
+seamless = true
+
+[resource]
+resource_name = "cel_plafon"
+albedo_texture = SubResource("NoiseTexture2D_1tkxa")
+roughness = 0.95

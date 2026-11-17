@@ -594,6 +594,7 @@ const PERSONAJES := {
 	"Hecdog": {"ruta": "res://Assets/Models/poli/Poli/Neutral Idle.fbx", "escala": 380.0, "desfase": Vector3(0, 0.004, 0), "anim": "mixamo_com", "ojos": 1.45, "variantes": []},
 	"Miawrio": {"ruta": "res://Assets/Models/Miaurio/miaurio.tscn", "escala": 0.004647348, "desfase": Vector3(-1.5081899, 0.0025420994, -0.47148278), "anim": "global/Inactivo", "ojos": 1.36, "variantes": ["global/Tenso"]},
 	"Aya": {"ruta": "res://Assets/Models/Aya/Ayas.tscn", "escala": 0.035906643, "desfase": Vector3(-0.0044524237, 0.00513465, -0.9514183), "anim": "Inaya", "ojos": 1.28, "variantes": []},
+	"Tony": {"ruta": "res://Assets/Models/Tony/Tony.tscn", "escala": 0.650289, "desfase": Vector3(-0.005202312, 0.0009754335, 0.022760116), "anim": "global/InacTony", "ojos": 1.44, "variantes": ["global/TensoTony"]},
 	"Mimita": {"ruta": "res://Assets/Models/Personajes/mimita_rig.glb", "escala": 9.74026, "desfase": Vector3(0, 0, -0.0029220781), "anim": "Reposo", "ojos": 1.2, "variantes": ["ReposoMirar", "ReposoPeso"]},
 }
 

@@ -235,8 +235,7 @@ func _paredes() -> void:
 func _personajes() -> void:
 	var per := k.nodo("Personajes")
 	k.personaje("Miawrio", per, Vector3(8.55, 0, 1.45), 25.0)
-	var camara: Node3D = load(PROPS + "camara_mano.glb").instantiate()
-	k.personaje("Aya", per, Vector3(3.1, 0, 1.6), 35.0, camara)
+	k.personaje("Aya", per, Vector3(3.1, 0, 1.6), 35.0)
 	k.personaje("Mimita", per, Vector3(2.4, 0, 8.4), 150.0)
 	k.personaje("Hecdog", per, Vector3(3.6, 0, 8.9), 200.0)
 
