@@ -244,7 +244,8 @@ public partial class CartelPared : Node3D
 	// Para un marco de tamaño ya decidido: la fuente más grande que lo llena sin salirse
 	private int AjustarAlMarco(Font fuente, float anchoUtil, float altoUtil, int desde)
 	{
-		int anchoPx = Mathf.Max(8, (int)(anchoUtil / TamPixel));
+		// Con 8 % de holgura: las flechas salen de la fuente de respaldo y miden un poco distinto al dibujarse
+		int anchoPx = Mathf.Max(8, (int)(anchoUtil * 0.92f / TamPixel));
 		for (int tam = desde; tam > 8; tam -= 2)
 			if (PalabraMasLarga(fuente, tam) <= anchoPx && Medir(fuente, anchoPx, tam).Y * TamPixel <= altoUtil) return tam;
 		return 8;
@@ -256,9 +257,12 @@ public partial class CartelPared : Node3D
 
 	private void Rotular(Node3D padre, Font fuente, int tam, float anchoUtil, float z, Color color, int contorno, Color colorContorno)
 	{
+		// Una flecha nunca se queda sola en un renglón: va pegada a su palabra con espacio duro
+		string texto = fuente == ThemeDB.FallbackFont ? Texto
+			: System.Text.RegularExpressions.Regex.Replace(Texto, @"([←→↑↓↗↖↘↙]) +| +([←→↑↓↗↖↘↙])", m => m.Groups[1].Success ? m.Groups[1].Value + "\u00A0" : "\u00A0" + m.Groups[2].Value);
 		var etiqueta = new Label3D
 		{
-			Text = Texto,
+			Text = texto,
 			Font = fuente == ThemeDB.FallbackFont ? null : fuente,
 			FontSize = tam,
 			PixelSize = TamPixel,
@@ -266,7 +270,8 @@ public partial class CartelPared : Node3D
 			OutlineSize = contorno,
 			OutlineModulate = colorContorno,
 			AutowrapMode = TextServer.AutowrapMode.WordSmart,
-			Width = Mathf.Max(8, (int)(Mathf.Max(0.02f, anchoUtil) / TamPixel)),
+			// Un poco más ancho que lo medido, para que el renglón que sí cabe no se parta al dibujarse (flechas)
+			Width = Mathf.Max(8, (int)(Mathf.Max(0.02f, anchoUtil) * (fuente == ThemeDB.FallbackFont ? 1f : 1.06f) / TamPixel)),
 			HorizontalAlignment = HorizontalAlignment.Center,
 			VerticalAlignment = VerticalAlignment.Center,
 			Position = new Vector3(0, 0, z + 0.0008f),
