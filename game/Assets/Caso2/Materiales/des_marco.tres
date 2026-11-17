@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_wuk4m"]
+colors = PackedColorArray(0.21835294, 0.15811765, 0.112941176, 1, 0.24599215, 0.18475294, 0.13882352, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jn62t"]
+seed = 58
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ooy1k"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_jn62t")
+color_ramp = SubResource("Gradient_wuk4m")
+seamless = true
+
+[resource]
+resource_name = "des_marco"
+albedo_texture = SubResource("NoiseTexture2D_ooy1k")
+roughness = 0.4

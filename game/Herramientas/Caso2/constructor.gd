@@ -623,6 +623,65 @@ func personaje(nombre: String, padre: Node, pos: Vector3, rot_y: float, objeto: 
 	colision("Cuerpo", p, Vector3(0, 0.8, 0), Vector3(0.6, 1.6, 0.5), CAPA_NPC).add_to_group("auditoria_invisible_ok", true)
 	return p
 
+## La ciudad vista desde un piso alto (el 30 de la torre): azoteas abajo, torres a los lados y la silueta al fondo.
+## `base` es el pie del ventanal; `frente` hacia dónde se mira (grados); `altura` a la que está el piso (m).
+func vista_alta(padre: Node, base: Vector3, frente: float, altura := 90.0, semilla := 3) -> Node3D:
+	var v := nodo("VistaCiudad", padre, base, frente)
+	v.add_to_group("auditoria_fuera_ok", true)
+	var azar := RandomNumberGenerator.new()
+	azar.seed = semilla
+	# Suelo de la ciudad (calles y manzanas) muy abajo
+	for i in range(-6, 7):
+		for j in range(1, 9):
+			var p := Vector3(i * 36.0, -altura, -j * 36.0)
+			kenney("city-kit-roads", "road-crossroad" if (i + j) % 3 == 0 else "tile-low", v, p, 0.0, 36.0, "Suelo_%d_%d" % [i + 6, j])
+	var bajos := ["building-a", "building-b", "building-c", "building-d", "building-e", "building-f", "building-g", "building-h",
+		"building-i", "building-j", "building-k", "building-l", "building-m", "building-n"]
+	var torres := ["building-skyscraper-a", "building-skyscraper-b", "building-skyscraper-c", "building-skyscraper-d", "building-skyscraper-e"]
+	var n := 0
+	for i in range(-5, 6):
+		for j in range(1, 8):
+			if azar.randf() < 0.25:
+				continue
+			var p := Vector3(i * 36.0 + azar.randf_range(-8, 8), -altura, -j * 36.0 - azar.randf_range(0, 10))
+			var torre := azar.randf() < 0.3
+			var e: String = (torres[azar.randi() % torres.size()]) if torre else (bajos[azar.randi() % bajos.size()])
+			var esc := azar.randf_range(18.0, 34.0) if torre else azar.randf_range(14.0, 22.0)
+			kenney("city-kit-commercial", e, v, p, azar.randi_range(0, 3) * 90.0, esc, "Edificio%d" % n)
+			n += 1
+	for i in 12:
+		kenney("city-kit-commercial", "low-detail-building-%s" % "abcdefghijklmn"[azar.randi() % 14], v,
+			Vector3(-300.0 + i * 55.0, -altura, -330.0 - azar.randf_range(0, 60)), 0.0, 70.0, "Lejano%d" % i)
+	return v
+
+## Contenedor (cajón que se abre): `parte` es el nodo que se mueve; la colisión cubre su frente.
+func contenedor(padre: Node, nombre: String, nombre_visible: String, pos: Vector3, rot_y: float, parte: Node3D,
+		desplazamiento: Vector3, tam_frente: Vector3, centro_frente: Vector3, mensaje: String) -> StaticBody3D:
+	var c := StaticBody3D.new()
+	c.name = nombre
+	c.set_script(load("res://Escenas/Investigacion/Contenedor.cs"))
+	c.collision_layer = CAPA_INTERACTUABLE
+	c.collision_mask = 0
+	c.position = pos
+	c.rotation_degrees.y = rot_y
+	padre.add_child(c)
+	parte.name = "Parte"
+	c.add_child(parte)
+	var f := CollisionShape3D.new()
+	f.name = "Forma"
+	var s := BoxShape3D.new()
+	s.size = tam_frente
+	f.shape = s
+	f.position = centro_frente
+	c.add_child(f)
+	c.set("Nombre", nombre_visible)
+	c.set("MensajeAlAbrir", mensaje)
+	c.set("Parte", parte)
+	c.set("TipoMovimiento", 1)
+	c.set("Desplazamiento", desplazamiento)
+	c.set("SonidoAbrir", 1)
+	return c
+
 # ---------- Lo común de una escena jugable ----------
 
 ## HUD, jugador, menú de pausa, ventana de diálogo, música, viñeta y el nodo EscenarioCaso2

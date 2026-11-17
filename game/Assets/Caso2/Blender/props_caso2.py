@@ -229,6 +229,222 @@ def marco_pantalla():
     m.objeto("marco_pantalla")
     exportar("marco_pantalla")
 
+# ---------- Despacho del piso 30 ----------
+
+CUERO = lambda: mat("Cuero", (0.18, 0.32, 0.25), 0.55)
+
+@pieza
+def escritorio_ejecutivo():
+    """Escritorio de nogal de 2.2 × 1.0 m, cubierta con cuero verde y cajoneras a los lados. El cajón de abajo a la
+    derecha (lado de Miawrio) va aparte: escritorio_cajon. El frente (lado del visitante) mira a +Z."""
+    m = Malla()
+    m.caja((0, 0.74, 0), (2.2, 0.05, 1.0), NOGAL(), 0.01)
+    m.caja((0, 0.769, 0), (1.9, 0.004, 0.75), CUERO())
+    for x in (-0.82, 0.82):
+        m.caja((x, 0.36, 0), (0.5, 0.72, 0.92), NOGAL(), 0.008)
+    m.caja((0, 0.45, 0.43), (1.14, 0.55, 0.03), mat("NogalClaro", (0.48, 0.31, 0.18), 0.5), 0.006)   # faldón
+    # Frentes de cajones fijos (lado de Miawrio, -Z) y jaladeras doradas
+    for x in (-0.82, 0.82):
+        for y in (0.58, 0.38, 0.16):
+            if x > 0 and y < 0.2: continue   # hueco del cajón que se abre
+            m.caja((x, y, -0.465), (0.44, 0.17, 0.02), mat("NogalClaro", (0.48, 0.31, 0.18), 0.5), 0.005)
+            m.caja((x, y, -0.48), (0.12, 0.015, 0.012), DORADO(), 0.002)
+    m.caja((0.82, 0.16, -0.2), (0.44, 0.17, 0.5), mat("Hueco", (0.12, 0.08, 0.05), 0.9))
+    m.objeto("escritorio_ejecutivo")
+    exportar("escritorio_ejecutivo")
+
+@pieza
+def escritorio_cajon():
+    """Cajón del escritorio ejecutivo (se desliza hacia -Z). Pivote en el centro de su frente, abajo."""
+    m = Malla()
+    m.caja((0, 0.085, -0.008), (0.44, 0.17, 0.02), mat("NogalClaro", (0.48, 0.31, 0.18), 0.5), 0.005)
+    m.caja((0, 0.085, -0.025), (0.12, 0.015, 0.012), DORADO(), 0.002)
+    m.caja((0, 0.02, 0.24), (0.4, 0.012, 0.46), mat("FondoCajon", (0.55, 0.4, 0.26), 0.8))
+    for x in (-0.195, 0.195):
+        m.caja((x, 0.08, 0.24), (0.012, 0.13, 0.46), mat("FondoCajon", (0.55, 0.4, 0.26), 0.8))
+    m.caja((0, 0.08, 0.465), (0.4, 0.13, 0.012), mat("FondoCajon", (0.55, 0.4, 0.26), 0.8))
+    m.objeto("escritorio_cajon")
+    exportar("escritorio_cajon")
+
+@pieza
+def archivero_cuerpo():
+    """Archivero de nogal de tres cajones (0.5 × 1.05 × 0.6); el de en medio va aparte (archivero_cajon).
+    Frente a +Z."""
+    m = Malla()
+    m.caja((0, 0.525, 0), (0.5, 1.05, 0.6), NOGAL(), 0.008)
+    claro = mat("NogalClaro", (0.48, 0.31, 0.18), 0.5)
+    for y in (0.85, 0.2):
+        m.caja((0, y, 0.305), (0.44, 0.3, 0.02), claro, 0.005)
+        m.caja((0, y + 0.08, 0.32), (0.16, 0.02, 0.015), DORADO(), 0.002)
+        m.caja((0, y + 0.03, 0.317), (0.1, 0.04, 0.004), mat("Etiqueta", (0.95, 0.92, 0.82), 0.9))
+    m.caja((0, 0.525, 0.1), (0.44, 0.3, 0.4), mat("Hueco", (0.12, 0.08, 0.05), 0.9))
+    m.objeto("archivero_cuerpo")
+    exportar("archivero_cuerpo")
+
+@pieza
+def archivero_cajon():
+    """Cajón del archivero (sale hacia +Z) con carpetas colgantes. Pivote en el centro de su frente, abajo."""
+    m = Malla()
+    claro = mat("NogalClaro", (0.48, 0.31, 0.18), 0.5)
+    m.caja((0, 0.15, 0.01), (0.44, 0.3, 0.02), claro, 0.005)
+    m.caja((0, 0.23, 0.025), (0.16, 0.02, 0.015), DORADO(), 0.002)
+    m.caja((0, 0.18, 0.022), (0.1, 0.04, 0.004), mat("Etiqueta", (0.95, 0.92, 0.82), 0.9))
+    fondo = mat("FondoCajon", (0.55, 0.4, 0.26), 0.8)
+    m.caja((0, 0.02, -0.2), (0.4, 0.012, 0.4), fondo)
+    for x in (-0.195, 0.195):
+        m.caja((x, 0.12, -0.2), (0.012, 0.22, 0.4), fondo)
+    m.caja((0, 0.12, -0.395), (0.4, 0.22, 0.012), fondo)
+    colores = [(0.82, 0.68, 0.42), (0.55, 0.7, 0.55), (0.82, 0.68, 0.42), (0.6, 0.65, 0.8), (0.82, 0.68, 0.42)]
+    for i, col in enumerate(colores):
+        m.caja((0, 0.13, -0.33 + i * 0.05), (0.36, 0.2, 0.006), mat(f"Carpeta{i}", col, 0.9))
+    m.objeto("archivero_cajon")
+    exportar("archivero_cajon")
+
+@pieza
+def maqueta_hotel():
+    """Maqueta del hotel junto al lago sobre una base de 0.9 × 0.6 m: agua, orilla, pinos, el hotel y el muelle."""
+    m = Malla()
+    m.caja((0, 0.03, 0), (0.9, 0.06, 0.6), mat("BaseMaqueta", (0.94, 0.92, 0.86), 0.6), 0.004)
+    m.caja((-0.18, 0.062, 0.05), (0.5, 0.004, 0.45), mat("AguaMaqueta", (0.35, 0.6, 0.75), 0.15))
+    pasto = mat("PastoMaqueta", (0.55, 0.7, 0.45), 0.8)
+    m.caja((0.27, 0.064, 0), (0.34, 0.008, 0.58), pasto)
+    blanco = mat("Hotel", (0.97, 0.95, 0.9), 0.5)
+    m.caja((0.27, 0.12, -0.08), (0.26, 0.1, 0.16), blanco, 0.003)
+    m.caja((0.27, 0.19, -0.1), (0.2, 0.05, 0.12), blanco, 0.003)
+    vidrio = mat("VentanaMaqueta", (0.4, 0.55, 0.65), 0.2)
+    for i in range(5):
+        m.caja((0.17 + i * 0.05, 0.13, 0.002), (0.025, 0.03, 0.002), vidrio)
+    m.caja((0.27, 0.235, -0.1), (0.04, 0.03, 0.04), mat("Cruz", (0.85, 0.25, 0.2), 0.5))   # la clínica en la azotea
+    m.caja((0.0, 0.068, 0.12), (0.18, 0.006, 0.03), mat("Muelle", (0.6, 0.45, 0.3), 0.7))
+    pino = mat("PinoMaqueta", (0.2, 0.42, 0.28), 0.8)
+    for (x, z) in ((0.38, 0.2), (0.42, 0.12), (0.12, -0.24), (0.4, -0.24), (0.33, 0.24), (0.15, 0.22)):
+        m.cilindro((x, 0.1, z), 0.025, 0.08, pino, 8, "y", 0.0)
+    m.objeto("maqueta_hotel")
+    exportar("maqueta_hotel")
+
+@pieza
+def torre_gato():
+    """Torre para gato elegante de 1.5 m: base, postes con cuerda, dos plataformas con cojín y una casita."""
+    m = Malla()
+    alfombra = mat("Alfombrado", (0.82, 0.76, 0.66), 0.95)
+    cuerda = mat("Sisal", (0.72, 0.6, 0.42), 0.95)
+    m.caja((0, 0.03, 0), (0.6, 0.06, 0.6), alfombra, 0.01)
+    m.cilindro((-0.15, 0.55, -0.1), 0.05, 1.0, cuerda, 12)
+    m.cilindro((0.18, 0.35, 0.12), 0.05, 0.6, cuerda, 12)
+    m.caja((0.12, 0.68, 0.05), (0.42, 0.04, 0.42), alfombra, 0.01)
+    m.caja((0.12, 0.72, 0.05), (0.34, 0.04, 0.34), mat("CojinGato", (0.55, 0.2, 0.25), 0.9), 0.015)
+    m.caja((-0.12, 1.08, -0.08), (0.4, 0.04, 0.4), alfombra, 0.01)
+    m.caja((-0.12, 1.25, -0.08), (0.36, 0.3, 0.36), alfombra, 0.02)
+    m.cilindro((-0.12, 1.24, 0.1), 0.09, 0.02, mat("Hueco", (0.12, 0.08, 0.05), 0.9), 16, "z")
+    m.esfera((0.3, 0.75, 0.25), 0.03, mat("Bolita", (0.85, 0.65, 0.28), 0.4), 8)
+    m.objeto("torre_gato")
+    exportar("torre_gato")
+
+@pieza
+def pecera():
+    """Pecera de 0.8 × 0.45 × 0.4 m sobre su mueble, con agua, piedras, plantas y peces de colores."""
+    m = Malla()
+    m.caja((0, 0.4, 0), (0.85, 0.8, 0.45), NOGAL(), 0.008)
+    m.caja((0, 1.03, 0), (0.8, 0.45, 0.4), mat("VidrioPecera", (0.75, 0.88, 0.92), 0.05))
+    m.caja((0, 1.0, 0), (0.76, 0.36, 0.36), mat("Agua", (0.25, 0.55, 0.65), 0.1, 0, 0.4))
+    m.caja((0, 0.83, 0), (0.76, 0.03, 0.36), mat("Grava", (0.85, 0.78, 0.6), 0.9))
+    verde = mat("Alga", (0.2, 0.6, 0.35), 0.6)
+    for x in (-0.28, -0.1, 0.22):
+        m.caja((x, 0.95, -0.08), (0.03, 0.22, 0.03), verde, 0, ("z", 10))
+    for i, (x, y, col) in enumerate(((-0.15, 1.05, (1.0, 0.5, 0.15)), (0.1, 0.98, (1.0, 0.8, 0.2)), (0.25, 1.1, (0.95, 0.3, 0.25)))):
+        m.esfera((x, y, 0.02), 0.03, mat(f"Pez{i}", col, 0.4, 0, 0.3), 8, (1.6, 0.9, 0.6))
+    m.caja((0, 1.27, 0), (0.82, 0.03, 0.42), mat("TapaPecera", (0.1, 0.1, 0.1), 0.4), 0.004)
+    m.objeto("pecera")
+    exportar("pecera")
+
+@pieza
+def tripie_camara():
+    """Tripié de fotógrafo (1.5 m) con una cámara réflex encima."""
+    m = Malla()
+    negro = mat("Negro", (0.06, 0.06, 0.07), 0.4)
+    for k in range(3):
+        a = math.radians(k * 120)
+        x, z = math.cos(a) * 0.28, math.sin(a) * 0.28
+        m.caja((x / 2, 0.66, z / 2), (0.022, 1.36, 0.022), negro, 0, ("z", math.degrees(math.atan2(x, 1.3))))
+    m.cilindro((0, 1.38, 0), 0.03, 0.1, negro, 10)
+    m.caja((0, 1.48, 0), (0.14, 0.09, 0.07), negro, 0.01)
+    m.cilindro((0, 1.475, 0.07), 0.034, 0.08, mat("Lente", (0.12, 0.12, 0.13), 0.3), 16, "z")
+    m.cilindro((0, 1.475, 0.111), 0.026, 0.004, mat("Cristal", (0.3, 0.4, 0.55), 0.05, 0, 0.3), 16, "z")
+    m.caja((-0.045, 1.535, 0), (0.03, 0.02, 0.04), negro)
+    m.objeto("tripie_camara")
+    exportar("tripie_camara")
+
+@pieza
+def camara_mano():
+    """Cámara réflex para llevar en la mano (Aya)."""
+    m = Malla()
+    negro = mat("Negro", (0.06, 0.06, 0.07), 0.4)
+    m.caja((0, 0.045, 0), (0.14, 0.09, 0.07), negro, 0.01)
+    m.cilindro((0, 0.04, 0.07), 0.034, 0.08, mat("Lente", (0.12, 0.12, 0.13), 0.3), 16, "z")
+    m.cilindro((0, 0.04, 0.111), 0.026, 0.004, mat("Cristal", (0.3, 0.4, 0.55), 0.05, 0, 0.3), 16, "z")
+    m.caja((0, 0.1, -0.005), (0.04, 0.02, 0.04), negro)
+    m.objeto("camara_mano")
+    exportar("camara_mano")
+
+@pieza
+def telefono_escritorio():
+    """Teléfono de escritorio con auricular y teclado (0.22 × 0.08 × 0.2)."""
+    m = Malla()
+    negro = mat("Negro", (0.07, 0.07, 0.08), 0.35)
+    m.caja((0, 0.035, 0), (0.22, 0.07, 0.2), negro, 0.012)
+    m.caja((0, 0.07, -0.02), (0.2, 0.035, 0.06), negro, 0.015)
+    gris = mat("Tecla", (0.8, 0.8, 0.78), 0.5)
+    for i in range(4):
+        for j in range(3):
+            m.caja((-0.03 + j * 0.03, 0.072, 0.03 + i * 0.022), (0.022, 0.006, 0.016), gris, 0.002)
+    m.caja((0.07, 0.072, 0.05), (0.04, 0.005, 0.06), mat("Pantallita", (0.6, 0.75, 0.6), 0.3, 0, 0.6))
+    m.objeto("telefono_escritorio")
+    exportar("telefono_escritorio")
+
+@pieza
+def trofeo():
+    """Trofeo dorado de copa (0.3 m) con base de madera."""
+    m = Malla()
+    m.caja((0, 0.04, 0), (0.12, 0.08, 0.12), NOGAL(), 0.005)
+    m.cilindro((0, 0.12, 0), 0.015, 0.08, DORADO(), 12)
+    m.cilindro((0, 0.22, 0), 0.07, 0.14, DORADO(), 16, "y", 0.03)
+    m.objeto("trofeo")
+    exportar("trofeo")
+
+@pieza
+def galletas():
+    """Plato con galletas (para la mesa baja)."""
+    m = Malla()
+    m.cilindro((0, 0.008, 0), 0.11, 0.016, mat("Plato", (0.96, 0.95, 0.92), 0.3), 24, "y", 0.08)
+    gall = mat("Galleta", (0.78, 0.55, 0.3), 0.8)
+    chispa = mat("Chispa", (0.25, 0.14, 0.08), 0.8)
+    for (x, z, y) in ((-0.04, 0.0, 0.022), (0.04, 0.02, 0.022), (0.0, -0.04, 0.022), (0.01, 0.0, 0.034)):
+        m.cilindro((x, y, z), 0.038, 0.012, gall, 14)
+        m.esfera((x + 0.012, y + 0.007, z), 0.005, chispa, 6)
+    m.objeto("galletas")
+    exportar("galletas")
+
+@pieza
+def bocina_techo():
+    """Bocina del sistema de voceo, para colgar de la pared (estado hackeado: se ve de dónde sale la voz)."""
+    m = Malla()
+    gris = mat("Bocina", (0.85, 0.85, 0.82), 0.5)
+    m.caja((0, 0, 0.06), (0.26, 0.2, 0.12), gris, 0.015)
+    m.cilindro((0, 0, 0.125), 0.08, 0.01, mat("Rejilla", (0.2, 0.2, 0.22), 0.6), 20, "z")
+    m.objeto("bocina_techo")
+    exportar("bocina_techo")
+
+@pieza
+def luz_emergencia():
+    """Luz de emergencia roja de pared (caja con dos focos); el brillo lo pone la escena."""
+    m = Malla()
+    m.caja((0, 0, 0.04), (0.32, 0.12, 0.08), mat("CajaLuz", (0.9, 0.9, 0.88), 0.5), 0.01)
+    rojo = mat("FocoRojo", (1.0, 0.12, 0.08), 0.3, 0, 4.0)
+    for x in (-0.1, 0.1):
+        m.cilindro((x, -0.02, 0.09), 0.04, 0.05, rojo, 12, "z")
+    m.objeto("luz_emergencia")
+    exportar("luz_emergencia")
+
 for nombre, f in PIEZAS.items():
     if SOLO and nombre not in SOLO: continue
     limpiar()

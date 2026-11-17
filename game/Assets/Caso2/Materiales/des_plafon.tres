@@ -1,0 +1,21 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[sub_resource type="Gradient" id="Gradient_57jc0"]
+colors = PackedColorArray(0.9261961, 0.90313727, 0.84933335, 1, 0.94575685, 0.9225098, 0.8682667, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_n2ko5"]
+seed = 488
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_4oeif"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_n2ko5")
+color_ramp = SubResource("Gradient_57jc0")
+seamless = true
+
+[resource]
+resource_name = "des_plafon"
+albedo_texture = SubResource("NoiseTexture2D_4oeif")
+roughness = 0.9
