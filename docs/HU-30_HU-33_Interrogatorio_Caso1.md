@@ -86,7 +86,7 @@ En la sala, la opción «Interrogar a…» dice «· Preguntas nuevas» cuando e
 | La linterna de Porky estaba en el fondo del lago, prendida. | ¿Una linterna en el lago? Yo andaba en el bosque, wey, no en el agua. |
 | Este recorte habla de la muerte de Paco. | Paco era mi mejor amigo, wey. No me lo pongas así... eso no tiene nada que ver con lo de anoche. |
 | El remo con sangre estaba entre los juncos, abajo del embarcadero. | ¿Y yo qué, wey? Yo no bajé al embarcadero. Ese remo ni lo toqué, te lo juro. |
-| Este silbato estaba atorado en un clavo del embarcadero. | Ese silbato no es mío, wey. Fíjate en las letras: yo no soy «T. S.». |
+| Este silbato estaba atorado en un clavo del embarcadero. | Ese silbato no es mío, wey. Fíjate en las letras: yo no soy «G. S.». |
 | *(una prueba que el GDD no contempla)* | ¿Y eso qué, wey? No tiene nada que ver conmigo. / Fíjate que con eso no me agarras, bro. Ni sé qué tiene que ver. |
 
 ### Aya

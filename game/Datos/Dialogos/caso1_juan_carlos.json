@@ -354,7 +354,7 @@
 				{
 					"id": "silbato_gs",
 					"tipo": "MOSTRAR",
-					"texto": "Silbato «T. S.»",
+					"texto": "Silbato «G. S.»",
 					"destino": "e_silbato",
 					"requiere": {
 						"pistas": [
@@ -429,7 +429,7 @@
 				{
 					"habla": "Juan Carlos",
 					"animo": "a la defensiva",
-					"texto": "Ese silbato no es mío, wey. Fíjate en las letras: yo no soy «T. S.»."
+					"texto": "Ese silbato no es mío, wey. Fíjate en las letras: yo no soy «G. S.»."
 				}
 			],
 			"siguiente": "error"

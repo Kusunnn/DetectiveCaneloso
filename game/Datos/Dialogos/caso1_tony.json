@@ -444,7 +444,7 @@
 				{
 					"habla": "Tony",
 					"animo": "molesto",
-					"texto": "¿Ese silbato? No es mío. «T. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?"
+					"texto": "¿Ese silbato? No es mío. «G. S.» puede ser cualquiera. ¿En serio va a perder el tiempo con eso?"
 				}
 			],
 			"siguiente": "hub_3"
@@ -455,7 +455,7 @@
 				{
 					"id": "silbato_gs",
 					"tipo": "MOSTRAR",
-					"texto": "Silbato «T. S.»",
+					"texto": "Silbato «G. S.»",
 					"destino": "e3_silbato",
 					"requiere": {
 						"pistas": [
@@ -497,7 +497,7 @@
 			"lineas": [
 				{
 					"habla": "Caneloso",
-					"texto": "«T. S.»: Tony Spínola. Estaba atorado en un clavo del embarcadero, con el cordón roto. Y hoy trae uno nuevo."
+					"texto": "«G. S.»: Guillermo Spínola. Su abuelo. Usted heredó el campamento... y también su silbato. Estaba atorado en un clavo del embarcadero, con el cordón roto. Y hoy trae uno nuevo."
 				}
 			],
 			"ir_a": [
@@ -522,7 +522,7 @@
 				{
 					"habla": "Tony",
 					"animo": "sarcástico",
-					"texto": "¿En serio? Mi abuelo les regalaba silbatos a todos los monitores. Cualquiera pudo grabarle esas letras. Usted es muy chismoso, detective."
+					"texto": "¿En serio? Mi abuelo les regalaba silbatos a todos los monitores. Hay docenas así. Usted es muy chismoso, detective."
 				}
 			]
 		},
@@ -532,7 +532,7 @@
 					"habla": "Tony",
 					"animo": "nervioso",
 					"gesto": "Se queda callado un momento",
-					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años ya lo traigo colgado. Sí. Es mío. Se me cayó."
+					"texto": "...Mimita oyó el silbido. Y en la foto de hace diez años lo trae colgado mi abuelo. Sí. Me lo dejó a mí. Se me cayó."
 				}
 			],
 			"siguiente": "hub",
@@ -541,7 +541,7 @@
 					"tony_3"
 				],
 				"notas": [
-					"El silbato «T. S.» es de Tony Spínola. Lo traía anoche y se le cayó en el embarcadero."
+					"El silbato «G. S.» era de Guillermo Spínola, el abuelo de Tony. Tony lo traía anoche y se le cayó en el embarcadero."
 				]
 			}
 		},
@@ -1292,7 +1292,7 @@
 				{
 					"id": "silbato_gs",
 					"tipo": "MOSTRAR",
-					"texto": "Silbato «T. S.»",
+					"texto": "Silbato «G. S.»",
 					"destino": "e3_silbato",
 					"requiere": {
 						"pistas": [
