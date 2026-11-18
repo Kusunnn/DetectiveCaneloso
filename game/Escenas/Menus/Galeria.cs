@@ -16,19 +16,43 @@ public partial class Galeria : Control
 
 	// Personaje: escena del modelo, escala y animación de reposo tal como aparecen en el juego.
 	private record Entrada(string Nombre, string Ruta, string Grupo = null, float Escala = 1f, Vector3 Desfase = default,
-		string Animacion = null, string[] Variantes = null, bool Somnoliento = false, bool SinAnimador = false);
+		string Animacion = null, string[] Variantes = null, bool Somnoliento = false, bool SinAnimador = false, bool Ual = false);
 
 	private static readonly Entrada[] Personajes =
 	{
 		new("Detective Caneloso", "res://Assets/Models/Caneloso/Archivo/player.tscn", SinAnimador: true),
-		new("Porky", "res://Assets/Models/Personajes/porky.glb", Escala: 6.67f, Somnoliento: true),
-		new("Hecdog", "res://Assets/Models/poli/Poli/Neutral Idle.fbx", Escala: 380f, Desfase: new Vector3(0, 0.004f, 0), Animacion: "mixamo_com"),
-		new("Eriz", "res://Assets/Models/Personajes/eriz.glb", Escala: 4.77f, Desfase: new Vector3(0, 0, 0.0076f)),
-		new("Juan Carlos", "res://Assets/Models/Personajes/lala.glb", Escala: 6.3707f, Desfase: new Vector3(0, 0, 0.5447f)),
+		new("Porky", "res://Assets/Models/Personajes/porky.glb", Escala: 6.67f, Somnoliento: true, Ual: true),
+		new("Hecdog", "res://Assets/Models/poli/Poli/Neutral Idle.fbx", Escala: 380f, Desfase: new Vector3(0, 0.004f, 0), Ual: true),
+		new("Eriz", "res://Assets/Models/Personajes/eriz.glb", Escala: 4.77f, Desfase: new Vector3(0, 0, 0.0076f), Ual: true),
+		new("Juan Carlos", "res://Assets/Models/Personajes/lala.glb", Escala: 6.3707f, Desfase: new Vector3(0, 0, 0.5447f), Ual: true),
 		new("Mimita", "res://Assets/Models/Personajes/mimita_rig.glb", Escala: 9.7403f, Desfase: new Vector3(0, 0, -0.0029f), Animacion: "Reposo", Variantes: new[] { "ReposoMirar", "ReposoPeso" }),
 		new("Tony", "res://Assets/Models/Tony/Tony.tscn", Escala: 0.6503f, Desfase: new Vector3(-0.0052f, 0.001f, 0.0228f), Animacion: "global/InacTony"),
 		new("Aya", "res://Assets/Models/Aya/Ayas.tscn", Escala: 0.0359f, Desfase: new Vector3(-0.0045f, 0.0051f, -0.9514f), Animacion: "Inaya"),
 		new("Miawrio", "res://Assets/Models/Miaurio/miaurio.tscn", Escala: 0.0046f, Desfase: new Vector3(-1.5082f, 0.0025f, -0.4715f), Animacion: "global/Inactivo"),
+	};
+
+	// Personajes sin animaciones propias: se animan con la biblioteca de Quaternius, como Porky y el comisario en el juego.
+	private static readonly (string Etiqueta, string Nombre)[] AnimacionesUal =
+	{
+		("Reposo", "Idle"), ("Brazos cruzados", "Idle_FoldArms"), ("Hablando", "Idle_Talking"),
+		("Al teléfono", "Idle_TalkingPhone"), ("Negar", "Idle_No"), ("Asentir", "Yes"),
+		("Caminar", "Walk"), ("Caminar formal", "Walk_Formal"), ("Trotar", "Jog_Fwd"), ("Correr", "Sprint"),
+		("Agachado", "Crouch_Idle"), ("Sentado", "Sitting_Idle"), ("Sentado hablando", "Sitting_Talking"),
+		("Comer", "Consume"), ("Con linterna", "Idle_Torch"), ("Con farol", "Idle_Lantern"),
+		("Recoger", "PickUp_Table"), ("Interactuar", "Interact"), ("Abrir cofre", "Chest_Open"),
+		("Lanzar", "OverhandThrow"), ("Empujar", "Push"), ("Golpe recibido", "Hit_Chest"),
+		("Caer", "Death01"), ("Bailar", "Dance"),
+	};
+
+	// Nombres legibles de las animaciones propias de cada modelo
+	private static readonly Dictionary<string, string> NombresAnimacion = new()
+	{
+		["anim_reposo"] = "Reposo", ["anim_caminar"] = "Caminar", ["anim_agacharse"] = "Agacharse",
+		["anim_agarrar"] = "Agarrar", ["anim_macarena"] = "Macarena", ["anim_muerte"] = "Muerte",
+		["InacTony"] = "Reposo", ["CaminaTony"] = "Caminar", ["TensoTony"] = "Tenso", ["AltTony"] = "Alterado",
+		["Inaya"] = "Reposo", ["Caminaya"] = "Caminar", ["Tensaya"] = "Tensa", ["Alteraya"] = "Alterada",
+		["Inactivo"] = "Reposo", ["Caminar"] = "Caminar", ["Tenso"] = "Tenso", ["Alterado"] = "Alterado",
+		["Reposo"] = "Reposo", ["ReposoMirar"] = "Mirar alrededor", ["ReposoPeso"] = "Cambiar de peso",
 	};
 
 	private const string Pistas_ = "res://Assets/Pistas/Modelos/";
@@ -111,6 +135,11 @@ public partial class Galeria : Control
 	private MeshInstance3D _pedestal;
 	private Camera3D _camara;
 	private ItemList _lista;
+	private ItemList _animaciones;
+	private Label _tituloAnimaciones;
+	private readonly List<(string Etiqueta, string Nombre)> _opcionesAnimacion = new();
+	private AnimadorPersonaje _animador; // retarget de Quaternius
+	private AnimacionPersonaje _animacionPropia;
 	private Label _nombre;
 	private Label _detalle;
 	private Button _volver;
@@ -259,6 +288,14 @@ public partial class Galeria : Control
 		_lista.ItemSelected += i => MostrarIndice((int)i);
 		columna.AddChild(_lista);
 
+		// Animaciones del personaje elegido (solo en Personajes)
+		_tituloAnimaciones = EstiloPapel.Texto("ANIMACIONES", 24, EstiloPapel.Ambar, titulo: true);
+		columna.AddChild(_tituloAnimaciones);
+		_animaciones = (ItemList)_lista.Duplicate(0); // sin señales: no debe cambiar de modelo
+		_animaciones.SizeFlagsStretchRatio = 1.3f;
+		_animaciones.ItemSelected += i => ReproducirIndice((int)i);
+		columna.AddChild(_animaciones);
+
 		_volver = new Button { Text = "← VOLVER", Flat = true, Alignment = HorizontalAlignment.Left, MouseDefaultCursorShape = CursorShape.PointingHand };
 		_volver.AddThemeFontOverride("font", fuenteTitulo);
 		_volver.AddThemeFontSizeOverride("font_size", 30);
@@ -352,6 +389,8 @@ public partial class Galeria : Control
 	{
 		_ocultos.Clear();
 		LiberarModelo();
+		_animador = null;
+		_animacionPropia = null;
 		_nombre.Text = entrada.Nombre.ToUpper();
 		_detalle.Text = entrada.Grupo ?? "";
 
@@ -373,10 +412,11 @@ public partial class Galeria : Control
 		}
 		_escenario.AddChild(_modelo);
 		Encuadrar(_categoria != Categoria.Escenarios);
+		LlenarAnimaciones(entrada);
 	}
 
 	// Igual que en el juego: el modelo escalado dentro de un nodo, con su animación de reposo.
-	private static Node3D ArmarPersonaje(Entrada e, Node3D instancia)
+	private Node3D ArmarPersonaje(Entrada e, Node3D instancia)
 	{
 		var personaje = new Node3D { Name = "Personaje" };
 		instancia.Name = "Modelo";
@@ -385,7 +425,24 @@ public partial class Galeria : Control
 		personaje.AddChild(instancia);
 		if (e.SinAnimador) return personaje;
 
-		var animacion = new AnimacionPersonaje
+		if (e.Ual)
+		{
+			_animador = new AnimadorPersonaje
+			{
+				Name = "Animador",
+				Modelo = instancia,
+				Reposo = "Idle",
+				ReposoCerrado = "",
+				AlHablar = "",
+				Somnoliento = e.Somnoliento,
+				DistanciaMirar = 0f,
+				MirarJugador = false,
+			};
+			personaje.AddChild(_animador);
+			return personaje;
+		}
+
+		var animacion = _animacionPropia = new AnimacionPersonaje
 		{
 			Name = "Animacion",
 			Modelo = instancia,
@@ -396,6 +453,99 @@ public partial class Galeria : Control
 		};
 		personaje.AddChild(animacion);
 		return personaje;
+	}
+
+	// ---------- Animaciones ----------
+
+	private void LlenarAnimaciones(Entrada entrada)
+	{
+		_animaciones.Clear();
+		_opcionesAnimacion.Clear();
+		bool personaje = _categoria == Categoria.Personajes;
+		_tituloAnimaciones.Visible = _animaciones.Visible = personaje;
+		if (!personaje || _modelo == null) return;
+
+		if (entrada.Ual) _opcionesAnimacion.AddRange(AnimacionesUal);
+		else
+		{
+			// Las animaciones propias del modelo («mixamo_com» es la toma cruda de importación: se omite)
+			foreach (Node n in _modelo.FindChildren("*", "AnimationPlayer", true, false))
+				foreach (string nombre in ((AnimationPlayer)n).GetAnimationList())
+				{
+					if (nombre.Contains("mixamo_com") || nombre.StartsWith("galeria/")) continue;
+					string corto = nombre.Contains('/') ? nombre[(nombre.LastIndexOf('/') + 1)..] : nombre;
+					string etiqueta = NombresAnimacion.TryGetValue(corto, out var bonito) ? bonito : corto;
+					_opcionesAnimacion.Add((etiqueta, nombre));
+				}
+			// Reposo primero, luego en orden alfabético
+			_opcionesAnimacion.Sort((a, b) => a.Etiqueta == "Reposo" ? -1 : b.Etiqueta == "Reposo" ? 1
+				: string.Compare(a.Etiqueta, b.Etiqueta, StringComparison.CurrentCulture));
+		}
+
+		foreach (var (etiqueta, _) in _opcionesAnimacion) _animaciones.AddItem("   " + etiqueta);
+		if (_opcionesAnimacion.Count == 0)
+		{
+			int i = _animaciones.AddItem("   (solo respira)", selectable: false);
+			_animaciones.SetItemDisabled(i, true);
+		}
+		else _animaciones.Select(0);
+	}
+
+	private void ReproducirIndice(int indice)
+	{
+		if (indice < 0 || indice >= _opcionesAnimacion.Count || _modelo == null) return;
+		string nombre = _opcionesAnimacion[indice].Nombre;
+		_quieto = 0f;
+
+		if (IsInstanceValid(_animador) && _animador.IsInsideTree())
+		{
+			_animador.Reposo = nombre;
+			_animador.Controlar(false); // vuelve al «reposo», que ahora es la animación elegida, en bucle
+			return;
+		}
+
+		// Animación propia: se apaga el animador del juego (que alterna variantes) y se reproduce directo
+		if (IsInstanceValid(_animacionPropia)) _animacionPropia.SetProcess(false);
+		foreach (Node n in _modelo.FindChildren("*", "AnimationPlayer", true, false))
+		{
+			var reproductor = (AnimationPlayer)n;
+			if (!reproductor.HasAnimation(nombre)) continue;
+			bool caminata = nombre.Contains("camin", StringComparison.OrdinalIgnoreCase) || nombre.Contains("walk", StringComparison.OrdinalIgnoreCase);
+			string aReproducir = caminata ? EnSitio(reproductor, nombre) : nombre;
+			reproductor.GetAnimation(aReproducir).LoopMode = Animation.LoopModeEnum.Linear;
+			reproductor.SpeedScale = 1f;
+			reproductor.Play(aReproducir, 0.25);
+			return;
+		}
+	}
+
+	// Las caminatas de Mixamo avanzan la cadera; en la galería se camina en el sitio (la cadera no se mueve en X/Z).
+	private static string EnSitio(AnimationPlayer reproductor, string nombre)
+	{
+		const string Biblioteca = "galeria";
+		string copiaNombre = nombre.Replace('/', '_');
+		if (!reproductor.HasAnimationLibrary(Biblioteca)) reproductor.AddAnimationLibrary(Biblioteca, new AnimationLibrary());
+		var biblioteca = reproductor.GetAnimationLibrary(Biblioteca);
+		if (!biblioteca.HasAnimation(copiaNombre))
+		{
+			var copia = (Animation)reproductor.GetAnimation(nombre).Duplicate();
+			for (int t = 0; t < copia.GetTrackCount(); t++)
+			{
+				if (copia.TrackGetType(t) != Animation.TrackType.Position3D) continue;
+				string hueso = copia.TrackGetPath(t).GetConcatenatedSubNames().ToLower();
+				if (!(hueso.Contains("hip") || hueso.Contains("pelvis") || hueso.Contains("root"))) continue;
+				int claves = copia.TrackGetKeyCount(t);
+				if (claves == 0) continue;
+				var inicio = (Vector3)copia.TrackGetKeyValue(t, 0);
+				for (int k = 0; k < claves; k++)
+				{
+					var v = (Vector3)copia.TrackGetKeyValue(t, k);
+					copia.TrackSetKeyValue(t, k, new Vector3(inicio.X, v.Y, inicio.Z));
+				}
+			}
+			biblioteca.AddAnimation(copiaNombre, copia);
+		}
+		return Biblioteca + "/" + copiaNombre;
 	}
 
 	// ---------- Cámara ----------

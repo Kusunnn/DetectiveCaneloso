@@ -51,6 +51,34 @@ func _correr() -> void:
 		await process_frame
 	root.get_texture().get_image().save_png(carpeta.path_join("escenarios_sin_techo.png"))
 	print("CAPTURA sin techo")
+	# Animaciones: personaje -> etiquetas a probar
+	var animaciones: ItemList = galeria.find_children("*", "ItemList", true, false)[1]
+	for b in botones:
+		if b.text == "PERSONAJES":
+			b.emit_signal("pressed")
+	await process_frame
+	var pruebas := {0: ["Caminar", "Macarena"], 1: ["Comer"], 3: ["Caminar", "Sentado"], 6: ["Alterado", "Caminar"], 5: ["Caminar"]}
+	for p in pruebas:
+		lista.select(p)
+		lista.emit_signal("item_selected", p)
+		for f in 10:
+			await process_frame
+		var nombres := []
+		for k in animaciones.item_count:
+			nombres.append(animaciones.get_item_text(k).strip_edges())
+		print("ANIMACIONES ", lista.get_item_text(p).strip_edges(), ": ", nombres)
+		for etiqueta in pruebas[p]:
+			var k := nombres.find(etiqueta)
+			if k < 0:
+				print("FALTA ", etiqueta)
+				continue
+			animaciones.select(k)
+			animaciones.emit_signal("item_selected", k)
+			for f in 45:
+				await process_frame
+			var ruta := carpeta.path_join("anim_%d_%s.png" % [p, etiqueta])
+			root.get_texture().get_image().save_png(ruta)
+			print("CAPTURA ", lista.get_item_text(p).strip_edges(), " / ", etiqueta)
 	galeria.call("Cerrar")
 	await process_frame
 	print("FIN_PRUEBA")
