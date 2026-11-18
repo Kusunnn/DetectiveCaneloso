@@ -364,8 +364,9 @@ omni_attenuation = 1.4
 shadow_enabled = true
 
 [node name="Rotulo" type="Node3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -1.7, 1.75, 12.035)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -1.7, 1.75, 11.999)
 script = ExtResource("e12")
+Estilo = 1
 Texto = "COMEDOR"
 Ancho = 1.0
 ColorPapel = Color(0.33, 0.22, 0.13, 1.0)
@@ -549,8 +550,9 @@ AltoMaximo = 1.2
 TamPixel = 0.0015
 
 [node name="Pizarra" type="Node3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3, 1.55, 12.675)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3, 1.55, 12.799)
 script = ExtResource("e12")
+Estilo = 4
 Texto = "MENÚ DEL DÍA
 Sopa de fideo
 Tacos de papa
@@ -566,8 +568,9 @@ AltoMaximo = 1.2
 TamPixel = 0.0025
 
 [node name="Horarios" type="Node3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 1.6, 12.69)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.15, 1.6, 12.801)
 script = ExtResource("e12")
+Estilo = 1
 Texto = "HORARIOS
 Desayuno 8:00
 Comida 14:00
@@ -583,8 +586,9 @@ AltoMaximo = 1.2
 TamPixel = 0.0025
 
 [node name="Placa" type="Node3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.3, 1.6, 17.310001)
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.3, 1.6, 17.204)
 script = ExtResource("e12")
+Estilo = 2
 Texto = "CAMPAMENTO PINO LUNAR
 Gracias por tantos veranos.
 Cerramos este año."

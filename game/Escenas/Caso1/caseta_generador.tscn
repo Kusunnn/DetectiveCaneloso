@@ -326,8 +326,9 @@ mesh = SubResource("SphereMesh_25")
 cast_shadow = 0
 
 [node name="Placa" type="Node3D" parent="Generador"]
-transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.15, 0.67, 0.376)
+transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.15, 0.67, 0.431)
 script = ExtResource("e8")
+Estilo = 2
 Texto = "GENERADOR 5 kW"
 Ancho = 0.4
 ColorPapel = Color(0.8, 0.7, 0.2, 1.0)
@@ -399,8 +400,9 @@ transform = Transform3D(1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, -26.37, 0.8
 mesh = SubResource("CylinderMesh_34")
 
 [node name="Peligro" type="Node3D" parent="." groups=["apoyar_pared"]]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -22.381048, 1.7, 11)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -22.118, 1.7, 11.0)
 script = ExtResource("e8")
+Estilo = 2
 Texto = "⚠ PELIGRO
 ALTO VOLTAJE"
 Ancho = 0.5
