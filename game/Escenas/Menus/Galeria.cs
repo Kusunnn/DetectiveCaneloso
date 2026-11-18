@@ -104,10 +104,33 @@ public partial class Galeria : Control
 			Encuadre: new[] { "Sendero", "Bosque", "Colina", "Orilla", "Embarcadero", "Cobertizo", "Lago" }),
 		new("Sala de interrogatorio", "res://Escenas/Caso1/Interrogatorio/sala_interrogatorio_caso1.tscn", "Caso 1",
 			Encuadre: new[] { "Sala", "CSGBox3D", "Mesa", "Corcho", "MesaEvidencias", "Implicados" }, SinTecho: true),
+		// Capítulo 2 «La Trampa de la Garrapata» (en estado normal; el hackeado se quita al limpiar el nivel)
+		new("Comisaría por la mañana", "res://Escenas/Caso2/comisaria_manana.tscn", "Caso 2",
+			Encuadre: new[] { "Cuarto", "Muebles", "EscritorioCaneloso", "ParedOeste", "RinconCafe", "Personajes" }, SinTecho: true),
+		new("Torre Miawrio · Lobby", "res://Escenas/Caso2/torre_lobby.tscn", "Caso 2",
+			Encuadre: new[] { "Cuarto", "Recepcion", "SalaEspera", "ParedFondo" }, SinTecho: true),
+		new("Torre Miawrio · Despacho", "res://Escenas/Caso2/torre_despacho.tscn", "Caso 2",
+			Encuadre: new[] { "Escritorio", "ZonaEstar", "MesaProyectos", "LibreroArchivero", "Paredes", "Personajes" }, SinTecho: true),
+		new("Escaleras de emergencia", "res://Escenas/Caso2/torre_escaleras.tscn", "Caso 2",
+			Encuadre: new[] { "Cuarto", "Escalera", "Puertas", "MurosAltos" }, SinTecho: true),
+		new("Piso 23 · Cuarto del servidor", "res://Escenas/Caso2/torre_piso23.tscn", "Caso 2",
+			Encuadre: new[] { "Cuarto", "Racks", "ServidorDisco", "Puertas" }, SinTecho: true),
+		new("Cocina del edificio", "res://Escenas/Caso2/torre_cocina.tscn", "Caso 2",
+			Encuadre: new[] { "Cuarto", "Cocina" }, SinTecho: true),
+		new("Cuarto de basura", "res://Escenas/Caso2/torre_basura.tscn", "Caso 2",
+			Encuadre: new[] { "Cuarto", "Basura" }, SinTecho: true),
+		new("Estacionamiento", "res://Escenas/Caso2/torre_estacionamiento.tscn", "Caso 2",
+			Encuadre: new[] { "Cuarto", "Columnas", "Coches", "Patrulla", "Tecnicos" }, SinTecho: true),
+		new("Afuera de la torre (noche)", "res://Escenas/Caso2/torre_fachada_noche.tscn", "Caso 2",
+			Encuadre: new[] { "Torre", "Banqueta", "Personajes" }),
+		new("Penal · Celda de Tony", "res://Escenas/Caso2/penal_celda.tscn", "Caso 2",
+			Encuadre: new[] { "Cuarto", "Celda", "Personajes" }, SinTecho: true),
+		new("Embarcadero sellado", "res://Escenas/Caso2/embarcadero_sellado.tscn", "Caso 2",
+			Encuadre: new[] { "Embarcadero", "Sellos" }),
 	};
 
 	// Nodos del nivel que no son parte del escenario
-	private static readonly HashSet<string> FueraDelEscenario = new() { "Jugador", "Limites", "HUD", "MenuPausa" };
+	private static readonly HashSet<string> FueraDelEscenario = new() { "Jugador", "Limites", "HUD", "MenuPausa", "SoloHackeado", "LucesHackeado" };
 
 	private static readonly Color Fondo3D = new(0.045f, 0.05f, 0.06f);
 	private static readonly Color Coral = new(0.941f, 0.392f, 0.361f);
