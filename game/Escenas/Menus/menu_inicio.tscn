@@ -145,6 +145,23 @@ mouse_default_cursor_shape = 2
 text = "CAPÍTULOS"
 alignment = 0
 
+[node name="FilaGaleria" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 0
+
+[node name="HBox" type="HBoxContainer" parent="PantallaPrincipal/ListaOpciones/FilaGaleria"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 18
+
+[node name="BotonGaleria" type="Button" parent="PantallaPrincipal/ListaOpciones/FilaGaleria/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "GALERÍA"
+alignment = 0
+
 [node name="FilaOpciones" type="MarginContainer" parent="PantallaPrincipal/ListaOpciones"]
 layout_mode = 2
 mouse_filter = 2
