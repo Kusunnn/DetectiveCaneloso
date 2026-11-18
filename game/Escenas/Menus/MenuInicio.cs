@@ -17,12 +17,14 @@ public partial class MenuInicio : Control
 	private Button _botonContinuar;
 	private Button _botonCargar;
 	private Button _botonCapitulos;
+	private Button _botonGaleria;
 	private Button _botonOpciones;
 	private Button _botonCreditos;
 	private Button _botonSalir;
 	private PanelMenu _menuOpciones;
 	private PanelMenu _pantallaCreditos;
 	private TableroCapitulos _tableroCapitulos;
+	private Galeria _galeria;
 	private PanelRanuras _panelCargar;
 	private DialogoConfirmacion _dialogoConfirmacion;
 
@@ -39,6 +41,7 @@ public partial class MenuInicio : Control
 		_botonContinuar = GetNode<Button>("%BotonContinuar");
 		_botonCargar = GetNode<Button>("%BotonCargar");
 		_botonCapitulos = GetNode<Button>("%BotonCapitulos");
+		_botonGaleria = GetNode<Button>("%BotonGaleria");
 		_botonOpciones = GetNode<Button>("%BotonOpciones");
 		_botonCreditos = GetNode<Button>("%BotonCreditos");
 		_botonSalir = GetNode<Button>("%BotonSalir");
@@ -47,7 +50,7 @@ public partial class MenuInicio : Control
 		_dialogoConfirmacion = GetNode<DialogoConfirmacion>("%DialogoConfirmacion");
 
 		AplicarFuentes();
-		var botones = new[] { _botonNuevaPartida, _botonContinuar, _botonCargar, _botonCapitulos, _botonOpciones, _botonCreditos, _botonSalir };
+		var botones = new[] { _botonNuevaPartida, _botonContinuar, _botonCargar, _botonCapitulos, _botonGaleria, _botonOpciones, _botonCreditos, _botonSalir };
 		foreach (var boton in botones)
 		{
 			var fila = FilaDe(boton);
@@ -59,6 +62,7 @@ public partial class MenuInicio : Control
 		_botonContinuar.Pressed += () => _ = AlPresionarContinuar();
 		_botonCargar.Pressed += AbrirCargar;
 		_botonCapitulos.Pressed += () => AbrirTablero();
+		_botonGaleria.Pressed += AbrirGaleria;
 		_botonOpciones.Pressed += () => AbrirPanel(_menuOpciones, _botonOpciones);
 		_botonCreditos.Pressed += () => AbrirPanel(_pantallaCreditos, _botonCreditos);
 		_botonSalir.Pressed += AlPresionarSalir;
@@ -87,6 +91,12 @@ public partial class MenuInicio : Control
 		MoveChild(_panelCargar, _dialogoConfirmacion.GetIndex());
 		_panelCargar.Cerrado += AlCerrarPanel;
 
+		// Galería de modelos (personajes, pistas y escenarios)
+		_galeria = new Galeria();
+		AddChild(_galeria);
+		MoveChild(_galeria, _dialogoConfirmacion.GetIndex());
+		_galeria.Cerrado += AlCerrarPanel;
+
 
 		UtilidadesUI.ConectarFocoConRaton(this);
 		UtilidadesUI.EncadenarFoco(botones);
@@ -106,6 +116,13 @@ public partial class MenuInicio : Control
 		_focoAlVolver = _botonCargar;
 		_pantallaPrincipal.Hide();
 		_panelCargar.Abrir();
+	}
+
+	private void AbrirGaleria()
+	{
+		_focoAlVolver = _botonGaleria;
+		_pantallaPrincipal.Hide();
+		_galeria.Abrir();
 	}
 
 	private void AbrirTablero(string mensaje = null)
