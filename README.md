@@ -1,3 +1,2 @@
 # DetectiveCaneloso
-Detective Caneloso es un videojuego 2.5D de misterio y deducción dirigido a jóvenes y adultos, que ejercite el pensamiento crítico y la atención al detalle mediante una experiencia narrativa de investigación, diferenciándose de los juegos de acción sin trama y juegos de del mismo género que son monótonos o que cuentan con el mismo final.
-
+Detective Caneloso es un videojuego 3D de misterio y deducción dirigido a jóvenes y adultos. El jugador asume el papel de un detective que debe explorar escenarios, examinar pistas y relacionar detalles para reconstruir lo ocurrido. La historia incorpora un toque de terror psicológico que genera tensión y hace que el jugador dude de sus primeras conclusiones. A lo largo de la investigación, el juego invita a observar con cuidado, formular hipótesis y ponerlas a prueba con las evidencias encontradas.
