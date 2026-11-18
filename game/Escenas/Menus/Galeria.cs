@@ -16,7 +16,7 @@ public partial class Galeria : Control
 
 	// Personaje: escena del modelo, escala y animación de reposo tal como aparecen en el juego.
 	private record Entrada(string Nombre, string Ruta, string Grupo = null, float Escala = 1f, Vector3 Desfase = default,
-		string Animacion = null, string[] Variantes = null, bool Somnoliento = false, bool SinAnimador = false, bool Ual = false);
+		string Animacion = null, string[] Variantes = null, bool Somnoliento = false, bool SinAnimador = false, bool Ual = false, string[] Encuadre = null, bool SinTecho = false);
 
 	private static readonly Entrada[] Personajes =
 	{
@@ -91,31 +91,23 @@ public partial class Galeria : Control
 		new("Silbato «G. S.»", Pistas_ + "silbato_ts/silbato_ts.tscn", "Caso 1"),
 	};
 
-	// Cada zona por separado: el escenario completo pesa demasiado para un visor.
+	// Escenarios completos, tal como se juegan. Del nivel se quitan el jugador, la interfaz, la lógica del caso, la música,
+	// la niebla y su iluminación (la galería pone la suya). Encuadre: las partes que definen el encuadre inicial
+	// (sin el bosque lejano ni el terreno, que harían ver todo diminuto).
 	private static readonly Entrada[] Escenarios =
 	{
-		new("Recepción", "res://Escenas/Caso0/zona_recepcion.tscn", "Caso 0 · Comisaría"),
-		new("Pasillo", "res://Escenas/Caso0/zona_pasillo.tscn", "Caso 0 · Comisaría"),
-		new("Vestuario", "res://Escenas/Caso0/zona_vestuario.tscn", "Caso 0 · Comisaría"),
-		new("Estacionamiento", "res://Escenas/Caso1/estacionamiento.tscn", "Caso 1 · Campamento"),
-		new("Cabaña del director", "res://Escenas/Caso1/cabana_director.tscn", "Caso 1 · Campamento"),
-		new("Cabaña de Porky", "res://Escenas/Caso1/cabana_porky.tscn", "Caso 1 · Campamento"),
-		new("Cabañas de campistas", "res://Escenas/Caso1/cabanas_campistas.tscn", "Caso 1 · Campamento"),
-		new("Cocina y comedor", "res://Escenas/Caso1/cocina_comedor.tscn", "Caso 1 · Campamento"),
-		new("Enfermería", "res://Escenas/Caso1/enfermeria.tscn", "Caso 1 · Campamento"),
-		new("Almacén", "res://Escenas/Caso1/almacen.tscn", "Caso 1 · Campamento"),
-		new("Caseta del generador", "res://Escenas/Caso1/caseta_generador.tscn", "Caso 1 · Campamento"),
-		new("Fogata", "res://Escenas/Caso1/zona_fogata.tscn", "Caso 1 · Campamento"),
-		new("Embarcadero", "res://Escenas/Caso1/embarcadero.tscn", "Caso 1 · Campamento"),
-		new("Salida al sendero", "res://Escenas/Caso1/salida_sendero.tscn", "Caso 1 · Campamento"),
-		new("Sendero", "res://Escenas/Caso1/Lago/zona_sendero.tscn", "Caso 1 · Lago"),
-		new("Bosque", "res://Escenas/Caso1/Lago/zona_bosque.tscn", "Caso 1 · Lago"),
-		new("Colina", "res://Escenas/Caso1/Lago/zona_colina.tscn", "Caso 1 · Lago"),
-		new("Cobertizo", "res://Escenas/Caso1/Lago/zona_cobertizo.tscn", "Caso 1 · Lago"),
-		new("Orilla", "res://Escenas/Caso1/Lago/zona_orilla.tscn", "Caso 1 · Lago"),
-		new("Embarcadero del lago", "res://Escenas/Caso1/Lago/zona_embarcadero.tscn", "Caso 1 · Lago"),
-		new("Lago", "res://Escenas/Caso1/Lago/zona_lago.tscn", "Caso 1 · Lago"),
+		new("Comisaría", "res://Escenas/Interrogatorio/sala_interrogatorio.tscn", "Caso 0",
+			Encuadre: new[] { "Sala", "ZonaPasillo", "ZonaRecepcion", "ZonaVestuario" }, SinTecho: true),
+		new("Campamento", "res://Escenas/Caso1/escenario_campamento.tscn", "Caso 1",
+			Encuadre: new[] { "ZonaFogata", "Almacen", "Cocina", "CabanaPorky", "CabanaDirector", "Campistas", "Enfermeria", "Caseta", "Estacionamiento", "SalidaSendero", "Embarcadero" }),
+		new("Lago", "res://Escenas/Caso1/Lago/escenario_lago.tscn", "Caso 1",
+			Encuadre: new[] { "Sendero", "Bosque", "Colina", "Orilla", "Embarcadero", "Cobertizo", "Lago" }),
+		new("Sala de interrogatorio", "res://Escenas/Caso1/Interrogatorio/sala_interrogatorio_caso1.tscn", "Caso 1",
+			Encuadre: new[] { "Sala", "CSGBox3D", "Mesa", "Corcho", "MesaEvidencias", "Implicados" }, SinTecho: true),
 	};
+
+	// Nodos del nivel que no son parte del escenario
+	private static readonly HashSet<string> FueraDelEscenario = new() { "Jugador", "Limites", "HUD", "MenuPausa" };
 
 	private static readonly Color Fondo3D = new(0.045f, 0.05f, 0.06f);
 	private static readonly Color Coral = new(0.941f, 0.392f, 0.361f);
@@ -318,7 +310,7 @@ public partial class Galeria : Control
 		_detalle = EstiloPapel.Texto("", 16, Gris);
 		pie.AddChild(_detalle);
 		pie.AddChild(EstiloPapel.Texto(
-			"Arrastrar: girar   ·   Rueda o +/-: acercar   ·   Clic derecho: mover   ·   WASD: girar   ·   T: quitar techo   ·   R: vista inicial   ·   Esc: volver",
+			"Arrastrar: girar   ·   Rueda o +/-: acercar   ·   Clic derecho: mover   ·   WASD: girar   ·   T: techo   ·   R: vista inicial   ·   Esc: volver",
 			14, new Color(Gris, 0.7f)));
 	}
 
@@ -385,7 +377,9 @@ public partial class Galeria : Control
 		_modelo = null;
 	}
 
-	private void Mostrar(Entrada entrada)
+	private int _turnoCarga;
+
+	private async void Mostrar(Entrada entrada)
 	{
 		_ocultos.Clear();
 		LiberarModelo();
@@ -393,6 +387,18 @@ public partial class Galeria : Control
 		_animacionPropia = null;
 		_nombre.Text = entrada.Nombre.ToUpper();
 		_detalle.Text = entrada.Grupo ?? "";
+
+		int turno = ++_turnoCarga;
+		if (_categoria == Categoria.Escenarios)
+		{
+			// Un nivel completo tarda unos segundos: primero se muestra el aviso
+			_detalle.Text = "Cargando…";
+			_pedestal.Visible = false;
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+			if (turno != _turnoCarga || !Visible) return; // ya se eligió otra cosa
+			_detalle.Text = entrada.Grupo ?? "";
+		}
 
 		var escena = ResourceLoader.Exists(entrada.Ruta) ? GD.Load<PackedScene>(entrada.Ruta) : null;
 		if (escena == null)
@@ -408,11 +414,32 @@ public partial class Galeria : Control
 		{
 			_modelo = new Node3D { Name = "Modelo" };
 			instancia.Position = Vector3.Zero;
+			if (_categoria == Categoria.Escenarios) LimpiarNivel(instancia);
 			_modelo.AddChild(instancia);
 		}
 		_escenario.AddChild(_modelo);
-		Encuadrar(_categoria != Categoria.Escenarios);
+		if (_categoria == Categoria.Escenarios)
+		{
+			// Las paredes CSG arman su malla un cuadro después: antes no tienen tamaño
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
+			if (turno != _turnoCarga || _modelo == null) return;
+		}
+		// Los interiores se abren sin techo para ver dentro; con T se vuelve a poner
+		if (_categoria == Categoria.Escenarios) _sinTecho = entrada.SinTecho;
+		Encuadrar(_categoria != Categoria.Escenarios, entrada.Encuadre);
 		LlenarAnimaciones(entrada);
+	}
+
+	// Se quita lo que no es escenario antes de entrar al árbol, así sus scripts nunca arrancan.
+	private static void LimpiarNivel(Node3D nivel)
+	{
+		foreach (Node hijo in nivel.GetChildren())
+		{
+			bool fuera = hijo is not Node3D || hijo is DirectionalLight3D || hijo is FogVolume || FueraDelEscenario.Contains(hijo.Name);
+			if (!fuera) continue;
+			nivel.RemoveChild(hijo);
+			hijo.Free();
+		}
 	}
 
 	// Igual que en el juego: el modelo escalado dentro de un nodo, con su animación de reposo.
@@ -551,9 +578,17 @@ public partial class Galeria : Control
 	// ---------- Cámara ----------
 
 	// Centra la cámara en la caja que ocupa el modelo y se aleja lo justo para verlo completo.
-	private void Encuadrar(bool conPedestal)
+	private void Encuadrar(bool conPedestal, string[] partes = null)
 	{
-		var caja = CajaDe(_modelo);
+		Aabb? porPartes = null;
+		if (partes != null && _modelo.GetChildCount() > 0)
+			foreach (string parte in partes)
+				if (_modelo.GetChild(0).GetNodeOrNull<Node3D>(parte) is Node3D nodo)
+				{
+					if (CajaDeONada(nodo) is not Aabb c) continue;
+					porPartes = porPartes?.Merge(c) ?? c;
+				}
+		var caja = porPartes ?? CajaDe(_modelo);
 		_radio = Mathf.Max(caja.Size.Length() * 0.5f, 0.05f);
 		_centroInicial = caja.GetCenter();
 		float mitadFov = Mathf.DegToRad(_camara.Fov * 0.5f);
@@ -586,7 +621,7 @@ public partial class Galeria : Control
 	private void ColocarCamara()
 	{
 		_pitch = Mathf.Clamp(_pitch, PitchMin, PitchMax);
-		_distancia = Mathf.Clamp(_distancia, _radio * 0.15f, _distanciaInicial * 4f);
+		_distancia = Mathf.Clamp(_distancia, Mathf.Min(_radio * 0.15f, 1f), _distanciaInicial * 4f);
 		var direccion = new Vector3(Mathf.Sin(_yaw) * Mathf.Cos(_pitch), -Mathf.Sin(_pitch), Mathf.Cos(_yaw) * Mathf.Cos(_pitch));
 		_camara.Position = _centro + direccion * _distancia;
 		_camara.LookAt(_centro, Vector3.Up);
@@ -594,7 +629,9 @@ public partial class Galeria : Control
 
 	// Caja que ocupa lo visible. Las mallas con esqueleto (FBX de Mixamo, sobre todo) traen una caja en
 	// otra escala que no sirve; en su lugar se usan las posiciones de los huesos, con margen para la cabeza y los pies.
-	private static Aabb CajaDe(Node3D raiz)
+	private static Aabb CajaDe(Node3D raiz) => CajaDeONada(raiz) ?? new Aabb(new Vector3(-0.5f, 0, -0.5f), Vector3.One);
+
+	private static Aabb? CajaDeONada(Node3D raiz)
 	{
 		Aabb? total = null;
 		void Sumar(Aabb caja) => total = total?.Merge(caja) ?? caja;
@@ -624,7 +661,7 @@ public partial class Galeria : Control
 			if (local.Size == Vector3.Zero) continue;
 			Sumar(g.GlobalTransform * local);
 		}
-		return total ?? new Aabb(new Vector3(-0.5f, 0, -0.5f), Vector3.One);
+		return total;
 	}
 
 	// ---------- Entrada ----------

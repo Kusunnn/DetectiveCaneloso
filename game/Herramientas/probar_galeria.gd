@@ -6,7 +6,7 @@ extends SceneTree
 const MUESTRA := {
 	"PERSONAJES": [0, 2, 6, 7, 8],
 	"PISTAS": [1, 12, 30],
-	"ESCENARIOS": [1, 7, 23],
+	"ESCENARIOS": [1, 3, 4, 5],
 }
 
 func _initialize() -> void:
@@ -32,7 +32,7 @@ func _correr() -> void:
 				continue
 			lista.select(i)
 			lista.emit_signal("item_selected", i)
-			for f in 20:
+			for f in (60 if pestana == "ESCENARIOS" else 20):
 				await process_frame
 			var nombre := lista.get_item_text(i).strip_edges()
 			var img := root.get_texture().get_image()
@@ -46,6 +46,8 @@ func _correr() -> void:
 	var tecla := InputEventKey.new()
 	tecla.keycode = KEY_T
 	tecla.pressed = true
+	for f in 60:
+		await process_frame
 	Input.parse_input_event(tecla)
 	for f in 20:
 		await process_frame
