@@ -223,7 +223,7 @@ func _cocina() -> void:
 	k.prefab("tabla_picar", m, Vector3(3.6, y, 2.5), 10.0, 1.0, "Tabla")
 	k.prefab("sarten", m, Vector3(3.9, y, 2.8), -40.0, 1.0, "Sarten")
 	k.prefab("huacal_papas", m, Vector3(0.5, 0, 4.4), 15.0, 1.0, "Huacal")
-	k.prefab("escurridor", m, Vector3(3.6, 0.95, 0.4), 0.0, 1.0, "Escurridor")
+	k.prefab("escurridor", m, Vector3(3.55, k.tope(m.get_node("Tarja")) - 0.15, 0.42), 0.0, 1.0, "Escurridor")
 	# Cruce_2: la puerta de servicio (este) que todavía se mueve
 	var pz := k.nodo("Puertas")
 	var hoja := k.pieza_kit("puerta_hoja_metal", pz, Vector3(5.94, 0.01, 2.5 - 0.43), -90.0, {}, "PuertaQueSeMueve")

@@ -114,7 +114,7 @@ func _escritorio() -> void:
 	k.kenney("furniture-kit", "computerScreen", e, Vector3(7.65, y, 1.95), 180.0, 1.5, "Monitor")
 	k.kenney("furniture-kit", "computerKeyboard", e, Vector3(7.35, y, 2.1), 0.0, 1.5, "Teclado")
 	k.modelo(PROPS + "telefono_escritorio.glb", e, Vector3(6.15, y, 2.05), 200.0, 1.0, "Telefono")
-	k.modelo("res://Assets/Cinematicas/Modelos/polyhaven/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf", e, Vector3(8.0, y, 1.95), 150.0, 1.0, "Lampara")
+	k.prefab("lampara_mesa", e, Vector3(8.0, y, 1.95), 150.0, 1.0, "Lampara")
 	k.prefab("portarretrato", e, Vector3(5.95, y, 1.95), 160.0, 0.8, "FotoMimita")
 	k.prefab("portarretrato", e, Vector3(8.0, y, 2.6), 200.0, 0.7, "FotoGraduacion")
 	k.prefab("taza_cafe", e, Vector3(7.95, y, 2.25), 0.0, 1.0, "CafeMiawrio")
@@ -139,7 +139,7 @@ func _escritorio() -> void:
 	var cajon: Node3D = load(PROPS + "escritorio_cajon.glb").instantiate()
 	cajon.name = "Cajon"
 	parte.add_child(cajon)
-	k.contenedor(e, "CajonExpediente", "Cajón", Vector3(7.82, 0.075, 1.835), 180.0, parte, Vector3(0, 0, -0.32),
+	k.contenedor(e, "CajonExpediente", "Cajón", Vector3(7.82, 0.075, 1.835), 0.0, parte, Vector3(0, 0, -0.32),
 		Vector3(0.46, 0.19, 0.06), Vector3(0, 0.085, -0.01), "Una carpeta con el sello de la Fiscalía.")
 	var exp: Node3D = load(PISTAS + "expediente_filtrado/expediente_filtrado.tscn").instantiate()
 	k.pista(parte, "expediente_filtrado", "Copia del expediente de Pino Lunar",
@@ -149,17 +149,16 @@ func _escritorio() -> void:
 
 func _zona_estar() -> void:
 	var z := k.nodo("ZonaEstar")
-	k.prefab("tapete", z, Vector3(3.0, 0.004, 5.0), 90.0, 1.6, "Alfombra")
-	var mesa := k.prefab("mesa_baja", z, Vector3(3.0, 0, 5.0), 0.0, 0.85, "MesaBaja")
+	var alfombra := k.prefab("tapete", z, Vector3(3.0, 0.004, 5.0), 90.0, 1.6, "Alfombra")
+	var mesa := k.prefab("mesa_baja", z, Vector3(3.0, k.tope(alfombra), 5.0), 0.0, 0.85, "MesaBaja")
 	var y := k.tope(mesa)
 	k.modelo(PROPS + "galletas.glb", z, Vector3(2.75, y, 4.95), 0.0, 1.0, "Galletas")
 	k.prefab("taza_cafe", z, Vector3(3.3, y, 4.8), 40.0, 1.0, "Cafe1")
 	k.prefab("taza_cafe", z, Vector3(3.35, y, 5.2), -20.0, 1.0, "Cafe2")
-	k.kenney("furniture-kit", "loungeSofa", z, Vector3(1.0, 0, 6.05), 90.0, 2.2, "Sofa")
-	k.kenney("furniture-kit", "pillow", z, Vector3(1.25, 0.5, 4.6), 80.0, 2.2, "Cojin1")
+	k.kenney("furniture-kit", "loungeSofa", z, Vector3(1.0, 0, 6.3), 90.0, 2.2, "Sofa")
 	k.modelo(PROPS + "torre_gato.glb", z, Vector3(0.6, 0, 1.6), 20.0, 1.0, "TorreGato")
 	k.kenney("furniture-kit", "pottedPlant", z, Vector3(0.6, 0, 3.0), 10.0, 3.2, "PlantaGrande")
-	k.prefab("lampara_pie", z, Vector3(0.6, 0, 7.3), 0.0, 1.0, "LamparaPie")
+	k.prefab("lampara_pie", z, Vector3(2.3, 0, 9.5), 0.0, 1.0, "LamparaPie")
 
 func _mesa_proyectos() -> void:
 	var m := k.nodo("MesaProyectos")
@@ -176,13 +175,13 @@ func _mesa_proyectos() -> void:
 
 func _librero_archivero() -> void:
 	var l := k.nodo("LibreroArchivero")
-	for i in 3:
+	for i in 2:
 		var lib := k.prefab("repisa_larga" if i != 1 else "vitrina", l, Vector3(0.45, 0, 8.4 - i * 1.25), 90.0, 0.9, "Librero%d" % i)
-		var yt := k.tope(lib)
-		if i != 1:
-			k.modelo(PROPS + "trofeo.glb", l, Vector3(0.4, yt, 8.4 - i * 1.25), 90.0, 1.0, "Trofeo%d" % i)
+
 	# P05 · Estado de cuenta, en el cajón de en medio del archivero (junto al librero)
-	k.modelo(PROPS + "archivero_cuerpo.glb", l, Vector3(1.3, 0, 9.6), 180.0, 1.0, "Archivero")
+	var archivero := k.modelo(PROPS + "archivero_cuerpo.glb", l, Vector3(1.3, 0, 9.6), 180.0, 1.0, "Archivero")
+	for t in 2:
+		k.modelo(PROPS + "trofeo.glb", l, Vector3(1.15 + t * 0.28, k.tope(archivero), 9.6), 180.0, 1.0, "Trofeo%d" % t)
 	k.colision("ColisionArchivero", l, Vector3(1.3, 0.525, 9.6), Vector3(0.5, 1.05, 0.6), Constructor.CAPA_MUEBLES)
 	var parte := Node3D.new()
 	var cajon: Node3D = load(PROPS + "archivero_cajon.glb").instantiate()
@@ -276,7 +275,7 @@ func _luces() -> void:
 	k.entorno(Color("6f9fd8"), Color("dbe6ee"), Color("d4c2a2"), 0.45, 0.95)
 	k.sol(l, "Sol", 28.0, 160.0, Color("ffe6c0"), 1.35)
 	k.omni(l, "LamparaEscritorio", Vector3(7.95, 1.3, 2.05), Color("ffc27a"), 0.9, 2.6)
-	k.omni(l, "LamparaPie", Vector3(0.6, 1.6, 7.3), Color("ffc27a"), 0.9, 4.0)
+	k.omni(l, "LamparaPie", Vector3(2.3, 1.6, 9.5), Color("ffc27a"), 0.9, 4.0)
 	k.omni(l, "LamparaProyectos", Vector3(12.25, 1.3, 5.7), Color("ffc27a"), 0.7, 3.0)
 	for p in [Vector3(3.0, 3.1, 5.0), Vector3(7.0, 3.1, 4.0), Vector3(11.0, 3.1, 6.2), Vector3(7.0, 3.1, 8.0)]:
 		k.omni(l, "Plafon", p, Color("ffd9a0"), 0.5, 6.0)

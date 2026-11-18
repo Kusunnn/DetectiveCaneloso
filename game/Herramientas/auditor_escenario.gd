@@ -191,6 +191,7 @@ func _revisar_solapes() -> void:
 			if (_es_pared(a) and _en_grupo(b, "auditoria_estructura")) or (_es_pared(b) and _en_grupo(a, "auditoria_estructura")): continue
 			# La copa de un árbol cubre lo que está debajo; solo cuenta su tronco (que tiene colisión propia)
 			if _en_grupo(a, "auditoria_vegetacion") or _en_grupo(b, "auditoria_vegetacion"): continue
+			if _en_grupo(a, "auditoria_fuera_ok") or _en_grupo(b, "auditoria_fuera_ok"): continue
 			var ca: AABB = cajas[i][1]; var cb: AABB = cajas[j][1]
 			if not ca.intersects(cb): continue
 			var inter := ca.intersection(cb)
@@ -208,6 +209,7 @@ func _revisar_colisiones() -> void:
 	# Mallas que el jugador podría atravesar
 	for o in _objetos:
 		if _en_grupo(o, "auditoria_colgado") or _es_pared(o): continue
+		if _en_grupo(o, "auditoria_fuera_ok"): continue  # Fondo fuera del área jugable (la ciudad tras una ventana)
 		var caja := _aabb_global(o)
 		if caja.position.y > 0.35: continue  # Encima de un mueble: el jugador no llega a pisarlo
 		if caja.size.y < ALTURA_ATRAVESABLE or maxf(caja.size.x, caja.size.z) < 0.3: continue

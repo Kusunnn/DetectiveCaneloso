@@ -30,7 +30,8 @@ public partial class EstadoLuces : Node
 		}
 		// Para revisar el estado hackeado sin guion: el juego se abre con «-- --estado=hackeado»
 		bool porArgumento = Array.IndexOf(OS.GetCmdlineUserArgs(), "--estado=hackeado") >= 0;
-		FijarEstado(EmpiezaHackeado || porArgumento);
+		bool normalPorArgumento = Array.IndexOf(OS.GetCmdlineUserArgs(), "--estado=normal") >= 0;
+		FijarEstado((EmpiezaHackeado || porArgumento) && !normalPorArgumento);
 	}
 
 	public void FijarEstado(bool hackeado)

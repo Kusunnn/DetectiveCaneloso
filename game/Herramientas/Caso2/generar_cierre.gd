@@ -42,7 +42,7 @@ func _fachada() -> void:
 		ventanas[i] = "ventana" if i % 2 == 0 else "muro"
 	for nivel in 5:
 		k.tramo_muro("Piso%d" % nivel, torre, Vector3(16, 4.0 + nivel * 3.4, 0), 16, 180.0, 3.4, mats, ventanas)
-	k.modelo(PROPS + "logo_torre.glb", torre, Vector3(8.0, 4.4, -0.05), 180.0, 1.6, "Logo").add_to_group("auditoria_pared", true)
+	k.modelo(PROPS + "logo_torre.glb", torre, Vector3(8.0, 4.4, -0.0), 180.0, 1.6, "Logo").add_to_group("auditoria_pared", true)
 	var nombre := Label3D.new()
 	nombre.name = "NombreTorre"
 	nombre.text = "TORRE MIAWRIO"
@@ -61,7 +61,7 @@ func _fachada() -> void:
 	k.prefab("banca_parque", b, Vector3(4.5, 0, -1.6), 0.0, 1.0, "Banca")
 	k.kenney("furniture-kit", "pottedPlant", b, Vector3(6.2, 0, -0.7), 0.0, 3.4, "Maceta1")
 	k.kenney("furniture-kit", "pottedPlant", b, Vector3(9.8, 0, -0.7), 0.0, 3.4, "Maceta2")
-	k.kenney("car-kit", "police", b, Vector3(12.5, 0, -7.2), 90.0, 1.65, "Patrulla")
+	k.kenney("car-kit", "police", b, Vector3(12.5, -0.04, -7.2), 90.0, 1.65, "Patrulla")
 	# Farolas que parpadean
 	var luces := k.nodo("Luces")
 	for x in [2.0, 14.0]:
@@ -174,9 +174,10 @@ func _embarcadero() -> void:
 	s.add_to_group("caso2", true)
 	for x in [6.95, 9.05]:
 		k.prefab("poste_madera", s, Vector3(x, 0.3, -7.0), 0.0, 1.0, "Poste")
-		k.modelo(PROPS + "sello_roto.glb", s, Vector3(x, 1.0, -6.93), 0.0, 1.0, "Sello")
-	k.modelo(PROPS + "cinta_amarilla.glb", s, Vector3(6.95, 1.15, -6.98), 0.0, 1.0, "CintaAmarilla")
-	k.modelo(PROPS + "cinta_amarilla.glb", s, Vector3(6.95, 0.7, -6.98), 0.0, 1.0, "CintaAmarilla2")
+		k.modelo(PROPS + "sello_roto.glb", s, Vector3(x, 1.1, -6.93), 0.0, 1.0, "Sello%d" % int(x)).add_to_group("auditoria_colgado", true)
+	# La cinta y los sellos cuelgan de los postes
+	k.modelo(PROPS + "cinta_amarilla.glb", s, Vector3(6.95, 1.3, -6.98), 0.0, 1.0, "CintaAmarilla").add_to_group("auditoria_colgado", true)
+	k.modelo(PROPS + "cinta_amarilla.glb", s, Vector3(6.95, 1.0, -6.98), 0.0, 1.0, "CintaAmarilla2").add_to_group("auditoria_colgado", true)
 	k.marcador("Entrada_Cierre", s, Vector3(8.0, 0.4, -3.0), 0.0)
 	k.marcador("PuntoSilueta", s, Vector3(8.0, 0.35, -30.0), 0.0)
 	# Solo lo nuevo se adueña de la escena: lo heredado se queda como en el Lago original

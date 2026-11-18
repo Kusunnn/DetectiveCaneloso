@@ -495,12 +495,12 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1.05, 0.5)
 
-[node name="EmbarcaderoSellado" type="Node3D" unique_id=1048577798]
+[node name="EmbarcaderoSellado" type="Node3D" unique_id=2047421399]
 
-[node name="Entorno" type="WorldEnvironment" parent="." unique_id=1212341551]
+[node name="Entorno" type="WorldEnvironment" parent="." unique_id=202843484]
 environment = SubResource("Environment_3")
 
-[node name="Luna" type="DirectionalLight3D" parent="." unique_id=1459627365]
+[node name="Luna" type="DirectionalLight3D" parent="." unique_id=275574626]
 transform = Transform3D(-0.9397, 0.1812, -0.29, 0, 0.848, 0.5299, 0.342, 0.498, -0.7969, 0, 30, 0)
 light_color = Color(0.55, 0.66, 1, 1)
 light_energy = 0.42
@@ -508,23 +508,23 @@ shadow_enabled = true
 directional_shadow_mode = 1
 directional_shadow_max_distance = 40.0
 
-[node name="NieblaBaja" type="FogVolume" parent="." unique_id=1412617183]
+[node name="NieblaBaja" type="FogVolume" parent="." unique_id=1675680090]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.7, 25)
 size = Vector3(100, 2.2, 76)
 material = SubResource("FogMaterial_4")
 
-[node name="Terreno" type="MeshInstance3D" parent="." unique_id=186196975 groups=["auditoria_estructura", "auditoria_terreno"]]
+[node name="Terreno" type="MeshInstance3D" parent="." unique_id=1843108760 groups=["auditoria_estructura", "auditoria_terreno"]]
 material_override = SubResource("ShaderMaterial_5")
 mesh = ExtResource("9_v3ko1")
 
-[node name="ColTerreno" type="StaticBody3D" parent="." unique_id=1364270757]
+[node name="ColTerreno" type="StaticBody3D" parent="." unique_id=1137793251]
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="ColTerreno" unique_id=1732506763]
+[node name="Forma" type="CollisionShape3D" parent="ColTerreno" unique_id=2061088593]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.5)
 shape = ExtResource("10_h3vbd")
 
-[node name="Pinos" type="Node3D" parent="." unique_id=744708260]
+[node name="Pinos" type="Node3D" parent="." unique_id=716747674]
 script = ExtResource("11_adfdx")
 Modelos = [ExtResource("12_wmp7a"), ExtResource("13_urbao"), ExtResource("14_qpt07"), ExtResource("15_peyvh"), ExtResource("16_rinlx"), ExtResource("17_bcs2s"), ExtResource("18_oo4vh")]
 Cantidad = 1400
@@ -539,7 +539,7 @@ Alturas = ExtResource("10_h3vbd")
 OrigenAlturas = Vector3(0, 0, 2.5)
 AlturaMinima = 0.02
 
-[node name="PinosInterior" type="Node3D" parent="." unique_id=2092450357]
+[node name="PinosInterior" type="Node3D" parent="." unique_id=1518382380]
 script = ExtResource("11_adfdx")
 Modelos = [ExtResource("12_wmp7a"), ExtResource("13_urbao"), ExtResource("14_qpt07"), ExtResource("15_peyvh"), ExtResource("16_rinlx"), ExtResource("17_bcs2s"), ExtResource("18_oo4vh")]
 Cantidad = 420
@@ -555,7 +555,7 @@ Alturas = ExtResource("10_h3vbd")
 OrigenAlturas = Vector3(0, 0, 2.5)
 AlturaMinima = 0.03
 
-[node name="PinosLejanos" type="Node3D" parent="." unique_id=1554707085]
+[node name="PinosLejanos" type="Node3D" parent="." unique_id=1208615599]
 script = ExtResource("11_adfdx")
 Modelos = [ExtResource("13_urbao"), ExtResource("15_peyvh"), ExtResource("19_03aae")]
 Cantidad = 320
@@ -564,7 +564,7 @@ Area = Rect2(-130, -152, 260, 18)
 Escala = Vector2(8, 11)
 ProyectarSombras = false
 
-[node name="Matorral" type="Node3D" parent="." unique_id=2061417670]
+[node name="Matorral" type="Node3D" parent="." unique_id=2026380397]
 script = ExtResource("11_adfdx")
 Modelos = [ExtResource("20_5olxf"), ExtResource("21_620up"), ExtResource("22_ah4jv"), ExtResource("23_b1t1t"), ExtResource("24_v0sd6")]
 Cantidad = 380
@@ -577,7 +577,7 @@ Alturas = ExtResource("10_h3vbd")
 OrigenAlturas = Vector3(0, 0, 2.5)
 AlturaMinima = 0.03
 
-[node name="Pasto" type="Node3D" parent="." unique_id=710498401]
+[node name="Pasto" type="Node3D" parent="." unique_id=1104387587]
 script = ExtResource("11_adfdx")
 Modelos = [ExtResource("25_iqt68"), ExtResource("26_tefth"), ExtResource("27_yw3d8")]
 Cantidad = 1500
@@ -590,7 +590,7 @@ Alturas = ExtResource("10_h3vbd")
 OrigenAlturas = Vector3(0, 0, 2.5)
 AlturaMinima = -0.02
 
-[node name="Juncos" type="Node3D" parent="." unique_id=2121944945]
+[node name="Juncos" type="Node3D" parent="." unique_id=1285532902]
 script = ExtResource("11_adfdx")
 Modelos = [ExtResource("26_tefth")]
 Cantidad = 520
@@ -606,319 +606,319 @@ AlturaMinima = -0.45
 AlturaMaxima = -0.12
 MaterialCopias = SubResource("ShaderMaterial_6")
 
-[node name="Limites" type="Node3D" parent="." unique_id=1011280592 groups=["auditoria_invisible_ok"]]
+[node name="Limites" type="Node3D" parent="." unique_id=57512911 groups=["auditoria_invisible_ok"]]
 
-[node name="Oeste" type="StaticBody3D" parent="Limites" unique_id=2064053921]
+[node name="Oeste" type="StaticBody3D" parent="Limites" unique_id=1808388744]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -52.5, 3, 24.5)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Oeste" unique_id=1167146091]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Oeste" unique_id=1449364025]
 shape = SubResource("BoxShape3D_7")
 
-[node name="Este" type="StaticBody3D" parent="Limites" unique_id=1187067605]
+[node name="Este" type="StaticBody3D" parent="Limites" unique_id=1220383640]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.5, 3, 24.5)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Este" unique_id=1533404427]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Este" unique_id=1481109082]
 shape = SubResource("BoxShape3D_8")
 
-[node name="Sur" type="StaticBody3D" parent="Limites" unique_id=578273499]
+[node name="Sur" type="StaticBody3D" parent="Limites" unique_id=408835082]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 3, 62.6)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Sur" unique_id=1836443400]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Sur" unique_id=1369069732]
 shape = SubResource("BoxShape3D_9")
 
-[node name="Orilla0" type="StaticBody3D" parent="Limites" unique_id=2068401912]
+[node name="Orilla0" type="StaticBody3D" parent="Limites" unique_id=704513992]
 transform = Transform3D(0.996, 0, 0.0891, 0, 1, 0, -0.0891, 0, 0.996, -50.5, 2, -8.4354)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla0" unique_id=1577493377]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla0" unique_id=422448961]
 shape = SubResource("BoxShape3D_10")
 
-[node name="Orilla1" type="StaticBody3D" parent="Limites" unique_id=1879271577]
+[node name="Orilla1" type="StaticBody3D" parent="Limites" unique_id=16476007]
 transform = Transform3D(0.9776, 0, 0.2105, 0, 1, 0, -0.2105, 0, 0.9776, -47.5, 2, -8.8925)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla1" unique_id=537035711]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla1" unique_id=2067450117]
 shape = SubResource("BoxShape3D_11")
 
-[node name="Orilla2" type="StaticBody3D" parent="Limites" unique_id=730917364]
+[node name="Orilla2" type="StaticBody3D" parent="Limites" unique_id=1661462011]
 transform = Transform3D(0.9667, 0, 0.2558, 0, 1, 0, -0.2558, 0, 0.9667, -44.5, 2, -9.6123)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla2" unique_id=1598784785]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla2" unique_id=1277593861]
 shape = SubResource("BoxShape3D_12")
 
-[node name="Orilla3" type="StaticBody3D" parent="Limites" unique_id=1140561943]
+[node name="Orilla3" type="StaticBody3D" parent="Limites" unique_id=935588721]
 transform = Transform3D(0.9753, 0, 0.2209, 0, 1, 0, -0.2209, 0, 0.9753, -41.5, 2, -10.349)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla3" unique_id=1147326849]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla3" unique_id=1154167397]
 shape = SubResource("BoxShape3D_13")
 
-[node name="Orilla4" type="StaticBody3D" parent="Limites" unique_id=132446509]
+[node name="Orilla4" type="StaticBody3D" parent="Limites" unique_id=1500538619]
 transform = Transform3D(0.9919, 0, 0.1268, 0, 1, 0, -0.1268, 0, 0.9919, -38.5, 2, -10.8805)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla4" unique_id=672771179]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla4" unique_id=1919940838]
 shape = SubResource("BoxShape3D_14")
 
-[node name="Orilla5" type="StaticBody3D" parent="Limites" unique_id=244585238]
+[node name="Orilla5" type="StaticBody3D" parent="Limites" unique_id=932426056]
 transform = Transform3D(0.9998, 0, 0.0197, 0, 1, 0, -0.0197, 0, 0.9998, -35.5, 2, -11.1018)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla5" unique_id=1548760721]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla5" unique_id=223328335]
 shape = SubResource("BoxShape3D_15")
 
-[node name="Orilla6" type="StaticBody3D" parent="Limites" unique_id=260785114]
+[node name="Orilla6" type="StaticBody3D" parent="Limites" unique_id=1187312249]
 transform = Transform3D(0.999, 0, -0.0456, 0, 1, 0, 0.0456, 0, 0.999, -32.5, 2, -11.0629)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla6" unique_id=2066826793]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla6" unique_id=674427285]
 shape = SubResource("BoxShape3D_16")
 
-[node name="Orilla7" type="StaticBody3D" parent="Limites" unique_id=128179227]
+[node name="Orilla7" type="StaticBody3D" parent="Limites" unique_id=261472518]
 transform = Transform3D(0.9992, 0, -0.0394, 0, 1, 0, 0.0394, 0, 0.9992, -29.5, 2, -10.9353)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla7" unique_id=575955117]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla7" unique_id=2062951277]
 shape = SubResource("BoxShape3D_17")
 
-[node name="Orilla8" type="StaticBody3D" parent="Limites" unique_id=1450459638]
+[node name="Orilla8" type="StaticBody3D" parent="Limites" unique_id=2124489327]
 transform = Transform3D(0.9995, 0, 0.0305, 0, 1, 0, -0.0305, 0, 0.9995, -26.5, 2, -10.9219)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla8" unique_id=859988598]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla8" unique_id=1792020112]
 shape = SubResource("BoxShape3D_18")
 
-[node name="Orilla9" type="StaticBody3D" parent="Limites" unique_id=139139856]
+[node name="Orilla9" type="StaticBody3D" parent="Limites" unique_id=993231109]
 transform = Transform3D(0.9924, 0, 0.1233, 0, 1, 0, -0.1233, 0, 0.9924, -23.5, 2, -11.1541)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla9" unique_id=476569536]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla9" unique_id=896416634]
 shape = SubResource("BoxShape3D_19")
 
-[node name="Orilla10" type="StaticBody3D" parent="Limites" unique_id=863418594]
+[node name="Orilla10" type="StaticBody3D" parent="Limites" unique_id=1889012079]
 transform = Transform3D(0.9828, 0, 0.1847, 0, 1, 0, -0.1847, 0, 0.9828, -20.5, 2, -11.6224)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla10" unique_id=929916959]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla10" unique_id=1151503948]
 shape = SubResource("BoxShape3D_20")
 
-[node name="Orilla11" type="StaticBody3D" parent="Limites" unique_id=1881691771]
+[node name="Orilla11" type="StaticBody3D" parent="Limites" unique_id=1992395522]
 transform = Transform3D(0.9842, 0, 0.1769, 0, 1, 0, -0.1769, 0, 0.9842, -17.5, 2, -12.1739)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla11" unique_id=880055365]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla11" unique_id=1917964727]
 shape = SubResource("BoxShape3D_21")
 
-[node name="Orilla12" type="StaticBody3D" parent="Limites" unique_id=319768300]
+[node name="Orilla12" type="StaticBody3D" parent="Limites" unique_id=749235371]
 transform = Transform3D(0.996, 0, 0.0891, 0, 1, 0, -0.0891, 0, 0.996, -14.5, 2, -12.5777)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla12" unique_id=1374351687]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla12" unique_id=1631787259]
 shape = SubResource("BoxShape3D_22")
 
-[node name="Orilla13" type="StaticBody3D" parent="Limites" unique_id=206236508]
+[node name="Orilla13" type="StaticBody3D" parent="Limites" unique_id=1616830270]
 transform = Transform3D(0.9985, 0, -0.0553, 0, 1, 0, 0.0553, 0, 0.9985, -11.5, 2, -12.6288)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla13" unique_id=1437118847]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla13" unique_id=2076696954]
 shape = SubResource("BoxShape3D_23")
 
-[node name="Orilla14" type="StaticBody3D" parent="Limites" unique_id=1093124945]
+[node name="Orilla14" type="StaticBody3D" parent="Limites" unique_id=998495981]
 transform = Transform3D(0.9803, 0, -0.1973, 0, 1, 0, 0.1973, 0, 0.9803, -8.5, 2, -12.2439)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla14" unique_id=1390486203]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla14" unique_id=361233374]
 shape = SubResource("BoxShape3D_24")
 
-[node name="Orilla15" type="StaticBody3D" parent="Limites" unique_id=1744318040]
+[node name="Orilla15" type="StaticBody3D" parent="Limites" unique_id=472851913]
 transform = Transform3D(0.9598, 0, -0.2807, 0, 1, 0, 0.2807, 0, 0.9598, -5.5, 2, -11.5032)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla15" unique_id=1540319341]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla15" unique_id=1090131882]
 shape = SubResource("BoxShape3D_25")
 
-[node name="Orilla16" type="StaticBody3D" parent="Limites" unique_id=443744060]
+[node name="Orilla16" type="StaticBody3D" parent="Limites" unique_id=1246545960]
 transform = Transform3D(0.959, 0, -0.2834, 0, 1, 0, 0.2834, 0, 0.959, -2.5, 2, -10.6212)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla16" unique_id=521412888]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla16" unique_id=1045238285]
 shape = SubResource("BoxShape3D_26")
 
-[node name="Orilla17" type="StaticBody3D" parent="Limites" unique_id=1419322393]
+[node name="Orilla17" type="StaticBody3D" parent="Limites" unique_id=615981065]
 transform = Transform3D(0.9779, 0, -0.2091, 0, 1, 0, 0.2091, 0, 0.9779, 0.5, 2, -9.8571)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla17" unique_id=103072477]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla17" unique_id=1317916649]
 shape = SubResource("BoxShape3D_27")
 
-[node name="Orilla18" type="StaticBody3D" parent="Limites" unique_id=1899127694]
+[node name="Orilla18" type="StaticBody3D" parent="Limites" unique_id=663587443]
 transform = Transform3D(0.9963, 0, -0.0858, 0, 1, 0, 0.0858, 0, 0.9963, 3.5, 2, -9.4072)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla18" unique_id=1998545736]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla18" unique_id=551033055]
 shape = SubResource("BoxShape3D_28")
 
-[node name="Orilla19" type="StaticBody3D" parent="Limites" unique_id=2062343401]
+[node name="Orilla19" type="StaticBody3D" parent="Limites" unique_id=767814058]
 transform = Transform3D(1, 0, 0.0096, 0, 1, 0, -0.0096, 0, 1, 5.8, 2, -9.2857)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla19" unique_id=1125013037]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla19" unique_id=408785907]
 shape = SubResource("BoxShape3D_29")
 
-[node name="Orilla20" type="StaticBody3D" parent="Limites" unique_id=514404837]
+[node name="Orilla20" type="StaticBody3D" parent="Limites" unique_id=1115580263]
 transform = Transform3D(0.9953, 0, 0.0968, 0, 1, 0, -0.0968, 0, 0.9953, 10.2, 2, -9.5712)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla20" unique_id=1214358028]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla20" unique_id=110125478]
 shape = SubResource("BoxShape3D_30")
 
-[node name="Orilla21" type="StaticBody3D" parent="Limites" unique_id=562143955]
+[node name="Orilla21" type="StaticBody3D" parent="Limites" unique_id=1193226526]
 transform = Transform3D(0.9971, 0, 0.0757, 0, 1, 0, -0.0757, 0, 0.9971, 12.5, 2, -9.7629)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla21" unique_id=307654890]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla21" unique_id=895260110]
 shape = SubResource("BoxShape3D_31")
 
-[node name="Orilla22" type="StaticBody3D" parent="Limites" unique_id=1803520031]
+[node name="Orilla22" type="StaticBody3D" parent="Limites" unique_id=1071154768]
 transform = Transform3D(1, 0, 0.0029, 0, 1, 0, -0.0029, 0, 1, 15.5, 2, -9.8813)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla22" unique_id=552390995]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla22" unique_id=796291719]
 shape = SubResource("BoxShape3D_32")
 
-[node name="Orilla23" type="StaticBody3D" parent="Limites" unique_id=1611674536]
+[node name="Orilla23" type="StaticBody3D" parent="Limites" unique_id=1647356618]
 transform = Transform3D(0.9968, 0, -0.0802, 0, 1, 0, 0.0802, 0, 0.9968, 18.5, 2, -9.765)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla23" unique_id=321244433]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla23" unique_id=1126558371]
 shape = SubResource("BoxShape3D_33")
 
-[node name="Orilla24" type="StaticBody3D" parent="Limites" unique_id=980715440]
+[node name="Orilla24" type="StaticBody3D" parent="Limites" unique_id=287759849]
 transform = Transform3D(0.9926, 0, -0.1213, 0, 1, 0, 0.1213, 0, 0.9926, 21.5, 2, -9.4609)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla24" unique_id=1703587102]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla24" unique_id=1849963491]
 shape = SubResource("BoxShape3D_34")
 
-[node name="Orilla25" type="StaticBody3D" parent="Limites" unique_id=57396878]
+[node name="Orilla25" type="StaticBody3D" parent="Limites" unique_id=52995612]
 transform = Transform3D(0.996, 0, -0.0892, 0, 1, 0, 0.0892, 0, 0.996, 24.5, 2, -9.1432)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla25" unique_id=1985295222]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla25" unique_id=2112016928]
 shape = SubResource("BoxShape3D_35")
 
-[node name="Orilla26" type="StaticBody3D" parent="Limites" unique_id=989723714]
+[node name="Orilla26" type="StaticBody3D" parent="Limites" unique_id=1577925362]
 transform = Transform3D(0.9999, 0, 0.0148, 0, 1, 0, -0.0148, 0, 0.9999, 27.5, 2, -9.031)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla26" unique_id=1824111651]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla26" unique_id=1547865164]
 shape = SubResource("BoxShape3D_36")
 
-[node name="Orilla27" type="StaticBody3D" parent="Limites" unique_id=946724327]
+[node name="Orilla27" type="StaticBody3D" parent="Limites" unique_id=824284826]
 transform = Transform3D(0.9885, 0, 0.1513, 0, 1, 0, -0.1513, 0, 0.9885, 30.5, 2, -9.2827)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla27" unique_id=1949226997]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla27" unique_id=300207508]
 shape = SubResource("BoxShape3D_37")
 
-[node name="Orilla28" type="StaticBody3D" parent="Limites" unique_id=1826789724]
+[node name="Orilla28" type="StaticBody3D" parent="Limites" unique_id=1355123805]
 transform = Transform3D(0.9656, 0, 0.2599, 0, 1, 0, -0.2599, 0, 0.9656, 33.5, 2, -9.916)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla28" unique_id=1961976327]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla28" unique_id=2130844743]
 shape = SubResource("BoxShape3D_38")
 
-[node name="Orilla29" type="StaticBody3D" parent="Limites" unique_id=4423146]
+[node name="Orilla29" type="StaticBody3D" parent="Limites" unique_id=66181669]
 transform = Transform3D(0.9542, 0, 0.2991, 0, 1, 0, -0.2991, 0, 0.9542, 36.5, 2, -10.79)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla29" unique_id=1102303936]
+[node name="Forma" type="CollisionShape3D" parent="Limites/Orilla29" unique_id=694647669]
 shape = SubResource("BoxShape3D_39")
 
-[node name="MuelleOeste" type="StaticBody3D" parent="Limites" unique_id=1022487187]
+[node name="MuelleOeste" type="StaticBody3D" parent="Limites" unique_id=1334266115]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.7, 1.85, -20.95)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/MuelleOeste" unique_id=902063483]
+[node name="Forma" type="CollisionShape3D" parent="Limites/MuelleOeste" unique_id=1244876428]
 shape = SubResource("BoxShape3D_40")
 
-[node name="MuelleEste" type="StaticBody3D" parent="Limites" unique_id=2111570747]
+[node name="MuelleEste" type="StaticBody3D" parent="Limites" unique_id=949177512]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 1.85, -20.95)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/MuelleEste" unique_id=2030900747]
+[node name="Forma" type="CollisionShape3D" parent="Limites/MuelleEste" unique_id=1958317968]
 shape = SubResource("BoxShape3D_41")
 
-[node name="MuellePunta" type="StaticBody3D" parent="Limites" unique_id=1102735804]
+[node name="MuellePunta" type="StaticBody3D" parent="Limites" unique_id=839124578]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.85, -34.15)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/MuellePunta" unique_id=1842952780]
+[node name="Forma" type="CollisionShape3D" parent="Limites/MuellePunta" unique_id=1683202933]
 shape = SubResource("BoxShape3D_42")
 
-[node name="OrillaEste" type="StaticBody3D" parent="Limites" unique_id=1834590432]
+[node name="OrillaEste" type="StaticBody3D" parent="Limites" unique_id=1597505573]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42.25, 2, -11.9454)
 collision_layer = 64
 collision_mask = 0
 
-[node name="Forma" type="CollisionShape3D" parent="Limites/OrillaEste" unique_id=260914930]
+[node name="Forma" type="CollisionShape3D" parent="Limites/OrillaEste" unique_id=422836665]
 shape = SubResource("BoxShape3D_43")
 
-[node name="Sendero" parent="." unique_id=292568851 instance=ExtResource("29_udvk0")]
+[node name="Sendero" parent="." unique_id=1816137788 instance=ExtResource("29_udvk0")]
 
-[node name="Bosque" parent="." unique_id=1122318499 instance=ExtResource("30_fii80")]
+[node name="Bosque" parent="." unique_id=708089119 instance=ExtResource("30_fii80")]
 
-[node name="Colina" parent="." unique_id=1547020101 instance=ExtResource("31_fklrm")]
+[node name="Colina" parent="." unique_id=145126076 instance=ExtResource("31_fklrm")]
 
-[node name="Orilla" parent="." unique_id=1859999868 instance=ExtResource("32_poicb")]
+[node name="Orilla" parent="." unique_id=1777285420 instance=ExtResource("32_poicb")]
 
-[node name="Embarcadero" parent="." unique_id=1827928928 instance=ExtResource("33_eoctx")]
+[node name="Embarcadero" parent="." unique_id=1339895159 instance=ExtResource("33_eoctx")]
 
-[node name="Cobertizo" parent="." unique_id=1810095004 instance=ExtResource("34_lf053")]
+[node name="Cobertizo" parent="." unique_id=1559433538 instance=ExtResource("34_lf053")]
 
-[node name="Lago" parent="." unique_id=164929129 instance=ExtResource("35_07swb")]
+[node name="Lago" parent="." unique_id=1530494804 instance=ExtResource("35_07swb")]
 
-[node name="Luciernagas0" type="GPUParticles3D" parent="." unique_id=2100067025]
+[node name="Luciernagas0" type="GPUParticles3D" parent="." unique_id=951723524]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 1.2031, -6)
 cast_shadow = 0
 amount = 22
@@ -928,7 +928,7 @@ visibility_aabb = AABB(-12, -12, -12, 24, 24, 24)
 process_material = SubResource("ParticleProcessMaterial_46")
 draw_pass_1 = SubResource("QuadMesh_48")
 
-[node name="Luciernagas1" type="GPUParticles3D" parent="." unique_id=1030339658]
+[node name="Luciernagas1" type="GPUParticles3D" parent="." unique_id=693546909]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 1.1769, -5)
 cast_shadow = 0
 amount = 22
@@ -938,7 +938,7 @@ visibility_aabb = AABB(-12, -12, -12, 24, 24, 24)
 process_material = SubResource("ParticleProcessMaterial_51")
 draw_pass_1 = SubResource("QuadMesh_53")
 
-[node name="Luciernagas2" type="GPUParticles3D" parent="." unique_id=896892711]
+[node name="Luciernagas2" type="GPUParticles3D" parent="." unique_id=1099529327]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 1.3, 32)
 cast_shadow = 0
 amount = 22
@@ -948,7 +948,7 @@ visibility_aabb = AABB(-12, -12, -12, 24, 24, 24)
 process_material = SubResource("ParticleProcessMaterial_56")
 draw_pass_1 = SubResource("QuadMesh_58")
 
-[node name="Luciernagas3" type="GPUParticles3D" parent="." unique_id=1885748335]
+[node name="Luciernagas3" type="GPUParticles3D" parent="." unique_id=155863693]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 9.7, 22)
 cast_shadow = 0
 amount = 22
@@ -958,7 +958,7 @@ visibility_aabb = AABB(-12, -12, -12, 24, 24, 24)
 process_material = SubResource("ParticleProcessMaterial_61")
 draw_pass_1 = SubResource("QuadMesh_63")
 
-[node name="Hojas0" type="GPUParticles3D" parent="." unique_id=480273879]
+[node name="Hojas0" type="GPUParticles3D" parent="." unique_id=1166292052]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21, 9, 32)
 cast_shadow = 0
 amount = 40
@@ -968,7 +968,7 @@ visibility_aabb = AABB(-24, -24, -24, 48, 48, 48)
 process_material = SubResource("ParticleProcessMaterial_64")
 draw_pass_1 = SubResource("QuadMesh_66")
 
-[node name="Hojas1" type="GPUParticles3D" parent="." unique_id=1348495562]
+[node name="Hojas1" type="GPUParticles3D" parent="." unique_id=1287773137]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9, 35)
 cast_shadow = 0
 amount = 40
@@ -978,7 +978,7 @@ visibility_aabb = AABB(-24, -24, -24, 48, 48, 48)
 process_material = SubResource("ParticleProcessMaterial_67")
 draw_pass_1 = SubResource("QuadMesh_69")
 
-[node name="Hojas2" type="GPUParticles3D" parent="." unique_id=965767406]
+[node name="Hojas2" type="GPUParticles3D" parent="." unique_id=700110544]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 12.8206, 20)
 cast_shadow = 0
 amount = 40
@@ -988,37 +988,37 @@ visibility_aabb = AABB(-24, -24, -24, 48, 48, 48)
 process_material = SubResource("ParticleProcessMaterial_70")
 draw_pass_1 = SubResource("QuadMesh_72")
 
-[node name="Ambiente" type="Node3D" parent="." unique_id=671659118]
+[node name="Ambiente" type="Node3D" parent="." unique_id=904982040]
 
-[node name="Grillos0" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1438678490]
+[node name="Grillos0" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=50268313]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24, 0.5, 30)
 volume_db = -3.0
 max_distance = 40.0
 script = ExtResource("37_wob3n")
 Tipo = 27
 
-[node name="Grillos1" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1241472403]
+[node name="Grillos1" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=864013408]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.8937, 30)
 volume_db = -3.0
 max_distance = 40.0
 script = ExtResource("37_wob3n")
 Tipo = 27
 
-[node name="Grillos2" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=250750683]
+[node name="Grillos2" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=68737946]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0.6115, 50)
 volume_db = -3.0
 max_distance = 40.0
 script = ExtResource("37_wob3n")
 Tipo = 27
 
-[node name="Grillos3" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=867170144]
+[node name="Grillos3" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1534750228]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 2.4693, 14)
 volume_db = -3.0
 max_distance = 40.0
 script = ExtResource("37_wob3n")
 Tipo = 27
 
-[node name="Ranas0" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=485732276]
+[node name="Ranas0" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=582935028]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0.2, -8)
 volume_db = -2.0
 unit_size = 8.0
@@ -1026,7 +1026,7 @@ max_distance = 30.0
 script = ExtResource("37_wob3n")
 Tipo = 39
 
-[node name="Ranas1" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1952686178]
+[node name="Ranas1" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1472443782]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.2, -8)
 volume_db = -2.0
 unit_size = 8.0
@@ -1034,7 +1034,7 @@ max_distance = 30.0
 script = ExtResource("37_wob3n")
 Tipo = 39
 
-[node name="Ranas2" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1297149392]
+[node name="Ranas2" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=864473027]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.2, -9)
 volume_db = -2.0
 unit_size = 8.0
@@ -1042,7 +1042,7 @@ max_distance = 30.0
 script = ExtResource("37_wob3n")
 Tipo = 39
 
-[node name="Viento0" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=419567582]
+[node name="Viento0" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1546605914]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48, 8, 20)
 volume_db = -4.0
 unit_size = 14.0
@@ -1050,7 +1050,7 @@ max_distance = 60.0
 script = ExtResource("37_wob3n")
 Tipo = 28
 
-[node name="Viento1" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1194589312]
+[node name="Viento1" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=343255567]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 8, 40)
 volume_db = -4.0
 unit_size = 14.0
@@ -1058,7 +1058,7 @@ max_distance = 60.0
 script = ExtResource("37_wob3n")
 Tipo = 28
 
-[node name="Viento2" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=222953494]
+[node name="Viento2" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1942895912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 62)
 volume_db = -4.0
 unit_size = 14.0
@@ -1066,7 +1066,7 @@ max_distance = 60.0
 script = ExtResource("37_wob3n")
 Tipo = 28
 
-[node name="Buho" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1349552285]
+[node name="Buho" type="AudioStreamPlayer3D" parent="Ambiente" unique_id=1566368130]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 12, 45)
 volume_db = -2.0
 unit_size = 12.0
@@ -1076,29 +1076,29 @@ Tipo = 30
 PausaMinima = 16.0
 PausaMaxima = 40.0
 
-[node name="HUD" parent="." unique_id=300862103 instance=ExtResource("38_ccuui")]
+[node name="HUD" parent="." unique_id=1593195127 instance=ExtResource("38_ccuui")]
 
-[node name="Jugador" parent="." unique_id=315296 instance=ExtResource("39_foioy")]
+[node name="Jugador" parent="." unique_id=1766617344 instance=ExtResource("39_foioy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.4, -3)
 
-[node name="MenuPausa" parent="." unique_id=1678376383 instance=ExtResource("40_um2xx")]
+[node name="MenuPausa" parent="." unique_id=605238668 instance=ExtResource("40_um2xx")]
 
-[node name="VentanaDialogo" type="CanvasLayer" parent="." unique_id=132756913]
+[node name="VentanaDialogo" type="CanvasLayer" parent="." unique_id=767923928]
 script = ExtResource("41_241sc")
 
-[node name="TableroDeduccion" type="CanvasLayer" parent="." unique_id=226701894]
+[node name="TableroDeduccion" type="CanvasLayer" parent="." unique_id=64912226]
 script = ExtResource("42_mbdpk")
 
-[node name="MusicaFondo" type="AudioStreamPlayer" parent="." unique_id=229555986]
+[node name="MusicaFondo" type="AudioStreamPlayer" parent="." unique_id=665784643]
 stream = ExtResource("43_sm0h1")
 script = ExtResource("44_0qn05")
 
-[node name="MandoHud" type="Node" parent="." unique_id=1603665636]
+[node name="MandoHud" type="Node" parent="." unique_id=662972321]
 script = ExtResource("45_ayi6r")
 
-[node name="Vineta" type="CanvasLayer" parent="." unique_id=1805643561]
+[node name="Vineta" type="CanvasLayer" parent="." unique_id=129260283]
 
-[node name="Degradado" type="TextureRect" parent="Vineta" unique_id=8442135]
+[node name="Degradado" type="TextureRect" parent="Vineta" unique_id=282237664]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1108,7 +1108,7 @@ mouse_filter = 2
 texture = SubResource("GradientTexture2D_74")
 expand_mode = 1
 
-[node name="Caso1Lago" type="Node" parent="." unique_id=1748167738 node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "Musica")]
+[node name="Caso1Lago" type="Node" parent="." unique_id=1039905501 node_paths=PackedStringArray("Jugador", "Hud", "Dialogo", "Musica")]
 script = ExtResource("46_0d4x5")
 Jugador = NodePath("../Jugador")
 Hud = NodePath("../HUD")
@@ -1116,36 +1116,36 @@ Dialogo = NodePath("../VentanaDialogo")
 Musica = NodePath("../MusicaFondo")
 Lugar = "Campamento Pino Lunar · Embarcadero"
 
-[node name="ContornoPistas" type="Node" parent="." unique_id=616613836]
+[node name="ContornoPistas" type="Node" parent="." unique_id=2131472336]
 script = ExtResource("47_jrnc6")
 DistanciaMaxima = 5.5
 Instinto = true
 
-[node name="VarianteEmbarcadero" type="Node" parent="." unique_id=576172302]
+[node name="VarianteEmbarcadero" type="Node" parent="." unique_id=164545016]
 script = ExtResource("48_xyjsw")
 
-[node name="Sellos" type="Node3D" parent="." unique_id=1193247011 groups=["caso2"]]
+[node name="Sellos" type="Node3D" parent="." unique_id=1436304184 groups=["caso2"]]
 
-[node name="Poste" type="Node3D" parent="Sellos" unique_id=1577436967 instance=ExtResource("49_jxlj0")]
+[node name="Poste" type="Node3D" parent="Sellos" unique_id=1625890872 instance=ExtResource("49_jxlj0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.95, 0.3, -7)
 
-[node name="Sello" type="Node3D" parent="Sellos" unique_id=1965384332 instance=ExtResource("50_kkgye")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.95, 1, -6.93)
+[node name="Sello6" type="Node3D" parent="Sellos" unique_id=1965384332 groups=["auditoria_colgado"] instance=ExtResource("50_kkgye")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.95, 1.1, -6.93)
 
-[node name="@Node3D@5" type="Node3D" parent="Sellos" unique_id=1781930532 instance=ExtResource("49_jxlj0")]
+[node name="@Node3D@8" type="Node3D" parent="Sellos" unique_id=1249726967 instance=ExtResource("49_jxlj0")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.05, 0.3, -7)
 
-[node name="@Node3D@6" type="Node3D" parent="Sellos" unique_id=96100496 instance=ExtResource("50_kkgye")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.05, 1, -6.93)
+[node name="Sello9" type="Node3D" parent="Sellos" unique_id=1242477188 groups=["auditoria_colgado"] instance=ExtResource("50_kkgye")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.05, 1.1, -6.93)
 
-[node name="CintaAmarilla" type="Node3D" parent="Sellos" unique_id=1332422292 instance=ExtResource("51_4e48n")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.95, 1.15, -6.98)
+[node name="CintaAmarilla" type="Node3D" parent="Sellos" unique_id=1332422292 groups=["auditoria_colgado"] instance=ExtResource("51_4e48n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.95, 1.3, -6.98)
 
-[node name="CintaAmarilla2" type="Node3D" parent="Sellos" unique_id=977401384 instance=ExtResource("51_4e48n")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.95, 0.7, -6.98)
+[node name="CintaAmarilla2" type="Node3D" parent="Sellos" unique_id=226303180 groups=["auditoria_colgado"] instance=ExtResource("51_4e48n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.95, 1, -6.98)
 
-[node name="Entrada_Cierre" type="Marker3D" parent="Sellos" unique_id=375950042]
+[node name="Entrada_Cierre" type="Marker3D" parent="Sellos" unique_id=1099645418]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.4, -3)
 
-[node name="PuntoSilueta" type="Marker3D" parent="Sellos" unique_id=376039400]
+[node name="PuntoSilueta" type="Marker3D" parent="Sellos" unique_id=2000976555]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.35, -30)

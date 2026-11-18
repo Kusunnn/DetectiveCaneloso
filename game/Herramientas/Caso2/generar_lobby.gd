@@ -88,8 +88,8 @@ func _sala_espera() -> void:
 	var s := k.nodo("SalaEspera")
 	for lado in [[2.4, 90.0], [9.6, -90.0]]:
 		var x: float = lado[0]
-		k.prefab("tapete", s, Vector3(x, 0.004, 3.3), 0.0, 1.3, "Tapete%d" % int(x))
-		var mesa := k.prefab("mesa_baja", s, Vector3(x, 0, 3.3), 90.0, 0.8, "MesaBaja%d" % int(x))
+		var tapete := k.prefab("tapete", s, Vector3(x, 0.004, 3.3), 0.0, 1.3, "Tapete%d" % int(x))
+		var mesa := k.prefab("mesa_baja", s, Vector3(x, k.tope(tapete), 3.3), 90.0, 0.8, "MesaBaja%d" % int(x))
 		k.prefab("sillon", s, Vector3(x - 1.3, 0, 3.3), 90.0, 1.0, "SillonA%d" % int(x))
 		k.prefab("sillon", s, Vector3(x + 1.3, 0, 3.3), -90.0, 1.0, "SillonB%d" % int(x))
 		var y := k.tope(mesa)
@@ -128,7 +128,7 @@ func _fondo() -> void:
 	nombre.position = Vector3(9.0, 1.25, FONDO - 0.03)
 	nombre.rotation_degrees.y = 180.0
 	f.add_child(nombre)
-	k.pantalla(f, "Directorio", Vector3(1.6, 1.6, FONDO - 0.03), 180.0, Vector2(0.75, 1.0), GEN + "c2_directorio.png", 0.35)
+	k.pantalla(f, "Directorio", Vector3(1.6, 1.6, FONDO - 0.004), 180.0, Vector2(0.75, 1.0), GEN + "c2_directorio.png", 0.35)
 	for c in [[Vector3(ANCHO - 0.02, 1.9, 3.3), -90.0], [Vector3(ANCHO - 0.02, 1.9, 7.0), -90.0]]:
 		k.prefab("cuadro_grande", f, c[0], c[1], 1.0).add_to_group("auditoria_pared", true)
 	k.prefab("tapete_largo", f, Vector3(6.0, 0.004, 3.0), 0.0, 1.5, "TapeteCentral")

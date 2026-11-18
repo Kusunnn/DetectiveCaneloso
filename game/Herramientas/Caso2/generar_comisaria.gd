@@ -113,7 +113,7 @@ func _escritorio_caneloso() -> void:
 	k.prefab("radio_vieja", m, Vector3(1.35, y, 0.8), 195.0, 0.8, "RadioPolicia")
 	var taza := k.prefab("taza_cafe", m, Vector3(2.6, y, 1.25), 30.0, 1.0, "Cafe")
 	k.vapor(m, Vector3(2.6, k.tope(taza) - 0.01, 1.25))
-	k.modelo("res://Assets/Cinematicas/Modelos/polyhaven/desk_lamp_arm_01/desk_lamp_arm_01_1k.gltf", m, Vector3(2.65, y, 0.75), 210.0, 1.0, "Lampara")
+	k.prefab("lampara_mesa", m, Vector3(2.7, y, 0.75), 210.0, 1.0, "Lampara")
 	k.prefab("libros_k", m, Vector3(1.5, y, 1.25), -25.0, 1.0, "Carpetas")
 	# La invitación (se lee, no es evidencia) y el sobre de Eriz abierto junto a la P01
 	var inv: Node3D = load(PISTAS + "invitacion_miawrio/invitacion_miawrio.tscn").instantiate()

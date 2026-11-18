@@ -184,6 +184,7 @@ func multimalla(nombre: String, padre: Node, malla: Mesh, transformaciones: Arra
 func cuarto(nombre: String, origen: Vector3, ancho: int, fondo: int, alto: float, huecos: Dictionary,
 		mats_muro: Dictionary, malla_piso: Mesh, mats_techo: Dictionary, con_techo := true) -> Node3D:
 	var c := nodo(nombre, raiz, origen)
+	c.add_to_group("auditoria_estructura", true)
 	var a := int(round(alto * 100))
 	var piso_t := []
 	for i in ancho:
@@ -201,9 +202,10 @@ func cuarto(nombre: String, origen: Vector3, ancho: int, fondo: int, alto: float
 		"oeste": [func(i): return Vector3(0, 0, i + 0.5), 90.0, fondo],
 		"este": [func(i): return Vector3(ancho, 0, i + 0.5), -90.0, fondo],
 	}
-	var por_pieza := {}
 	var muros := nodo("Muros", c)
+	# Una malla por lado y por pieza: así la caja de cada malla es la franja de su muro, no todo el cuarto
 	for lado in lados:
+		var por_pieza := {}
 		var pos_de: Callable = lados[lado][0]
 		var giro: float = lados[lado][1]
 		var largo: int = lados[lado][2]
@@ -224,17 +226,18 @@ func cuarto(nombre: String, origen: Vector3, ancho: int, fondo: int, alto: float
 				for lado_x in [-0.475, 0.475]:
 					colision("ColisionJamba_%s%d" % [lado, i], muros, t * Vector3(lado_x, 1.05, -0.06), Vector3(0.05, 2.1, 0.12), CAPA_MUNDO, giro)
 			colision("Colision_%s%d" % [lado, i], muros, t * centro_local, tam, CAPA_MUNDO, giro)
-	for pieza in por_pieza:
-		multimalla(pieza.to_pascal_case(), muros, malla_kit(pieza, mats_muro), por_pieza[pieza])
-	var esq := []
+		for pieza in por_pieza:
+			multimalla(lado.capitalize() + pieza.to_pascal_case(), muros, malla_kit(pieza, mats_muro), por_pieza[pieza])
+	var n_esq := 0
 	for p in [Vector3(0, 0, 0), Vector3(ancho, 0, 0), Vector3(0, 0, fondo), Vector3(ancho, 0, fondo)]:
-		esq.append(Transform3D(Basis.IDENTITY, p))
-	multimalla("Esquineros", muros, malla_kit("esquinero_%d" % a, mats_muro), esq)
+		multimalla("Esquinero%d" % n_esq, muros, malla_kit("esquinero_%d" % a, mats_muro), [Transform3D(Basis.IDENTITY, p)])
+		n_esq += 1
 	return c
 
 ## Muro interior suelto (divisiones): `largo` módulos desde `inicio`, mirando a `giro`
 func tramo_muro(nombre: String, padre: Node, inicio: Vector3, largo: int, giro: float, alto: float, mats_muro: Dictionary, huecos := {}) -> Node3D:
 	var n := nodo(nombre, padre)
+	n.add_to_group("auditoria_estructura", true)
 	var a := int(round(alto * 100))
 	var por_pieza := {}
 	var dir := Basis(Vector3.UP, deg_to_rad(giro)) * Vector3.RIGHT
@@ -309,6 +312,10 @@ func pista(padre: Node, id: String, titulo: String, descripcion: String, comenta
 	p.set("Descripcion", descripcion)
 	p.set("ComentarioAlMirar", comentario)
 	p.set("Lugar", lugar)
+	# La foto del expediente (fotografo_pistas_caso2.gd), si ya existe
+	var foto := "res://Assets/Pistas/caso2/%s.png" % id
+	if ResourceLoader.exists(foto):
+		p.set("Imagen", load(foto))
 	for k in extra:
 		p.set(k, extra[k])
 	return p
@@ -424,6 +431,7 @@ func pieza_kit(pieza: String, padre: Node, pos: Vector3, rot_y := 0.0, materiale
 	n.mesh = malla_kit(pieza, materiales, "_" + str(materiales.hash()) if not materiales.is_empty() else "")
 	n.position = pos
 	n.rotation_degrees.y = rot_y
+	n.add_to_group("auditoria_estructura", true)
 	padre.add_child(n)
 	return n
 
@@ -457,10 +465,10 @@ func vista_calle(padre: Node, base: Vector3, frente: float, largo := 40.0, semil
 	# La vista mira hacia -Z local. Banqueta (0..-3 m), calle (-3..-15), banqueta de enfrente y edificios.
 	for i in range(-mitad, mitad + 1):
 		var x := i * ESCALA_CALLE
-		kenney("city-kit-roads", "tile-low", v, Vector3(x, -0.02 - altura_ojo, -3.0), 0.0, ESCALA_CALLE, "Banqueta%d" % i)
-		kenney("city-kit-roads", "road-straight", v, Vector3(x, -0.06 - altura_ojo, -9.0), 90.0, ESCALA_CALLE, "Calle%d" % i)
-		kenney("city-kit-roads", "road-straight", v, Vector3(x, -0.06 - altura_ojo, -15.0), 90.0, ESCALA_CALLE, "Calle%db" % i)
-		kenney("city-kit-roads", "tile-low", v, Vector3(x, -0.02 - altura_ojo, -21.0), 0.0, ESCALA_CALLE, "BanquetaEnfrente%d" % i)
+		kenney("city-kit-roads", "tile-low", v, Vector3(x, -0.1 - altura_ojo, -3.0), 0.0, ESCALA_CALLE, "Banqueta%d" % i)
+		kenney("city-kit-roads", "road-straight", v, Vector3(x, -0.16 - altura_ojo, -9.0), 90.0, ESCALA_CALLE, "Calle%d" % i)
+		kenney("city-kit-roads", "road-straight", v, Vector3(x, -0.16 - altura_ojo, -15.0), 90.0, ESCALA_CALLE, "Calle%db" % i)
+		kenney("city-kit-roads", "tile-low", v, Vector3(x, -0.1 - altura_ojo, -21.0), 0.0, ESCALA_CALLE, "BanquetaEnfrente%d" % i)
 		if i % 2 == 0:
 			kenney("city-kit-roads", "light-square", v, Vector3(x + 1.5, -altura_ojo, -4.6), 180.0, 8.0, "Poste%d" % i)
 	var coches := ["sedan", "taxi", "suv", "van", "hatchback-sports", "delivery"]
@@ -478,7 +486,7 @@ func vista_calle(padre: Node, base: Vector3, frente: float, largo := 40.0, semil
 		n += 1
 	for i in 7:
 		var e: String = ["building-skyscraper-a", "building-skyscraper-b", "building-skyscraper-c", "building-skyscraper-d", "building-skyscraper-e"][azar.randi() % 5]
-		kenney("city-kit-commercial", e, v, Vector3(-48.0 + i * 16.0 + azar.randf_range(-3, 3), -altura_ojo, -55.0 - azar.randf_range(0, 15)), azar.randi_range(0, 3) * 90.0, ESCALA_EDIFICIOS * azar.randf_range(0.9, 1.3), "Torre%d" % i)
+		kenney("city-kit-commercial", e, v, Vector3(-48.0 + i * 16.0 + azar.randf_range(-3, 3), -altura_ojo, -55.0 - azar.randf_range(0, 15)), azar.randi_range(0, 3) * 90.0, ESCALA_EDIFICIOS * 1.1, "Torre%d" % i)
 	for i in 10:
 		kenney("city-kit-commercial", "low-detail-building-%s" % "abcdefghijklmn"[azar.randi() % 14], v, Vector3(-90.0 + i * 20.0, -altura_ojo, -110.0 - azar.randf_range(0, 20)), 0.0, 22.0, "Lejano%d" % i)
 	# Sin sombras: la vista es fondo
@@ -516,6 +524,7 @@ func pantalla(padre: Node, nombre: String, pos: Vector3, rot_y: float, tam: Vect
 	n.position = pos
 	n.rotation_degrees = Vector3(rot_x, rot_y, 0)
 	n.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	n.add_to_group("auditoria_pared", true)
 	padre.add_child(n)
 	return n
 
@@ -675,6 +684,7 @@ func contenedor(padre: Node, nombre: String, nombre_visible: String, pos: Vector
 	f.shape = s
 	f.position = centro_frente
 	c.add_child(f)
+	c.add_to_group("auditoria_estructura", true)
 	c.set("Nombre", nombre_visible)
 	c.set("MensajeAlAbrir", mensaje)
 	c.set("Parte", parte)
@@ -710,7 +720,7 @@ func puerta_tito(padre: Node, n: int, pos_muro: Vector3, giro: float) -> Node3D:
 	puerta.set("Bloqueada", true)
 	puerta.set("MensajeBloqueada", "Está cerrada.")
 	# Pantalla a un lado de la puerta, a la altura de los ojos
-	var pos_pantalla := pos_muro + b * Vector3(0.78, 1.5, 0.03)
+	var pos_pantalla := pos_muro + b * Vector3(0.78, 1.5, 0.0)
 	modelo("res://Assets/Caso2/Modelos/props/marco_pantalla.glb", raiz_p, pos_muro + b * Vector3(0.78, 1.5, 0.0), giro, 0.28, "MarcoPantalla").add_to_group("auditoria_pared", true)
 	pantalla(raiz_p, "Pantalla", pos_pantalla + b * Vector3(0, 0, 0.016), giro, Vector2(0.45, 0.25), "res://Assets/Pistas/Modelos/generadas/c2_tres_rayas.png", 1.4)
 	var pregunta := punto(raiz_p, "PuntoPregunta", "Responder", pos_pantalla + b * Vector3(0, 0, 0.05), Vector3(0.5, 0.32, 0.1), giro)
@@ -750,7 +760,7 @@ func techo(padre: Node, nombre: String, x0: int, z0: int, ancho: int, fondo: int
 	for i in ancho:
 		for j in fondo:
 			t.append(Transform3D(Basis.IDENTITY, Vector3(x0 + i + 0.5, alto, z0 + j + 0.5)))
-	multimalla(nombre, padre, malla_kit("techo_panel", mats), t, false)
+	multimalla(nombre, padre, malla_kit("techo_panel", mats), t, false).add_to_group("auditoria_estructura", true)
 	colision("Colision" + nombre, padre, Vector3(x0 + ancho / 2.0, alto + 0.1, z0 + fondo / 2.0), Vector3(ancho, 0.2, fondo), CAPA_LIMITES)
 
 # ---------- Lo común de una escena jugable ----------
@@ -835,12 +845,94 @@ func ambiente_sonoro(nombre: String, padre: Node, pos: Vector3, ruta: String, vo
 # ---------- Guardar ----------
 
 func guardar(ruta: String) -> void:
+	_marcar_y_solidificar()
+	_limites()
 	_duenos(raiz, raiz)
 	var ps := PackedScene.new()
 	var err := ps.pack(raiz)
 	assert(err == OK, "No se pudo empaquetar " + ruta)
 	ResourceSaver.save(ps, ruta)
 	print("  guardada ", ruta)
+
+const COLGADOS := ["lampSquareCeiling", "lampara_tubo", "charola_cables", "bocina_techo", "luz_emergencia", "disco_duro", "sello_roto", "cinta_amarilla"]
+const EN_PARED := ["elevador", "marco_pantalla", "logo_torre", "barrotes", "corcho", "reloj_pared", "panel_tarjeta"]
+const ESTRUCTURA := ["tramo_escalera", "descanso", "rampa", "escritorio_cajon", "archivero_cajon", "archivero_cuerpo", "escritorio_ejecutivo", "reja_celda"]
+
+## Antes de guardar: grupos de la auditoría para lo que cuelga, y colisión para los modelos de librería que están
+## en el piso y no la traen (los prefabs del Caso 1 ya la traen), para que el jugador no los atraviese.
+func _marcar_y_solidificar() -> void:
+	var modelos := []
+	_juntar_modelos(raiz, modelos)
+	for n in modelos:
+		# Solo modelos de librería o hechos en Blender (no el jugador, el HUD ni los menús)
+		if not n.scene_file_path.begins_with("res://Assets/") or n is CollisionObject3D:
+			continue
+		var archivo: String = n.scene_file_path.get_file().get_basename()
+		if archivo in COLGADOS:
+			n.add_to_group("auditoria_colgado", true)
+			continue
+		if archivo in EN_PARED:
+			n.add_to_group("auditoria_pared", true)
+			continue
+		if archivo in ESTRUCTURA:
+			n.add_to_group("auditoria_estructura", true)
+			continue
+		if _con_grupo(n, ["auditoria_fuera_ok", "auditoria_pared", "auditoria_colgado", "auditoria_personaje", "auditoria_estructura", "marcador_temporal"]):
+			continue
+		if _dentro_de_cuerpo(n) or not n.find_children("*", "CollisionObject3D", true, false).is_empty():
+			continue
+		var caja := caja_de(n)
+		if caja.size.y < 0.35 or maxf(caja.size.x, caja.size.z) < 0.3:
+			continue
+		var c := colision("Solido", n.get_parent(), caja.get_center(), caja.size * Vector3(0.92, 1.0, 0.92), CAPA_MUEBLES)
+		# La caja está en coordenadas de la escena: se pasa a las del padre
+		c.position = _transformacion_relativa(raiz, n.get_parent()).affine_inverse() * caja.get_center()
+		c.name = String(n.name) + "_Solido"
+		c.add_to_group("auditoria_invisible_ok", true)
+
+## Nodo «Limites» (lo usa la auditoría para saber qué queda fuera del mapa): la caja del cuarto, con su colisión
+func _limites() -> void:
+	var cuarto := raiz.get_node_or_null("Cuarto") as Node3D
+	if cuarto == null or raiz.get_node_or_null("Limites") != null:
+		return
+	var caja := AABB()
+	var primera := true
+	for mi in cuarto.find_children("*", "MeshInstance3D", true, false):
+		var b := _transformacion_relativa(raiz, mi) * (mi as MeshInstance3D).get_aabb()
+		caja = b if primera else caja.merge(b)
+		primera = false
+	var l := nodo("Limites")
+	l.add_to_group("auditoria_invisible_ok", true)
+	var c := caja.get_center()
+	var s := caja.size
+	for d in [[Vector3(c.x, c.y, caja.position.z - 0.1), Vector3(s.x + 0.4, s.y, 0.2)], [Vector3(c.x, c.y, caja.end.z + 0.1), Vector3(s.x + 0.4, s.y, 0.2)],
+			[Vector3(caja.position.x - 0.1, c.y, c.z), Vector3(0.2, s.y, s.z + 0.4)], [Vector3(caja.end.x + 0.1, c.y, c.z), Vector3(0.2, s.y, s.z + 0.4)]]:
+		colision("Borde", l, d[0], d[1], CAPA_LIMITES)
+
+func _juntar_modelos(n: Node, lista: Array) -> void:
+	for h in n.get_children():
+		if not h.scene_file_path.is_empty():
+			if h is Node3D:
+				lista.append(h)
+			continue
+		_juntar_modelos(h, lista)
+
+func _con_grupo(n: Node, grupos: Array) -> bool:
+	var p := n
+	while p != null:
+		for g in grupos:
+			if p.is_in_group(g):
+				return true
+		p = p.get_parent()
+	return false
+
+func _dentro_de_cuerpo(n: Node) -> bool:
+	var p := n.get_parent()
+	while p != null:
+		if p is CollisionObject3D:
+			return true
+		p = p.get_parent()
+	return false
 
 func _duenos(r: Node, n: Node) -> void:
 	for h in n.get_children():
