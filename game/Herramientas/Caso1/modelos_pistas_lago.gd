@@ -284,7 +284,7 @@ func _cuaderno() -> Node3D:
 	var papel := _mat(Color(0.93, 0.9, 0.82), 0.95)
 	_malla(r, "TapaIzq", _caja(Vector3(0.155, 0.004, 0.215)), tapa, Vector3(-0.08, 0.002, 0), Vector3(0, 0, 3))
 	_malla(r, "TapaDer", _caja(Vector3(0.155, 0.004, 0.215)), tapa, Vector3(0.08, 0.002, 0), Vector3(0, 0, -3))
-	_malla(r, "HojasIzq", _caja(Vector3(0.148, 0.01, 0.205)), papel, Vector3(-0.077, 0.009, 0), Vector3(0, 0, 3))
+	var hojas_izq := _malla(r, "HojasIzq", _caja(Vector3(0.148, 0.01, 0.205)), papel, Vector3(-0.077, 0.009, 0), Vector3(0, 0, 3))
 	_malla(r, "HojasDer", _caja(Vector3(0.148, 0.01, 0.205)), papel, Vector3(0.077, 0.009, 0), Vector3(0, 0, -3))
 	var espiral := _mat(Color(0.6, 0.6, 0.62), 0.35, 0.8)
 	for k in 9:
@@ -293,8 +293,17 @@ func _cuaderno() -> Node3D:
 		a.outer_radius = 0.007
 		_malla(r, "Espiral%d" % k, a, espiral, Vector3(0, 0.012, -0.09 + k * 0.0225), Vector3(0, 0, 90))
 	var tinta := Color(0.12, 0.14, 0.32)
-	# Página izquierda: un dibujo rápido del lago (rayas) y la luna
-	_texto(r, "Dibujo", "~ ~ ~  )  ~ ~\n  ~ ~ ~ ~ ~\n   |=====|", Vector3(-0.14, 0.0165, -0.085), Vector3(-90, 0, 0), 40, tinta, 0.0004)
+	# Página izquierda: el dibujo a lápiz de Eriz de esa noche, pegado a la hoja (sigue su inclinación)
+	var dibujo := Sprite3D.new()
+	dibujo.name = "Dibujo"
+	dibujo.texture = load(BASE + "cuaderno_eriz/dibujo_eriz.png")
+	dibujo.pixel_size = 0.000151
+	dibujo.shaded = true
+	dibujo.double_sided = false
+	dibujo.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	dibujo.position = Vector3(0, 0.0056, -0.0325)
+	dibujo.rotation_degrees = Vector3(-90, 0, 0)
+	hojas_izq.add_child(dibujo)
 	_texto(r, "Fecha", "14 ago.  Lago Espejo", Vector3(-0.14, 0.0165, 0.04), Vector3(-90, 0, 0), 34, tinta, 0.0004)
 	# Página derecha: las notas de la noche
 	_texto(r, "Notas", "23:00  se fue la luz en\ntodo el campamento.\n23:05  ¿bramidos en el\nbosque??\n23:20: perturbación luminosa\nfuerte junto al embarcadero.\n(¿un pez?)",

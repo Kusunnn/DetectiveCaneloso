@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="FontFile" path="res://Assets/Fuentes/Caveat-Variable.ttf" id="1_w8nus"]
+[ext_resource type="Texture2D" path="res://Assets/Pistas/Modelos/cuaderno_eriz/dibujo_eriz.png" id="2_dibujo"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7cwho"]
 albedo_color = Color(0.12, 0.2, 0.28, 1)
@@ -85,6 +86,14 @@ transform = Transform3D(0.9986295, 0.05233596, 0, -0.05233596, 0.9986295, 0, 0, 
 material_override = SubResource("StandardMaterial3D_prdhi")
 mesh = SubResource("BoxMesh_o0rqp")
 
+[node name="Dibujo" type="Sprite3D" parent="HojasIzq" unique_id=593760978]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.0056, -0.0325)
+pixel_size = 0.000151
+shaded = true
+double_sided = false
+texture_filter = 3
+texture = ExtResource("2_dibujo")
+
 [node name="Espiral0" type="MeshInstance3D" parent="." unique_id=90197165]
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, -0.09)
 material_override = SubResource("StandardMaterial3D_10n4c")
@@ -129,21 +138,6 @@ mesh = SubResource("TorusMesh_qy0vm")
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.012, 0.09)
 material_override = SubResource("StandardMaterial3D_10n4c")
 mesh = SubResource("TorusMesh_g3n4x")
-
-[node name="Dibujo" type="Label3D" parent="." unique_id=593760978]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.14, 0.0165, -0.085)
-pixel_size = 0.0004
-shaded = true
-double_sided = false
-modulate = Color(0.12, 0.14, 0.32, 1)
-text = "~ ~ ~  )  ~ ~
-  ~ ~ ~ ~ ~
-   |=====|"
-font = ExtResource("1_w8nus")
-font_size = 40
-outline_size = 0
-horizontal_alignment = 0
-vertical_alignment = 0
 
 [node name="Fecha" type="Label3D" parent="." unique_id=1501898774]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.14, 0.0165, 0.04)
